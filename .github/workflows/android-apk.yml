@@ -126,6 +126,18 @@ jobs:
           ccache --zero-stats
           ccache --max-size=2G
 
+      - name: Fetch ONNX Runtime (stem separation)
+        # CMake downloads it too, but without retries; Maven Central fails now
+        # and then. Pre-extracting it makes CMake skip the download.
+        run: |
+          set -e
+          VERSION=$(grep -oP 'MIXXX_ONNXRUNTIME_VERSION \K[0-9.]+' cmake/modules/MixxxAndroid.cmake)
+          mkdir -p build/onnxruntime
+          curl -fsSL --retry 6 --retry-delay 10 --retry-all-errors -o /tmp/ort.aar \
+            "https://repo1.maven.org/maven2/com/microsoft/onnxruntime/onnxruntime-android/$VERSION/onnxruntime-android-$VERSION.aar"
+          unzip -q -o /tmp/ort.aar 'headers/*' 'jni/arm64-v8a/libonnxruntime.so' -d build/onnxruntime
+          ls build/onnxruntime/headers | head
+
       - name: Configure
         shell: bash
         run: |
