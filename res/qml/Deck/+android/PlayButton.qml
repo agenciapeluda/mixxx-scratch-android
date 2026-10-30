@@ -10,7 +10,7 @@ Skin.ControlButton {
 
     property bool minimized: false
 
-    activeColor: "#00e676"
+    activeColor: "#2bd67b"
     key: "play"
     toggleable: trackLoadedControl.value == 1
 
@@ -30,7 +30,7 @@ Skin.ControlButton {
 
             ShapePath {
                 capStyle: ShapePath.RoundCap
-                fillColor: root.value > 0 ? "#00e676" : (trackLoadedControl.value > 0 ? "#ffffff" : Theme.buttonDisableColor)
+                fillColor: root.value > 0 ? "#2bd67b" : (trackLoadedControl.value > 0 ? "#ffffff" : Theme.buttonDisableColor)
                 fillRule: ShapePath.WindingFill
                 startX: 4
                 startY: 0
@@ -56,8 +56,8 @@ Skin.ControlButton {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 4
             anchors.horizontalCenter: parent.horizontalCenter
-            color: root.value > 0 ? "#00e676" : (trackLoadedControl.value > 0 ? "#ffffff" : "#626262")
-            font.bold: true
+            color: root.value > 0 ? "#2bd67b" : (trackLoadedControl.value > 0 ? "#ffffff" : "#626262")
+            font.weight: Font.DemiBold
             font.capitalization: Font.AllUppercase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize

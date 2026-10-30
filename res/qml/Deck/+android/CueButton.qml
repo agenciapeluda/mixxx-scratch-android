@@ -6,8 +6,8 @@ Skin.ControlButton {
 
     property bool minimized: false
 
-    activeColor: "#ff9100"
+    activeColor: "#ff8f57"
     key: "cue_default"
     text: "CUE"
-    font.bold: true
+    font.weight: Font.DemiBold
 }

@@ -78,7 +78,7 @@ AbstractButton {
 
             anchors.fill: parent
             color: root.normalColor
-            font.bold: true
+            font.weight: Font.DemiBold
             font.capitalization: Font.AllUppercase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize
@@ -112,16 +112,16 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                backgroundImage.color: root.checked ? "#3a60be" : root.backgroundColor
+                backgroundImage.color: root.checked ? "#5b6cff" : root.backgroundColor
             }
             PropertyChanges {
                 label.color: root.pressedColor
             }
             PropertyChanges {
-                bottomInnerEffect.color: '#353535'
+                bottomInnerEffect.color: '#2a2f3d'
             }
             PropertyChanges {
-                topInnerEffect.color: '#353535'
+                topInnerEffect.color: '#2a2f3d'
             }
             PropertyChanges {
                 labelGlow.visible: true
@@ -138,10 +138,10 @@ AbstractButton {
                 label.color: root.activeColor
             }
             PropertyChanges {
-                bottomInnerEffect.color: '#353535'
+                bottomInnerEffect.color: '#2a2f3d'
             }
             PropertyChanges {
-                topInnerEffect.color: '#353535'
+                topInnerEffect.color: '#2a2f3d'
             }
             PropertyChanges {
                 labelGlow.visible: true

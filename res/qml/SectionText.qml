@@ -7,6 +7,6 @@ Text {
     elide: Text.ElideRight
     font.family: Theme.fontFamily
     font.pixelSize: Theme.textFontPixelSize
-    font.bold: true
+    font.weight: Font.DemiBold
     color: Theme.buttonNormalColor
 }

@@ -24,8 +24,8 @@ Item {
     readonly property var currentTrack: deckPlayer?.currentTrack
     readonly property bool isDeck1: group === "[Channel1]"
     readonly property bool isDeck2: group === "[Channel2]"
-    readonly property color deckColor: isDeck1 ? "#00b0ff" : (isDeck2 ? "#ff6d00" : (group === "[Channel3]" ? "#00e676" : "#e040fb"))
-    readonly property color deckBgColor: isDeck1 ? "#0d47a1" : (isDeck2 ? "#bf360c" : "#263238")
+    readonly property color deckColor: isDeck1 ? "#7c8cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
+    readonly property color deckBgColor: isDeck1 ? "#2c47b8" : (isDeck2 ? "#bf360c" : "#1a1e28")
     readonly property string deckName: isDeck1 ? "DECK 1" : (isDeck2 ? "DECK 2" : (group === "[Channel3]" ? "DECK 3" : "DECK 4"))
 
     onEnabledChanged: {
@@ -424,7 +424,7 @@ Item {
                 anchors.centerIn: parent
                 text: root.deckName
                 color: "#ffffff"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 10
                 font.letterSpacing: 1
             }
@@ -449,7 +449,7 @@ Item {
                 anchors.centerIn: parent
                 text: keyControl.value ? keyControl.value.toString() : ""
                 color: "#ffffff"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 10
             }
         }
@@ -475,7 +475,7 @@ Item {
                 elide: Text.ElideRight
                 text: (root.currentTrack ? (root.currentTrack.artist ? root.currentTrack.artist + " - " : "") + root.currentTrack.title : "")
                 color: "#e0e6ed"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 10
             }
         }

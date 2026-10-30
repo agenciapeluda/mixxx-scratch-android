@@ -24,7 +24,7 @@ Item {
                 root.tracksModel = tracks;
                 root.statusMessage = qsTr("%1 tracks found on streaming").arg(tracks.length);
             } else {
-                root.statusMessage = qsTr("❌ Error: %1").arg(errorString);
+                root.statusMessage = qsTr("Error: %1").arg(errorString);
             }
         }
 
@@ -34,7 +34,7 @@ Item {
                 root.tracksModel = tracks;
                 root.statusMessage = qsTr("%1 trending tracks (%2)").arg(tracks.length).arg(root.currentGenre);
             } else {
-                root.statusMessage = qsTr("❌ Error: %1").arg(errorString);
+                root.statusMessage = qsTr("Error: %1").arg(errorString);
             }
         }
 
@@ -57,14 +57,14 @@ Item {
                 }
             }
             root.tracksModel = currentTracks;
-            root.statusMessage = qsTr("✔ Track ready and loaded into %1").arg(targetDeck === "[Channel1]" ? qsTr("Deck 1") : (targetDeck === "[Channel2]" ? qsTr("Deck 2") : qsTr("cache")));
+            root.statusMessage = qsTr("✓ Track ready and loaded into %1").arg(targetDeck === "[Channel1]" ? qsTr("Deck 1") : (targetDeck === "[Channel2]" ? qsTr("Deck 2") : qsTr("cache")));
         }
 
         function onDownloadFailed(trackId, errorMessage) {
             var updated = Object.assign({}, root.downloadProgressMap);
             delete updated[trackId];
             root.downloadProgressMap = updated;
-            root.statusMessage = qsTr("❌ Download error: %1").arg(errorMessage);
+            root.statusMessage = qsTr("Download error: %1").arg(errorMessage);
         }
     }
 
@@ -82,7 +82,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
             color: "#1c202a"
-            border.color: "#282d3b"
+            border.color: "#232836"
             border.width: 1
 
             RowLayout {
@@ -92,11 +92,11 @@ Item {
                 spacing: 8
 
                 Text {
-                    text: qsTr("🔥 AUDIUS STREAMING (FREE MUSIC)")
-                    font.bold: true
+                    text: qsTr("AUDIUS STREAMING (FREE MUSIC)")
+                    font.weight: Font.DemiBold
                     font.pixelSize: 13
                     font.letterSpacing: 1
-                    color: "#ea80fc"
+                    color: "#a78bfa"
                 }
 
                 Rectangle {
@@ -104,15 +104,15 @@ Item {
                     Layout.preferredWidth: liveText.implicitWidth + 14
                     radius: 11
                     color: "#00e67622"
-                    border.color: "#00e676"
+                    border.color: "#2bd67b"
                     border.width: 1
 
                     Text {
                         id: liveText
                         anchors.centerIn: parent
                         font.pixelSize: 10
-                        font.bold: true
-                        color: "#00e676"
+                        font.weight: Font.DemiBold
+                        color: "#2bd67b"
                         text: qsTr("● Free online")
                     }
                 }
@@ -123,7 +123,7 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#b0bec5"
+                    color: "#b4b9c7"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 320
                 }
@@ -131,12 +131,12 @@ Item {
                 Skin.Button {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 120
-                    activeColor: "#ea80fc"
+                    activeColor: "#a78bfa"
                     backgroundColor: "#2a3040"
                     normalColor: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 11
-                    text: root.isBusy ? qsTr("🔄 Loading...") : qsTr("🔄 Trending")
+                    text: root.isBusy ? qsTr("Loading...") : qsTr("Trending")
                     enabled: !root.isBusy
                     onClicked: {
                         root.isBusy = true;
@@ -150,7 +150,7 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#181b24"
+            color: "#12151c"
             border.color: "#232834"
             border.width: 1
 
@@ -169,7 +169,7 @@ Item {
                     font.pixelSize: 13
                     background: Rectangle {
                         color: "#212632"
-                        border.color: searchInput.activeFocus ? "#ff9100" : "#2e3646"
+                        border.color: searchInput.activeFocus ? "#ff8f57" : "#2e3646"
                         border.width: 1
                         radius: 4
                     }
@@ -187,7 +187,7 @@ Item {
                     Layout.preferredWidth: 38
                     backgroundColor: "#2a3140"
                     normalColor: "#ffffff"
-                    text: "🔍"
+                    text: ""
                     onClicked: searchInput.accepted()
                 }
 
@@ -205,27 +205,27 @@ Item {
 
                         Repeater {
                             model: [
-                                { name: qsTr("🔥 Trending"), genre: "Electronic" },
-                                { name: "🎧 Techno", genre: "Techno" },
-                                { name: "🎹 House", genre: "House" },
-                                { name: "🥁 Drum & Bass", genre: "Drum & Bass" },
-                                { name: "⚡ Electro", genre: "Electro" },
-                                { name: "🎤 Trap / Hip-Hop", genre: "Trap" }
+                                { name: qsTr("Trending"), genre: "Electronic" },
+                                { name: "Techno", genre: "Techno" },
+                                { name: "House", genre: "House" },
+                                { name: "Drum & Bass", genre: "Drum & Bass" },
+                                { name: "Electro", genre: "Electro" },
+                                { name: "Trap / Hip-Hop", genre: "Trap" }
                             ]
 
                             delegate: Rectangle {
                                 width: chipText.implicitWidth + 20
                                 height: 32
                                 radius: 16
-                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#e65100" : "#222734"
-                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#ff9100" : "#323a4d"
+                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#e2622a" : "#1a1e28"
+                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#ff8f57" : "#323a4d"
                                 border.width: 1
 
                                 Text {
                                     id: chipText
                                     anchors.centerIn: parent
                                     text: modelData.name
-                                    font.bold: true
+                                    font.weight: Font.DemiBold
                                     font.pixelSize: 11
                                     color: "#ffffff"
                                 }
@@ -267,7 +267,7 @@ Item {
                         implicitWidth: 10
                         implicitHeight: 40
                         radius: 5
-                        color: onlineScroll.pressed ? "#ea80fc" : "#4a5568"
+                        color: onlineScroll.pressed ? "#a78bfa" : "#4a5568"
                     }
                 }
 
@@ -276,7 +276,7 @@ Item {
                     width: tracksList.width
                     height: 58
                     color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#222734"
+                    border.color: "#1a1e28"
                     border.width: 1
 
                     readonly property var track: modelData
@@ -307,7 +307,7 @@ Item {
 
                             Text {
                                 anchors.centerIn: parent
-                                text: "🔥"
+                                text: ""
                                 font.pixelSize: 16
                                 visible: !track.coverArtUrl
                             }
@@ -321,7 +321,7 @@ Item {
                             Text {
                                 Layout.fillWidth: true
                                 text: track.title
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
                                 color: "#ffffff"
                                 elide: Text.ElideRight
@@ -334,7 +334,7 @@ Item {
                                 Text {
                                     text: track.artist
                                     font.pixelSize: 11
-                                    color: "#ffab40"
+                                    color: "#f5b544"
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -354,8 +354,8 @@ Item {
                                 anchors.centerIn: parent
                                 text: track.genre || ""
                                 font.pixelSize: 9
-                                font.bold: true
-                                color: "#ffb74d"
+                                font.weight: Font.DemiBold
+                                color: "#f7c86a"
                             }
                         }
 
@@ -368,7 +368,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#78909c"
+                            color: "#6e7587"
                         }
 
                         // Cache status badge
@@ -377,16 +377,16 @@ Item {
                             Layout.preferredWidth: cacheStatusText.implicitWidth + 10
                             radius: 10
                             color: track.isCached ? "#00e67622" : "#ff910022"
-                            border.color: track.isCached ? "#00e676" : "#ff9100"
+                            border.color: track.isCached ? "#2bd67b" : "#ff8f57"
                             border.width: 1
 
                             Text {
                                 id: cacheStatusText
                                 anchors.centerIn: parent
                                 font.pixelSize: 9
-                                font.bold: true
-                                color: track.isCached ? "#00e676" : "#ff9100"
-                                text: track.isCached ? qsTr("💾 Ready") : qsTr("☁️ Stream")
+                                font.weight: Font.DemiBold
+                                color: track.isCached ? "#2bd67b" : "#ff8f57"
+                                text: track.isCached ? qsTr("Ready") : qsTr("Stream")
                             }
                         }
 
@@ -394,10 +394,10 @@ Item {
                         Skin.Button {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#64b5f6"
-                            backgroundColor: "#1565c0"
+                            activeColor: "#8aa8ff"
+                            backgroundColor: "#3d63e0"
                             normalColor: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                             arrowLeft: true
                             text: "D1"
@@ -413,10 +413,10 @@ Item {
                         Skin.Button {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#ffb74d"
-                            backgroundColor: "#e65100"
+                            activeColor: "#f7c86a"
+                            backgroundColor: "#e2622a"
                             normalColor: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                             arrowRight: true
                             text: "D2"
@@ -436,7 +436,7 @@ Item {
                         height: 3
                         visible: trackDelegate.isDownloading
                         width: parent.width * Math.max(0.05, trackDelegate.downloadProg)
-                        color: "#ff9100"
+                        color: "#ff8f57"
                     }
                 }
 
@@ -453,9 +453,9 @@ Item {
                         spacing: 8
 
                         Text {
-                            text: qsTr("🔥 Explore music by genre or search for any track or artist")
+                            text: qsTr("Explore music by genre or search for any track or artist")
                             font.pixelSize: 13
-                            color: "#78909c"
+                            color: "#6e7587"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -470,7 +470,7 @@ Item {
                 height: 40
                 radius: 6
                 color: "#1e2433"
-                border.color: "#ff9100"
+                border.color: "#ff8f57"
                 border.width: 1
                 visible: root.isBusy
 
@@ -479,9 +479,9 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: "🔄"
+                        text: ""
                         font.pixelSize: 16
-                        color: "#ff9100"
+                        color: "#ff8f57"
                         RotationAnimation on rotation {
                             from: 0
                             to: 360
@@ -493,7 +493,7 @@ Item {
 
                     Text {
                         text: qsTr("Connecting...")
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: "#ffffff"
                     }

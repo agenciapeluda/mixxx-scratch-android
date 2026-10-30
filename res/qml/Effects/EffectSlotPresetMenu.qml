@@ -8,14 +8,14 @@ Menu {
     id: root
 
     property color backgroundColor: "#151517"
-    property color borderColor: "#333333"
+    property color borderColor: "#262a35"
     property url checkedSource
     property color disabledTextColor: "#494949"
     property string fontFamily: "Open Sans"
     property int fontPixelSize: 14
     property color hoverColor: "#2c454f"
     property color hoverTextColor: "#ffffff"
-    property color separatorBottomColor: "#333333"
+    property color separatorBottomColor: "#262a35"
     property color separatorTopColor: "#000000"
     required property Mixxx.EffectSlotProxy slot
     property url submenuArrowSource

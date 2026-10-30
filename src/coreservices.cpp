@@ -1,6 +1,7 @@
 #include "coreservices.h"
 
 #include <QApplication>
+#include <QFont>
 #include <QFileDialog>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -550,6 +551,14 @@ void CoreServices::initialize(QApplication* pApp) {
     emit initializationProgressUpdate(0, tr("fonts"));
 
     FontUtils::initializeFonts(resourcePath); // takes a long time
+#if defined(Q_OS_ANDROID)
+    {
+        // Cutlab: Inter is the UI font of the touch interface
+        QFont appFont(QStringLiteral("Inter"));
+        appFont.setStyleStrategy(QFont::PreferAntialias);
+        QApplication::setFont(appFont);
+    }
+#endif
 
     emit initializationProgressUpdate(10, tr("database"));
     m_pDbConnectionPool = MixxxDb(pConfig).connectionPool();

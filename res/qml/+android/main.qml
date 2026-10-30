@@ -67,7 +67,7 @@ ApplicationWindow {
     property var themeDefaults: null
 
     // A skin can change the shared colors (Theme) through a skinTheme
-    // property of its main window, e.g. {"accentColor": "#1e5fb4"}. The
+    // property of its main window, e.g. {"accentColor": "#3d63e0"}. The
     // values of the previous skin are undone first.
     function applySkinTheme(skinTheme) {
         if (root.themeDefaults === null) {
@@ -180,9 +180,9 @@ ApplicationWindow {
         padding: 18
 
         background: Rectangle {
-            color: "#181b24"
+            color: "#12151c"
             radius: 10
-            border.color: "#ff5252"
+            border.color: "#ff5d6c"
             border.width: 1
         }
 
@@ -192,7 +192,7 @@ ApplicationWindow {
             Text {
                 Layout.fillWidth: true
                 text: qsTr("Quit Mixxx?")
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 color: Theme.white
                 wrapMode: Text.WordWrap
@@ -202,7 +202,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 text: qsTr("The music stops. The loaded tracks and the settings are saved.")
                 font.pixelSize: 12
-                color: "#b0bec5"
+                color: "#b4b9c7"
                 wrapMode: Text.WordWrap
             }
 
@@ -224,10 +224,10 @@ ApplicationWindow {
                 Skin.Button {
                     Layout.preferredHeight: 44
                     Layout.preferredWidth: 140
-                    activeColor: "#ff5252"
+                    activeColor: "#ff5d6c"
                     backgroundColor: "#4a1c1c"
-                    normalColor: "#ff8a80"
-                    font.bold: true
+                    normalColor: "#ff8f99"
+                    font.weight: Font.DemiBold
                     text: qsTr("QUIT")
                     onClicked: root.quit()
                 }
@@ -238,7 +238,7 @@ ApplicationWindow {
     Rectangle {
         id: splash
         anchors.fill: parent
-        color: "#0e1117"
+        color: "#0b0d12"
         z: 99999
         visible: opacity > 0
 
@@ -295,23 +295,32 @@ ApplicationWindow {
             Image {
                 id: logo
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: "qrc:/images/mixxx-icon-logo-symbolic.svg"
+                source: Qt.resolvedUrl("../images/cutlab_logo.svg")
+                sourceSize.width: 72
+                sourceSize.height: 72
                 fillMode: Image.PreserveAspectFit
-                width: 280
-                height: 60
+                width: 72
+                height: 72
                 smooth: true
                 antialiasing: true
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "#E8EAF0"
+                font.pixelSize: 30
+                font.weight: Font.DemiBold
+                font.letterSpacing: -0.5
+                text: "Cutlab"
             }
 
             // Subtitle
             Text {
                 id: subtitleText
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#ff9100"
-                font.pixelSize: 15
-                font.bold: true
-                font.letterSpacing: 0.8
-                text: qsTr("By JaviLabarumDJ on Android")
+                color: "#8A91A3"
+                font.pixelSize: 13
+                font.letterSpacing: 0.2
+                text: qsTr("DJ software for Android")
             }
 
             Item {
@@ -334,8 +343,8 @@ ApplicationWindow {
                     width: parent.width
                     height: 6
                     radius: 3
-                    color: "#161b24"
-                    border.color: "#283444"
+                    color: "#12151c"
+                    border.color: "#232836"
                     border.width: 1
                     clip: true
 
@@ -346,7 +355,7 @@ ApplicationWindow {
                         anchors.bottom: parent.bottom
                         width: Math.max(6, parent.width * splash.progress)
                         radius: 3
-                        color: "#00e5ff"
+                        color: "#7c8cff"
 
                         Behavior on width {
                             NumberAnimation { duration: 150; easing.type: Easing.OutCubic }

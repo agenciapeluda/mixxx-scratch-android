@@ -69,28 +69,28 @@ Item {
     // The colors of the shared parts (library, settings, popups) in this
     // skin, applied by main.qml; see Theme/+android/Theme.qml
     readonly property var skinTheme: ({
-            "accentColor": "#1e5fb4",
+            "accentColor": "#3d63e0",
             "backgroundColor": "#000000",
-            "sunkenBackgroundColor": "#0c0d0f",
+            "sunkenBackgroundColor": "#0b0d12",
             "darkGray": "#000000",
-            "darkGray2": "#1c1e22",
-            "darkGray3": "#2a2c30",
-            "darkGray4": "#141518",
+            "darkGray2": "#161922",
+            "darkGray3": "#1c202a",
+            "darkGray4": "#0f1117",
             "textColor": "#e6e8eb",
             "panelSplitterBackground": "#000000",
-            "libraryScrollHandle": "#3a3c40",
-            "libraryScrollHandleHovered": "#5c6068",
-            "libraryScrollHandlePressed": "#d8dadd",
+            "libraryScrollHandle": "#2a2f3d",
+            "libraryScrollHandleHovered": "#5a6072",
+            "libraryScrollHandlePressed": "#e8eaf0",
             "libraryScrollTrack": "#000000",
-            "libraryActionBackground": "#1c1e22",
+            "libraryActionBackground": "#161922",
             "libraryActionDisabledBackground": "#111214",
             "libraryActionText": "#ffffff",
-            "libraryActionDisabledText": "#5c6068",
-            "libraryDeck1Background": "#1f6fd1",
+            "libraryActionDisabledText": "#5a6072",
+            "libraryDeck1Background": "#4f7cff",
             "libraryDeck1Pressed": "#5a9be8",
-            "libraryDeck2Background": "#e8650f",
+            "libraryDeck2Background": "#ff7a3d",
             "libraryDeck2Pressed": "#ff9a52",
-            "libraryConfirmBackground": "#1e5fb4",
+            "libraryConfirmBackground": "#3d63e0",
             "libraryKeyMatchColor": "#3ad33a",
             "libraryKeyMatchBackground": "#1a3ad33a"
         })
@@ -265,9 +265,9 @@ Item {
         property bool active: false
         signal clicked
 
-        border.color: active ? "#d4e157" : "#5c6068"
+        border.color: active ? "#d4e157" : "#5a6072"
         border.width: active ? 2 : 1
-        color: tabMouse.pressed ? "#1c1e22" : "#000000"
+        color: tabMouse.pressed ? "#161922" : "#000000"
         height: parent.height
         // Narrow phones: smaller tabs, so that both rows of the top bar fit
         width: root.width < 760
@@ -278,8 +278,8 @@ Item {
             id: tabText
 
             anchors.centerIn: parent
-            color: tab.active ? "#d4e157" : "#9a9ea6"
-            font.bold: true
+            color: tab.active ? "#d4e157" : "#8a91a3"
+            font.weight: Font.DemiBold
             font.pixelSize: root.width < 760 ? 10 : (root.compact ? 11 : 13)
             text: tab.label
         }
@@ -356,14 +356,14 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            color: "#2a2c30"
+            color: "#1c202a"
             height: root.compact ? 18 : 24
 
             Text {
                 anchors.left: parent.left
                 anchors.leftMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
-                color: "#d8dadd"
+                color: "#e8eaf0"
                 font.pixelSize: root.compact ? 10 : 12
                 text: qsTr("DECK %1").arg(deckInfo.deckNumber)
             }
@@ -371,7 +371,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                color: deckInfo.deckNumber === 1 ? "#1f6fd1" : "#e8650f"
+                color: deckInfo.deckNumber === 1 ? "#4f7cff" : "#ff7a3d"
                 height: 2
             }
         }
@@ -389,7 +389,7 @@ Item {
                     },
                     {
                         "text": deckInfo.barsLeft,
-                        "color": "#ff6a13",
+                        "color": "#ff7a3d",
                         "unit": qsTr("Bars")
                     }
                 ]
@@ -397,9 +397,9 @@ Item {
                 Rectangle {
                     required property var modelData
 
-                    border.color: "#2a2c30"
+                    border.color: "#1c202a"
                     border.width: 1
-                    color: "#141518"
+                    color: "#0f1117"
                     height: deckInfo.rowHeight
                     width: parent.width
 
@@ -441,9 +441,9 @@ Item {
                     required property var modelData
                     readonly property bool on: modelData.control.value > 0
 
-                    border.color: on ? "#ff6a13" : "#2a2c30"
+                    border.color: on ? "#ff7a3d" : "#1c202a"
                     border.width: 1
-                    color: on ? "#3a1a08" : "#141518"
+                    color: on ? "#3a1a08" : "#0f1117"
                     height: deckInfo.rowHeight
                     width: parent.width
 
@@ -451,7 +451,7 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: 8
                         anchors.verticalCenter: parent.verticalCenter
-                        color: toggleRow.on ? "#ff6a13" : "#9a9ea6"
+                        color: toggleRow.on ? "#ff7a3d" : "#8a91a3"
                         font.pixelSize: Math.round(deckInfo.rowHeight * 0.42)
                         text: toggleRow.modelData.label
                     }
@@ -536,7 +536,7 @@ Item {
             Skin.MobileRecordButton {
                 fontPixelSize: root.width < 760 ? 10 : (root.compact ? 11 : 13)
                 height: parent.height
-                idleBorderColor: "#5c6068"
+                idleBorderColor: "#5a6072"
                 idleColor: "#000000"
                 radius: 0
                 visible: root.itemShown("rec")
@@ -707,18 +707,18 @@ Item {
             Skin.XYPad {
                 anchors.fill: parent
                 accentColor: "#2f9bff"
-                border.color: "#2a2c30"
-                buttonBorderColor: "#3a3c40"
-                buttonColor: "#141518"
-                buttonTextColor: "#9a9ea6"
+                border.color: "#1c202a"
+                buttonBorderColor: "#2a2f3d"
+                buttonColor: "#0f1117"
+                buttonTextColor: "#8a91a3"
                 closable: false
-                color: "#0c0d0f"
+                color: "#0b0d12"
                 controlRadius: 2
-                deck1Color: "#1f6fd1"
-                deck2Color: "#e8650f"
-                holdColor: "#ff6a13"
+                deck1Color: "#4f7cff"
+                deck2Color: "#ff7a3d"
+                holdColor: "#ff7a3d"
                 radius: 0
-                surfaceBorderColor: "#2a2c30"
+                surfaceBorderColor: "#1c202a"
                 surfaceColor: "#000000"
                 surfaceRadius: 0
                 title: qsTr("XY PAD")
@@ -744,7 +744,7 @@ Item {
         id: settingsPopup
 
         backgroundColor: "#000000"
-        headerColor: "#1c1e22"
+        headerColor: "#161922"
         title: qsTr("UTILITY")
         height: root.applicationWindow.isMobile ? parent.height : Math.min(840, parent.height)
         modal: true

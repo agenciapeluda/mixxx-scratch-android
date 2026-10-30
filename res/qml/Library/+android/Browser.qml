@@ -230,7 +230,7 @@ Rectangle {
 
                                     color: Theme.textColor
                                     // "▶" is drawn as an emoji on Android
-                                    font.bold: true
+                                    font.weight: Font.DemiBold
                                     font.pixelSize: 22
                                     text: "›"
                                     visible: isTreeNode && hasChildren

@@ -104,7 +104,7 @@ Item {
                         id: bottomOptionInnerEffect
 
                         anchors.fill: parent
-                        color: "#0E2A54"
+                        color: "#1a2350"
                         horizontalOffset: -1
                         radius: 8
                         samples: 32
@@ -117,7 +117,7 @@ Item {
                         id: topOptionInnerEffect
 
                         anchors.fill: parent
-                        color: "#0E2A54"
+                        color: "#1a2350"
                         horizontalOffset: 1
                         radius: 8
                         samples: 32
@@ -184,7 +184,7 @@ Item {
                 id: bottomInnerEffect
 
                 anchors.fill: parent
-                color: "#0E2A54"
+                color: "#1a2350"
                 horizontalOffset: -1
                 radius: 8
                 samples: 32
@@ -196,7 +196,7 @@ Item {
                 id: topInnerEffect
 
                 anchors.fill: parent
-                color: "#0E2A54"
+                color: "#1a2350"
                 horizontalOffset: 1
                 radius: 8
                 samples: 32

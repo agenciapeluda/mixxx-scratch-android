@@ -72,6 +72,41 @@ Item {
             devToolsWindow.requestActivate();
         }
     }
+    // Cutlab: the crossfader curve of the settings is kept in mixxx.cfg; the
+    // desktop preferences apply it at startup, on Android this does.
+    Item {
+        id: crossfaderConfigApplier
+
+        Mixxx.ControlProxy {
+            id: startupXfaderMode
+
+            group: "[Mixer Profile]"
+            key: "xFaderMode"
+        }
+        Mixxx.ControlProxy {
+            id: startupXfaderCurve
+
+            group: "[Mixer Profile]"
+            key: "xFaderCurve"
+        }
+        Mixxx.ControlProxy {
+            id: startupXfaderReverse
+
+            group: "[Mixer Profile]"
+            key: "xFaderReverse"
+        }
+        Component.onCompleted: {
+            const mode = Mixxx.Application.configValue("[Mixer Profile]", "xFaderMode", "");
+            const curve = Mixxx.Application.configValue("[Mixer Profile]", "xFaderCurve", "");
+            const reverse = Mixxx.Application.configValue("[Mixer Profile]", "xFaderReverse", "");
+            if (mode !== "")
+                startupXfaderMode.value = parseInt(mode);
+            if (curve !== "")
+                startupXfaderCurve.value = parseFloat(curve);
+            if (reverse !== "")
+                startupXfaderReverse.value = parseInt(reverse);
+        }
+    }
     Skin.ApplicationMenuActions {
         id: applicationMenuActions
 
@@ -157,11 +192,11 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
-                color: Theme.accentColor
-                font.bold: true
-                font.pixelSize: 14
-                font.letterSpacing: 1.5
-                text: "MIXXX"
+                color: Theme.white
+                font.weight: Font.DemiBold
+                font.pixelSize: 15
+                font.letterSpacing: -0.2
+                text: "Cutlab"
             }
 
             Skin.Button {
@@ -225,9 +260,9 @@ Item {
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
                                 backgroundColor: root.viewMode === 1 ? Theme.accentColor : "transparent"
-                                normalColor: root.viewMode === 1 ? "#ffffff" : "#90a4ae"
+                                normalColor: root.viewMode === 1 ? "#ffffff" : "#8a91a3"
                                 text: "DJ"
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 1
                                 visible: root.topBarItemShown("dj")
@@ -238,9 +273,9 @@ Item {
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
                                 backgroundColor: root.viewMode === 3 ? Theme.accentColor : "transparent"
-                                normalColor: root.viewMode === 3 ? "#ffffff" : "#90a4ae"
+                                normalColor: root.viewMode === 3 ? "#ffffff" : "#8a91a3"
                                 text: qsTr("WAVE")
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 3
                                 visible: root.topBarItemShown("wave")
@@ -251,9 +286,9 @@ Item {
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
                                 backgroundColor: root.viewMode === 2 ? Theme.accentColor : "transparent"
-                                normalColor: root.viewMode === 2 ? "#ffffff" : "#90a4ae"
+                                normalColor: root.viewMode === 2 ? "#ffffff" : "#8a91a3"
                                 text: qsTr("LIB")
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 2
                                 visible: root.topBarItemShown("lib")
@@ -264,9 +299,9 @@ Item {
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
                                 backgroundColor: root.viewMode === 0 ? Theme.accentColor : "transparent"
-                                normalColor: root.viewMode === 0 ? "#ffffff" : "#90a4ae"
+                                normalColor: root.viewMode === 0 ? "#ffffff" : "#8a91a3"
                                 text: qsTr("CTL")
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 0
                                 visible: root.topBarItemShown("ctl")
@@ -279,10 +314,10 @@ Item {
                         visible: root.topBarItemShown("load1")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 62
-                        activeColor: "#64b5f6"
-                        backgroundColor: "#1565c0"
+                        activeColor: "#8aa8ff"
+                        backgroundColor: "#3d63e0"
                         normalColor: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         text: qsTr("LOAD %1").arg(1)
                         onClicked: root.openQuickLoad("[Channel1]")
@@ -293,10 +328,10 @@ Item {
                         visible: root.topBarItemShown("load2")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 62
-                        activeColor: "#ffb74d"
-                        backgroundColor: "#e65100"
+                        activeColor: "#f7c86a"
+                        backgroundColor: "#e2622a"
                         normalColor: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         text: qsTr("LOAD %1").arg(2)
                         onClicked: root.openQuickLoad("[Channel2]")
@@ -308,12 +343,12 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 42
                         activeColor: "#e040fb"
-                        backgroundColor: root.showEffects ? "#4a148c" : "#222733"
-                        normalColor: root.showEffects ? "#ea80fc" : "#b0bec5"
+                        backgroundColor: root.showEffects ? "#4a148c" : "#1a1e28"
+                        normalColor: root.showEffects ? "#a78bfa" : "#b4b9c7"
                         checkable: true
                         checked: root.showEffects
                         text: "FX"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         onClicked: root.showEffects = !root.showEffects
                     }
@@ -323,13 +358,13 @@ Item {
                         visible: root.topBarItemShown("xy")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 54
-                        activeColor: "#00e5ff"
-                        backgroundColor: xyPadOverlay.visible ? "#006064" : "#222733"
-                        normalColor: xyPadOverlay.visible ? "#00e5ff" : "#b0bec5"
+                        activeColor: "#7c8cff"
+                        backgroundColor: xyPadOverlay.visible ? "#006064" : "#1a1e28"
+                        normalColor: xyPadOverlay.visible ? "#7c8cff" : "#b4b9c7"
                         checkable: true
                         checked: xyPadOverlay.visible
                         text: "XY"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         onClicked: xyPadOverlay.visible = !xyPadOverlay.visible
                     }
@@ -339,13 +374,13 @@ Item {
                         visible: root.topBarItemShown("split")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 52
-                        activeColor: "#ff9100"
-                        backgroundColor: headSplitControl.value > 0 ? "#e65100" : "#222733"
-                        normalColor: headSplitControl.value > 0 ? "#ffffff" : "#b0bec5"
+                        activeColor: "#ff8f57"
+                        backgroundColor: headSplitControl.value > 0 ? "#e2622a" : "#1a1e28"
+                        normalColor: headSplitControl.value > 0 ? "#ffffff" : "#b4b9c7"
                         checkable: true
                         checked: headSplitControl.value > 0
                         text: "SPLIT"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         onClicked: {
                             headSplitControl.value = (headSplitControl.value > 0) ? 0 : 1;

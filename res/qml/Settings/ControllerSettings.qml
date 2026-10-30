@@ -204,7 +204,7 @@ ColumnLayout {
                         id: bottomInnerEffect
 
                         anchors.fill: parent
-                        color: "#0E2A54"
+                        color: "#1a2350"
                         horizontalOffset: -1
                         radius: 8
                         samples: 32
@@ -216,7 +216,7 @@ ColumnLayout {
                         id: topInnerEffect
 
                         anchors.fill: parent
-                        color: "#0E2A54"
+                        color: "#1a2350"
                         horizontalOffset: 1
                         radius: 8
                         samples: 32

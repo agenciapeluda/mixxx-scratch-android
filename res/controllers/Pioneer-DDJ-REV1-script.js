@@ -761,3 +761,59 @@ PioneerDDJREV1.samplerPadShiftPress = function(_channel, _control, value, _statu
         engine.setValue(group, "eject", value);
     }
 };
+
+
+// ---------------------------------------------------------------------------
+// Cutlab additions
+// ---------------------------------------------------------------------------
+
+// Crossfader, 14 bit, with a cut lag: the first N % of travel from either edge
+// keeps that side fully closed, like the cut lag of Serato.
+PioneerDDJREV1.crossfaderLsbValue = 0;
+
+PioneerDDJREV1.crossfaderLSB = function(_channel, _control, value) {
+    PioneerDDJREV1.crossfaderLsbValue = value;
+};
+
+PioneerDDJREV1.crossfaderMSB = function(_channel, _control, value) {
+    const raw = ((value << 7) | PioneerDDJREV1.crossfaderLsbValue) / 16383; // 0..1
+    let lag = Number(engine.getSetting("crossfaderCutLag"));
+    if (!(lag >= 0)) {
+        lag = 2;
+    }
+    lag = Math.min(lag, 15) / 100;
+    let position;
+    if (raw <= lag) {
+        position = 0;
+    } else if (raw >= 1 - lag) {
+        position = 1;
+    } else {
+        position = (raw - lag) / (1 - 2 * lag);
+    }
+    engine.setValue("[Master]", "crossfader", position * 2 - 1);
+};
+
+// SHIFT + PLAY/PAUSE: Serato-style scratch performance functions
+PioneerDDJREV1.shiftPlay = function(channel, _control, value, _status, group) {
+    const pressed = value > 0;
+    const deck = channel + 1;
+    switch (engine.getSetting("shiftPlayAction")) {
+    case "censor":
+        engine.setValue(group, "reverseroll", pressed ? 1 : 0);
+        break;
+    case "brake":
+        engine.brake(deck, pressed);
+        break;
+    case "reverse":
+        engine.setValue(group, "reverse", pressed ? 1 : 0);
+        break;
+    case "spinback":
+        engine.spinback(deck, pressed);
+        break;
+    default:
+        if (pressed) {
+            engine.setValue(group, "play_stutter", 1);
+        }
+        break;
+    }
+};

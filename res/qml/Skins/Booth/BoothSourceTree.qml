@@ -157,7 +157,7 @@ Mixxx.LibrarySourceTree {
 
         readonly property var caps: capabilities
 
-        color: selected ? "#1e5fb4" : (row % 2 === 0 ? "#0c0d0f" : "#16181b")
+        color: selected ? "#3d63e0" : (row % 2 === 0 ? "#0b0d12" : "#16181b")
         implicitHeight: 40
 
         LibraryComponent.Track {
@@ -196,7 +196,7 @@ Mixxx.LibrarySourceTree {
             anchors.fill: parent
             anchors.leftMargin: 10
             anchors.rightMargin: 10
-            color: selected ? "#ffffff" : (textCell.dim ? "#9a9ea6" : "#e6e8eb")
+            color: selected ? "#ffffff" : (textCell.dim ? "#8a91a3" : "#e6e8eb")
             elide: Text.ElideRight
             font.pixelSize: 15
             horizontalAlignment: textCell.alignRight ? Text.AlignRight : Text.AlignLeft

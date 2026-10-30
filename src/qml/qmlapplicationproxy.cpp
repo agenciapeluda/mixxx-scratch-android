@@ -11,6 +11,9 @@
 #include "util/experiment.h"
 #include "util/menubarhelper.h"
 #include "util/versionstore.h"
+#ifdef __VINYLCONTROL__
+#include "vinylcontrol/vinylcontrolmanager.h"
+#endif
 
 namespace {
 const ConfigKey kDebuggerEnabledConfigKey(
@@ -180,6 +183,32 @@ QString QmlApplicationProxy::menuShortcut(
     return pKeyboardConfig->getValue(
             ConfigKey(QStringLiteral("[KeyboardShortcuts]"), command),
             defaultShortcut);
+}
+
+QString QmlApplicationProxy::configValue(const QString& group,
+        const QString& key,
+        const QString& defaultValue) const {
+    if (!s_pConfig) {
+        return defaultValue;
+    }
+    return s_pConfig->getValue(ConfigKey(group, key), defaultValue);
+}
+
+void QmlApplicationProxy::setConfigValue(
+        const QString& group, const QString& key, const QString& value) {
+    VERIFY_OR_DEBUG_ASSERT(s_pConfig) {
+        return;
+    }
+    s_pConfig->set(ConfigKey(group, key), ConfigValue(value));
+    s_pConfig->save();
+}
+
+void QmlApplicationProxy::reloadVinylControlConfig() {
+#ifdef __VINYLCONTROL__
+    if (s_pVinylControlManager) {
+        s_pVinylControlManager->requestReloadConfig();
+    }
+#endif
 }
 
 void QmlApplicationProxy::reloadSkin() {

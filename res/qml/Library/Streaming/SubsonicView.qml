@@ -23,8 +23,8 @@ Item {
         function onSubsonicConnectionTested(success, message, version) {
             root.isBusy = false;
             root.statusMessage = success
-                ? ("✔ " + message + (version ? " (" + version + ")" : ""))
-                : ("❌ " + message);
+                ? ("✓ " + message + (version ? " (" + version + ")" : ""))
+                : ("" + message);
             if (success) {
                 root.showSettings = false;
             }
@@ -37,7 +37,7 @@ Item {
                 root.activeMode = "search";
                 root.statusMessage = qsTr("%1 tracks found").arg(songs.length);
             } else {
-                root.statusMessage = qsTr("❌ Error: %1").arg(errorString);
+                root.statusMessage = qsTr("Error: %1").arg(errorString);
             }
         }
 
@@ -48,7 +48,7 @@ Item {
                 root.activeMode = "playlists";
                 root.statusMessage = qsTr("%1 playlists available").arg(playlists.length);
             } else {
-                root.statusMessage = qsTr("❌ Error: %1").arg(errorString);
+                root.statusMessage = qsTr("Error: %1").arg(errorString);
             }
         }
 
@@ -59,7 +59,7 @@ Item {
                 root.activeMode = "playlist_tracks";
                 root.statusMessage = qsTr("%1 tracks in %2").arg(songs.length).arg(root.currentPlaylistName);
             } else {
-                root.statusMessage = qsTr("❌ Error: %1").arg(errorString);
+                root.statusMessage = qsTr("Error: %1").arg(errorString);
             }
         }
 
@@ -85,14 +85,14 @@ Item {
                 }
             }
             root.tracksModel = currentTracks;
-            root.statusMessage = qsTr("✔ Track ready and loaded into %1").arg(targetDeck === "[Channel1]" ? qsTr("Deck 1") : (targetDeck === "[Channel2]" ? qsTr("Deck 2") : qsTr("cache")));
+            root.statusMessage = qsTr("✓ Track ready and loaded into %1").arg(targetDeck === "[Channel1]" ? qsTr("Deck 1") : (targetDeck === "[Channel2]" ? qsTr("Deck 2") : qsTr("cache")));
         }
 
         function onDownloadFailed(trackId, errorMessage) {
             var updated = Object.assign({}, root.downloadProgressMap);
             delete updated[trackId];
             root.downloadProgressMap = updated;
-            root.statusMessage = qsTr("❌ Download error: %1").arg(errorMessage);
+            root.statusMessage = qsTr("Download error: %1").arg(errorMessage);
         }
     }
 
@@ -105,7 +105,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
             color: "#1c202a"
-            border.color: "#282d3b"
+            border.color: "#232836"
             border.width: 1
 
             RowLayout {
@@ -115,11 +115,11 @@ Item {
                 spacing: 8
 
                 Text {
-                    text: "☁️ NAVIDROME / SUBSONIC"
-                    font.bold: true
+                    text: "NAVIDROME / SUBSONIC"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 13
                     font.letterSpacing: 1
-                    color: "#00e5ff"
+                    color: "#7c8cff"
                 }
 
                 Rectangle {
@@ -127,15 +127,15 @@ Item {
                     Layout.preferredWidth: statusText.implicitWidth + 14
                     radius: 11
                     color: Mixxx.StreamingManager.isSubsonicConnected ? "#00e67622" : "#ff525222"
-                    border.color: Mixxx.StreamingManager.isSubsonicConnected ? "#00e676" : "#ff5252"
+                    border.color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff5d6c"
                     border.width: 1
 
                     Text {
                         id: statusText
                         anchors.centerIn: parent
                         font.pixelSize: 10
-                        font.bold: true
-                        color: Mixxx.StreamingManager.isSubsonicConnected ? "#00e676" : "#ff5252"
+                        font.weight: Font.DemiBold
+                        color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff5d6c"
                         text: Mixxx.StreamingManager.isSubsonicConnected ? qsTr("● Connected") : qsTr("● Disconnected")
                     }
                 }
@@ -146,7 +146,7 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#b0bec5"
+                    color: "#b4b9c7"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 280
                 }
@@ -154,11 +154,11 @@ Item {
                 Skin.Button {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 100
-                    activeColor: "#00e5ff"
+                    activeColor: "#7c8cff"
                     backgroundColor: root.showSettings ? "#0097a7" : "#2a3040"
                     normalColor: "#ffffff"
-                    font.bold: true
-                    text: root.showSettings ? qsTr("▲ Hide") : qsTr("⚙ Settings")
+                    font.weight: Font.DemiBold
+                    text: root.showSettings ? qsTr("▲ Hide") : qsTr("Settings")
                     onClicked: root.showSettings = !root.showSettings
                 }
             }
@@ -199,7 +199,7 @@ Item {
                         font.pixelSize: 12
                         background: Rectangle {
                             color: "#1f2430"
-                            border.color: serverUrlField.activeFocus ? "#00e5ff" : "#374151"
+                            border.color: serverUrlField.activeFocus ? "#7c8cff" : "#2a2f3d"
                             border.width: 1
                             radius: 4
                         }
@@ -216,7 +216,7 @@ Item {
                         font.pixelSize: 12
                         background: Rectangle {
                             color: "#1f2430"
-                            border.color: userField.activeFocus ? "#00e5ff" : "#374151"
+                            border.color: userField.activeFocus ? "#7c8cff" : "#2a2f3d"
                             border.width: 1
                             radius: 4
                         }
@@ -234,7 +234,7 @@ Item {
                         font.pixelSize: 12
                         background: Rectangle {
                             color: "#1f2430"
-                            border.color: passField.activeFocus ? "#00e5ff" : "#374151"
+                            border.color: passField.activeFocus ? "#7c8cff" : "#2a2f3d"
                             border.width: 1
                             radius: 4
                         }
@@ -244,11 +244,11 @@ Item {
                     Skin.Button {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 110
-                        activeColor: "#00e676"
+                        activeColor: "#2bd67b"
                         backgroundColor: "#00897b"
                         normalColor: "#ffffff"
-                        font.bold: true
-                        text: root.isBusy ? qsTr("🔄 Connecting") : qsTr("✔ Connect")
+                        font.weight: Font.DemiBold
+                        text: root.isBusy ? qsTr("Connecting") : qsTr("✓ Connect")
                         enabled: !root.isBusy
                         onClicked: {
                             Mixxx.StreamingManager.subsonicUrl = serverUrlField.text;
@@ -266,9 +266,9 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: qsTr("💡 Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.")
+                        text: qsTr("Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.")
                         font.pixelSize: 11
-                        color: "#78909c"
+                        color: "#6e7587"
                         Layout.fillWidth: true
                     }
 
@@ -276,9 +276,9 @@ Item {
                         Layout.preferredHeight: 26
                         Layout.preferredWidth: 140
                         backgroundColor: "#262b36"
-                        normalColor: "#90a4ae"
+                        normalColor: "#8a91a3"
                         font.pixelSize: 10
-                        text: qsTr("🧹 Clear cache")
+                        text: qsTr("Clear cache")
                         onClicked: {
                             Mixxx.StreamingManager.clearCache();
                             root.statusMessage = qsTr("Streaming cache cleared");
@@ -292,7 +292,7 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#181b24"
+            color: "#12151c"
             border.color: "#232834"
             border.width: 1
 
@@ -304,11 +304,11 @@ Item {
                 Skin.Button {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 100
-                    activeColor: "#00e5ff"
-                    backgroundColor: root.activeMode === "search" ? "#006064" : "#222733"
+                    activeColor: "#7c8cff"
+                    backgroundColor: root.activeMode === "search" ? "#006064" : "#1a1e28"
                     normalColor: "#ffffff"
-                    font.bold: true
-                    text: qsTr("🔍 Search")
+                    font.weight: Font.DemiBold
+                    text: qsTr("Search")
                     onClicked: {
                         root.activeMode = "search";
                         if (searchInput.text.trim() !== "") {
@@ -321,11 +321,11 @@ Item {
                 Skin.Button {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 105
-                    activeColor: "#00e5ff"
-                    backgroundColor: root.activeMode === "playlists" ? "#006064" : "#222733"
+                    activeColor: "#7c8cff"
+                    backgroundColor: root.activeMode === "playlists" ? "#006064" : "#1a1e28"
                     normalColor: "#ffffff"
-                    font.bold: true
-                    text: qsTr("📜 Playlists")
+                    font.weight: Font.DemiBold
+                    text: qsTr("Playlists")
                     onClicked: {
                         root.isBusy = true;
                         Mixxx.StreamingManager.getSubsonicPlaylists();
@@ -342,7 +342,7 @@ Item {
                     font.pixelSize: 13
                     background: Rectangle {
                         color: "#212632"
-                        border.color: searchInput.activeFocus ? "#00e5ff" : "#2e3646"
+                        border.color: searchInput.activeFocus ? "#7c8cff" : "#2e3646"
                         border.width: 1
                         radius: 4
                     }
@@ -360,7 +360,7 @@ Item {
                     Layout.preferredWidth: 40
                     backgroundColor: "#2a3140"
                     normalColor: "#ffffff"
-                    text: "🔍"
+                    text: ""
                     onClicked: searchInput.accepted()
                 }
             }
@@ -384,17 +384,17 @@ Item {
                     Layout.preferredWidth: 80
                     backgroundColor: "#2e4053"
                     normalColor: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     arrowLeft: true
                     text: qsTr("Back")
                     onClicked: root.activeMode = "playlists"
                 }
 
                 Text {
-                    text: "📁 " + root.currentPlaylistName
-                    font.bold: true
+                    text: "" + root.currentPlaylistName
+                    font.weight: Font.DemiBold
                     font.pixelSize: 13
-                    color: "#80d8ff"
+                    color: "#a9b3ff"
                     Layout.fillWidth: true
                 }
             }
@@ -422,7 +422,7 @@ Item {
                         implicitWidth: 10
                         implicitHeight: 40
                         radius: 5
-                        color: subScroll.pressed ? "#00e5ff" : "#4a5568"
+                        color: subScroll.pressed ? "#7c8cff" : "#4a5568"
                     }
                 }
 
@@ -431,7 +431,7 @@ Item {
                     width: tracksList.width
                     height: 56
                     color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#222734"
+                    border.color: "#1a1e28"
                     border.width: 1
 
                     readonly property var song: modelData
@@ -462,7 +462,7 @@ Item {
 
                             Text {
                                 anchors.centerIn: parent
-                                text: "🎵"
+                                text: ""
                                 font.pixelSize: 16
                                 visible: !song.coverArtUrl
                             }
@@ -476,7 +476,7 @@ Item {
                             Text {
                                 Layout.fillWidth: true
                                 text: song.title
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
                                 color: "#ffffff"
                                 elide: Text.ElideRight
@@ -489,7 +489,7 @@ Item {
                                 Text {
                                     text: song.artist + (song.album ? (" • " + song.album) : "")
                                     font.pixelSize: 11
-                                    color: "#90a4ae"
+                                    color: "#8a91a3"
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -500,7 +500,7 @@ Item {
                         Rectangle {
                             Layout.preferredHeight: 18
                             Layout.preferredWidth: formatText.implicitWidth + 8
-                            color: "#1e293b"
+                            color: "#1c2130"
                             radius: 3
 
                             Text {
@@ -508,7 +508,7 @@ Item {
                                 anchors.centerIn: parent
                                 text: (song.suffix ? song.suffix : "MP3") + (song.bitRate ? (" " + song.bitRate + "k") : "")
                                 font.pixelSize: 9
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 color: "#38bdf8"
                             }
                         }
@@ -522,7 +522,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#78909c"
+                            color: "#6e7587"
                         }
 
                         // Offline Cache Status Pill
@@ -531,16 +531,16 @@ Item {
                             Layout.preferredWidth: cacheStatusText.implicitWidth + 10
                             radius: 10
                             color: song.isCached ? "#00e67622" : "#0288d122"
-                            border.color: song.isCached ? "#00e676" : "#0288d1"
+                            border.color: song.isCached ? "#2bd67b" : "#0288d1"
                             border.width: 1
 
                             Text {
                                 id: cacheStatusText
                                 anchors.centerIn: parent
                                 font.pixelSize: 9
-                                font.bold: true
-                                color: song.isCached ? "#00e676" : "#0288d1"
-                                text: song.isCached ? qsTr("💾 Ready") : qsTr("☁️ Cloud")
+                                font.weight: Font.DemiBold
+                                color: song.isCached ? "#2bd67b" : "#0288d1"
+                                text: song.isCached ? qsTr("Ready") : qsTr("Cloud")
                             }
                         }
 
@@ -548,10 +548,10 @@ Item {
                         Skin.Button {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#64b5f6"
-                            backgroundColor: "#1565c0"
+                            activeColor: "#8aa8ff"
+                            backgroundColor: "#3d63e0"
                             normalColor: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                             arrowLeft: true
                             text: "D1"
@@ -567,10 +567,10 @@ Item {
                         Skin.Button {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#ffb74d"
-                            backgroundColor: "#e65100"
+                            activeColor: "#f7c86a"
+                            backgroundColor: "#e2622a"
                             normalColor: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                             arrowRight: true
                             text: "D2"
@@ -590,7 +590,7 @@ Item {
                         height: 3
                         visible: trackDelegate.isDownloading
                         width: parent.width * Math.max(0.05, trackDelegate.downloadProg)
-                        color: "#00e5ff"
+                        color: "#7c8cff"
                     }
                 }
 
@@ -608,10 +608,10 @@ Item {
 
                         Text {
                             text: Mixxx.StreamingManager.isSubsonicConnected
-                                ? qsTr("🔍 Type an artist, title or album to search your server")
-                                : qsTr("☁️ Connect your Navidrome / Subsonic server in the settings above")
+                                ? qsTr("Type an artist, title or album to search your server")
+                                : qsTr("Connect your Navidrome / Subsonic server in the settings above")
                             font.pixelSize: 13
-                            color: "#78909c"
+                            color: "#6e7587"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -637,7 +637,7 @@ Item {
                     width: playlistsList.width
                     height: 52
                     color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#222734"
+                    border.color: "#1a1e28"
                     border.width: 1
 
                     RowLayout {
@@ -647,7 +647,7 @@ Item {
                         spacing: 12
 
                         Text {
-                            text: "📜"
+                            text: ""
                             font.pixelSize: 20
                         }
 
@@ -657,7 +657,7 @@ Item {
 
                             Text {
                                 text: modelData.name
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 14
                                 color: "#ffffff"
                                 elide: Text.ElideRight
@@ -667,17 +667,17 @@ Item {
                             Text {
                                 text: qsTr("%1 tracks").arg(modelData.songCount)
                                 font.pixelSize: 11
-                                color: "#90a4ae"
+                                color: "#8a91a3"
                             }
                         }
 
                         Skin.Button {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 95
-                            activeColor: "#00e5ff"
+                            activeColor: "#7c8cff"
                             backgroundColor: "#006064"
                             normalColor: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                             arrowRight: true
                             text: qsTr("Show tracks")
@@ -699,7 +699,7 @@ Item {
                 height: 40
                 radius: 6
                 color: "#1e2433"
-                border.color: "#00e5ff"
+                border.color: "#7c8cff"
                 border.width: 1
                 visible: root.isBusy
 
@@ -708,9 +708,9 @@ Item {
                     spacing: 8
 
                     Text {
-                        text: "🔄"
+                        text: ""
                         font.pixelSize: 16
-                        color: "#00e5ff"
+                        color: "#7c8cff"
                         RotationAnimation on rotation {
                             from: 0
                             to: 360
@@ -722,7 +722,7 @@ Item {
 
                     Text {
                         text: qsTr("Loading...")
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: "#ffffff"
                     }

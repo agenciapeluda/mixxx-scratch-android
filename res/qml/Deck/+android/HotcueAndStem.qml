@@ -98,7 +98,7 @@ Item {
                             id: effect2
 
                             anchors.fill: parent
-                            color: "#353535"
+                            color: "#2a2f3d"
                             horizontalOffset: 1
                             radius: 12
                             samples: 24
@@ -108,7 +108,7 @@ Item {
                         }
                         InnerShadow {
                             anchors.fill: parent
-                            color: "#353535"
+                            color: "#2a2f3d"
                             horizontalOffset: -1
                             radius: 12
                             samples: 24
@@ -197,8 +197,8 @@ Item {
                             anchors.fill: parent
                             radius: 4
                             color: (loopEnabledProxy.value > 0)
-                                ? "#00e5ff"
-                                : (loopPadMouse.pressed ? "#374151" : "#1a222e")
+                                ? "#7c8cff"
+                                : (loopPadMouse.pressed ? "#2a2f3d" : "#1a222e")
                             border.color: (loopEnabledProxy.value > 0) ? "#ffffff" : "#2c3b4d"
                             border.width: (loopEnabledProxy.value > 0) ? 2 : 1
 
@@ -208,17 +208,17 @@ Item {
 
                                 Text {
                                     Layout.alignment: Qt.AlignHCenter
-                                    font.bold: true
+                                    font.weight: Font.DemiBold
                                     font.pixelSize: 15
-                                    color: (loopEnabledProxy.value > 0) ? "#001018" : "#00e5ff"
+                                    color: (loopEnabledProxy.value > 0) ? "#001018" : "#7c8cff"
                                     text: loopPadItem.modelData.label
                                 }
 
                                 Text {
                                     Layout.alignment: Qt.AlignHCenter
-                                    font.bold: true
+                                    font.weight: Font.DemiBold
                                     font.pixelSize: 8
-                                    color: (loopEnabledProxy.value > 0) ? "#00364a" : "#78909c"
+                                    color: (loopEnabledProxy.value > 0) ? "#00364a" : "#6e7587"
                                     text: "BEATS"
                                 }
                             }
@@ -251,7 +251,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: 5
-            color: root.activePadMode === 0 ? ((root.group === "[Channel2]") ? "#e65100" : "#1565c0") : (cueTabMouse.pressed ? "#2e3440" : "#181c24")
+            color: root.activePadMode === 0 ? ((root.group === "[Channel2]") ? "#e2622a" : "#3d63e0") : (cueTabMouse.pressed ? "#2e3440" : "#181c24")
             border.color: root.activePadMode === 0 ? "#ffffff" : "#2c3544"
             border.width: root.activePadMode === 0 ? 1.5 : 1
 
@@ -277,7 +277,7 @@ Item {
                 Text {
                     Layout.alignment: Qt.AlignHCenter
                     text: "CUE"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 9
                     color: root.activePadMode === 0 ? "#ffffff" : "#8293a7"
                 }
@@ -332,7 +332,7 @@ Item {
                 Text {
                     Layout.alignment: Qt.AlignHCenter
                     text: "LOOP"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 9
                     color: root.activePadMode === 1 ? "#ffffff" : "#8293a7"
                 }

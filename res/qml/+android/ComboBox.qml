@@ -101,9 +101,9 @@ ComboBox {
         width: ListView.view ? ListView.view.width : root.popup.width
 
         background: Rectangle {
-            border.color: itemDlgt.highlighted ? "#00e5ff" : "transparent"
+            border.color: itemDlgt.highlighted ? "#7c8cff" : "transparent"
             border.width: 1
-            color: itemDlgt.down ? "#37474f" : (itemDlgt.highlighted ? "#263238" : "transparent")
+            color: itemDlgt.down ? "#2a2f3d" : (itemDlgt.highlighted ? "#1a1e28" : "transparent")
             radius: 4
         }
         contentItem: Text {
@@ -173,7 +173,7 @@ ComboBox {
 
         background: Rectangle {
             color: "#181a20"
-            border.color: "#37474f"
+            border.color: "#2a2f3d"
             border.width: 1
             radius: 8
 
@@ -209,7 +209,7 @@ ComboBox {
                     policy: popupListView.contentHeight > popupListView.height ? ScrollBar.AlwaysOn : ScrollBar.AsNeeded
                     width: 8
                     contentItem: Rectangle {
-                        color: popupScrollBar.pressed ? "#00e5ff" : "#546e7a"
+                        color: popupScrollBar.pressed ? "#7c8cff" : "#5a6072"
                         radius: 4
                     }
                 }

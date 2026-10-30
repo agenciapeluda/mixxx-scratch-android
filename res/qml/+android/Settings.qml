@@ -16,7 +16,7 @@ Popup {
     property alias sections: managerItem.data
     property var categoryItems: []
     // Skins can give the window their own title and colors
-    property string title: qsTr("⚙️ Settings")
+    property string title: qsTr("Settings")
     property color headerColor: Theme.darkGray3
     property color backgroundColor: Theme.darkGray2
 
@@ -79,7 +79,7 @@ Popup {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 105
                     activeColor: Theme.accentColor
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     text: qsTr("← Back")
                     onClicked: root.close()
                 }
@@ -87,7 +87,7 @@ Popup {
                 Text {
                     Layout.fillWidth: true
                     color: Theme.white
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 15
                     horizontalAlignment: Text.AlignHCenter
                     text: root.title
@@ -141,7 +141,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
                             color: "#9e9e9e"
                             font.pixelSize: 12
-                            text: qsTr("🔍 Search settings...")
+                            text: qsTr("Search settings...")
                             visible: !parent.active && searchInput.text.length === 0
                         }
 
@@ -170,7 +170,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
                             color: "#bbdefb"
                             font.pixelSize: 12
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             text: "✕"
                             visible: parent.active || searchInput.text.length > 0
                             MouseArea {
@@ -213,18 +213,30 @@ Popup {
 
                             readonly property bool isSelected: ListView.isCurrentItem
 
-                            color: isSelected ? Theme.accentColor : (tapArea.pressed ? "#2a2d36" : "transparent")
+                            color: isSelected ? "#1c202a" : (tapArea.pressed ? "#161922" : "transparent")
                             height: 48
-                            radius: 6
+                            radius: 8
                             width: ListView.view.width
+
+                            // Accent bar of the selected category
+                            Rectangle {
+                                anchors.left: parent.left
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 3
+                                height: 22
+                                radius: 1.5
+                                color: Theme.accentColor
+                                visible: categoryDelegate.isSelected
+                            }
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.leftMargin: 10
+                                anchors.leftMargin: 14
                                 anchors.rightMargin: 8
                                 spacing: 10
 
                                 Text {
+                                    visible: iconGlyph !== ""
                                     color: categoryDelegate.isSelected ? "#ffffff" : Theme.accentColor
                                     font.pixelSize: 18
                                     text: iconGlyph
@@ -236,16 +248,16 @@ Popup {
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#ffffff" : "#e0e0e0"
+                                        color: categoryDelegate.isSelected ? "#ffffff" : "#b4b9c7"
                                         elide: Text.ElideRight
-                                        font.bold: categoryDelegate.isSelected
+                                        font.weight: categoryDelegate.isSelected ? Font.DemiBold : Font.Normal
                                         font.pixelSize: 13
                                         text: qsTr(label)
                                     }
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#d0e4ff" : "#808595"
+                                        color: categoryDelegate.isSelected ? "#8a91a3" : "#5a6072"
                                         elide: Text.ElideRight
                                         font.pixelSize: 10
                                         text: qsTr(subtext)
@@ -300,7 +312,7 @@ Popup {
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
-                                    font.bold: true
+                                    font.weight: Font.DemiBold
                                     text: searchSetting.input.text ? display.replace(searchSetting.input.text, `<b>${searchSetting.input.text}</b>`) : display
                                     textFormat: Text.RichText
                                     elide: Text.ElideRight
@@ -397,31 +409,38 @@ Popup {
                         enabled: visible
                     }
 
+                    Settings.Turntables {
+                        id: turntablesSection
+                        anchors.fill: parent
+                        visible: categoryList.currentIndex === 2
+                        enabled: visible
+                    }
+
                     Settings.Library {
                         id: librarySection
                         anchors.fill: parent
-                        visible: categoryList.currentIndex === 2
+                        visible: categoryList.currentIndex === 3
                         enabled: visible
                     }
 
                     Settings.Waveform {
                         id: waveformSection
                         anchors.fill: parent
-                        visible: categoryList.currentIndex === 3
+                        visible: categoryList.currentIndex === 4
                         enabled: visible
                     }
 
                     Settings.Interface {
                         id: interfaceSection
                         anchors.fill: parent
-                        visible: categoryList.currentIndex === 4
+                        visible: categoryList.currentIndex === 5
                         enabled: visible
                     }
 
                     Settings.About {
                         id: aboutSection
                         anchors.fill: parent
-                        visible: categoryList.currentIndex === 5
+                        visible: categoryList.currentIndex === 6
                         enabled: visible
                     }
 
@@ -429,6 +448,7 @@ Popup {
                         root.categoryItems = [
                             soundHardwareSection,
                             controllerSection,
+                            turntablesSection,
                             librarySection,
                             waveformSection,
                             interfaceSection,
@@ -437,10 +457,11 @@ Popup {
                         soundHardwareSection.activated.connect(function() { categoryList.currentIndex = 0; });
                         controllerSection.activated.connect(function() { categoryList.currentIndex = 1; });
                         controllerSection.requestNavigateToAudio.connect(function() { categoryList.currentIndex = 0; });
-                        librarySection.activated.connect(function() { categoryList.currentIndex = 2; });
-                        waveformSection.activated.connect(function() { categoryList.currentIndex = 3; });
-                        interfaceSection.activated.connect(function() { categoryList.currentIndex = 4; });
-                        aboutSection.activated.connect(function() { categoryList.currentIndex = 5; });
+                        turntablesSection.activated.connect(function() { categoryList.currentIndex = 2; });
+                        librarySection.activated.connect(function() { categoryList.currentIndex = 3; });
+                        waveformSection.activated.connect(function() { categoryList.currentIndex = 4; });
+                        interfaceSection.activated.connect(function() { categoryList.currentIndex = 5; });
+                        aboutSection.activated.connect(function() { categoryList.currentIndex = 6; });
                         root.updateActiveCategory();
                     }
                 }
@@ -456,33 +477,38 @@ Popup {
 
         ListElement {
             label: QT_TR_NOOP("Audio & Outputs")
-            iconGlyph: "🎧"
+            iconGlyph: ""
             subtext: QT_TR_NOOP("Main, Headphones, Latency")
         }
         ListElement {
             label: QT_TR_NOOP("DJ Controllers")
-            iconGlyph: "🎛️"
+            iconGlyph: ""
             subtext: "MIDI / HID USB"
         }
         ListElement {
+            label: QT_TR_NOOP("Turntables & Crossfader")
+            iconGlyph: ""
+            subtext: QT_TR_NOOP("DVS timecode, crossfader curve")
+        }
+        ListElement {
             label: QT_TR_NOOP("Music Library")
-            iconGlyph: "📁"
+            iconGlyph: ""
             subtext: QT_TR_NOOP("Folders, Track scanning")
         }
         ListElement {
             label: QT_TR_NOOP("Waveforms")
-            iconGlyph: "〰️"
+            iconGlyph: ""
             subtext: QT_TR_NOOP("FPS, RGB/HSV colors, Zoom")
         }
         ListElement {
             label: QT_TR_NOOP("Interface")
-            iconGlyph: "📱"
+            iconGlyph: ""
             subtext: QT_TR_NOOP("Theme, Decks, Display")
         }
         ListElement {
             label: QT_TR_NOOP("About")
-            iconGlyph: "✨"
-            subtext: qsTr("JaviLabarum, Socials & Info")
+            iconGlyph: ""
+            subtext: QT_TR_NOOP("Version, updates & credits")
         }
     }
 }

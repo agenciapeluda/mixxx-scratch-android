@@ -88,14 +88,14 @@ Item {
             width: 50
             height: 22
             radius: 3
-            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#e65100" : "#1565c0") : "#1a1e24"
+            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#e2622a" : "#3d63e0") : "#1a1e24"
             border.color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#2f3745"
             border.width: 1
 
             Text {
                 anchors.centerIn: parent
                 text: "PADS"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 9
                 color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#9da5b4"
             }
@@ -120,7 +120,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "IN / OUT"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 8
                 color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#9da5b4"
             }

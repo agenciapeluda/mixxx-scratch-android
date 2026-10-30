@@ -30,7 +30,7 @@ Popup {
         backgroundColor: "#2e3440"
         normalColor: "#ffffff"
         enabled: root.editable
-        font.bold: true
+        font.weight: Font.DemiBold
         font.pixelSize: 12
 
         Mixxx.ControlProxy {
@@ -101,7 +101,7 @@ Popup {
                 Layout.fillWidth: true
                 color: Theme.white
                 elide: Text.ElideRight
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 text: qsTr("Beatgrid – Deck %1").arg(root.group.replace(/\D/g, ""))
             }
@@ -125,11 +125,11 @@ Popup {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
             visible: root.trackLoaded && root.locked
-            activeColor: "#ffab40"
+            activeColor: "#f5b544"
             backgroundColor: "#3a2a14"
             normalColor: "#ffd180"
-            font.bold: true
-            text: qsTr("🔒 Grid locked – tap to unlock")
+            font.weight: Font.DemiBold
+            text: qsTr("Grid locked – tap to unlock")
             onClicked: bpmLockProxy.value = 0
         }
 
@@ -184,9 +184,9 @@ Popup {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 visible: root.trackLoaded && !root.locked
-                activeColor: "#ffab40"
-                font.bold: true
-                text: qsTr("🔒 LOCK GRID")
+                activeColor: "#f5b544"
+                font.weight: Font.DemiBold
+                text: qsTr("LOCK GRID")
                 onClicked: bpmLockProxy.value = 1
             }
             // Analyzes the track again, e.g. to get the grid lined up with
@@ -197,15 +197,15 @@ Popup {
                 visible: root.trackLoaded && !root.locked
                 enabled: playProxy.value === 0
                 activeColor: Theme.accentColor
-                font.bold: true
-                text: qsTr("🔄 RE-ANALYZE")
+                font.weight: Font.DemiBold
+                text: qsTr("RE-ANALYZE")
                 onClicked: Mixxx.MobileLibrary.reanalyzeBeats(root.player.currentTrack)
             }
             Skin.Button {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 activeColor: Theme.accentColor
-                font.bold: true
+                font.weight: Font.DemiBold
                 text: qsTr("CLOSE")
                 onClicked: root.close()
             }

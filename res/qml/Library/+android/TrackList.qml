@@ -436,7 +436,7 @@ Rectangle {
                 backgroundColor: quickLoadBar.hasTracks ? Theme.libraryActionBackground : Theme.libraryActionDisabledBackground
                 normalColor: quickLoadBar.hasTracks ? Theme.libraryActionText : Theme.libraryActionDisabledText
                 enabled: quickLoadBar.hasTracks
-                font.bold: true
+                font.weight: Font.DemiBold
                 text: quickLoadBar.hasTrack ? qsTr("+ PLAYLIST") : qsTr("+ ALL")
 
                 onClicked: playlistPopup.openFor(quickLoadBar.hasTrack ? quickLoadBar.selectedUrls[0] : "")
@@ -450,7 +450,7 @@ Rectangle {
                 activeColor: Theme.accentColor
                 backgroundColor: Theme.libraryActionBackground
                 normalColor: Theme.libraryActionText
-                font.bold: true
+                font.weight: Font.DemiBold
                 text: Mixxx.MobileLibrary.playlistCopyRunning ? "%1/%2".arg(Mixxx.MobileLibrary.playlistCopyDone).arg(Mixxx.MobileLibrary.playlistCopyTotal) : qsTr("⬇ COPY")
 
                 onClicked: copyPopup.openForList()
@@ -466,7 +466,7 @@ Rectangle {
                 normalColor: quickLoadBar.hasTrack ? Theme.libraryActionText : Theme.libraryActionDisabledText
                 highlight: quickLoadBar.hasTrack
                 enabled: quickLoadBar.hasTrack
-                font.bold: true
+                font.weight: Font.DemiBold
                 arrowLeft: true
                 text: "DECK 1"
 
@@ -485,7 +485,7 @@ Rectangle {
                 normalColor: quickLoadBar.hasTrack ? Theme.libraryActionText : Theme.libraryActionDisabledText
                 highlight: quickLoadBar.hasTrack
                 enabled: quickLoadBar.hasTrack
-                font.bold: true
+                font.weight: Font.DemiBold
                 arrowRight: true
                 text: "DECK 2"
 
@@ -550,7 +550,7 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 text: playlistPopup.allTracks ? qsTr("Add all tracks of the list to a playlist") : qsTr("Add to playlist")
                 wrapMode: Text.WordWrap
@@ -637,7 +637,7 @@ Rectangle {
                     activeColor: Theme.accentColor
                     backgroundColor: Theme.libraryConfirmBackground
                     normalColor: Theme.libraryActionText
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     text: qsTr("CREATE")
 
                     onClicked: {
@@ -703,7 +703,7 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 text: qsTr("Copy the playlist to this device")
                 wrapMode: Text.WordWrap
@@ -761,7 +761,7 @@ Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 44
                     activeColor: Theme.accentColor
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     text: Mixxx.MobileLibrary.playlistCopyRunning ? qsTr("STOP") : qsTr("CLOSE")
                     onClicked: {
                         if (Mixxx.MobileLibrary.playlistCopyRunning) {
@@ -779,7 +779,7 @@ Rectangle {
                     activeColor: Theme.accentColor
                     backgroundColor: Theme.libraryConfirmBackground
                     normalColor: Theme.libraryActionText
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     text: qsTr("COPY")
                     onClicked: {
                         const error = Mixxx.MobileLibrary.copyRekordboxPlaylist(root.model, copyName.text.trim());

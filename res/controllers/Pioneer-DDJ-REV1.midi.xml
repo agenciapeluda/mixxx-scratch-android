@@ -7,6 +7,22 @@
         <manual>pioneer_ddj_rev1</manual>
         <forums></forums>
     </info>
+    <settings>
+        <group label="Scratch">
+            <option variable="crossfaderCutLag" type="integer" min="0" max="15" default="2" label="Crossfader cut lag (% of travel)">
+                <description>
+                    How far from the closed edge the crossfader stays fully closed, like the cut lag of Serato. 0 = no lag.
+                </description>
+            </option>
+            <option variable="shiftPlayAction" type="enum" label="SHIFT + PLAY/PAUSE">
+                <value label="Stutter (back to the cue and play)" default="true">stutter</value>
+                <value label="Censor (plays backwards while held, then continues where it would have been)">censor</value>
+                <value label="Brake (vinyl stop)">brake</value>
+                <value label="Reverse while held">reverse</value>
+                <value label="Spinback">spinback</value>
+            </option>
+        </group>
+    </settings>
     <controller id="DDJ-REV1">
         <scriptfiles>
             <file functionprefix="PioneerDDJREV1" filename="Pioneer-DDJ-REV1-script.js"/>
@@ -165,13 +181,13 @@
                 </options>
             </control>
             <control>
-                <description>PLAY/PAUSE + SHIFT (DECK1) - press - Stutter</description>
+                <description>PLAY/PAUSE + SHIFT (DECK1) - press - Stutter / Censor / Brake / Reverse / Spinback (mapping option)</description>
                 <group>[Channel1]</group>
-                <key>play_stutter</key>
+                <key>PioneerDDJREV1.shiftPlay</key>
                 <status>0x90</status>
                 <midino>0x47</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -376,13 +392,13 @@
                 </options>
             </control>
             <control>
-                <description>PLAY/PAUSE + SHIFT (DECK2) - press - Stutter</description>
+                <description>PLAY/PAUSE + SHIFT (DECK2) - press - Stutter / Censor / Brake / Reverse / Spinback (mapping option)</description>
                 <group>[Channel2]</group>
-                <key>play_stutter</key>
+                <key>PioneerDDJREV1.shiftPlay</key>
                 <status>0x91</status>
                 <midino>0x47</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -587,13 +603,13 @@
                 </options>
             </control>
             <control>
-                <description>PLAY/PAUSE + SHIFT (DECK3) - press - Stutter</description>
+                <description>PLAY/PAUSE + SHIFT (DECK3) - press - Stutter / Censor / Brake / Reverse / Spinback (mapping option)</description>
                 <group>[Channel3]</group>
-                <key>play_stutter</key>
+                <key>PioneerDDJREV1.shiftPlay</key>
                 <status>0x92</status>
                 <midino>0x47</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -798,13 +814,13 @@
                 </options>
             </control>
             <control>
-                <description>PLAY/PAUSE + SHIFT (DECK4) - press - Stutter</description>
+                <description>PLAY/PAUSE + SHIFT (DECK4) - press - Stutter / Censor / Brake / Reverse / Spinback (mapping option)</description>
                 <group>[Channel4]</group>
-                <key>play_stutter</key>
+                <key>PioneerDDJREV1.shiftPlay</key>
                 <status>0x93</status>
                 <midino>0x47</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1003,21 +1019,21 @@
             <control>
                 <description>CROSSFADER - slider</description>
                 <group>[Master]</group>
-                <key>crossfader</key>
+                <key>PioneerDDJREV1.crossfaderMSB</key>
                 <status>0xB6</status>
                 <midino>0x1F</midino>
                 <options>
-                    <fourteen-bit-msb/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
                 <description>CROSSFADER - slider</description>
                 <group>[Master]</group>
-                <key>crossfader</key>
+                <key>PioneerDDJREV1.crossfaderLSB</key>
                 <status>0xB6</status>
                 <midino>0x3F</midino>
                 <options>
-                    <fourteen-bit-lsb/>
+                    <Script-Binding/>
                 </options>
             </control>
 

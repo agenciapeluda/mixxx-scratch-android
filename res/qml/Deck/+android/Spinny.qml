@@ -14,9 +14,9 @@ Item {
 
     readonly property color deckAccentColor: {
         switch (root.group) {
-        case "[Channel1]": return "#00b0ff";
-        case "[Channel2]": return "#ff6d00";
-        case "[Channel3]": return "#00e676";
+        case "[Channel1]": return "#7c8cff";
+        case "[Channel2]": return "#ff7a3d";
+        case "[Channel3]": return "#2bd67b";
         case "[Channel4]": return "#e040fb";
         default: return Theme.accentColor;
         }
@@ -119,7 +119,7 @@ Item {
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: Math.max(10, Math.round(tempoInfo.height * 0.34))
                     text: bpm > 0 ? (bpm.toFixed(2) + " BPM") : "--.-- BPM"
 

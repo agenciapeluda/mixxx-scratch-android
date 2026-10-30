@@ -287,7 +287,7 @@ Rectangle {
         }
         InnerShadow {
             anchors.fill: backgroundImage
-            color: "#353535"
+            color: "#2a2f3d"
             horizontalOffset: -0
             radius: 1
             samples: 16

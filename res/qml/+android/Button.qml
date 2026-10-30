@@ -46,7 +46,7 @@ AbstractButton {
             id: effect2
 
             anchors.fill: backgroundImage
-            color: "#353535"
+            color: "#2a2f3d"
             horizontalOffset: 1
             radius: 1
             samples: 16
@@ -55,7 +55,7 @@ AbstractButton {
         }
         InnerShadow {
             anchors.fill: backgroundImage
-            color: "#353535"
+            color: "#2a2f3d"
             horizontalOffset: -1
             radius: 1
             samples: 16
@@ -80,7 +80,7 @@ AbstractButton {
 
             anchors.fill: parent
             color: root.normalColor
-            font.bold: true
+            font.weight: Font.DemiBold
             font.capitalization: Font.AllUppercase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize
@@ -133,7 +133,7 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? "#3a60be" : Theme.darkGray3
+                color: root.checked ? "#5b6cff" : Theme.darkGray3
                 target: backgroundImage
             }
             PropertyChanges {

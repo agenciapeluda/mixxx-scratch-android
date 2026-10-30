@@ -69,7 +69,7 @@ Item {
         anchors.margins: 8
         color: '#181818'
         radius: root.focused ? 18 : 22
-        border.color: root.focused ? "#2979ff" : (root.knownDevice ? "#2e7d32" : "#37474f")
+        border.color: root.focused ? "#2979ff" : (root.knownDevice ? "#2e7d32" : "#2a2f3d")
         border.width: root.focused ? 2 : 1
 
         Item {
@@ -488,7 +488,7 @@ Item {
                     anchors.margins: 6
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    color: mappingsCombobox.currentIndex >= 0 ? Theme.deckTextColor : "#ffb74d"
+                    color: mappingsCombobox.currentIndex >= 0 ? Theme.deckTextColor : "#f7c86a"
                     font: mappingsCombobox.font
                     text: mappingsCombobox.currentIndex >= 0 
                           ? mappingsCombobox.model[mappingsCombobox.currentIndex]?.name 

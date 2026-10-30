@@ -17,8 +17,8 @@ Rectangle {
 
     readonly property bool isDeck1: group === "[Channel1]"
     readonly property bool isDeck2: group === "[Channel2]"
-    readonly property color deckColor: isDeck1 ? "#00b0ff" : (isDeck2 ? "#ff6d00" : (group === "[Channel3]" ? "#00e676" : "#e040fb"))
-    readonly property color deckBgColor: isDeck1 ? "#0d47a1" : (isDeck2 ? "#bf360c" : "#263238")
+    readonly property color deckColor: isDeck1 ? "#7c8cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
+    readonly property color deckBgColor: isDeck1 ? "#2c47b8" : (isDeck2 ? "#bf360c" : "#1a1e28")
     readonly property string deckName: isDeck1 ? "DECK 1" : (isDeck2 ? "DECK 2" : (group === "[Channel3]" ? "DECK 3" : "DECK 4"))
 
     radius: 6
@@ -81,7 +81,7 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: (root.width < 360 || root.minimized) ? 9 : 11
                 font.letterSpacing: 1
                 color: "#ffffff"
@@ -94,7 +94,7 @@ Rectangle {
             Layout.preferredHeight: root.minimized ? 22 : 36
             Layout.preferredWidth: root.minimized ? 22 : 36
             radius: 4
-            color: "#222734"
+            color: "#1a1e28"
             clip: true
             visible: !root.minimized && root.width >= 400
 
@@ -108,9 +108,9 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: "♫"
+                text: ""
                 font.pixelSize: 14
-                color: "#90a4ae"
+                color: "#8a91a3"
                 visible: !root.currentTrack?.coverArtUrl
             }
         }
@@ -127,8 +127,8 @@ Rectangle {
                 text: (root.deckPlayer?.isLoaded && root.currentTrack?.title)
                     ? root.currentTrack.title
                     : qsTr("No track - press LOAD")
-                color: root.deckPlayer?.isLoaded ? "#ffffff" : "#90a4ae"
-                font.bold: true
+                color: root.deckPlayer?.isLoaded ? "#ffffff" : "#8a91a3"
+                font.weight: Font.DemiBold
                 font.pixelSize: (root.width < 360 || root.minimized) ? 10 : 12
                 elide: Text.ElideRight
             }
@@ -162,16 +162,16 @@ Rectangle {
                 Text {
                     id: bpmText
                     Layout.alignment: Qt.AlignHCenter
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: (root.width < 360 || root.minimized) ? 10 : 12
-                    color: bpmControl.value > 0 ? "#ffffff" : "#78909c"
+                    color: bpmControl.value > 0 ? "#ffffff" : "#6e7587"
                     text: bpmControl.value > 0 ? (bpmControl.value.toFixed(2) + " BPM") : "--.-- BPM"
                 }
 
                 Text {
                     visible: !root.minimized && bpmControl.value > 0
                     Layout.alignment: Qt.AlignHCenter
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 9
                     color: root.deckColor
                     text: {
@@ -202,13 +202,13 @@ Rectangle {
             Layout.preferredWidth: keyText.implicitWidth + 10
             radius: 4
             color: "#1e2433"
-            border.color: "#374151"
+            border.color: "#2a2f3d"
             border.width: 1
 
             Text {
                 id: keyText
                 anchors.centerIn: parent
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 10
                 color: "#e0e0e0"
                 text: keyControl.value ? keyControl.value.toString() : ""
@@ -225,13 +225,13 @@ Rectangle {
             Layout.preferredWidth: Math.max(76, timeText.implicitWidth + 14)
             radius: 4
             color: "#141720"
-            border.color: timeMouse.containsMouse ? "#64b5f6" : "#293040"
+            border.color: timeMouse.containsMouse ? "#8aa8ff" : "#293040"
             border.width: 1
 
             Text {
                 id: timeText
                 anchors.centerIn: parent
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: (root.width < 360 || root.minimized) ? 10 : 11
                 color: "#e0e6ed"
                 text: {
@@ -276,22 +276,22 @@ Rectangle {
             Layout.preferredWidth: (root.width < 360) ? 36 : 44
             radius: 4
             color: pflControl.value > 0 ? "#ff9800" : (pflMouse.pressed ? "#2a2d36" : "#1a1e27")
-            border.color: pflControl.value > 0 ? "#ffe082" : "#323947"
+            border.color: pflControl.value > 0 ? "#f7d58f" : "#323947"
             border.width: 1
 
             RowLayout {
                 anchors.centerIn: parent
                 spacing: 2
                 Text {
-                    text: "🎧"
+                    text: ""
                     font.pixelSize: (root.width < 360 || root.minimized) ? 11 : 13
                 }
                 Text {
                     visible: !root.minimized && root.width >= 420
                     text: "CUE"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: pflControl.value > 0 ? "#000000" : "#b0bec5"
+                    color: pflControl.value > 0 ? "#000000" : "#b4b9c7"
                 }
             }
 
@@ -309,10 +309,10 @@ Rectangle {
             id: loadButton
             Layout.preferredHeight: root.minimized ? 24 : 36
             Layout.preferredWidth: (root.width < 360) ? 58 : (root.minimized ? 66 : 76)
-            activeColor: root.isDeck1 ? "#64b5f6" : "#ffb74d"
-            backgroundColor: root.isDeck1 ? "#1565c0" : "#e65100"
+            activeColor: root.isDeck1 ? "#8aa8ff" : "#f7c86a"
+            backgroundColor: root.isDeck1 ? "#3d63e0" : "#e2622a"
             normalColor: "#ffffff"
-            font.bold: true
+            font.weight: Font.DemiBold
             font.pixelSize: (root.width < 360 || root.minimized) ? 9 : 11
             text: (root.width < 360) ? "LOAD" : qsTr("LOAD")
 

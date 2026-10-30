@@ -2,9 +2,9 @@ pragma Singleton
 import QtQuick 2.12
 
 QtObject {
-    property color accentColor: "#3a60be"
-    property color backgroundColor: "#1e1e20"
-    property color blue: "#01dcfc"
+    property color accentColor: "#5b6cff"
+    property color backgroundColor: "#0f1117"
+    property color blue: "#7c8cff"
     property color bpmSliderBarColor: blue
     property color buttonActiveColor: white
     property color buttonDisableColor: lightGray
@@ -12,16 +12,16 @@ QtObject {
     property color buttonNormalColor: midGray
     property color crossfaderBarColor: blue
     property color crossfaderOrientationColor: lightGray
-    property color darkGray: "#0f0f0f"
-    property color darkGray2: "#2e2e2e"
-    property color darkGray3: "#3F3F3F"
-    property color darkGray4: "#202020"
+    property color darkGray: "#0b0d12"
+    property color darkGray2: "#1c202a"
+    property color darkGray3: "#2a2f3d"
+    property color darkGray4: "#161922"
     property color deckActiveColor: white
     property color deckBackgroundColor: darkGray
     property color deckBeatjumpBackgroundColor: midGray3
     property color deckBeatjumpLabelColor: darkGray3
     property color deckEmptyCoverArt: darkGray3
-    property color deckInfoBarBackgroundColor: '#0e0e0e'
+    property color deckInfoBarBackgroundColor: '#0f1117'
     property color deckLineColor: darkGray2
     property color deckLoopBackgroundColor: midGray3
     property color deckLoopLabelColor: darkGray3
@@ -33,9 +33,9 @@ QtObject {
     property color eqHighColor: white
     property color eqLowColor: white
     property color eqMidColor: white
-    property string fontFamily: "Open Sans"
+    property string fontFamily: "Inter"
     property color gainKnobColor: blue
-    property color green: "#85c85b"
+    property color green: "#2bd67b"
     property string imgBpmSliderBackground: "images/slider_bpm.svg"
     property string imgButton: "images/button.svg"
     property string imgButtonPressed: "images/button_pressed.svg"
@@ -51,13 +51,13 @@ QtObject {
     property string imgSectionBackground: "images/section.svg"
     property string imgSliderHandle: "images/slider_handle.svg"
     property string imgVolumeSliderBackground: "images/slider_volume.svg"
-    property color knobBackgroundColor: "#262626"
+    property color knobBackgroundColor: "#1c202a"
     property color libraryPanelSplitterBackground: "#1e1e1e"
     property color libraryPanelSplitterHandle: "#5f5f5f"
     property color libraryPanelSplitterHandleActive: "#7a7a7a"
-    property color lightGray: "#747474"
-    property color lightGray2: "#b0b0b0"
-    property color lightGray3: "#939393"
+    property color lightGray: "#6e7587"
+    property color lightGray2: "#b4b9c7"
+    property color lightGray3: "#8a91a3"
     property color midGray: "#696969"
     property color midGray2: "#676767"
     property color midGray3: "#626262"
@@ -65,15 +65,15 @@ QtObject {
     property color panelSplitterHandle: midGray
     property color panelSplitterHandleActive: lightGray2
     property color pflActiveButtonColor: blue
-    property color red: "#ea2a4e"
+    property color red: "#ff5d6c"
     property color samplerColor: blue
-    property color sunkenBackgroundColor: "#0C0C0C"
+    property color sunkenBackgroundColor: "#0b0d12"
     property color textColor: lightGray2
     property int textFontPixelSize: 14
     property color toolbarActiveColor: white
     property color toolbarBackgroundColor: darkGray2
     property color volumeSliderBarColor: blue
-    property color warningColor: "#7D3B3B"
+    property color warningColor: "#5a2a30"
     property color waveformBeatColor: lightGray
     property color waveformCursorColor: white
     property color waveformMarkerDefault: '#ff7a01'
@@ -89,32 +89,32 @@ QtObject {
     // ---- Android port: colors of the library that were written into the
     // components. Skins can change them, see "Skins" in
     // packaging/android/README.md ----
-    property color libraryScrollHandle: "#546e7a"
-    property color libraryScrollHandleHovered: "#78909c"
-    property color libraryScrollHandlePressed: "#00e5ff"
+    property color libraryScrollHandle: "#5a6072"
+    property color libraryScrollHandleHovered: "#6e7587"
+    property color libraryScrollHandlePressed: "#7c8cff"
     property color libraryScrollTrack: "#181a20"
     property color libraryActionBackground: "#2e3440"
     property color libraryActionDisabledBackground: "#262930"
     property color libraryActionText: "#ffffff"
-    property color libraryActionDisabledText: "#78909c"
-    property color libraryDeck1Background: "#1565c0"
-    property color libraryDeck1Pressed: "#64b5f6"
-    property color libraryDeck2Background: "#e65100"
-    property color libraryDeck2Pressed: "#ffb74d"
-    property color libraryConfirmBackground: "#1565c0"
-    property color librarySuccessColor: "#69f0ae"
+    property color libraryActionDisabledText: "#6e7587"
+    property color libraryDeck1Background: "#3d63e0"
+    property color libraryDeck1Pressed: "#8aa8ff"
+    property color libraryDeck2Background: "#e2622a"
+    property color libraryDeck2Pressed: "#f7c86a"
+    property color libraryConfirmBackground: "#3d63e0"
+    property color librarySuccessColor: "#6fe3a4"
     property color librarySourceBarBackground: "#181b22"
-    property color librarySourceBarBorder: "#282d3b"
-    property color librarySourceTabBackground: "#222733"
-    property color librarySourceTabText: "#90a4ae"
-    property color libraryLocalTabColor: "#00e5ff"
+    property color librarySourceBarBorder: "#232836"
+    property color librarySourceTabBackground: "#1a1e28"
+    property color librarySourceTabText: "#8a91a3"
+    property color libraryLocalTabColor: "#7c8cff"
     property color libraryLocalTabBackground: "#1e3a47"
     property color libraryStreamingTabColor: "#00ffff"
-    property color libraryStreamingTabText: "#80deea"
-    property color libraryStreamingTabBackground: "#004d40"
-    property color libraryKeyMatchColor: "#00e676"
+    property color libraryStreamingTabText: "#a9b3ff"
+    property color libraryStreamingTabBackground: "#123a2a"
+    property color libraryKeyMatchColor: "#2bd67b"
     property color libraryKeyMatchBackground: "#00c85333"
-    property color libraryKeyHarmonicColor: "#00b0ff"
-    property color libraryKeyHarmonicText: "#00e5ff"
+    property color libraryKeyHarmonicColor: "#7c8cff"
+    property color libraryKeyHarmonicText: "#7c8cff"
     property color libraryKeyHarmonicBackground: "#00b0ff22"
 }

@@ -113,6 +113,14 @@ jobs:
             exit 1
           fi
 
+      - name: Compile translations
+        run: |
+          LRELEASE=$(find /home/runner/buildenv -path '*x64-linux-release/tools/Qt6/bin/lrelease' | head -n 1)
+          [ -n "$LRELEASE" ] || { echo "::error::lrelease not found in the buildenv"; exit 1; }
+          for ts in res/translations/mixxx-android_*.ts; do
+            "$LRELEASE" -silent "$ts" -qm "${ts%.ts}.qm"
+          done
+
       - name: Build APK
         run: cmake --build build --target apk --parallel "$(nproc)"
 

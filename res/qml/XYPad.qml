@@ -17,15 +17,15 @@ Rectangle {
     property bool closable: true
 
     // The look, for the skins
-    property string title: qsTr("⚡ XY TOUCH PAD")
-    property color accentColor: "#00e5ff"
-    property color deck1Color: "#00b0ff"
-    property color deck2Color: "#ff6d00"
+    property string title: qsTr("XY TOUCH PAD")
+    property color accentColor: "#7c8cff"
+    property color deck1Color: "#7c8cff"
+    property color deck2Color: "#ff7a3d"
     property color wetColor: "#e040fb"
     property color holdColor: "#ab47bc"
     property color buttonColor: "#1a222d"
     property color buttonBorderColor: "#303e4f"
-    property color buttonTextColor: "#90a4ae"
+    property color buttonTextColor: "#8a91a3"
     property color surfaceColor: "#080b10"
     property color surfaceBorderColor: "#1f2937"
     property int controlRadius: 4
@@ -182,7 +182,7 @@ Rectangle {
 
             Text {
                 text: root.title
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 13
                 font.letterSpacing: 1
                 color: root.accentColor
@@ -202,7 +202,7 @@ Rectangle {
                 Text {
                     anchors.centerIn: parent
                     text: "DECK 1"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     color: root.targetDeck === "[Channel1]" ? "#001018" : root.buttonTextColor
                 }
@@ -224,7 +224,7 @@ Rectangle {
                 Text {
                     anchors.centerIn: parent
                     text: "DECK 2"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     color: root.targetDeck === "[Channel2]" ? "#000000" : root.buttonTextColor
                 }
@@ -246,8 +246,8 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: root.holdMode ? "🔒 HOLD" : "SNAP"
-                    font.bold: true
+                    text: root.holdMode ? "HOLD" : "SNAP"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     color: root.holdMode ? "#ffffff" : root.buttonTextColor
                 }
@@ -263,16 +263,16 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 54
                 radius: root.controlRadius
-                color: resetMouse.pressed ? "#455a64" : "#263238"
+                color: resetMouse.pressed ? "#455a64" : "#1a1e28"
                 border.color: "#455a64"
                 border.width: 1
 
                 Text {
                     anchors.centerIn: parent
                     text: qsTr("RESET")
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: "#cfd8dc"
+                    color: "#d5d8e0"
                 }
 
                 MouseArea {
@@ -288,12 +288,12 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 28
                 radius: 14
-                color: closeMouse.pressed ? "#b71c1c" : "#374151"
+                color: closeMouse.pressed ? "#b71c1c" : "#2a2f3d"
 
                 Text {
                     anchors.centerIn: parent
                     text: "✕"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 12
                     color: "#ffffff"
                 }
@@ -361,7 +361,7 @@ Rectangle {
                 anchors.leftMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 text: qsTr("LOW PASS")
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 color: Qt.alpha(root.deck1Color, 0.4)
             }
@@ -372,7 +372,7 @@ Rectangle {
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
                 text: qsTr("HIGH PASS")
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 color: Qt.alpha(root.deck2Color, 0.4)
             }
@@ -393,7 +393,7 @@ Rectangle {
                 }
                 Text {
                     text: "FX WET (100%)"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     color: Qt.alpha(root.wetColor, 0.53)
                 }
@@ -415,7 +415,7 @@ Rectangle {
                 }
                 Text {
                     text: "FX DRY (0%)"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     color: Qt.alpha(root.buttonTextColor, 0.4)
                 }
@@ -535,7 +535,7 @@ Rectangle {
                     if (f < 0) return qsTr("FILTER: LPF %1%").arg(Math.round(Math.abs(f)));
                     return qsTr("FILTER: HPF %1%").arg(Math.round(f));
                 }
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 color: root.currentX < 0.48 ? root.deck1Color : (root.currentX > 0.52 ? root.deck2Color : root.buttonTextColor)
             }
@@ -544,7 +544,7 @@ Rectangle {
 
             Text {
                 text: qsTr("FX DEPTH: %1%").arg(Math.round(root.currentY * 100))
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 color: root.currentY > 0.05 ? root.wetColor : root.buttonTextColor
             }

@@ -375,7 +375,7 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔒 Grid locked – tap to unlock</source>
+        <source>Grid locked – tap to unlock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -411,11 +411,11 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔒 LOCK GRID</source>
+        <source>LOCK GRID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 RE-ANALYZE</source>
+        <source>RE-ANALYZE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -686,7 +686,7 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💡 How do I connect my DJ controller to Android properly?</source>
+        <source>How do I connect my DJ controller to Android properly?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -706,7 +706,7 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ Power supply: connect through a USB-C hub</source>
+        <source>Power supply: connect through a USB-C hub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -730,7 +730,7 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎧 Go to audio outputs and profiles</source>
+        <source>Go to audio outputs and profiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -746,11 +746,11 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📋 Copy path</source>
+        <source>Copy path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✨ Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.</source>
+        <source>Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -782,7 +782,7 @@ Use the advanced mode to view them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎧 Audio outputs</source>
+        <source>Audio outputs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -972,15 +972,15 @@ set another visual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Stream downloaded and loaded into %1</source>
+        <source>✓ Stream downloaded and loaded into %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>❌ Stream error: %1</source>
+        <source>Stream error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔗 DIRECT URL / WEB STREAMING</source>
+        <source>DIRECT URL / WEB STREAMING</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1102,7 +1102,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎨 APPEARANCE &amp; DISPLAY</source>
+        <source>APPEARANCE &amp; DISPLAY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1166,7 +1166,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🧭 TOP BAR</source>
+        <source>TOP BAR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1190,7 +1190,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📁 LIBRARY &amp; COLLECTION</source>
+        <source>LIBRARY &amp; COLLECTION</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1210,7 +1210,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🌈 COLOR PALETTES</source>
+        <source>COLOR PALETTES</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1242,7 +1242,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎛️ CUE MODES &amp; LOADING BEHAVIOR</source>
+        <source>CUE MODES &amp; LOADING BEHAVIOR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1290,7 +1290,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⏱️ TIME FORMAT &amp; DISPLAY</source>
+        <source>TIME FORMAT &amp; DISPLAY</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1302,7 +1302,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎚️ PITCH, SPEED &amp; SYNC</source>
+        <source>PITCH, SPEED &amp; SYNC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1342,7 +1342,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ SPEED / PITCH BEND BUTTON STEPS</source>
+        <source>SPEED / PITCH BEND BUTTON STEPS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1449,15 +1449,15 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📁 Local music folders</source>
+        <source>Local music folders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Scanning...</source>
+        <source>Scanning...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Collection ready</source>
+        <source>✓ Collection ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1477,11 +1477,11 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🗑 Remove</source>
+        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚠️ No folders added yet. Use the buttons below to add one.</source>
+        <source>No folders added yet. Use the buttons below to add one.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1489,11 +1489,11 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎵 Music (/sdcard)</source>
+        <source>Music (/sdcard)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📥 Downloads (/Download)</source>
+        <source>Downloads (/Download)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1501,15 +1501,15 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📂 Browse / other folder...</source>
+        <source>Browse / other folder...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Rescan music</source>
+        <source>Rescan music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Device folder browser:</source>
+        <source>Device folder browser:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1525,7 +1525,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Add &apos;%1&apos; to the library</source>
+        <source>✓ Add &apos;%1&apos; to the library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1533,7 +1533,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>☁️ Streaming storage &amp; cache</source>
+        <source>Streaming storage &amp; cache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1541,7 +1541,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💾 Space used:</source>
+        <source>Space used:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1553,11 +1553,11 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🗑️ Clear cache</source>
+        <source>Clear cache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💾 Library backup</source>
+        <source>Library backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1565,7 +1565,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💾 Back up now</source>
+        <source>Back up now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1577,7 +1577,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🎛 Rekordbox stick backup</source>
+        <source>Rekordbox stick backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1589,7 +1589,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Find sticks</source>
+        <source>Find sticks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1617,7 +1617,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Search &amp; organization</source>
+        <source>Search &amp; organization</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1629,7 +1629,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ Collection pre-analysis (BPM &amp; Camelot key)</source>
+        <source>Collection pre-analysis (BPM &amp; Camelot key)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1637,11 +1637,11 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ Analyze tracks without BPM/key</source>
+        <source>Analyze tracks without BPM/key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Re-analyze the whole collection</source>
+        <source>Re-analyze the whole collection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1681,7 +1681,7 @@ Button</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚠ Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.</source>
+        <source>Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1980,7 +1980,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>❌ Error: %1</source>
+        <source>Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1988,7 +1988,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Track ready and loaded into %1</source>
+        <source>✓ Track ready and loaded into %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2004,11 +2004,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>❌ Download error: %1</source>
+        <source>Download error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔥 AUDIUS STREAMING (FREE MUSIC)</source>
+        <source>AUDIUS STREAMING (FREE MUSIC)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2016,11 +2016,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Loading...</source>
+        <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Trending</source>
+        <source>Trending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2032,7 +2032,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔥 Trending</source>
+        <source>Trending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2040,15 +2040,15 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💾 Ready</source>
+        <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>☁️ Stream</source>
+        <source>Stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔥 Explore music by genre or search for any track or artist</source>
+        <source>Explore music by genre or search for any track or artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2087,7 +2087,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📂 Open full library view</source>
+        <source>Open full library view</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2130,11 +2130,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚙️ Settings</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Search settings...</source>
+        <source>Search settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2245,7 +2245,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ Quick audio output profiles</source>
+        <source>Quick audio output profiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2301,7 +2301,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💡 How do I connect my speakers and headphones?</source>
+        <source>How do I connect my speakers and headphones?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2309,7 +2309,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚙️ Audio engine, latency &amp; quality</source>
+        <source>Audio engine, latency &amp; quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2329,15 +2329,15 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚡ Ultra-low latency: instant response for scratching and fast mixing.</source>
+        <source>Ultra-low latency: instant response for scratching and fast mixing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚖️ Balanced latency: recommended for most Android phones (stable, no dropouts).</source>
+        <source>Balanced latency: recommended for most Android phones (stable, no dropouts).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🛡️ Safe mode: maximum stability if you hear crackles or the phone is slow.</source>
+        <source>Safe mode: maximum stability if you hear crackles or the phone is slow.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2421,7 +2421,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔧 Advanced routing matrix (virtual cables)</source>
+        <source>Advanced routing matrix (virtual cables)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2542,11 +2542,11 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>StreamingHub</name>
     <message>
-        <source>🔥 AUDIUS (free)</source>
+        <source>AUDIUS (free)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔗 DIRECT URL / RADIO</source>
+        <source>DIRECT URL / RADIO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2561,7 +2561,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>❌ Error: %1</source>
+        <source>Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2573,7 +2573,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Track ready and loaded into %1</source>
+        <source>✓ Track ready and loaded into %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2589,7 +2589,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>❌ Download error: %1</source>
+        <source>Download error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2605,7 +2605,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>⚙ Settings</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2621,11 +2621,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔄 Connecting</source>
+        <source>Connecting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>✔ Connect</source>
+        <source>✓ Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2633,11 +2633,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💡 Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
+        <source>Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🧹 Clear cache</source>
+        <source>Clear cache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2645,11 +2645,11 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Search</source>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>📜 Playlists</source>
+        <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2669,19 +2669,19 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>💾 Ready</source>
+        <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>☁️ Cloud</source>
+        <source>Cloud</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>🔍 Type an artist, title or album to search your server</source>
+        <source>Type an artist, title or album to search your server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>☁️ Connect your Navidrome / Subsonic server in the settings above</source>
+        <source>Connect your Navidrome / Subsonic server in the settings above</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3299,7 +3299,7 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>XYPad</name>
     <message>
-        <source>⚡ XY TOUCH PAD</source>
+        <source>XY TOUCH PAD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

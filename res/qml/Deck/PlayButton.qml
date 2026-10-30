@@ -57,7 +57,7 @@ Skin.ControlButton {
             anchors.bottomMargin: 4
             anchors.horizontalCenter: parent.horizontalCenter
             color: '#626262'
-            font.bold: true
+            font.weight: Font.DemiBold
             font.capitalization: Font.AllUppercase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize

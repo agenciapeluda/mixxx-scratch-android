@@ -376,7 +376,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        color: "#1c1e22"
+        color: "#161922"
         height: root.compact ? 30 : 38
 
         Row {
@@ -392,15 +392,15 @@ Item {
                 readonly property bool usable: !root.streaming && (root.showTracks ? root.levelIndex !== null : root.levelHasAll)
 
                 anchors.verticalCenter: parent.verticalCenter
-                border.color: usable ? "#8a8d93" : "#2a2c30"
+                border.color: usable ? "#8a8d93" : "#1c202a"
                 border.width: 1
-                color: backMouse.pressed ? "#2a2c30" : "transparent"
+                color: backMouse.pressed ? "#1c202a" : "transparent"
                 height: header.height - 8
                 width: height * 1.3
 
                 Text {
                     anchors.centerIn: parent
-                    color: parent.usable ? "#d8dadd" : "#3a3c40"
+                    color: parent.usable ? "#e8eaf0" : "#2a2f3d"
                     font.pixelSize: root.compact ? 14 : 17
                     text: "←"
                 }
@@ -414,7 +414,7 @@ Item {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                color: "#d8dadd"
+                color: "#e8eaf0"
                 elide: Text.ElideMiddle
                 font.pixelSize: root.compact ? 12 : 14
                 text: {
@@ -435,7 +435,7 @@ Item {
             // LOAD 1/2: the deck the tracks go to
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.loadTarget === "[Channel2]" ? "#e8650f" : "#1f6fd1"
+                color: root.loadTarget === "[Channel2]" ? "#ff7a3d" : "#4f7cff"
                 height: loadText.implicitHeight + 6
                 visible: root.loadTarget.length > 0
                 width: loadText.implicitWidth + 14
@@ -445,7 +445,7 @@ Item {
 
                     anchors.centerIn: parent
                     color: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: root.compact ? 11 : 12
                     text: qsTr("LOAD TO DECK %1").arg(root.loadTarget === "[Channel2]" ? 2 : 1)
                 }
@@ -467,7 +467,7 @@ Item {
             visible: !root.streaming
 
             background: Rectangle {
-                border.color: searchField.activeFocus ? "#d8dadd" : "#3a3c40"
+                border.color: searchField.activeFocus ? "#e8eaf0" : "#2a2f3d"
                 border.width: 1
                 color: "#000000"
             }
@@ -480,7 +480,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
-            border.color: root.streaming ? "#d4e157" : "#5c6068"
+            border.color: root.streaming ? "#d4e157" : "#5a6072"
             border.width: 1
             color: "#000000"
             height: parent.height - 8
@@ -490,8 +490,8 @@ Item {
                 id: streamingText
 
                 anchors.centerIn: parent
-                color: root.streaming ? "#d4e157" : "#9a9ea6"
-                font.bold: true
+                color: root.streaming ? "#d4e157" : "#8a91a3"
+                font.weight: Font.DemiBold
                 font.pixelSize: root.compact ? 10 : 12
                 text: qsTr("STREAMING")
             }
@@ -520,9 +520,9 @@ Item {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.top: parent.top
-            border.color: libraryControl.sidebarFocused && !root.showLevel ? "#d8dadd" : "transparent"
+            border.color: libraryControl.sidebarFocused && !root.showLevel ? "#e8eaf0" : "transparent"
             border.width: 1
-            color: "#1c1e22"
+            color: "#161922"
             width: root.compact ? 64 : 78
 
             Column {
@@ -542,7 +542,7 @@ Item {
                             readonly property bool active: root.activeSection === index
                             readonly property bool atCursor: libraryControl.sidebarFocused && !root.showLevel && root.cursor === index
 
-                            color: active ? "#3a3c40" : (sectionMouse.pressed ? "#2a2c30" : "transparent")
+                            color: active ? "#2a2f3d" : (sectionMouse.pressed ? "#1c202a" : "transparent")
                             height: sectionColumn.buttonHeight
                             width: sectionColumn.width
 
@@ -555,7 +555,7 @@ Item {
                             }
                             Rectangle {
                                 anchors.fill: parent
-                                border.color: "#1e88e5"
+                                border.color: "#4f7cff"
                                 border.width: 2
                                 color: "transparent"
                                 visible: section.atCursor
@@ -609,9 +609,9 @@ Item {
             anchors.leftMargin: 3
             anchors.right: trackList.right
             anchors.top: parent.top
-            border.color: libraryControl.sidebarFocused ? "#d8dadd" : "transparent"
+            border.color: libraryControl.sidebarFocused ? "#e8eaf0" : "transparent"
             border.width: 1
-            color: "#0c0d0f"
+            color: "#0b0d12"
             visible: root.showLevel
 
             ListView {
@@ -627,7 +627,7 @@ Item {
 
                 // The tracks of the entry itself, e.g. all of a drive
                 header: Rectangle {
-                    color: root.cursor === -1 ? "#1e5fb4" : (allMouse.pressed ? "#2a2c30" : "#16181b")
+                    color: root.cursor === -1 ? "#3d63e0" : (allMouse.pressed ? "#1c202a" : "#16181b")
                     height: root.levelHasAll ? (root.compact ? 40 : 46) : 0
                     visible: root.levelHasAll
                     width: ListView.view.width
@@ -660,7 +660,7 @@ Item {
                         required property var model
                         required property bool hasModelChildren
 
-                        color: root.cursor === index ? "#1e5fb4" : (entryMouse.pressed ? "#2a2c30" : (index % 2 === 0 ? "#0c0d0f" : "#16181b"))
+                        color: root.cursor === index ? "#3d63e0" : (entryMouse.pressed ? "#1c202a" : (index % 2 === 0 ? "#0b0d12" : "#16181b"))
                         height: root.compact ? 40 : 46
                         width: ListView.view.width
 
@@ -722,9 +722,9 @@ Item {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.top: parent.top
-            border.color: "#2a2c30"
+            border.color: "#1c202a"
             border.width: 1
-            color: "#0c0d0f"
+            color: "#0b0d12"
             visible: !root.compact && root.width > 900
             width: 210
 
@@ -748,7 +748,7 @@ Item {
                     }
                     Text {
                         anchors.centerIn: parent
-                        color: "#3a3c40"
+                        color: "#2a2f3d"
                         font.pixelSize: 40
                         text: "♪"
                         visible: root.cover.toString().length === 0
@@ -763,7 +763,7 @@ Item {
                     wrapMode: Text.Wrap
                 }
                 Text {
-                    color: "#9a9ea6"
+                    color: "#8a91a3"
                     elide: Text.ElideRight
                     font.pixelSize: 13
                     text: root.artist
@@ -795,7 +795,7 @@ Item {
                         Text {
                             anchors.left: parent.left
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "#9a9ea6"
+                            color: "#8a91a3"
                             font.pixelSize: 12
                             text: parent.modelData.label
                         }
@@ -830,7 +830,7 @@ Item {
         width: Math.min(460, root.width - 20)
 
         background: Rectangle {
-            border.color: "#5c6068"
+            border.color: "#5a6072"
             border.width: 1
             color: "#16181b"
         }
@@ -839,13 +839,13 @@ Item {
 
             Text {
                 color: "#ffffff"
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 text: qsTr("Permission to read USB")
                 width: parent.width
             }
             Text {
-                color: "#d8dadd"
+                color: "#e8eaf0"
                 font.pixelSize: 13
                 text: qsTr("To read Rekordbox and Engine DJ playlists from a USB drive, Android has to grant Mixxx access to all files. Enable it on the screen that opens, then tap the section again.")
                 width: parent.width
@@ -864,8 +864,8 @@ Item {
                 }
                 Skin.Button {
                     activeColor: "#ffffff"
-                    backgroundColor: "#1e5fb4"
-                    font.bold: true
+                    backgroundColor: "#3d63e0"
+                    font.weight: Font.DemiBold
                     height: 44
                     normalColor: "#ffffff"
                     text: qsTr("GRANT PERMISSION")

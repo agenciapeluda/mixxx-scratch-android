@@ -157,7 +157,7 @@ Item {
                             id: effect2
 
                             anchors.fill: parent
-                            color: "#353535"
+                            color: "#2a2f3d"
                             horizontalOffset: 1
                             radius: 12
                             samples: 24
@@ -167,7 +167,7 @@ Item {
                         }
                         InnerShadow {
                             anchors.fill: parent
-                            color: "#353535"
+                            color: "#2a2f3d"
                             horizontalOffset: -1
                             radius: 12
                             samples: 24
@@ -295,7 +295,7 @@ Item {
                                 id: effect2
 
                                 anchors.fill: parent
-                                color: "#353535"
+                                color: "#2a2f3d"
                                 horizontalOffset: 2
                                 radius: 4.0
                                 samples: 24
@@ -306,7 +306,7 @@ Item {
                             }
                             InnerShadow {
                                 anchors.fill: parent
-                                color: "#353535"
+                                color: "#2a2f3d"
                                 horizontalOffset: -2
                                 radius: 4.0
                                 samples: 24

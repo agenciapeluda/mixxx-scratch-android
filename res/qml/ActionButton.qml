@@ -22,7 +22,7 @@ AbstractButton {
             id: content
 
             anchors.fill: parent
-            color: root.category == ActionButton.Category.Action ? '#2D4EA1' : root.category == ActionButton.Category.Danger ? '#7D3B3B' : Theme.darkGray3
+            color: root.category == ActionButton.Category.Action ? '#2D4EA1' : root.category == ActionButton.Category.Danger ? '#5a2a30' : Theme.darkGray3
             radius: 4
         }
         DropShadow {
@@ -40,7 +40,7 @@ AbstractButton {
 
             anchors.fill: parent
             color: Theme.white
-            font.bold: true
+            font.weight: Font.DemiBold
             font.capitalization: Font.AllUppercase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize

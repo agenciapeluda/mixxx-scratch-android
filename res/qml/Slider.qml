@@ -86,7 +86,7 @@ RowLayout {
                 horizontalOffset: 0
                 verticalOffset: 0
                 radius: 16.0
-                color: "#0E2A54"
+                color: "#1a2350"
                 source: handle
             }
             DropShadow {
@@ -135,7 +135,7 @@ RowLayout {
             samples: 24
             horizontalOffset: 0
             verticalOffset: 0
-            color: "#353535"
+            color: "#2a2f3d"
         }
         Item {
             anchors.fill: parent

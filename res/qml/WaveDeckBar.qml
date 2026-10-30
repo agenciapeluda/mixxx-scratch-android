@@ -38,14 +38,14 @@ Item {
 
         Layout.preferredWidth: 24
         radius: 4
-        color: control.value > 0 ? "#37474f" : "#141924"
-        border.color: "#37474f"
+        color: control.value > 0 ? "#2a2f3d" : "#141924"
+        border.color: "#2a2f3d"
         border.width: 1
 
         // Drawn, as Android draws ◀ ▶ as emoji
         Skin.Triangle {
             anchors.centerIn: parent
-            color: "#b0bec5"
+            color: "#b4b9c7"
             height: 8
             pointsRight: parent.pointsRight
             width: 7
@@ -66,8 +66,8 @@ Item {
         required property string group
         required property bool isDeck1
 
-        readonly property color accentColor: isDeck1 ? "#00b0ff" : "#ff6d00"
-        readonly property color accentDim: isDeck1 ? "#0d47a1" : "#bf360c"
+        readonly property color accentColor: isDeck1 ? "#7c8cff" : "#ff7a3d"
+        readonly property color accentDim: isDeck1 ? "#2c47b8" : "#bf360c"
         readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
         readonly property var currentTrack: deckPlayer?.currentTrack
         readonly property bool isLoaded: !!deckPlayer?.isLoaded
@@ -121,7 +121,7 @@ Item {
                         anchors.centerIn: parent
                         text: card.isDeck1 ? "DECK 1" : "DECK 2"
                         color: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                         font.letterSpacing: 0.5
                     }
@@ -137,8 +137,8 @@ Item {
                         var a = card.currentTrack?.artist || "";
                         return a.length > 0 ? (a + " - " + t) : t;
                     }
-                    color: card.isLoaded ? "#ffffff" : "#78909c"
-                    font.bold: true
+                    color: card.isLoaded ? "#ffffff" : "#6e7587"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 11
                 }
 
@@ -157,7 +157,7 @@ Item {
                         anchors.centerIn: parent
                         text: keyControl.value ? keyControl.value.toString() : ""
                         color: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                     }
                 }
@@ -175,8 +175,8 @@ Item {
                     Text {
                         anchors.centerIn: parent
                         text: "Q"
-                        color: quantizeControl.value > 0 ? "#000000" : "#78909c"
-                        font.bold: true
+                        color: quantizeControl.value > 0 ? "#000000" : "#6e7587"
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
                     }
 
@@ -200,7 +200,7 @@ Item {
                     Layout.fillHeight: true
                     radius: 4
                     color: "#080b10"
-                    border.color: timeMouse.containsMouse ? card.accentColor : "#1e293b"
+                    border.color: timeMouse.containsMouse ? card.accentColor : "#1c2130"
                     border.width: 1
 
                     RowLayout {
@@ -211,7 +211,7 @@ Item {
 
                         Text {
                             text: card.timeDisplayMode === 0 ? qsTr("REMAIN") : qsTr("TIME")
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 8
                             color: card.accentColor
                         }
@@ -220,7 +220,7 @@ Item {
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignRight
                             font.family: "monospace"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: card.width < 380 ? 13 : 15
                             color: "#ffffff"
                             text: {
@@ -263,7 +263,7 @@ Item {
                     Layout.preferredWidth: card.width < 380 ? 46 : 56
                     radius: 4
                     color: "#080b10"
-                    border.color: "#1e293b"
+                    border.color: "#1c2130"
                     border.width: 1
 
                     ColumnLayout {
@@ -274,12 +274,12 @@ Item {
                             Layout.alignment: Qt.AlignHCenter
                             text: "TEMPO"
                             font.pixelSize: 7
-                            color: "#90a4ae"
-                            font.bold: true
+                            color: "#8a91a3"
+                            font.weight: Font.DemiBold
                         }
                         Text {
                             Layout.alignment: Qt.AlignHCenter
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 10
                             color: card.accentColor
                             text: {
@@ -302,7 +302,7 @@ Item {
                     Layout.preferredWidth: card.width < 380 ? 70 : 84
                     radius: 4
                     color: "#080b10"
-                    border.color: (syncModeControl.value >= 2) ? "#ff9100" : (syncEnabledControl.value > 0 ? "#00e676" : card.accentColor)
+                    border.color: (syncModeControl.value >= 2) ? "#ff8f57" : (syncEnabledControl.value > 0 ? "#2bd67b" : card.accentColor)
                     border.width: 1
 
                     RowLayout {
@@ -319,14 +319,14 @@ Item {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: "BPM"
                                 font.pixelSize: 7
-                                color: "#90a4ae"
-                                font.bold: true
+                                color: "#8a91a3"
+                                font.weight: Font.DemiBold
                             }
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: card.width < 380 ? 12 : 14
-                                color: (syncModeControl.value >= 2) ? "#ffb74d" : "#ffffff"
+                                color: (syncModeControl.value >= 2) ? "#f7c86a" : "#ffffff"
                                 text: bpmControl.value > 0 ? bpmControl.value.toFixed(1) : "--.-"
                             }
                         }
@@ -339,16 +339,16 @@ Item {
                             Layout.preferredHeight: 24
                             Layout.preferredWidth: 38
                             radius: 3
-                            color: (syncModeControl.value >= 2) ? "#ff9100" : (syncEnabledControl.value > 0 ? "#00e676" : (syncMouse.pressed ? "#263238" : "#1a2230"))
-                            border.color: "#00e676"
+                            color: (syncModeControl.value >= 2) ? "#ff8f57" : (syncEnabledControl.value > 0 ? "#2bd67b" : (syncMouse.pressed ? "#1a1e28" : "#1a2230"))
+                            border.color: "#2bd67b"
                             border.width: 1
 
                             Text {
                                 anchors.centerIn: parent
                                 text: (syncModeControl.value >= 2) ? "MSTR" : (syncEnabledControl.value > 0 ? "LOCK" : "SYNC")
-                                font.bold: true
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 9
-                                color: (syncModeControl.value >= 2 || syncEnabledControl.value > 0) ? "#000000" : "#b0bec5"
+                                color: (syncModeControl.value >= 2 || syncEnabledControl.value > 0) ? "#000000" : "#b4b9c7"
                             }
 
                             MouseArea {
@@ -379,16 +379,16 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: 36
                     radius: 4
-                    color: cueMouse.pressed ? "#ff9100" : "#141924"
-                    border.color: "#ff9100"
+                    color: cueMouse.pressed ? "#ff8f57" : "#141924"
+                    border.color: "#ff8f57"
                     border.width: 1
 
                     Text {
                         anchors.centerIn: parent
                         text: "CUE"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 10
-                        color: cueMouse.pressed ? "#000000" : "#ff9100"
+                        color: cueMouse.pressed ? "#000000" : "#ff8f57"
                     }
 
                     MouseArea {
@@ -403,8 +403,8 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: 38
                     radius: 4
-                    color: playControl.value > 0 ? "#00e676" : (playMouse.pressed ? "#00b248" : "#141924")
-                    border.color: "#00e676"
+                    color: playControl.value > 0 ? "#2bd67b" : (playMouse.pressed ? "#00b248" : "#141924")
+                    border.color: "#2bd67b"
                     border.width: 1
 
                     // Drawn, as the fonts of Android lack the pause sign and
@@ -427,7 +427,7 @@ Item {
                     Skin.Triangle {
                         anchors.centerIn: parent
                         anchors.horizontalCenterOffset: 1
-                        color: "#00e676"
+                        color: "#2bd67b"
                         height: 12
                         visible: playControl.value <= 0
                         width: 10
@@ -447,7 +447,7 @@ Item {
                 Layout.preferredHeight: 26
                 radius: 4
                 color: "#05070a"
-                border.color: "#1e293b"
+                border.color: "#1c2130"
                 border.width: 1
                 clip: true
 

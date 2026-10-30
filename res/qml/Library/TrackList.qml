@@ -101,7 +101,7 @@ Rectangle {
                     anchors.centerIn: parent
                     color: "red"
                     elide: Text.ElideRight
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.capitalization: Font.AllUppercase
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.buttonFontPixelSize

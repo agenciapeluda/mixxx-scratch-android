@@ -57,7 +57,7 @@ Item {
             const from = root.bipolar ? Math.PI * 1.5 : start;
             ctx.lineCap = "round";
             ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = "#2a2c30";
+            ctx.strokeStyle = "#1c202a";
             ctx.beginPath();
             ctx.arc(center, center, radius, start, end);
             ctx.stroke();
@@ -103,7 +103,7 @@ Item {
 
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: "#9a9ea6"
+        color: "#8a91a3"
         font.pixelSize: Math.max(8, Math.min(13, Math.round(root.width * 0.22)))
         text: root.label
         visible: root.label.length > 0

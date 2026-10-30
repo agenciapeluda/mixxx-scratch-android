@@ -20,7 +20,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
             color: "#12151c"
-            border.color: "#222734"
+            border.color: "#1a1e28"
             border.width: 1
 
             RowLayout {
@@ -37,36 +37,36 @@ Item {
                     Skin.Button {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 170
-                        activeColor: "#00e5ff"
+                        activeColor: "#7c8cff"
                         backgroundColor: root.activePlatform === 0 ? "#00363a" : "#1a212d"
-                        normalColor: root.activePlatform === 0 ? "#00e5ff" : "#80d8ff"
-                        font.bold: true
+                        normalColor: root.activePlatform === 0 ? "#7c8cff" : "#a9b3ff"
+                        font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        text: "☁️ NAVIDROME / SUBSONIC"
+                        text: "NAVIDROME / SUBSONIC"
                         onClicked: root.activePlatform = 0
                     }
 
                     Skin.Button {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 130
-                        activeColor: "#ea80fc"
+                        activeColor: "#a78bfa"
                         backgroundColor: root.activePlatform === 1 ? "#4a148c" : "#1a212d"
-                        normalColor: root.activePlatform === 1 ? "#ea80fc" : "#e1bee7"
-                        font.bold: true
+                        normalColor: root.activePlatform === 1 ? "#a78bfa" : "#e1bee7"
+                        font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        text: qsTr("🔥 AUDIUS (free)")
+                        text: qsTr("AUDIUS (free)")
                         onClicked: root.activePlatform = 1
                     }
 
                     Skin.Button {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 150
-                        activeColor: "#ffb300"
+                        activeColor: "#f5b544"
                         backgroundColor: root.activePlatform === 2 ? "#4a3b00" : "#1a212d"
-                        normalColor: root.activePlatform === 2 ? "#ffb300" : "#ffe082"
-                        font.bold: true
+                        normalColor: root.activePlatform === 2 ? "#f5b544" : "#f7d58f"
+                        font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        text: qsTr("🔗 DIRECT URL / RADIO")
+                        text: qsTr("DIRECT URL / RADIO")
                         onClicked: root.activePlatform = 2
                     }
                 }
@@ -78,8 +78,8 @@ Item {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 120
                     radius: 4
-                    color: root.targetDeck === "[Channel1]" ? "#0d47a1" : "#bf360c"
-                    border.color: root.targetDeck === "[Channel1]" ? "#00b0ff" : "#ff6d00"
+                    color: root.targetDeck === "[Channel1]" ? "#2c47b8" : "#bf360c"
+                    border.color: root.targetDeck === "[Channel1]" ? "#7c8cff" : "#ff7a3d"
                     border.width: 1
 
                     RowLayout {
@@ -89,14 +89,14 @@ Item {
 
                         Text {
                             text: qsTr("Target:")
-                            color: "#b0bec5"
+                            color: "#b4b9c7"
                             font.pixelSize: 10
                         }
 
                         Text {
                             text: root.targetDeck === "[Channel1]" ? "DECK 1" : "DECK 2"
                             color: "#ffffff"
-                            font.bold: true
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
                         }
                     }

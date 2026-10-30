@@ -194,9 +194,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: card1Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -206,10 +206,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("🎨 APPEARANCE & DISPLAY")
-                                font.bold: true
+                                text: qsTr("APPEARANCE & DISPLAY")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#00e5ff"
+                                color: "#7c8cff"
                             }
 
                             // Applied immediately, independently of the Save button
@@ -265,7 +265,7 @@ Category {
                                 Layout.fillWidth: true
                                 visible: false
                                 text: qsTr("Library and effect names change after restarting Mixxx.")
-                                color: "#ffb74d"
+                                color: "#f7c86a"
                                 font.pixelSize: 11
                                 wrapMode: Text.WordWrap
                             }
@@ -367,9 +367,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: topBarCol.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -379,15 +379,15 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("🧭 TOP BAR")
-                                font.bold: true
+                                text: qsTr("TOP BAR")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#00e5ff"
+                                color: "#7c8cff"
                             }
                             Text {
                                 Layout.fillWidth: true
                                 text: qsTr("Choose the views and buttons shown at the top of the screen. At least one view stays visible.")
-                                color: "#90a4ae"
+                                color: "#8a91a3"
                                 font.pixelSize: 11
                                 wrapMode: Text.WordWrap
                             }
@@ -426,9 +426,9 @@ Category {
                                         implicitWidth: 72
                                         implicitHeight: 34
                                         activeColor: Theme.accentColor
-                                        backgroundColor: shown ? "#1e3a5f" : "#222733"
+                                        backgroundColor: shown ? "#1e3a5f" : "#1a1e28"
                                         normalColor: shown ? "#ffffff" : "#607d8b"
-                                        font.bold: true
+                                        font.weight: Font.DemiBold
                                         font.pixelSize: 11
                                         text: (shown ? "✓ " : "") + modelData.label
                                         // The last view shown can't be hidden
@@ -452,9 +452,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: card2Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -464,10 +464,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("📁 LIBRARY & COLLECTION")
-                                font.bold: true
+                                text: qsTr("LIBRARY & COLLECTION")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#80d8ff"
+                                color: "#a9b3ff"
                             }
 
                             RowLayout {
@@ -534,9 +534,9 @@ Category {
 
                         Layout.fillWidth: true
                         implicitHeight: card3Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -546,10 +546,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("🌈 COLOR PALETTES")
-                                font.bold: true
+                                text: qsTr("COLOR PALETTES")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#ea80fc"
+                                color: "#a78bfa"
                             }
 
                             RowLayout {
@@ -657,9 +657,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard1Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -669,10 +669,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("🎛️ CUE MODES & LOADING BEHAVIOR")
-                                font.bold: true
+                                text: qsTr("CUE MODES & LOADING BEHAVIOR")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#00e5ff"
+                                color: "#7c8cff"
                             }
 
                             RowLayout {
@@ -733,9 +733,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard2Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -745,10 +745,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("⏱️ TIME FORMAT & DISPLAY")
-                                font.bold: true
+                                text: qsTr("TIME FORMAT & DISPLAY")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#80d8ff"
+                                color: "#a9b3ff"
                             }
 
                             RowLayout {
@@ -791,9 +791,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard3Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -803,10 +803,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("🎚️ PITCH, SPEED & SYNC")
-                                font.bold: true
+                                text: qsTr("PITCH, SPEED & SYNC")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#ffb74d"
+                                color: "#f7c86a"
                             }
 
                             RowLayout {
@@ -901,9 +901,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard4Col.implicitHeight + 20
-                        color: "#181b24"
+                        color: "#12151c"
                         radius: 8
-                        border.color: "#282d3b"
+                        border.color: "#232836"
                         border.width: 1
 
                         ColumnLayout {
@@ -913,10 +913,10 @@ Category {
                             spacing: 10
 
                             Text {
-                                text: qsTr("⚡ SPEED / PITCH BEND BUTTON STEPS")
-                                font.bold: true
+                                text: qsTr("SPEED / PITCH BEND BUTTON STEPS")
+                                font.weight: Font.DemiBold
                                 font.pixelSize: 13
-                                color: "#b0bec5"
+                                color: "#b4b9c7"
                             }
 
                             RowLayout {
@@ -992,8 +992,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#181b24"
-        border.color: "#282d3c"
+        color: "#12151c"
+        border.color: "#232836"
         border.width: 1
         radius: 8
 
@@ -1010,7 +1010,7 @@ Category {
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
                 color: buttonActions.hasChanges ? "#332200" : "#0d2b1a"
-                border.color: buttonActions.hasChanges ? "#ffb300" : "#00c853"
+                border.color: buttonActions.hasChanges ? "#f5b544" : "#22b868"
                 border.width: 1
 
                 RowLayout {
@@ -1019,15 +1019,15 @@ Category {
                     spacing: 8
                     Text {
                         text: buttonActions.hasChanges ? "●" : "✓"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: buttonActions.hasChanges ? "#ffb300" : "#00e676"
+                        color: buttonActions.hasChanges ? "#f5b544" : "#2bd67b"
                     }
                     Text {
                         text: buttonActions.hasChanges ? qsTr("Unsaved changes") : qsTr("Interface configured")
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: buttonActions.hasChanges ? "#ffe082" : "#b9f6ca"
+                        color: buttonActions.hasChanges ? "#f7d58f" : "#b9f6ca"
                     }
                 }
             }
@@ -1037,7 +1037,7 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff5252"
+                color: "#ff5d6c"
                 font.pixelSize: 12
                 text: ""
             }
@@ -1056,10 +1056,10 @@ Category {
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff8a80"; font.pixelSize: 14 }
+                    Text { text: "↺"; color: "#ff8f99"; font.pixelSize: 14 }
                     Text {
                         text: qsTr("Reset")
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: "#ffcdd2"
                     }
@@ -1089,14 +1089,14 @@ Category {
                 Layout.preferredWidth: 110
                 radius: 6
                 visible: buttonActions.hasChanges
-                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#333333" : "#262626")
+                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#262a35" : "#262626")
                 border.color: "#555555"
                 border.width: 1
 
                 Text {
                     anchors.centerIn: parent
                     text: qsTr("Discard")
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 13
                     color: "#e0e0e0"
                 }
@@ -1126,9 +1126,9 @@ Category {
                 Layout.preferredWidth: 220
                 radius: 6
                 color: buttonActions.hasChanges
-                       ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#00e676" : "#00c853"))
-                       : (saveMouse.pressed ? "#0d47a1" : (saveMouse.containsMouse ? "#1e88e5" : "#1976d2"))
-                border.color: buttonActions.hasChanges ? "#69f0ae" : "#64b5f6"
+                       ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#2bd67b" : "#22b868"))
+                       : (saveMouse.pressed ? "#2c47b8" : (saveMouse.containsMouse ? "#4f7cff" : "#4f7cff"))
+                border.color: buttonActions.hasChanges ? "#6fe3a4" : "#8aa8ff"
                 border.width: 1.5
 
                 RowLayout {
@@ -1136,14 +1136,14 @@ Category {
                     spacing: 8
 
                     Text {
-                        text: buttonActions.hasChanges ? "💾" : "✓"
+                        text: buttonActions.hasChanges ? "" : "✓"
                         font.pixelSize: 14
                         color: "#ffffff"
                     }
 
                     Text {
                         text: buttonActions.hasChanges ? qsTr("Save interface") : qsTr("Saved")
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 13
                         color: "#ffffff"
                     }

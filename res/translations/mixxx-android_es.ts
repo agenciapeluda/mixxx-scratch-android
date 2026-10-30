@@ -4,6 +4,22 @@
 <context>
     <name>About</name>
     <message>
+        <source>Open source DJ software for Android: DVS, DJ controllers and a touch interface.</source>
+        <translation>Software de DJ libre para Android: DVS, controladoras y una interfaz táctil.</translation>
+    </message>
+    <message>
+        <source>Look for updates when the app starts (once a day at most). Nothing is downloaded without asking.</source>
+        <translation>Buscar actualizaciones al abrir la app (una vez al día como mucho). No se descarga nada sin preguntar.</translation>
+    </message>
+    <message>
+        <source>Credits</source>
+        <translation>Créditos</translation>
+    </message>
+    <message>
+        <source>Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later.</source>
+        <translation>Basado en Mixxx (mixxx.org) y en el port para Android de JaviLabarumDJ y Angelos Exarchos. Software libre bajo la GNU GPL v2 o posterior.</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
@@ -386,8 +402,8 @@ Usa el modo avanzado para verla</translation>
         <translation>Si el play o los cues cuantizados empiezan entre los beats, la rejilla está desplazada: prueba primero ½ BEAT. Para colocarla con precisión, para en un primer tiempo (p. ej. el primer bombo) y pulsa PRIMER TIEMPO AQUÍ. Los cambios se guardan con la pista.</translation>
     </message>
     <message>
-        <source>🔒 Grid locked – tap to unlock</source>
-        <translation>🔒 Rejilla bloqueada – toca para desbloquear</translation>
+        <source>Grid locked – tap to unlock</source>
+        <translation>Rejilla bloqueada – toca para desbloquear</translation>
     </message>
     <message>
         <source>½ BEAT</source>
@@ -422,12 +438,12 @@ Usa el modo avanzado para verla</translation>
         <translation>DESHACER</translation>
     </message>
     <message>
-        <source>🔒 LOCK GRID</source>
-        <translation>🔒 BLOQUEAR REJILLA</translation>
+        <source>LOCK GRID</source>
+        <translation>BLOQUEAR REJILLA</translation>
     </message>
     <message>
-        <source>🔄 RE-ANALYZE</source>
-        <translation>🔄 RE-ANALIZAR</translation>
+        <source>RE-ANALYZE</source>
+        <translation>RE-ANALIZAR</translation>
     </message>
     <message>
         <source>CLOSE</source>
@@ -697,8 +713,8 @@ Usa el modo avanzado para verla</translation>
         <translation>Buscar Dispositivos USB</translation>
     </message>
     <message>
-        <source>💡 How do I connect my DJ controller to Android properly?</source>
-        <translation>💡 ¿Cómo conectar tu controladora DJ a Android y que funcione bien?</translation>
+        <source>How do I connect my DJ controller to Android properly?</source>
+        <translation>¿Cómo conectar tu controladora DJ a Android y que funcione bien?</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -717,8 +733,8 @@ Usa el modo avanzado para verla</translation>
         <translation>Usa un adaptador o cable USB-C a USB-B/A compatible con OTG directo al móvil.</translation>
     </message>
     <message>
-        <source>⚡ Power supply: connect through a USB-C hub</source>
-        <translation>⚡ Alimentación Eléctrica: Conexión mediante HUB USB-C</translation>
+        <source>Power supply: connect through a USB-C hub</source>
+        <translation>Alimentación Eléctrica: Conexión mediante HUB USB-C</translation>
     </message>
     <message>
         <source>Tablets only supply ~500mA. To keep your controller (Pioneer DDJ-400, etc.) from flickering or disconnecting, connect the tablet charger to the USB-C PD port of the hub, the controller to a USB port of the hub, and the hub cable to the tablet.</source>
@@ -741,8 +757,8 @@ Usa el modo avanzado para verla</translation>
         <translation>• &lt;b&gt;Cabina DJ Completa&lt;/b&gt;: Altavoces a las salidas RCA de la mesa y cascos al frontal. Selecciona el perfil &apos;Controladora DJ&apos;.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: Si no tienes altavoces externos, selecciona &apos;Tablet + Auriculares Mesa&apos; para que la música suene por la tablet y la preescucha por los cascos.</translation>
     </message>
     <message>
-        <source>🎧 Go to audio outputs and profiles</source>
-        <translation>🎧 Ir a Salidas de Audio y Perfiles</translation>
+        <source>Go to audio outputs and profiles</source>
+        <translation>Ir a Salidas de Audio y Perfiles</translation>
     </message>
     <message>
         <source>DJ mappings (.midi.xml / .js)</source>
@@ -757,12 +773,12 @@ Usa el modo avanzado para verla</translation>
         <translation>✓ ¡Copiado!</translation>
     </message>
     <message>
-        <source>📋 Copy path</source>
-        <translation>📋 Copiar ruta</translation>
+        <source>Copy path</source>
+        <translation>Copiar ruta</translation>
     </message>
     <message>
-        <source>✨ Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.</source>
-        <translation>✨ Compatible con Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop y +100 controladores.</translation>
+        <source>Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.</source>
+        <translation>Compatible con Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop y +100 controladores.</translation>
     </message>
     <message>
         <source>No connected DJ controller was detected</source>
@@ -793,8 +809,8 @@ Usa el modo avanzado para verla</translation>
         <translation>Selecciona su mapeo en la lista desplegable y pulsa Guardar</translation>
     </message>
     <message>
-        <source>🎧 Audio outputs</source>
-        <translation>🎧 Salidas Audio</translation>
+        <source>Audio outputs</source>
+        <translation>Salidas Audio</translation>
     </message>
     <message>
         <source>Show all</source>
@@ -985,16 +1001,16 @@ poner otra imagen</translation>
         <translation>Descargando... %1% (%2 MB)</translation>
     </message>
     <message>
-        <source>✔ Stream downloaded and loaded into %1</source>
-        <translation>✔ Stream descargado y cargado en %1</translation>
+        <source>✓ Stream downloaded and loaded into %1</source>
+        <translation>✓ Stream descargado y cargado en %1</translation>
     </message>
     <message>
-        <source>❌ Stream error: %1</source>
-        <translation>❌ Error en el stream: %1</translation>
+        <source>Stream error: %1</source>
+        <translation>Error en el stream: %1</translation>
     </message>
     <message>
-        <source>🔗 DIRECT URL / WEB STREAMING</source>
-        <translation>🔗 URL DIRECTA / STREAMING WEB</translation>
+        <source>DIRECT URL / WEB STREAMING</source>
+        <translation>URL DIRECTA / STREAMING WEB</translation>
     </message>
     <message>
         <source>URL of the audio file or stream:</source>
@@ -1117,8 +1133,8 @@ Cue</translation>
         <translation>Decks &amp; Reproducción</translation>
     </message>
     <message>
-        <source>🎨 APPEARANCE &amp; DISPLAY</source>
-        <translation>🎨 APARIENCIA &amp; PANTALLA</translation>
+        <source>APPEARANCE &amp; DISPLAY</source>
+        <translation>APARIENCIA &amp; PANTALLA</translation>
     </message>
     <message>
         <source>Language</source>
@@ -1181,8 +1197,8 @@ Cue</translation>
         <translation>Auto-ocultar barra superior</translation>
     </message>
     <message>
-        <source>🧭 TOP BAR</source>
-        <translation>🧭 BARRA SUPERIOR</translation>
+        <source>TOP BAR</source>
+        <translation>BARRA SUPERIOR</translation>
     </message>
     <message>
         <source>Choose the views and buttons shown at the top of the screen. At least one view stays visible.</source>
@@ -1205,8 +1221,8 @@ Cue</translation>
         <translation>LOAD %1</translation>
     </message>
     <message>
-        <source>📁 LIBRARY &amp; COLLECTION</source>
-        <translation>📁 BIBLIOTECA &amp; COLECCIÓN</translation>
+        <source>LIBRARY &amp; COLLECTION</source>
+        <translation>BIBLIOTECA &amp; COLECCIÓN</translation>
     </message>
     <message>
         <source>Search completions</source>
@@ -1225,8 +1241,8 @@ Cue</translation>
         <translation>Altura de fila en canciones</translation>
     </message>
     <message>
-        <source>🌈 COLOR PALETTES</source>
-        <translation>🌈 PALETAS DE COLOR</translation>
+        <source>COLOR PALETTES</source>
+        <translation>PALETAS DE COLOR</translation>
     </message>
     <message>
         <source>Track palette</source>
@@ -1257,8 +1273,8 @@ Cue</translation>
         <translation>Paleta de tonos (Key Palette)</translation>
     </message>
     <message>
-        <source>🎛️ CUE MODES &amp; LOADING BEHAVIOR</source>
-        <translation>🎛️ MODOS CUE &amp; COMPORTAMIENTO DE CARGA</translation>
+        <source>CUE MODES &amp; LOADING BEHAVIOR</source>
+        <translation>MODOS CUE &amp; COMPORTAMIENTO DE CARGA</translation>
     </message>
     <message>
         <source>Cue mode</source>
@@ -1305,8 +1321,8 @@ Cue</translation>
         <translation>Doble toque en CARGAR para clonar plato</translation>
     </message>
     <message>
-        <source>⏱️ TIME FORMAT &amp; DISPLAY</source>
-        <translation>⏱️ FORMATO DE TIEMPO &amp; VISUALIZACIÓN</translation>
+        <source>TIME FORMAT &amp; DISPLAY</source>
+        <translation>FORMATO DE TIEMPO &amp; VISUALIZACIÓN</translation>
     </message>
     <message>
         <source>Time format</source>
@@ -1317,8 +1333,8 @@ Cue</translation>
         <translation>Visualización de tiempo en pantalla</translation>
     </message>
     <message>
-        <source>🎚️ PITCH, SPEED &amp; SYNC</source>
-        <translation>🎚️ PITCH, VELOCIDAD &amp; SINCRONIZACIÓN</translation>
+        <source>PITCH, SPEED &amp; SYNC</source>
+        <translation>PITCH, VELOCIDAD &amp; SINCRONIZACIÓN</translation>
     </message>
     <message>
         <source>Pitch slider range</source>
@@ -1357,8 +1373,8 @@ Cue</translation>
         <translation>Sensibilidad de rampa de velocidad</translation>
     </message>
     <message>
-        <source>⚡ SPEED / PITCH BEND BUTTON STEPS</source>
-        <translation>⚡ PASOS DE BOTONES DE VELOCIDAD / PITCH BEND</translation>
+        <source>SPEED / PITCH BEND BUTTON STEPS</source>
+        <translation>PASOS DE BOTONES DE VELOCIDAD / PITCH BEND</translation>
     </message>
     <message>
         <source>Temporary fine (%)</source>
@@ -1464,16 +1480,16 @@ Cue</translation>
         <translation>Librería Musical</translation>
     </message>
     <message>
-        <source>📁 Local music folders</source>
-        <translation>📁 Carpetas de Música Local</translation>
+        <source>Local music folders</source>
+        <translation>Carpetas de Música Local</translation>
     </message>
     <message>
-        <source>🔄 Scanning...</source>
-        <translation>🔄 Escaneando...</translation>
+        <source>Scanning...</source>
+        <translation>Escaneando...</translation>
     </message>
     <message>
-        <source>✔ Collection ready</source>
-        <translation>✔ Colección lista</translation>
+        <source>✓ Collection ready</source>
+        <translation>✓ Colección lista</translation>
     </message>
     <message>
         <source>Choose the folders on your device where you keep your music. Mixxx will watch them and index the tracks it finds automatically.</source>
@@ -1492,40 +1508,40 @@ Cue</translation>
         <translation>%1 min</translation>
     </message>
     <message>
-        <source>🗑 Remove</source>
-        <translation>🗑 Quitar</translation>
+        <source>Remove</source>
+        <translation>Quitar</translation>
     </message>
     <message>
-        <source>⚠️ No folders added yet. Use the buttons below to add one.</source>
-        <translation>⚠️ No hay carpetas añadidas aún. Pulsa en los botones de abajo para añadir.</translation>
+        <source>No folders added yet. Use the buttons below to add one.</source>
+        <translation>No hay carpetas añadidas aún. Pulsa en los botones de abajo para añadir.</translation>
     </message>
     <message>
         <source>Shortcuts (standard Android locations):</source>
         <translation>Accesos rápidos (Ubicaciones estándar en Android):</translation>
     </message>
     <message>
-        <source>🎵 Music (/sdcard)</source>
-        <translation>🎵 Música (/sdcard)</translation>
+        <source>Music (/sdcard)</source>
+        <translation>Música (/sdcard)</translation>
     </message>
     <message>
-        <source>📥 Downloads (/Download)</source>
-        <translation>📥 Descargas (/Download)</translation>
+        <source>Downloads (/Download)</source>
+        <translation>Descargas (/Download)</translation>
     </message>
     <message>
         <source>▲ Hide browser</source>
         <translation>▲ Ocultar Explorador</translation>
     </message>
     <message>
-        <source>📂 Browse / other folder...</source>
-        <translation>📂 Explorar / Otra Carpeta...</translation>
+        <source>Browse / other folder...</source>
+        <translation>Explorar / Otra Carpeta...</translation>
     </message>
     <message>
-        <source>🔄 Rescan music</source>
-        <translation>🔄 Re-escanear Música</translation>
+        <source>Rescan music</source>
+        <translation>Re-escanear Música</translation>
     </message>
     <message>
-        <source>🔍 Device folder browser:</source>
-        <translation>🔍 Explorador de carpetas en el dispositivo:</translation>
+        <source>Device folder browser:</source>
+        <translation>Explorador de carpetas en el dispositivo:</translation>
     </message>
     <message>
         <source>⬆ Up</source>
@@ -1540,24 +1556,24 @@ Cue</translation>
         <translation>(No hay más subcarpetas)</translation>
     </message>
     <message>
-        <source>✔ Add &apos;%1&apos; to the library</source>
-        <translation>✔ Añadir &apos;%1&apos; a la Librería</translation>
+        <source>✓ Add &apos;%1&apos; to the library</source>
+        <translation>✓ Añadir &apos;%1&apos; a la Librería</translation>
     </message>
     <message>
         <source>Close</source>
         <translation>Cerrar</translation>
     </message>
     <message>
-        <source>☁️ Streaming storage &amp; cache</source>
-        <translation>☁️ Almacenamiento &amp; Caché de Streaming</translation>
+        <source>Streaming storage &amp; cache</source>
+        <translation>Almacenamiento &amp; Caché de Streaming</translation>
     </message>
     <message>
         <source>Tracks played from streaming platforms (Navidrome, Audius, SoundCloud, Tidal) are stored locally so playback continues without dropouts even if the internet connection is lost.</source>
         <translation>Las pistas reproducidas desde plataformas de streaming (Navidrome, Audius, SoundCloud, Tidal) se almacenan localmente para garantizar una reproducción sin cortes de audio aunque se pierda la conexión a internet.</translation>
     </message>
     <message>
-        <source>💾 Space used:</source>
-        <translation>💾 Espacio en uso:</translation>
+        <source>Space used:</source>
+        <translation>Espacio en uso:</translation>
     </message>
     <message>
         <source>0 MB (cache empty)</source>
@@ -1568,20 +1584,20 @@ Cue</translation>
         <translation>Ruta: %1</translation>
     </message>
     <message>
-        <source>🗑️ Clear cache</source>
-        <translation>🗑️ Vaciar Caché</translation>
+        <source>Clear cache</source>
+        <translation>Vaciar Caché</translation>
     </message>
     <message>
-        <source>💾 Library backup</source>
-        <translation>💾 Copia de seguridad de la librería</translation>
+        <source>Library backup</source>
+        <translation>Copia de seguridad de la librería</translation>
     </message>
     <message>
         <source>Saves the library (tracks, BPM, key, cues, playlists, crates and history) and the settings to %1. That folder is kept when Mixxx is uninstalled or its data is cleared, so a backup can be restored afterwards.</source>
         <translation>Guarda la librería (pistas, BPM, tonalidad, cues, playlists, cajas e historial) y los ajustes en %1. Esa carpeta se conserva al desinstalar Mixxx o borrar sus datos, así que la copia se puede restaurar después.</translation>
     </message>
     <message>
-        <source>💾 Back up now</source>
-        <translation>💾 Hacer copia ahora</translation>
+        <source>Back up now</source>
+        <translation>Hacer copia ahora</translation>
     </message>
     <message>
         <source>No backups yet.</source>
@@ -1592,8 +1608,8 @@ Cue</translation>
         <translation>Restaurar</translation>
     </message>
     <message>
-        <source>🎛 Rekordbox stick backup</source>
-        <translation>🎛 Copia de seguridad del USB de Rekordbox</translation>
+        <source>Rekordbox stick backup</source>
+        <translation>Copia de seguridad del USB de Rekordbox</translation>
     </message>
     <message>
         <source>Copies the Rekordbox export of a USB stick (playlists, analysis and tracks) to %1/&lt;name&gt;. The copy appears under Rekordbox in the library like the stick itself, also when the stick is not plugged in. Backing up the stick again only copies what changed, and deletes what was removed from the stick.</source>
@@ -1604,8 +1620,8 @@ Cue</translation>
         <translation>Buscando…</translation>
     </message>
     <message>
-        <source>🔍 Find sticks</source>
-        <translation>🔍 Buscar USB</translation>
+        <source>Find sticks</source>
+        <translation>Buscar USB</translation>
     </message>
     <message>
         <source>Plug in a stick and tap Find sticks.</source>
@@ -1632,8 +1648,8 @@ Cue</translation>
         <translation>DETENER</translation>
     </message>
     <message>
-        <source>🔍 Search &amp; organization</source>
-        <translation>🔍 Búsqueda y Organización</translation>
+        <source>Search &amp; organization</source>
+        <translation>Búsqueda y Organización</translation>
     </message>
     <message>
         <source>Autocomplete searches while typing</source>
@@ -1644,20 +1660,20 @@ Cue</translation>
         <translation>Sincronizar metadatos y etiquetas ID3 al editar</translation>
     </message>
     <message>
-        <source>⚡ Collection pre-analysis (BPM &amp; Camelot key)</source>
-        <translation>⚡ Pre-análisis de Colección (BPM &amp; Tonalidad Camelot)</translation>
+        <source>Collection pre-analysis (BPM &amp; Camelot key)</source>
+        <translation>Pre-análisis de Colección (BPM &amp; Tonalidad Camelot)</translation>
     </message>
     <message>
         <source>Calculates the BPM, beatgrid and musical key of your tracks in the background. Pre-analyzed tracks load instantly and the harmonic assistant can highlight compatible tracks.</source>
         <translation>Calcula el BPM, rejilla de compases y tono armónico de tus pistas en segundo plano. Al tener todas las pistas pre-analizadas, cargarán al instante sin retardo y el asistente armónico resaltará canciones compatibles.</translation>
     </message>
     <message>
-        <source>⚡ Analyze tracks without BPM/key</source>
-        <translation>⚡ Analizar Pistas sin BPM/Key</translation>
+        <source>Analyze tracks without BPM/key</source>
+        <translation>Analizar Pistas sin BPM/Key</translation>
     </message>
     <message>
-        <source>🔄 Re-analyze the whole collection</source>
-        <translation>🔄 Re-analizar Toda la Colección</translation>
+        <source>Re-analyze the whole collection</source>
+        <translation>Re-analizar Toda la Colección</translation>
     </message>
     <message>
         <source>Scanning...</source>
@@ -1696,8 +1712,8 @@ Cue</translation>
         <translation>Las formas de onda, la tonalidad y el resto del análisis se vuelven a hacer en segundo plano. Puedes mantener las rejillas o analizarlas también de nuevo.</translation>
     </message>
     <message>
-        <source>⚠ Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.</source>
-        <translation>⚠ Analizar de nuevo las rejillas sustituye las que corregiste a mano, salvo que las bloquearas. Las rejillas bloqueadas y las de Rekordbox se mantienen siempre.</translation>
+        <source>Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.</source>
+        <translation>Analizar de nuevo las rejillas sustituye las que corregiste a mano, salvo que las bloquearas. Las rejillas bloqueadas y las de Rekordbox se mantienen siempre.</translation>
     </message>
     <message>
         <source>KEEP BEATGRIDS</source>
@@ -1995,16 +2011,16 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>%1 pistas encontradas en Streaming</translation>
     </message>
     <message>
-        <source>❌ Error: %1</source>
-        <translation>❌ Error: %1</translation>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
     </message>
     <message>
         <source>%1 trending tracks (%2)</source>
         <translation>%1 temas en tendencias (%2)</translation>
     </message>
     <message>
-        <source>✔ Track ready and loaded into %1</source>
-        <translation>✔ Pista lista y cargada en %1</translation>
+        <source>✓ Track ready and loaded into %1</source>
+        <translation>✓ Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Deck 1</source>
@@ -2019,24 +2035,24 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>caché</translation>
     </message>
     <message>
-        <source>❌ Download error: %1</source>
-        <translation>❌ Error al descargar: %1</translation>
+        <source>Download error: %1</source>
+        <translation>Error al descargar: %1</translation>
     </message>
     <message>
-        <source>🔥 AUDIUS STREAMING (FREE MUSIC)</source>
-        <translation>🔥 AUDIUS STREAMING (MÚSICA LIBRE)</translation>
+        <source>AUDIUS STREAMING (FREE MUSIC)</source>
+        <translation>AUDIUS STREAMING (MÚSICA LIBRE)</translation>
     </message>
     <message>
         <source>● Free online</source>
         <translation>● Online Libre</translation>
     </message>
     <message>
-        <source>🔄 Loading...</source>
-        <translation>🔄 Cargando...</translation>
+        <source>Loading...</source>
+        <translation>Cargando...</translation>
     </message>
     <message>
-        <source>🔄 Trending</source>
-        <translation>🔄 Tendencias</translation>
+        <source>Trending</source>
+        <translation>Tendencias</translation>
     </message>
     <message>
         <source>Search tracks, remixes, acapellas...</source>
@@ -2047,24 +2063,24 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Buscando en Audius...</translation>
     </message>
     <message>
-        <source>🔥 Trending</source>
-        <translation>🔥 Tendencias</translation>
+        <source>Trending</source>
+        <translation>Tendencias</translation>
     </message>
     <message>
         <source>Loading trending tracks...</source>
         <translation>Cargando tendencias...</translation>
     </message>
     <message>
-        <source>💾 Ready</source>
-        <translation>💾 Listo</translation>
+        <source>Ready</source>
+        <translation>Listo</translation>
     </message>
     <message>
-        <source>☁️ Stream</source>
-        <translation>☁️ Stream</translation>
+        <source>Stream</source>
+        <translation>Stream</translation>
     </message>
     <message>
-        <source>🔥 Explore music by genre or search for any track or artist</source>
-        <translation>🔥 Explora música por género o busca cualquier canción o artista</translation>
+        <source>Explore music by genre or search for any track or artist</source>
+        <translation>Explora música por género o busca cualquier canción o artista</translation>
     </message>
     <message>
         <source>Connecting...</source>
@@ -2102,8 +2118,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Colección local de pistas</translation>
     </message>
     <message>
-        <source>📂 Open full library view</source>
-        <translation>📂 Abrir Vista Completa de Librería</translation>
+        <source>Open full library view</source>
+        <translation>Abrir Vista Completa de Librería</translation>
     </message>
 </context>
 <context>
@@ -2141,16 +2157,28 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Settings</name>
     <message>
+        <source>Turntables &amp; Crossfader</source>
+        <translation>Bandejas y crossfader</translation>
+    </message>
+    <message>
+        <source>DVS timecode, crossfader curve</source>
+        <translation>Timecode DVS, curva del crossfader</translation>
+    </message>
+    <message>
+        <source>Version, updates &amp; credits</source>
+        <translation>Versión, actualizaciones y créditos</translation>
+    </message>
+    <message>
         <source>← Back</source>
         <translation>← Volver</translation>
     </message>
     <message>
-        <source>⚙️ Settings</source>
-        <translation>⚙️ Preferencias</translation>
+        <source>Settings</source>
+        <translation>Preferencias</translation>
     </message>
     <message>
-        <source>🔍 Search settings...</source>
-        <translation>🔍 Buscar ajuste...</translation>
+        <source>Search settings...</source>
+        <translation>Buscar ajuste...</translation>
     </message>
     <message>
         <source>Audio &amp; Outputs</source>
@@ -2260,8 +2288,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Retardos (Delays)</translation>
     </message>
     <message>
-        <source>⚡ Quick audio output profiles</source>
-        <translation>⚡ Perfiles Rápidos de Salida de Audio</translation>
+        <source>Quick audio output profiles</source>
+        <translation>Perfiles Rápidos de Salida de Audio</translation>
     </message>
     <message>
         <source>Tap to configure automatically</source>
@@ -2316,16 +2344,16 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Configuración manual en uso</translation>
     </message>
     <message>
-        <source>💡 How do I connect my speakers and headphones?</source>
-        <translation>💡 ¿Cómo conectar tus altavoces y auriculares?</translation>
+        <source>How do I connect my speakers and headphones?</source>
+        <translation>¿Cómo conectar tus altavoces y auriculares?</translation>
     </message>
     <message>
         <source>• &lt;b&gt;Main output (1-2)&lt;/b&gt;: sound for the audience. Connect your speakers to the rear RCA outputs of your controller.&lt;br&gt;• &lt;b&gt;CUE pre-listening (3-4)&lt;/b&gt;: private sound. Connect your headphones to the headphone jack of the controller.&lt;br&gt;• &lt;b&gt;Hybrid mode&lt;/b&gt;: no external speakers? Choose &lt;i&gt;&apos;Tablet + controller headphones&apos;&lt;/i&gt; so the music plays through the tablet and the pre-listening through your headphones.&lt;br&gt;• &lt;b&gt;Important&lt;/b&gt;: after choosing your profile, press the blue &lt;b&gt;&apos;Apply and save outputs&apos;&lt;/b&gt; button at the bottom.</source>
         <translation>• &lt;b&gt;Salida Master (1-2)&lt;/b&gt;: Sonido para el público. Conecta tus altavoces a las clavijas RCA traseras de tu mesa.&lt;br&gt;• &lt;b&gt;Preescucha CUE (3-4)&lt;/b&gt;: Sonido privado. Conecta tus cascos a la clavija de auriculares de la mesa.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: ¿No tienes altavoces externos? Elige &lt;i&gt;&apos;Tablet + Auriculares Mesa&apos;&lt;/i&gt; para que la música salga por la tablet y la preescucha por los cascos.&lt;br&gt;• &lt;b&gt;Importante&lt;/b&gt;: Tras elegir tu perfil, pulsa el botón azul &lt;b&gt;&apos;Aplicar y guardar salidas&apos;&lt;/b&gt; abajo del todo.</translation>
     </message>
     <message>
-        <source>⚙️ Audio engine, latency &amp; quality</source>
-        <translation>⚙️ Motor de Audio, Latencia &amp; Calidad</translation>
+        <source>Audio engine, latency &amp; quality</source>
+        <translation>Motor de Audio, Latencia &amp; Calidad</translation>
     </message>
     <message>
         <source>Audio API</source>
@@ -2344,16 +2372,16 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>%1 ms</translation>
     </message>
     <message>
-        <source>⚡ Ultra-low latency: instant response for scratching and fast mixing.</source>
-        <translation>⚡ Latencia Ultra-Baja: Respuesta instantánea para scratch y mezclas rápidas.</translation>
+        <source>Ultra-low latency: instant response for scratching and fast mixing.</source>
+        <translation>Latencia Ultra-Baja: Respuesta instantánea para scratch y mezclas rápidas.</translation>
     </message>
     <message>
-        <source>⚖️ Balanced latency: recommended for most Android phones (stable, no dropouts).</source>
-        <translation>⚖️ Latencia Equilibrada: Recomendada para la mayoría de teléfonos Android (estable y sin cortes).</translation>
+        <source>Balanced latency: recommended for most Android phones (stable, no dropouts).</source>
+        <translation>Latencia Equilibrada: Recomendada para la mayoría de teléfonos Android (estable y sin cortes).</translation>
     </message>
     <message>
-        <source>🛡️ Safe mode: maximum stability if you hear crackles or the phone is slow.</source>
-        <translation>🛡️ Modo Seguro: Máxima estabilidad si notas chasquidos o si el móvil va lento.</translation>
+        <source>Safe mode: maximum stability if you hear crackles or the phone is slow.</source>
+        <translation>Modo Seguro: Máxima estabilidad si notas chasquidos o si el móvil va lento.</translation>
     </message>
     <message>
         <source>Main mix mode</source>
@@ -2436,8 +2464,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Monitorización directa</translation>
     </message>
     <message>
-        <source>🔧 Advanced routing matrix (virtual cables)</source>
-        <translation>🔧 Matriz de Ruteo Avanzada (Cables Virtuales)</translation>
+        <source>Advanced routing matrix (virtual cables)</source>
+        <translation>Matriz de Ruteo Avanzada (Cables Virtuales)</translation>
     </message>
     <message>
         <source>Hide matrix</source>
@@ -2557,12 +2585,12 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>StreamingHub</name>
     <message>
-        <source>🔥 AUDIUS (free)</source>
-        <translation>🔥 AUDIUS (Libre)</translation>
+        <source>AUDIUS (free)</source>
+        <translation>AUDIUS (Libre)</translation>
     </message>
     <message>
-        <source>🔗 DIRECT URL / RADIO</source>
-        <translation>🔗 URL DIRECTA / RADIO</translation>
+        <source>DIRECT URL / RADIO</source>
+        <translation>URL DIRECTA / RADIO</translation>
     </message>
     <message>
         <source>Target:</source>
@@ -2576,8 +2604,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>%1 canciones encontradas</translation>
     </message>
     <message>
-        <source>❌ Error: %1</source>
-        <translation>❌ Error: %1</translation>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
     </message>
     <message>
         <source>%1 playlists available</source>
@@ -2588,8 +2616,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>%1 pistas en %2</translation>
     </message>
     <message>
-        <source>✔ Track ready and loaded into %1</source>
-        <translation>✔ Pista lista y cargada en %1</translation>
+        <source>✓ Track ready and loaded into %1</source>
+        <translation>✓ Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Deck 1</source>
@@ -2604,8 +2632,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>caché</translation>
     </message>
     <message>
-        <source>❌ Download error: %1</source>
-        <translation>❌ Error al descargar: %1</translation>
+        <source>Download error: %1</source>
+        <translation>Error al descargar: %1</translation>
     </message>
     <message>
         <source>● Connected</source>
@@ -2620,8 +2648,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>▲ Ocultar</translation>
     </message>
     <message>
-        <source>⚙ Settings</source>
-        <translation>⚙ Ajustes</translation>
+        <source>Settings</source>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Server URL (e.g. http://192.168.1.50:4533)</source>
@@ -2636,36 +2664,36 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Contraseña</translation>
     </message>
     <message>
-        <source>🔄 Connecting</source>
-        <translation>🔄 Conectando</translation>
+        <source>Connecting</source>
+        <translation>Conectando</translation>
     </message>
     <message>
-        <source>✔ Connect</source>
-        <translation>✔ Conectar</translation>
+        <source>✓ Connect</source>
+        <translation>✓ Conectar</translation>
     </message>
     <message>
         <source>Connecting to the server...</source>
         <translation>Conectando al servidor...</translation>
     </message>
     <message>
-        <source>💡 Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
-        <translation>💡 Compatible con Navidrome, Funkwhale, Ampache, Subsonic, Airsonic y Nextcloud Music.</translation>
+        <source>Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
+        <translation>Compatible con Navidrome, Funkwhale, Ampache, Subsonic, Airsonic y Nextcloud Music.</translation>
     </message>
     <message>
-        <source>🧹 Clear cache</source>
-        <translation>🧹 Limpiar Caché</translation>
+        <source>Clear cache</source>
+        <translation>Limpiar Caché</translation>
     </message>
     <message>
         <source>Streaming cache cleared</source>
         <translation>Caché de streaming vaciado</translation>
     </message>
     <message>
-        <source>🔍 Search</source>
-        <translation>🔍 Buscar</translation>
+        <source>Search</source>
+        <translation>Buscar</translation>
     </message>
     <message>
-        <source>📜 Playlists</source>
-        <translation>📜 Playlists</translation>
+        <source>Playlists</source>
+        <translation>Playlists</translation>
     </message>
     <message>
         <source>Search artists, tracks or albums in your cloud...</source>
@@ -2684,20 +2712,20 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Ver Pistas</translation>
     </message>
     <message>
-        <source>💾 Ready</source>
-        <translation>💾 Listo</translation>
+        <source>Ready</source>
+        <translation>Listo</translation>
     </message>
     <message>
-        <source>☁️ Cloud</source>
-        <translation>☁️ Nube</translation>
+        <source>Cloud</source>
+        <translation>Nube</translation>
     </message>
     <message>
-        <source>🔍 Type an artist, title or album to search your server</source>
-        <translation>🔍 Escribe un artista, título o álbum para buscar en tu servidor</translation>
+        <source>Type an artist, title or album to search your server</source>
+        <translation>Escribe un artista, título o álbum para buscar en tu servidor</translation>
     </message>
     <message>
-        <source>☁️ Connect your Navidrome / Subsonic server in the settings above</source>
-        <translation>☁️ Conecta tu servidor Navidrome / Subsonic en Ajustes arriba</translation>
+        <source>Connect your Navidrome / Subsonic server in the settings above</source>
+        <translation>Conecta tu servidor Navidrome / Subsonic en Ajustes arriba</translation>
     </message>
     <message>
         <source>%1 tracks</source>
@@ -3314,8 +3342,8 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>XYPad</name>
     <message>
-        <source>⚡ XY TOUCH PAD</source>
-        <translation>⚡ PAD TÁCTIL XY</translation>
+        <source>XY TOUCH PAD</source>
+        <translation>PAD TÁCTIL XY</translation>
     </message>
     <message>
         <source>RESET</source>
@@ -3348,6 +3376,10 @@ Aborting the operation to avoid library inconsistencies</source>
 </context>
 <context>
     <name>main</name>
+    <message>
+        <source>DJ software for Android</source>
+        <translation>Software de DJ para Android</translation>
+    </message>
     <message>
         <source>Quit Mixxx?</source>
         <translation>¿Salir de Mixxx?</translation>
@@ -3579,6 +3611,77 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>Could not save the downloaded track</source>
         <translation>No se pudo guardar la pista descargada</translation>
+    </message>
+</context>
+<context>
+    <name>Turntables</name>
+    <message>
+        <source>Turntables &amp; Crossfader</source>
+        <translation>Bandejas y crossfader</translation>
+    </message>
+    <message>
+        <source>Smooth</source>
+        <translation>Suave</translation>
+    </message>
+    <message>
+        <source>Mix</source>
+        <translation>Mezcla</translation>
+    </message>
+    <message>
+        <source>Scratch</source>
+        <translation>Scratch</translation>
+    </message>
+    <message>
+        <source>Hard cut</source>
+        <translation>Corte seco</translation>
+    </message>
+    <message>
+        <source>Vinyl control (DVS)</source>
+        <translation>Control de vinilo (DVS)</translation>
+    </message>
+    <message>
+        <source>Route the turntable in Audio &amp; Outputs (Deck → Vinyl Control) and turn on DVS on the deck. Start in REL mode.</source>
+        <translation>Conectá la bandeja en Audio y salidas (Deck → Vinyl Control) y prendé DVS en el deck. Empezá en modo REL.</translation>
+    </message>
+    <message>
+        <source>Deck %1</source>
+        <translation>Deck %1</translation>
+    </message>
+    <message>
+        <source>Timecode</source>
+        <translation>Timecode</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Velocidad</translation>
+    </message>
+    <message>
+        <source>Lead-in (s)</source>
+        <translation>Lead-in (s)</translation>
+    </message>
+    <message>
+        <source>Crossfader</source>
+        <translation>Crossfader</translation>
+    </message>
+    <message>
+        <source>Scratch and Hard cut open the channel fully in the first millimetres, like a battle mixer.</source>
+        <translation>Scratch y Corte seco abren el canal entero en los primeros milímetros, como un mixer de battle.</translation>
+    </message>
+    <message>
+        <source>Curve</source>
+        <translation>Curva</translation>
+    </message>
+    <message>
+        <source>Hamster</source>
+        <translation>Hamster</translation>
+    </message>
+    <message>
+        <source>off</source>
+        <translation>no</translation>
+    </message>
+    <message>
+        <source>on</source>
+        <translation>sí</translation>
     </message>
 </context>
 </TS>

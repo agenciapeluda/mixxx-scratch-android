@@ -15,16 +15,16 @@ Rectangle {
     readonly property int focusedSlot: Math.min(3, Math.max(1, focusedControl.value))
     readonly property string slotGroup: `[EffectRack1_EffectUnit1_Effect${root.focusedSlot}]`
     readonly property var slot: Mixxx.EffectsManager.getEffectSlot(1, root.focusedSlot)
-    readonly property color accent: "#1e88e5"
+    readonly property color accent: "#4f7cff"
     // Landscape phones: smaller rows
     property bool compact: false
 
     color: "#000000"
-    border.color: "#3a3c40"
+    border.color: "#2a2f3d"
     border.width: 1
 
     component SmallLabel: Text {
-        color: "#9a9ea6"
+        color: "#8a91a3"
         font.pixelSize: root.compact ? 9 : 10
         horizontalAlignment: Text.AlignHCenter
         Layout.fillWidth: true
@@ -40,7 +40,7 @@ Rectangle {
 
         Layout.fillWidth: true
         Layout.preferredHeight: root.compact ? 24 : 30
-        border.color: toggleControl.value > 0 ? onColor : "#5c6068"
+        border.color: toggleControl.value > 0 ? onColor : "#5a6072"
         border.width: 1
         color: toggleControl.value > 0 ? onColor : "#000000"
 
@@ -52,7 +52,7 @@ Rectangle {
         }
         Text {
             anchors.centerIn: parent
-            color: toggleControl.value > 0 ? "#ffffff" : "#d8dadd"
+            color: toggleControl.value > 0 ? "#ffffff" : "#e8eaf0"
             font.pixelSize: root.compact ? 11 : 13
             text: toggleBox.label
         }
@@ -107,12 +107,12 @@ Rectangle {
         anchors.margins: 1
         anchors.right: parent.right
         anchors.top: parent.top
-        color: "#2a2c30"
+        color: "#1c202a"
         height: root.compact ? 20 : 26
 
         Text {
             anchors.centerIn: parent
-            color: "#d8dadd"
+            color: "#e8eaf0"
             font.pixelSize: root.compact ? 11 : 13
             text: "BEAT FX"
         }
@@ -136,7 +136,7 @@ Rectangle {
             Rectangle {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 24
-                color: prevMouse.pressed ? "#2a2d33" : "#141518"
+                color: prevMouse.pressed ? "#2a2d33" : "#0f1117"
                 radius: 3
 
                 Skin.Triangle {
@@ -158,9 +158,9 @@ Rectangle {
             Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                border.color: "#5c6068"
+                border.color: "#5a6072"
                 border.width: 1
-                color: "#141518"
+                color: "#0f1117"
 
                 Text {
                     anchors.fill: parent
@@ -177,7 +177,7 @@ Rectangle {
             Rectangle {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 24
-                color: nextMouse.pressed ? "#2a2d33" : "#141518"
+                color: nextMouse.pressed ? "#2a2d33" : "#0f1117"
                 radius: 3
 
                 Skin.Triangle {
@@ -214,7 +214,7 @@ Rectangle {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.compact ? 20 : 24
-                    border.color: focused ? "#d8dadd" : "#5c6068"
+                    border.color: focused ? "#e8eaf0" : "#5a6072"
                     border.width: 1
                     color: slotEnabledControl.value > 0 ? "#123a5c" : "#000000"
 
@@ -294,14 +294,14 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: root.compact ? 34 : 44
-            border.color: enabledControl.value > 0 ? "#ff6a13" : "#5c6068"
+            border.color: enabledControl.value > 0 ? "#ff7a3d" : "#5a6072"
             border.width: 1
-            color: enabledControl.value > 0 ? "#ff6a13" : "#000000"
+            color: enabledControl.value > 0 ? "#ff7a3d" : "#000000"
 
             Text {
                 anchors.centerIn: parent
-                color: enabledControl.value > 0 ? "#000000" : "#d8dadd"
-                font.bold: true
+                color: enabledControl.value > 0 ? "#000000" : "#e8eaf0"
+                font.weight: Font.DemiBold
                 font.pixelSize: root.compact ? 13 : 15
                 text: "ON / OFF"
             }

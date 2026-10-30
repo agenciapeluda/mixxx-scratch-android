@@ -13,7 +13,7 @@ Item {
     // The top (or the left) is the start of the range, like the tempo
     // slider of a player, whose top is minus
     property bool inverted: false
-    property color color: "#d8dadd"
+    property color color: "#e8eaf0"
     // A mark in the middle of the track, e.g. for the tempo and the
     // crossfader
     property bool centerMark: false
@@ -40,14 +40,14 @@ Item {
         id: track
 
         anchors.centerIn: parent
-        color: "#2a2c30"
+        color: "#1c202a"
         height: root.horizontal ? 4 : parent.height - root.handleLength / 2
         radius: 2
         width: root.horizontal ? parent.width - root.handleLength / 2 : 4
     }
     Rectangle {
         anchors.centerIn: parent
-        color: "#5c6068"
+        color: "#5a6072"
         height: root.horizontal ? parent.height * 0.6 : 1
         visible: root.centerMark
         width: root.horizontal ? 1 : parent.width * 0.6
@@ -57,7 +57,7 @@ Item {
 
         border.color: dragHandler.active ? "#ffffff" : "#8a8d93"
         border.width: 1
-        color: "#3a3c40"
+        color: "#2a2f3d"
         height: root.horizontal ? parent.height : root.handleLength * 0.55
         radius: 2
         width: root.horizontal ? root.handleLength * 0.55 : parent.width

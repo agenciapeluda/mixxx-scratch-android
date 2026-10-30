@@ -13,8 +13,8 @@ Popup {
     property int activeTab: 0 // 0: Local Library, 1: Streaming Hub
 
     readonly property bool isDeck1: targetDeck === "[Channel1]"
-    readonly property color deckColor: isDeck1 ? "#00b0ff" : "#ff6d00"
-    readonly property color deckBgColor: isDeck1 ? "#0d47a1" : "#bf360c"
+    readonly property color deckColor: isDeck1 ? "#7c8cff" : "#ff7a3d"
+    readonly property color deckBgColor: isDeck1 ? "#2c47b8" : "#bf360c"
     readonly property string deckName: isDeck1 ? "DECK 1" : "DECK 2"
 
     modal: true
@@ -76,7 +76,7 @@ Popup {
                         anchors.centerIn: parent
                         text: root.deckName
                         color: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 12
                         font.letterSpacing: 1
                     }
@@ -85,7 +85,7 @@ Popup {
                 Text {
                     text: qsTr("Load track into %1").arg(root.deckName)
                     color: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 14
                 }
 
@@ -93,10 +93,10 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 130
-                    activeColor: root.isDeck1 ? "#ff6d00" : "#00b0ff"
+                    activeColor: root.isDeck1 ? "#ff7a3d" : "#7c8cff"
                     backgroundColor: "#202736"
-                    normalColor: root.isDeck1 ? "#ffb74d" : "#80d8ff"
-                    font.bold: true
+                    normalColor: root.isDeck1 ? "#f7c86a" : "#a9b3ff"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: root.isDeck1 ? qsTr("GO TO DECK 2") : qsTr("GO TO DECK 1")
                     onClicked: {
@@ -110,10 +110,10 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 110
-                    activeColor: "#00e5ff"
-                    backgroundColor: root.activeTab === 0 ? "#1e3a47" : "#222733"
-                    normalColor: root.activeTab === 0 ? "#00e5ff" : "#90a4ae"
-                    font.bold: true
+                    activeColor: "#7c8cff"
+                    backgroundColor: root.activeTab === 0 ? "#1e3a47" : "#1a1e28"
+                    normalColor: root.activeTab === 0 ? "#7c8cff" : "#8a91a3"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("LOCAL MUSIC")
                     onClicked: root.activeTab = 0
@@ -123,9 +123,9 @@ Popup {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 120
                     activeColor: "#00ffff"
-                    backgroundColor: root.activeTab === 1 ? "#004d40" : "#222733"
-                    normalColor: root.activeTab === 1 ? "#00ffff" : "#80deea"
-                    font.bold: true
+                    backgroundColor: root.activeTab === 1 ? "#123a2a" : "#1a1e28"
+                    normalColor: root.activeTab === 1 ? "#00ffff" : "#a9b3ff"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("STREAMING HUB")
                     onClicked: root.activeTab = 1
@@ -135,10 +135,10 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 72
-                    activeColor: "#ff5252"
+                    activeColor: "#ff5d6c"
                     backgroundColor: "#b71c1c"
                     normalColor: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("CLOSE")
                     onClicked: root.close()
@@ -167,8 +167,8 @@ Popup {
 
                         Text {
                             text: qsTr("Local track collection")
-                            color: "#b0bec5"
-                            font.bold: true
+                            color: "#b4b9c7"
+                            font.weight: Font.DemiBold
                             font.pixelSize: 12
                         }
 
@@ -177,12 +177,12 @@ Popup {
                         Skin.Button {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 210
-                            activeColor: "#00e5ff"
+                            activeColor: "#7c8cff"
                             backgroundColor: "#1c2b38"
-                            normalColor: "#80d8ff"
-                            font.bold: true
+                            normalColor: "#a9b3ff"
+                            font.weight: Font.DemiBold
                             font.pixelSize: 11
-                            text: qsTr("📂 Open full library view")
+                            text: qsTr("Open full library view")
                             onClicked: {
                                 root.close();
                                 if (typeof root.parent?.viewMode !== "undefined") {

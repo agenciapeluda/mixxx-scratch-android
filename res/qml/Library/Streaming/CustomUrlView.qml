@@ -22,12 +22,12 @@ Item {
         function onDownloadFinished(trackId, localPath, targetDeck, autoPlay) {
             root.isDownloading = false;
             // QmlStreamingProxy already loaded the track safely into targetDeck in C++
-            root.statusMessage = qsTr("✔ Stream downloaded and loaded into %1").arg(targetDeck === "[Channel1]" ? "DECK 1" : "DECK 2");
+            root.statusMessage = qsTr("✓ Stream downloaded and loaded into %1").arg(targetDeck === "[Channel1]" ? "DECK 1" : "DECK 2");
         }
 
         function onDownloadFailed(trackId, errorMessage) {
             root.isDownloading = false;
-            root.statusMessage = qsTr("❌ Stream error: %1").arg(errorMessage);
+            root.statusMessage = qsTr("Stream error: %1").arg(errorMessage);
         }
     }
 
@@ -51,9 +51,9 @@ Item {
                 spacing: 10
 
                 Text {
-                    text: qsTr("🔗 DIRECT URL / WEB STREAMING")
-                    color: "#ffb300"
-                    font.bold: true
+                    text: qsTr("DIRECT URL / WEB STREAMING")
+                    color: "#f5b544"
+                    font.weight: Font.DemiBold
                     font.pixelSize: 14
                     font.letterSpacing: 1
                 }
@@ -61,7 +61,7 @@ Item {
                 Text {
                     Layout.fillWidth: true
                     text: root.statusMessage
-                    color: "#ffe082"
+                    color: "#f7d58f"
                     font.pixelSize: 11
                     elide: Text.ElideRight
                 }
@@ -72,7 +72,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 110
             color: "#16181f"
-            border.color: "#282d3c"
+            border.color: "#232836"
             border.width: 1
             radius: 6
 
@@ -84,7 +84,7 @@ Item {
                 Text {
                     text: qsTr("URL of the audio file or stream:")
                     color: "#ffffff"
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: 12
                 }
 
@@ -99,7 +99,7 @@ Item {
                     background: Rectangle {
                         color: "#202533"
                         radius: 4
-                        border.color: customUrlInput.activeFocus ? "#ffb300" : "#323b50"
+                        border.color: customUrlInput.activeFocus ? "#f5b544" : "#323b50"
                         border.width: 1
                     }
                 }
@@ -118,17 +118,17 @@ Item {
                         background: Rectangle {
                             color: "#1c202a"
                             radius: 3
-                            border.color: "#282d3c"
+                            border.color: "#232836"
                         }
                     }
 
                     Skin.Button {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 140
-                        activeColor: "#64b5f6"
-                        backgroundColor: "#1565c0"
+                        activeColor: "#8aa8ff"
+                        backgroundColor: "#3d63e0"
                         normalColor: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 11
                         arrowLeft: true
                         text: qsTr("Load into DECK 1")
@@ -152,10 +152,10 @@ Item {
                     Skin.Button {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 140
-                        activeColor: "#ffb74d"
-                        backgroundColor: "#e65100"
+                        activeColor: "#f7c86a"
+                        backgroundColor: "#e2622a"
                         normalColor: "#ffffff"
-                        font.bold: true
+                        font.weight: Font.DemiBold
                         font.pixelSize: 11
                         arrowRight: true
                         text: qsTr("Load into DECK 2")

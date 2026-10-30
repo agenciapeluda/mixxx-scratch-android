@@ -14,14 +14,14 @@ Rectangle {
 
     readonly property bool recording: statusControl.value > 0
     property int fontPixelSize: 10
-    property color idleColor: "#222733"
-    property color idleBorderColor: "#374151"
+    property color idleColor: "#1a1e28"
+    property color idleBorderColor: "#2a2f3d"
 
     implicitHeight: 30
     implicitWidth: Math.max(recording ? 76 : 50, recRow.implicitWidth + 16)
     radius: 4
     color: recording ? "#b71c1c" : (recMouse.pressed ? "#2e2124" : idleColor)
-    border.color: recording ? "#ff5252" : idleBorderColor
+    border.color: recording ? "#ff5d6c" : idleBorderColor
     border.width: 1
 
     Mixxx.ControlProxy {
@@ -58,13 +58,13 @@ Rectangle {
             Layout.preferredHeight: 8
             Layout.preferredWidth: 8
             radius: 4
-            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8a80") : "#78909c"
+            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#6e7587"
         }
         Text {
             text: root.recording ? Mixxx.Recording.durationText : "REC"
-            font.bold: true
+            font.weight: Font.DemiBold
             font.pixelSize: root.fontPixelSize
-            color: root.recording ? "#ffffff" : "#b0bec5"
+            color: root.recording ? "#ffffff" : "#b4b9c7"
         }
     }
 
@@ -91,9 +91,9 @@ Rectangle {
         padding: 18
 
         background: Rectangle {
-            color: "#181b24"
+            color: "#12151c"
             radius: 10
-            border.color: "#ff5252"
+            border.color: "#ff5d6c"
             border.width: 1
         }
 
@@ -103,7 +103,7 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 text: qsTr("Stop the recording?")
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 color: Theme.white
                 wrapMode: Text.WordWrap
@@ -112,7 +112,7 @@ Rectangle {
                 Layout.fillWidth: true
                 text: qsTr("%1 recorded. It is in REC of the library.").arg(Mixxx.Recording.durationText)
                 font.pixelSize: 12
-                color: "#b0bec5"
+                color: "#b4b9c7"
                 wrapMode: Text.WordWrap
             }
             RowLayout {
@@ -131,10 +131,10 @@ Rectangle {
                 Skin.Button {
                     Layout.preferredHeight: 44
                     Layout.preferredWidth: 140
-                    activeColor: "#ff5252"
+                    activeColor: "#ff5d6c"
                     backgroundColor: "#4a1c1c"
-                    normalColor: "#ff8a80"
-                    font.bold: true
+                    normalColor: "#ff8f99"
+                    font.weight: Font.DemiBold
                     text: qsTr("STOP")
                     onClicked: {
                         if (root.recording) {

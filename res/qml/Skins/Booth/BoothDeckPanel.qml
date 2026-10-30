@@ -35,7 +35,7 @@ Rectangle {
     }
 
     color: "#000000"
-    border.color: root.playing ? "#d8dadd" : "#2a2c30"
+    border.color: root.playing ? "#e8eaf0" : "#1c202a"
     border.width: 1
 
     Mixxx.ControlProxy {
@@ -101,7 +101,7 @@ Rectangle {
 
     // A small grey caption, like "REMAIN" or "TEMPO"
     component Caption: Text {
-        color: "#9a9ea6"
+        color: "#8a91a3"
         font.pixelSize: Math.round(root.unit * 0.95)
     }
     // A small outlined switch, where a player has A.HOT CUE / AUTO CUE
@@ -110,7 +110,7 @@ Rectangle {
 
         required property string label
         property bool on: false
-        property color onColor: "#ff6a13"
+        property color onColor: "#ff7a3d"
         signal clicked
         signal pressAndHold
 
@@ -122,7 +122,7 @@ Rectangle {
 
         Text {
             anchors.fill: parent
-            color: chip.on ? chip.onColor : "#d8dadd"
+            color: chip.on ? chip.onColor : "#e8eaf0"
             fontSizeMode: Text.HorizontalFit
             font.pixelSize: Math.round(root.unit * 0.95)
             horizontalAlignment: Text.AlignHCenter
@@ -148,14 +148,14 @@ Rectangle {
         anchors.rightMargin: 1
         anchors.top: parent.top
         anchors.topMargin: 1
-        color: "#1c1e22"
+        color: "#161922"
         height: Math.round(root.unit * 2.3)
 
         Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            color: root.deckNumber === 1 ? "#1f6fd1" : "#e8650f"
+            color: root.deckNumber === 1 ? "#4f7cff" : "#ff7a3d"
             height: 2
         }
         Column {
@@ -168,14 +168,14 @@ Rectangle {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#9a9ea6"
+                color: "#8a91a3"
                 font.pixelSize: Math.round(root.unit * 0.62)
                 text: qsTr("DECK")
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: root.playing ? "#ff6a13" : "#ffffff"
-                font.bold: true
+                color: root.playing ? "#ff7a3d" : "#ffffff"
+                font.weight: Font.DemiBold
                 font.pixelSize: Math.round(root.unit * 1.0)
                 text: root.playing ? `((${root.deckNumber}))` : root.deckNumber
             }
@@ -255,14 +255,14 @@ Rectangle {
                 spacing: 3
 
                 Caption {
-                    color: root.showElapsed ? "#5c6068" : "#d8dadd"
+                    color: root.showElapsed ? "#5a6072" : "#e8eaf0"
                     text: "• " + qsTr("REMAIN")
                 }
                 Caption {
                     text: "/"
                 }
                 Caption {
-                    color: root.showElapsed ? "#d8dadd" : "#5c6068"
+                    color: root.showElapsed ? "#e8eaf0" : "#5a6072"
                     text: qsTr("TIME")
                 }
             }
@@ -280,7 +280,7 @@ Rectangle {
                 Text {
                     id: minutesSeconds
 
-                    color: root.loaded ? "#ffffff" : "#5c6068"
+                    color: root.loaded ? "#ffffff" : "#5a6072"
                     font.pixelSize: Math.round(root.unit * 3.4)
                     text: {
                         const total = Math.floor(Math.max(0, root.seconds));
@@ -334,7 +334,7 @@ Rectangle {
             Text {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
-                color: root.loaded ? "#d8dadd" : "#5c6068"
+                color: root.loaded ? "#e8eaf0" : "#5a6072"
                 font.pixelSize: Math.round(root.unit * 1.45)
                 text: {
                     const percent = rateControl.value * rateRangeControl.value * 100;
@@ -350,7 +350,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.top: parent.top
-            border.color: root.leader ? "#ff6a13" : "#d8dadd"
+            border.color: root.leader ? "#ff7a3d" : "#e8eaf0"
             border.width: 1
             color: "transparent"
             width: Math.max(Math.round(root.unit * 6.2), bpmCaption.implicitWidth + masterText.implicitWidth + 12)
@@ -364,13 +364,13 @@ Rectangle {
                 Caption {
                     id: bpmCaption
 
-                    color: "#d8dadd"
+                    color: "#e8eaf0"
                     leftPadding: 4
                     rightPadding: 4
                     text: "BPM"
                 }
                 Rectangle {
-                    color: "#ff6a13"
+                    color: "#ff7a3d"
                     height: bpmCaption.implicitHeight
                     visible: root.leader
                     width: masterText.implicitWidth + 8
@@ -393,7 +393,7 @@ Rectangle {
                 Text {
                     id: bpmWhole
 
-                    color: root.leader ? "#ff6a13" : (root.loaded ? "#ffffff" : "#5c6068")
+                    color: root.leader ? "#ff7a3d" : (root.loaded ? "#ffffff" : "#5a6072")
                     font.pixelSize: Math.round(root.unit * 2.6)
                     text: root.loaded ? Math.floor(bpmControl.value) : "--"
                 }

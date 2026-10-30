@@ -65,6 +65,16 @@ class QmlApplicationProxy : public QObject {
     Q_INVOKABLE QString menuShortcut(
             const QString& command, const QString& defaultShortcut) const;
     Q_INVOKABLE void reloadSkin();
+    /// Cutlab: reads and writes a value of mixxx.cfg, for the settings that
+    /// have no dedicated property (vinyl control, crossfader curve).
+    Q_INVOKABLE QString configValue(const QString& group,
+            const QString& key,
+            const QString& defaultValue = QString()) const;
+    Q_INVOKABLE void setConfigValue(
+            const QString& group, const QString& key, const QString& value);
+    /// Applies the vinyl control settings of mixxx.cfg (timecode, speed,
+    /// lead-in) to the running vinyl control.
+    Q_INVOKABLE void reloadVinylControlConfig();
 
     static QmlApplicationProxy* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
     static void registerUserSettings(UserSettingsPointer pConfig) {

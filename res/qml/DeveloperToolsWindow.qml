@@ -69,7 +69,7 @@ Window {
                     verticalAlignment: Text.AlignVCenter
                     font.family: Theme.fontFamily
                     font.capitalization: Font.AllUppercase
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: Theme.buttonFontPixelSize
                     color: Theme.buttonNormalColor
                 }
@@ -86,7 +86,7 @@ Window {
                     verticalAlignment: Text.AlignVCenter
                     font.family: Theme.fontFamily
                     font.capitalization: Font.AllUppercase
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     font.pixelSize: Theme.buttonFontPixelSize
                     color: Theme.buttonNormalColor
                 }

@@ -4,7 +4,7 @@ import QtQuick.Controls
 MenuSeparator {
     id: root
 
-    property color bottomColor: "#333333"
+    property color bottomColor: "#262a35"
     property color topColor: "#000000"
 
     implicitHeight: 6

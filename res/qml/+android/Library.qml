@@ -117,7 +117,7 @@ Item {
                 activeColor: Theme.libraryLocalTabColor
                 backgroundColor: root.librarySourceMode === 0 ? Theme.libraryLocalTabBackground : Theme.librarySourceTabBackground
                 normalColor: root.librarySourceMode === 0 ? Theme.libraryLocalTabColor : Theme.librarySourceTabText
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 text: qsTr("LOCAL MUSIC")
                 onClicked: root.librarySourceMode = 0
@@ -129,7 +129,7 @@ Item {
                 activeColor: Theme.libraryStreamingTabColor
                 backgroundColor: root.librarySourceMode === 1 ? Theme.libraryStreamingTabBackground : Theme.librarySourceTabBackground
                 normalColor: root.librarySourceMode === 1 ? Theme.libraryStreamingTabColor : Theme.libraryStreamingTabText
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 11
                 text: qsTr("STREAMING HUB")
                 onClicked: root.librarySourceMode = 1
@@ -147,7 +147,7 @@ Item {
                 activeColor: Theme.libraryActionText
                 normalColor: Theme.librarySourceTabText
                 highlight: root.showSidebar
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 10
                 text: qsTr("SIDEBAR")
                 onClicked: Mixxx.MobileLibrary.sidebarVisible = !Mixxx.MobileLibrary.sidebarVisible
@@ -306,7 +306,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.bold: true
+                font.weight: Font.DemiBold
                 font.pixelSize: 15
                 text: qsTr("Permission to read USB")
             }
@@ -333,7 +333,7 @@ Item {
                     activeColor: Theme.accentColor
                     backgroundColor: Theme.libraryConfirmBackground
                     normalColor: Theme.libraryActionText
-                    font.bold: true
+                    font.weight: Font.DemiBold
                     text: qsTr("GRANT PERMISSION")
                     onClicked: {
                         storageAccessPopup.close();
