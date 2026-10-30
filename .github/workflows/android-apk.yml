@@ -144,10 +144,17 @@ jobs:
           name: mixxx-android-apk
           path: ${{ steps.apk.outputs.file }}
 
-      - name: Publish release (tags only)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Publish release
+        if: github.ref == 'refs/heads/scratch' || startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${{ github.ref_name }}" "${{ steps.apk.outputs.file }}" \
-            --title "${{ github.ref_name }}" --notes "Build automática de ${{ github.sha }}"
+          VERSION=$(grep -oP 'android:versionName="\K[^"]+' packaging/android/AndroidManifest.xml)
+          TAG="v${VERSION}-android"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${{ steps.apk.outputs.file }}" --clobber
+          else
+            gh release create "$TAG" "${{ steps.apk.outputs.file }}" --target "${{ github.sha }}" \
+              --title "Mixxx Scratch Android ${VERSION}" \
+              --notes "Build automática de ${{ github.sha }} (rama ${{ github.ref_name }})."
+          fi
