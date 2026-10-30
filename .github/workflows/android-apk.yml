@@ -96,7 +96,7 @@ jobs:
           if ! cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_SYSTEM_NAME=Android \
-            -DVCPKG_TARGET_TRIPLET=arm64-android-rel \
+            -DVCPKG_TARGET_TRIPLET=arm64-android \
             -DVCPKG_DEFAULT_HOST_TRIPLET=x64-linux-release \
             -DQT6=ON -DQML=ON -DHID=ON -DBULK=ON \
             -DVINYLCONTROL=ON \
