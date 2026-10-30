@@ -69,6 +69,20 @@ Category {
 
     label: qsTr("Turntables & Crossfader")
 
+    // The scope of the timecode needs the signal quality reports
+    Mixxx.ControlProxy {
+        id: showSignalQuality
+
+        group: "[VinylControl]"
+        key: "show_signal_quality"
+    }
+    Component.onCompleted: {
+        if (Mixxx.Application.configValue("[VinylControl]", "show_signal_quality", "0") !== "1") {
+            Mixxx.Application.setConfigValue("[VinylControl]", "show_signal_quality", "1");
+        }
+        showSignalQuality.value = 1;
+    }
+
     Mixxx.ControlProxy {
         id: xfaderMode
 
@@ -237,6 +251,47 @@ Category {
                                 const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
                                 const base = Mixxx.SoundManager.vinylControlInputChannelGroup(deckRow.index);
                                 return name === "" ? qsTr("Not routed") : `${name} · ${qsTr("channels")} ${base + 1}-${base + 2}`;
+                            }
+                        }
+                        Text {
+                            color: "#8a91a3"
+                            font.pixelSize: 12
+                            text: qsTr("Signal")
+                        }
+                        RowLayout {
+                            Layout.columnSpan: 3
+                            spacing: 14
+
+                            Rectangle {
+                                Layout.preferredHeight: 120
+                                Layout.preferredWidth: 120
+                                border.color: "#232836"
+                                color: "#0b0d12"
+                                radius: 10
+
+                                Mixxx.VinylSignalQuality {
+                                    active: root.visible
+                                    anchors.fill: parent
+                                    anchors.margins: 4
+                                    group: deckRow.group
+                                }
+                            }
+                            Text {
+                                Layout.fillWidth: true
+                                color: ["#8a91a3", "#2bd67b", "#f5b544", "#ff5d6c"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
+                                font.pixelSize: 12
+                                text: [qsTr("DVS is off on this deck: turn it on with the DVS button of the deck."),
+                                    qsTr("Reading the timecode."),
+                                    qsTr("Weak or unstable timecode: check the level and the needle."),
+                                    qsTr("No timecode: check the input channels and the timecode type.")][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))] + "\n" + qsTr("Play the record: a clean ring in the box means the timecode is read. Flat or empty: wrong channels or no signal. A messy cloud: wrong timecode type or level.")
+                                wrapMode: Text.WordWrap
+
+                                Mixxx.ControlProxy {
+                                    id: vinylStatus
+
+                                    group: deckRow.group
+                                    key: "vinylcontrol_status"
+                                }
                             }
                         }
                         Text {

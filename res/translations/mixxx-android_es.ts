@@ -4064,6 +4064,30 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Turntables</name>
     <message>
+        <source>Signal</source>
+        <translation>Señal</translation>
+    </message>
+    <message>
+        <source>DVS is off on this deck: turn it on with the DVS button of the deck.</source>
+        <translation>DVS apagado en este deck: prendelo con el botón DVS del deck.</translation>
+    </message>
+    <message>
+        <source>Reading the timecode.</source>
+        <translation>Leyendo el timecode.</translation>
+    </message>
+    <message>
+        <source>Weak or unstable timecode: check the level and the needle.</source>
+        <translation>Timecode débil o inestable: revisá el nivel y la púa.</translation>
+    </message>
+    <message>
+        <source>No timecode: check the input channels and the timecode type.</source>
+        <translation>No hay timecode: revisá los canales de entrada y el tipo de timecode.</translation>
+    </message>
+    <message>
+        <source>Play the record: a clean ring in the box means the timecode is read. Flat or empty: wrong channels or no signal. A messy cloud: wrong timecode type or level.</source>
+        <translation>Poné a girar el disco: un anillo limpio en el recuadro significa que lee el timecode. Plano o vacío: canales equivocados o sin señal. Una nube desordenada: tipo de timecode o nivel incorrecto.</translation>
+    </message>
+    <message>
         <source>Find USB sound cards</source>
         <translation>Buscar placas USB</translation>
     </message>
