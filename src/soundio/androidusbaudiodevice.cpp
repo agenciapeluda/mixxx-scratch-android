@@ -108,6 +108,8 @@ AndroidUsbAudioDevice::AndroidUsbAudioDevice(const QJniObject& usbDevice)
           m_pContext(nullptr),
           m_pHandle(nullptr),
           m_hasImplicitFeedback(false),
+          m_hasCapture(false),
+          m_captureTransfersPending(0),
           m_claimed(false),
           m_disconnected(false),
           m_eventThreadRunning(false),
@@ -284,6 +286,27 @@ bool AndroidUsbAudioDevice::open(DirectMode mode, bool waitForPermission) {
         m_implicitFormat = *pImplicit;
         m_hasImplicitFeedback = true;
     }
+    // Cutlab: the capture stream with most channels feeds the inputs (vinyl
+    // control). When it is the stream that clocks the output, it replaces the
+    // implicit feedback format: the same endpoint then carries both.
+    for (const auto& format : m_description.streams) {
+        if (format.isOutput || !format.isUsable()) {
+            continue;
+        }
+        if (!m_hasCapture || format.channels > m_captureFormat.channels ||
+                (format.channels == m_captureFormat.channels &&
+                        format.bitResolution > m_captureFormat.bitResolution)) {
+            m_captureFormat = format;
+            m_hasCapture = true;
+        }
+    }
+    if (m_hasCapture && m_hasImplicitFeedback &&
+            m_captureFormat.interfaceNumber == m_implicitFormat.interfaceNumber) {
+        m_implicitFormat = m_captureFormat;
+    }
+    if (m_hasCapture) {
+        qInfo() << m_productName << "capture:" << QString::fromStdString(usbaudio::describe(m_captureFormat));
+    }
     if (mode == DirectMode::Auto && m_outputFormat.channels <= 2) {
         qInfo() << m_productName << "is a stereo sound card, using Android audio";
         return false;
@@ -389,6 +412,13 @@ bool AndroidUsbAudioDevice::claim() {
             !claimInterface(m_implicitFormat.interfaceNumber)) {
         return false;
     }
+    if (m_hasCapture && m_captureFormat.interfaceNumber != m_outputFormat.interfaceNumber &&
+            !(m_hasImplicitFeedback &&
+                    m_captureFormat.interfaceNumber == m_implicitFormat.interfaceNumber) &&
+            !claimInterface(m_captureFormat.interfaceNumber)) {
+        qWarning() << "Unable to claim the capture interface of" << m_productName;
+        m_hasCapture = false;
+    }
     // The kernel driver releases the whole sound card, so the MIDI interface
     // has to be driven by us too.
     if (m_description.midi.isValid() && !claimInterface(m_description.midi.interfaceNumber)) {
@@ -453,6 +483,9 @@ void AndroidUsbAudioDevice::queryUac2SampleRates() {
         m_outputFormat.sampleRates = rates;
         if (m_hasImplicitFeedback) {
             m_implicitFormat.sampleRates = rates;
+        }
+        if (m_hasCapture) {
+            m_captureFormat.sampleRates = rates;
         }
         qInfo() << m_productName << "supports" << QList<int>(rates.begin(), rates.end()) << "Hz";
     }
@@ -759,6 +792,54 @@ bool AndroidUsbAudioDevice::startOutput(int sampleRate,
         }
     }
 
+    // Cutlab: inputs that don't clock the output have their own transfers
+    if (captureIsSeparate()) {
+        if (m_captureFormat.interfaceNumber != m_outputFormat.interfaceNumber) {
+            libusb_set_interface_alt_setting(m_pHandle, m_captureFormat.interfaceNumber, 0);
+            error = libusb_set_interface_alt_setting(m_pHandle,
+                    m_captureFormat.interfaceNumber,
+                    m_captureFormat.altSetting);
+            if (error < 0) {
+                qWarning() << "Unable to select the input altsetting:" << libusb_error_name(error);
+            }
+            if (m_captureFormat.uacVersion == 1) {
+                setSampleRate(m_captureFormat, sampleRate);
+            }
+        }
+        const int capturePackets = std::max(1,
+                transferMillis *
+                        usbaudio::packetsPerSecond(m_captureFormat.bInterval, isHighSpeed()) /
+                        1000);
+        const int capturePacketSize = m_captureFormat.maxPacketSize;
+        for (int i = 0; i < numTransfers; ++i) {
+            libusb_transfer* pTransfer = libusb_alloc_transfer(capturePackets);
+            if (!pTransfer) {
+                break;
+            }
+            auto* pBuffer = static_cast<unsigned char*>(
+                    std::calloc(capturePackets * capturePacketSize, 1));
+            libusb_fill_iso_transfer(pTransfer,
+                    m_pHandle,
+                    m_captureFormat.endpoint,
+                    pBuffer,
+                    capturePackets * capturePacketSize,
+                    capturePackets,
+                    captureTransferCallback,
+                    this,
+                    0);
+            libusb_set_iso_packet_lengths(pTransfer, capturePacketSize);
+            pTransfer->flags = LIBUSB_TRANSFER_FREE_BUFFER;
+            if (libusb_submit_transfer(pTransfer) < 0) {
+                libusb_free_transfer(pTransfer);
+                continue;
+            }
+            m_captureTransfers.push_back(pTransfer);
+            ++m_captureTransfersPending;
+        }
+        qInfo() << "Started the USB audio input of" << m_productName << "with"
+                << m_captureTransfers.size() << "transfers";
+    }
+
     const int bufferSize = packetsPerTransfer * m_outputFormat.maxPacketSize;
     for (int i = 0; i < numTransfers; ++i) {
         libusb_transfer* pTransfer = libusb_alloc_transfer(packetsPerTransfer);
@@ -791,6 +872,7 @@ bool AndroidUsbAudioDevice::startOutput(int sampleRate,
     if (m_outputTransfersPending == 0) {
         m_outputRunning = false;
         cancelAndFree(&m_feedbackTransfers, &m_feedbackTransfersPending);
+        cancelAndFree(&m_captureTransfers, &m_captureTransfersPending);
         for (libusb_transfer* pTransfer : m_outputTransfers) {
             libusb_free_transfer(pTransfer);
         }
@@ -907,6 +989,9 @@ void AndroidUsbAudioDevice::implicitTransferCallback(libusb_transfer* pTransfer)
                 pThis->m_implicitPacketFrames.push_back(frames);
             }
         }
+        if (pThis->m_hasCapture && !pThis->captureIsSeparate()) {
+            pThis->deliverCapture(pTransfer, frameBytes);
+        }
     } else if (pTransfer->status == LIBUSB_TRANSFER_NO_DEVICE) {
         pThis->markDisconnected();
     }
@@ -916,6 +1001,41 @@ void AndroidUsbAudioDevice::implicitTransferCallback(libusb_transfer* pTransfer)
         return;
     }
     --pThis->m_feedbackTransfersPending;
+}
+
+void AndroidUsbAudioDevice::deliverCapture(libusb_transfer* pTransfer, int frameBytes) {
+    if (frameBytes <= 0) {
+        return;
+    }
+    std::lock_guard lock(m_captureMutex);
+    if (!m_captureCallback) {
+        return;
+    }
+    for (int p = 0; p < pTransfer->num_iso_packets; ++p) {
+        const libusb_iso_packet_descriptor& packet = pTransfer->iso_packet_desc[p];
+        if (packet.status != LIBUSB_TRANSFER_COMPLETED) {
+            continue;
+        }
+        const int frames = static_cast<int>(packet.actual_length) / frameBytes;
+        if (frames > 0) {
+            m_captureCallback(libusb_get_iso_packet_buffer_simple(pTransfer, p), frames);
+        }
+    }
+}
+
+void AndroidUsbAudioDevice::captureTransferCallback(libusb_transfer* pTransfer) {
+    auto* pThis = static_cast<AndroidUsbAudioDevice*>(pTransfer->user_data);
+    if (pTransfer->status == LIBUSB_TRANSFER_COMPLETED) {
+        pThis->deliverCapture(pTransfer, pThis->m_captureFormat.frameBytes());
+    } else if (pTransfer->status == LIBUSB_TRANSFER_NO_DEVICE) {
+        pThis->markDisconnected();
+    }
+    if (pThis->m_outputRunning && pTransfer->status != LIBUSB_TRANSFER_CANCELLED &&
+            pTransfer->status != LIBUSB_TRANSFER_NO_DEVICE &&
+            libusb_submit_transfer(pTransfer) == 0) {
+        return;
+    }
+    --pThis->m_captureTransfersPending;
 }
 
 void AndroidUsbAudioDevice::cancelAndFree(
@@ -955,6 +1075,7 @@ void AndroidUsbAudioDevice::stopOutput() {
     m_outputRunning = false;
     cancelAndFree(&m_outputTransfers, &m_outputTransfersPending);
     cancelAndFree(&m_feedbackTransfers, &m_feedbackTransfersPending);
+    cancelAndFree(&m_captureTransfers, &m_captureTransfersPending);
     m_framesInFlight = 0;
     if (!m_disconnected) {
         // Zero bandwidth altsettings
@@ -962,6 +1083,10 @@ void AndroidUsbAudioDevice::stopOutput() {
         if (m_hasImplicitFeedback &&
                 m_implicitFormat.interfaceNumber != m_outputFormat.interfaceNumber) {
             libusb_set_interface_alt_setting(m_pHandle, m_implicitFormat.interfaceNumber, 0);
+        }
+        if (captureIsSeparate() &&
+                m_captureFormat.interfaceNumber != m_outputFormat.interfaceNumber) {
+            libusb_set_interface_alt_setting(m_pHandle, m_captureFormat.interfaceNumber, 0);
         }
     }
 }

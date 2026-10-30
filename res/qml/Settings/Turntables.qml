@@ -120,7 +120,7 @@ Category {
             // ---------------- Vinyl control ----------------
             Card {
                 title: qsTr("Vinyl control (DVS)")
-                subtitle: qsTr("Choose the sound card input of each turntable here, pick your timecode and turn on DVS on the deck. Start in REL mode. The sound card is used through Android audio, which handles inputs.")
+                subtitle: qsTr("Choose the sound card input of each turntable here (USB cards appear as \"directo\"), pick your timecode and turn on DVS on the deck. Start in REL mode.")
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -231,8 +231,6 @@ Category {
                                 if (currentIndex === 0) {
                                     return;
                                 }
-                                // The USB driver of Mixxx only plays audio: inputs need Android audio
-                                Mixxx.MobileAudio.setAndroidUsbDirectMode(2);
                                 Mixxx.SoundManager.setVinylControlInput(route.device, Math.max(0, route.group), deckRow.index);
                                 currentRoute.text = route.group < 0 ? qsTr("Not routed") : route.label;
                             }

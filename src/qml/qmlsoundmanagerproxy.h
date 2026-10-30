@@ -166,8 +166,8 @@ class QmlSoundManagerProxy : public QObject {
     /// The display name of the device routed to the vinyl control input of
     /// deck index+1 and its first channel ("" when not routed)
     Q_INVOKABLE QString vinylControlInputName(unsigned char index) const;
-    /// Stops using the USB driver of Mixxx (output only) so USB sound cards
-    /// show up as Android inputs, and reopens the sound devices.
+    /// Uses the USB driver of Cutlab for USB sound cards (it reads their
+    /// inputs too), lists the devices again and reopens them.
     Q_INVOKABLE void useAndroidAudioForUsbDevices();
     Q_INVOKABLE int vinylControlInputChannelGroup(unsigned char index) const;
     Q_INVOKABLE void clearOutputs();

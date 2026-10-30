@@ -314,8 +314,10 @@ void QmlSoundManagerProxy::removeClashingOutputs() {
 void QmlSoundManagerProxy::useAndroidAudioForUsbDevices() {
     const UserSettingsPointer pConfig = QmlConfigProxy::get();
     if (pConfig) {
-        // 2 = never use the USB driver of Mixxx (it only plays audio)
-        pConfig->setValue(ConfigKey(QStringLiteral("[Soundcard]"), QStringLiteral("AndroidUsbDirectMode")), 2);
+        // 1 = always use the USB driver of Cutlab for USB sound cards: it
+        // reads their inputs directly (Android often hides multichannel
+        // USB inputs)
+        pConfig->setValue(ConfigKey(QStringLiteral("[Soundcard]"), QStringLiteral("AndroidUsbDirectMode")), 1);
     }
     // List the USB sound cards again, now through Android audio
     m_pSoundManager->clearAndQueryDevices();

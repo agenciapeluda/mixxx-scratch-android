@@ -47,6 +47,11 @@ class SoundDeviceAndroidUsb : public SoundDevice {
     std::unique_ptr<FIFO<CSAMPLE>> m_pFifo;
     std::vector<CSAMPLE> m_engineBuffer;
     std::vector<CSAMPLE> m_renderBuffer;
+    // Cutlab: audio input (vinyl control, microphone) of the sound card
+    std::unique_ptr<FIFO<CSAMPLE>> m_pInputFifo;
+    std::vector<CSAMPLE> m_captureScratch;
+    std::vector<CSAMPLE> m_inputBuffer;
+    void capture(const uint8_t* pData, int frames);
     SINT m_framesPerBuffer;
     bool m_isClkRef;
     std::atomic<bool> m_open;

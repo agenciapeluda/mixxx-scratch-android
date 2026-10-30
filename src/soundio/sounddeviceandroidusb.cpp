@@ -45,7 +45,8 @@ SoundDeviceAndroidUsb::SoundDeviceAndroidUsb(UserSettingsPointer config,
     m_deviceId.deviceIndex = 0;
     m_hostAPI = QStringLiteral("Android Oboe");
     m_numOutputChannels = mixxx::audio::ChannelCount(m_pDevice->outputFormat().channels);
-    m_numInputChannels = mixxx::audio::ChannelCount(0);
+    m_numInputChannels = mixxx::audio::ChannelCount(
+            m_pDevice->hasCapture() ? m_pDevice->captureFormat().channels : 0);
     m_sampleRate = getDefaultSampleRate();
 }
 
@@ -87,6 +88,18 @@ SoundDeviceStatus SoundDeviceAndroidUsb::open(bool isClkRefDevice, int syncBuffe
     m_pFifo = std::make_unique<FIFO<CSAMPLE>>(
             nextPowerOfTwo((m_framesPerBuffer * 4 + 1024) * channels));
     m_isClkRef = isClkRefDevice;
+
+    // Cutlab: the inputs of the sound card, filled on the USB event thread
+    if (m_pDevice->hasCapture()) {
+        const int inChannels = m_pDevice->captureFormat().channels;
+        m_pInputFifo = std::make_unique<FIFO<CSAMPLE>>(
+                nextPowerOfTwo((m_framesPerBuffer * 8 + 4096) * inChannels));
+        m_captureScratch.assign((192 * kTransferMillis + 64) * inChannels, 0);
+        m_inputBuffer.assign(m_framesPerBuffer * inChannels, 0);
+        m_pDevice->setCaptureCallback([this](const uint8_t* pData, int frames) {
+            capture(pData, frames);
+        });
+    }
 
     // Queue roughly one engine buffer at the USB controller
     const int bufferMillis = static_cast<int>(
@@ -132,12 +145,69 @@ SoundDeviceStatus SoundDeviceAndroidUsb::close() {
     }
     m_open = false;
     m_pDevice->stopOutput();
+    m_pDevice->setCaptureCallback(nullptr);
     return SoundDeviceStatus::Ok;
 }
 
 void SoundDeviceAndroidUsb::readProcess(SINT framesPerBuffer) {
-    // No inputs
-    Q_UNUSED(framesPerBuffer);
+    if (!m_open || !m_pInputFifo || !m_pDevice->hasCapture()) {
+        return;
+    }
+    const int channels = m_pDevice->captureFormat().channels;
+    const SINT frames = std::min<SINT>(framesPerBuffer, m_framesPerBuffer);
+    const int samples = static_cast<int>(frames) * channels;
+    if (static_cast<int>(m_inputBuffer.size()) < samples) {
+        m_inputBuffer.resize(samples);
+    }
+    // Keep the latency low: drop what piled up beyond a few buffers
+    const int backlog = m_pInputFifo->readAvailable() - 4 * samples;
+    if (backlog > 0) {
+        m_pInputFifo->releaseReadRegions(backlog - backlog % channels);
+    }
+    const int read = m_pInputFifo->read(m_inputBuffer.data(), samples);
+    if (read < samples) {
+        std::fill(m_inputBuffer.begin() + std::max(0, read), m_inputBuffer.begin() + samples, 0.0f);
+    }
+    composeInputBuffer(m_inputBuffer.data(), frames, 0, channels);
+}
+
+void SoundDeviceAndroidUsb::capture(const uint8_t* pData, int frames) {
+    if (!m_pInputFifo) {
+        return;
+    }
+    const auto& format = m_pDevice->captureFormat();
+    const int samples = frames * format.channels;
+    if (static_cast<int>(m_captureScratch.size()) < samples) {
+        m_captureScratch.resize(samples);
+    }
+    const uint8_t* pIn = pData;
+    // Little endian signed integers to float
+    if (format.subframeBytes == 3) {
+        for (int i = 0; i < samples; ++i) {
+            int32_t value = pIn[0] | (pIn[1] << 8) | (pIn[2] << 16);
+            if (value & 0x800000) {
+                value |= ~0xffffff;
+            }
+            m_captureScratch[i] = static_cast<CSAMPLE>(value / 8388608.0);
+            pIn += 3;
+        }
+    } else if (format.subframeBytes == 4) {
+        for (int i = 0; i < samples; ++i) {
+            const auto value = static_cast<int32_t>(static_cast<uint32_t>(pIn[0]) |
+                    (static_cast<uint32_t>(pIn[1]) << 8) |
+                    (static_cast<uint32_t>(pIn[2]) << 16) |
+                    (static_cast<uint32_t>(pIn[3]) << 24));
+            m_captureScratch[i] = static_cast<CSAMPLE>(value / 2147483648.0);
+            pIn += 4;
+        }
+    } else {
+        for (int i = 0; i < samples; ++i) {
+            const auto value = static_cast<int16_t>(pIn[0] | (pIn[1] << 8));
+            m_captureScratch[i] = static_cast<CSAMPLE>(value / 32768.0f);
+            pIn += 2;
+        }
+    }
+    m_pInputFifo->write(m_captureScratch.data(), samples);
 }
 
 void SoundDeviceAndroidUsb::writeProcess(SINT framesPerBuffer) {

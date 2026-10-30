@@ -4064,6 +4064,10 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Turntables</name>
     <message>
+        <source>Choose the sound card input of each turntable here (USB cards appear as &quot;directo&quot;), pick your timecode and turn on DVS on the deck. Start in REL mode.</source>
+        <translation>Elegí acá la entrada de la placa para cada bandeja (las placas USB aparecen como &quot;directo&quot;), el timecode y prendé DVS en el deck. Empezá en modo REL.</translation>
+    </message>
+    <message>
         <source>Signal</source>
         <translation>Señal</translation>
     </message>

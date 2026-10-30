@@ -49,6 +49,9 @@ class AndroidUsbAudioDevice {
     using RenderCallback = std::function<void(uint8_t* pDestination, int frames)>;
     /// Receives one 4 byte USB-MIDI event packet. Called on the USB event thread.
     using MidiCallback = std::function<void(const uint8_t* pPacket)>;
+    /// Receives the captured audio of the device, in the device format
+    /// (captureFormat()), on the USB event thread.
+    using CaptureCallback = std::function<void(const uint8_t* pData, int frames)>;
 
     ~AndroidUsbAudioDevice();
 
@@ -79,6 +82,19 @@ class AndroidUsbAudioDevice {
     }
     const usbaudio::StreamFormat& outputFormat() const {
         return m_outputFormat;
+    }
+    /// Cutlab: the capture (input) stream with most channels, used for vinyl
+    /// control and microphones. Only valid if hasCapture().
+    bool hasCapture() const {
+        return m_hasCapture;
+    }
+    const usbaudio::StreamFormat& captureFormat() const {
+        return m_captureFormat;
+    }
+    /// Set before startOutput(): the input runs together with the output
+    void setCaptureCallback(CaptureCallback callback) {
+        std::lock_guard lock(m_captureMutex);
+        m_captureCallback = std::move(callback);
     }
     const usbaudio::MidiInterface& midiInterface() const {
         return m_description.midi;
@@ -150,6 +166,14 @@ class AndroidUsbAudioDevice {
     static void feedbackTransferCallback(libusb_transfer* pTransfer);
     static void implicitTransferCallback(libusb_transfer* pTransfer);
     static void midiInTransferCallback(libusb_transfer* pTransfer);
+    static void captureTransferCallback(libusb_transfer* pTransfer);
+    /// Hands the audio of a completed capture transfer to the callback
+    void deliverCapture(libusb_transfer* pTransfer, int frameBytes);
+    /// The capture stream has its own transfers (it doesn't clock the output)
+    bool captureIsSeparate() const {
+        return m_hasCapture &&
+                !(m_hasImplicitFeedback && m_implicitFormat.endpoint == m_captureFormat.endpoint);
+    }
 
     QJniObject m_usbDevice;
     QJniObject m_connection;
@@ -196,6 +220,14 @@ class AndroidUsbAudioDevice {
     uint64_t m_measuredFrames16_16;
     int m_measuredPackets;
     bool m_clockLogged;
+
+    // Audio input (Cutlab)
+    usbaudio::StreamFormat m_captureFormat;
+    bool m_hasCapture;
+    std::mutex m_captureMutex;
+    CaptureCallback m_captureCallback;
+    std::vector<libusb_transfer*> m_captureTransfers;
+    std::atomic<int> m_captureTransfersPending;
 
     // MIDI input
     MidiCallback m_midiCallback;
