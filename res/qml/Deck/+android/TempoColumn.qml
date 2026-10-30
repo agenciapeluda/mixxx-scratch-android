@@ -241,4 +241,38 @@ ColumnLayout {
         group: root.group
         height: 22
     }
+    // Vinyl control (DVS): on/off and the mode. The input is routed in
+    // Settings → Audio (Deck N → Vinyl Control).
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: 2
+        visible: Mixxx.Application.vinylControlAvailable
+
+        Skin.ControlButton {
+            Layout.fillWidth: true
+            activeColor: Theme.deckActiveColor
+            group: root.group
+            implicitHeight: 22
+            key: "vinylcontrol_enabled"
+            text: "DVS"
+            toggleable: true
+        }
+        Skin.Button {
+            id: vinylModeButton
+
+            Layout.fillWidth: true
+            implicitHeight: 22
+            // 0 absolute, 1 relative, 2 constant
+            text: ["ABS", "REL", "CONST"][Math.max(0, Math.min(2, Math.round(vinylModeControl.value)))]
+
+            onClicked: vinylModeControl.value = (Math.round(vinylModeControl.value) + 1) % 3
+
+            Mixxx.ControlProxy {
+                id: vinylModeControl
+
+                group: root.group
+                key: "vinylcontrol_mode"
+            }
+        }
+    }
 }

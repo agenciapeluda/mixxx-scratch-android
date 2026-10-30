@@ -525,6 +525,9 @@ void CoreServices::initialize(QApplication* pApp) {
     // permission in the system settings since the last run, and without it the
     // library scan finds nothing at all.
     mixxx::android::requestMusicLibraryPermissions();
+    // Audio inputs (vinyl control timecode, microphone) need it before the
+    // sound devices are opened.
+    mixxx::android::requestAudioInputPermission();
 #endif
 
 #if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

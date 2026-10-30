@@ -52,6 +52,12 @@ bool requestMusicLibraryPermissions() {
     return granted;
 }
 
+bool requestAudioInputPermission() {
+    // Without RECORD_AUDIO Android delivers silence on every input, USB sound
+    // cards included, so vinyl control (DVS) and the microphone can't work.
+    return requestPermission(QStringLiteral("android.permission.RECORD_AUDIO"));
+}
+
 bool hasFullExternalStorageAccess() {
     if (android_get_device_api_level() >= 30) {
         return QJniObject::callStaticMethod<jboolean>(
