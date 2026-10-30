@@ -437,10 +437,17 @@ Popup {
                         enabled: visible
                     }
 
+                    Settings.Stems {
+                        id: stemsSection
+                        anchors.fill: parent
+                        visible: categoryList.currentIndex === 6
+                        enabled: visible
+                    }
+
                     Settings.About {
                         id: aboutSection
                         anchors.fill: parent
-                        visible: categoryList.currentIndex === 6
+                        visible: categoryList.currentIndex === 7
                         enabled: visible
                     }
 
@@ -452,6 +459,7 @@ Popup {
                             librarySection,
                             waveformSection,
                             interfaceSection,
+                            stemsSection,
                             aboutSection
                         ];
                         soundHardwareSection.activated.connect(function() { categoryList.currentIndex = 0; });
@@ -461,7 +469,8 @@ Popup {
                         librarySection.activated.connect(function() { categoryList.currentIndex = 3; });
                         waveformSection.activated.connect(function() { categoryList.currentIndex = 4; });
                         interfaceSection.activated.connect(function() { categoryList.currentIndex = 5; });
-                        aboutSection.activated.connect(function() { categoryList.currentIndex = 6; });
+                        stemsSection.activated.connect(function() { categoryList.currentIndex = 6; });
+                        aboutSection.activated.connect(function() { categoryList.currentIndex = 7; });
                         root.updateActiveCategory();
                     }
                 }
@@ -504,6 +513,11 @@ Popup {
             label: QT_TR_NOOP("Interface")
             iconGlyph: ""
             subtext: QT_TR_NOOP("Theme, Decks, Display")
+        }
+        ListElement {
+            label: QT_TR_NOOP("Stems")
+            iconGlyph: ""
+            subtext: QT_TR_NOOP("Drums, bass, vocals with AI")
         }
         ListElement {
             label: QT_TR_NOOP("About")

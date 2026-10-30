@@ -252,7 +252,7 @@ Category {
                     }
                     Text {
                         Layout.fillWidth: true
-                        text: qsTr("Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later.")
+                        text: qsTr("Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license.")
                         font.pixelSize: 11
                         color: "#8A91A3"
                         wrapMode: Text.WordWrap

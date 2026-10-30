@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
 <TS version="2.1" language="es_ES">
 <context>
@@ -16,8 +16,8 @@
         <translation>Créditos</translation>
     </message>
     <message>
-        <source>Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later.</source>
-        <translation>Basado en Mixxx (mixxx.org) y en el port para Android de JaviLabarumDJ y Angelos Exarchos. Software libre bajo la GNU GPL v2 o posterior.</translation>
+        <source>Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license.</source>
+        <translation>Basado en Mixxx (mixxx.org) y en el port para Android de JaviLabarumDJ y Angelos Exarchos. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT.</translation>
     </message>
     <message>
         <source>About</source>
@@ -97,7 +97,15 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
         <source>Based on the open source Mixxx project. Mobile adaptation by JaviLabarum.</source>
         <translation>Basado en el proyecto Open Source Mixxx. Adaptación móvil por JaviLabarum.</translation>
     </message>
-</context>
+<message>
+        <source>Live stems in Mixxx: his mixxx-stems project inspired the stem separation of this app.</source>
+        <translation>Stems en directo en Mixxx: su proyecto mixxx-stems inspiró la separación de stems de esta app.</translation>
+    </message>
+    <message>
+        <source>Beatgrid editing, Rekordbox playlists and dates, library backups and controller navigation.</source>
+        <translation>Edición de la rejilla, playlists y fechas de Rekordbox, copias de seguridad de la biblioteca y navegación con la controladora.</translation>
+    </message>
+    </context>
 <context>
     <name>AboutDialog</name>
     <message>
@@ -449,7 +457,23 @@ Usa el modo avanzado para verla</translation>
         <source>CLOSE</source>
         <translation>CERRAR</translation>
     </message>
-</context>
+<message>
+        <source>Grid locked – tap to unlock</source>
+        <translation>Rejilla bloqueada – toca para desbloquear</translation>
+    </message>
+    <message>
+        <source>‹ EARLIER</source>
+        <translation>‹ ANTES</translation>
+    </message>
+    <message>
+        <source>LATER ›</source>
+        <translation>DESPUÉS ›</translation>
+    </message>
+    <message>
+        <source>LOCK GRID</source>
+        <translation>BLOQUEAR REJILLA</translation>
+    </message>
+    </context>
 <context>
     <name>BoothBeatFx</name>
     <message>
@@ -745,16 +769,16 @@ Usa el modo avanzado para verla</translation>
         <translation>Permiso USB en Android</translation>
     </message>
     <message>
-        <source>MIDI controllers (like the DDJ-400) need no permission. If Android asks &apos;Allow Mixxx to access the USB device?&apos; (HID controllers), tick &apos;Always use for this device&apos; and press OK.</source>
-        <translation>Las controladoras MIDI (como la DDJ-400) no necesitan permiso. Si Android pregunta &apos;¿Permitir a Mixxx acceder al dispositivo USB?&apos; (controladoras HID), marca &apos;Usar siempre para este dispositivo&apos; y pulsa ACEPTAR.</translation>
+        <source>MIDI controllers (like the DDJ-400) need no permission. If Android asks 'Allow Mixxx to access the USB device?' (HID controllers), tick 'Always use for this device' and press OK.</source>
+        <translation>Las controladoras MIDI (como la DDJ-400) no necesitan permiso. Si Android pregunta '¿Permitir a Mixxx acceder al dispositivo USB?' (controladoras HID), marca 'Usar siempre para este dispositivo' y pulsa ACEPTAR.</translation>
     </message>
     <message>
         <source>Enable audio on the controller (main + CUE headphones)</source>
         <translation>Activar Audio en Controladora (Master + Auriculares CUE)</translation>
     </message>
     <message>
-        <source>• &lt;b&gt;Full DJ booth&lt;/b&gt;: speakers to the RCA outputs of the controller and headphones to the front jack. Select the &apos;DJ controller&apos; profile.&lt;br&gt;• &lt;b&gt;Hybrid mode&lt;/b&gt;: if you have no external speakers, select &apos;Tablet + controller headphones&apos; so the music plays through the tablet and the pre-listening through your headphones.</source>
-        <translation>• &lt;b&gt;Cabina DJ Completa&lt;/b&gt;: Altavoces a las salidas RCA de la mesa y cascos al frontal. Selecciona el perfil &apos;Controladora DJ&apos;.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: Si no tienes altavoces externos, selecciona &apos;Tablet + Auriculares Mesa&apos; para que la música suene por la tablet y la preescucha por los cascos.</translation>
+        <source>• &lt;b&gt;Full DJ booth&lt;/b&gt;: speakers to the RCA outputs of the controller and headphones to the front jack. Select the 'DJ controller' profile.&lt;br&gt;• &lt;b&gt;Hybrid mode&lt;/b&gt;: if you have no external speakers, select 'Tablet + controller headphones' so the music plays through the tablet and the pre-listening through your headphones.</source>
+        <translation>• &lt;b&gt;Cabina DJ Completa&lt;/b&gt;: Altavoces a las salidas RCA de la mesa y cascos al frontal. Selecciona el perfil 'Controladora DJ'.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: Si no tienes altavoces externos, selecciona 'Tablet + Auriculares Mesa' para que la música suene por la tablet y la preescucha por los cascos.</translation>
     </message>
     <message>
         <source>Go to audio outputs and profiles</source>
@@ -765,8 +789,8 @@ Usa el modo avanzado para verla</translation>
         <translation>Mapeos DJ (.midi.xml / .js)</translation>
     </message>
     <message>
-        <source>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.&lt;br&gt;To add a new or modified mapping, copy it to the public Mixxx folder and press &apos;Scan for USB devices&apos;:</source>
-        <translation>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Mixxx y pulsa &apos;Buscar Dispositivos USB&apos;:</translation>
+        <source>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.&lt;br&gt;To add a new or modified mapping, copy it to the public Mixxx folder and press 'Scan for USB devices':</source>
+        <translation>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Mixxx y pulsa 'Buscar Dispositivos USB':</translation>
     </message>
     <message>
         <source>✓ Copied!</source>
@@ -785,8 +809,8 @@ Usa el modo avanzado para verla</translation>
         <translation>No se ha detectado ninguna controladora DJ conectada</translation>
     </message>
     <message>
-        <source>Connect your controller via USB OTG and press &apos;Scan for USB devices&apos;</source>
-        <translation>Conecta tu controladora por USB OTG y pulsa &apos;Buscar Dispositivos USB&apos;</translation>
+        <source>Connect your controller via USB OTG and press 'Scan for USB devices'</source>
+        <translation>Conecta tu controladora por USB OTG y pulsa 'Buscar Dispositivos USB'</translation>
     </message>
     <message>
         <source>Configuring: %1</source>
@@ -860,7 +884,31 @@ Usa el modo avanzado para verla</translation>
         <source>Saved</source>
         <translation>Guardado</translation>
     </message>
-</context>
+<message>
+        <source>How do I connect my DJ controller to Android properly?</source>
+        <translation>¿Cómo conectar tu controladora DJ a Android y que funcione bien?</translation>
+    </message>
+    <message>
+        <source>Power supply: connect through a USB-C hub</source>
+        <translation>Alimentación Eléctrica: Conexión mediante HUB USB-C</translation>
+    </message>
+    <message>
+        <source>Go to audio outputs and profiles</source>
+        <translation>Ir a Salidas de Audio y Perfiles</translation>
+    </message>
+    <message>
+        <source>Copy path</source>
+        <translation>Copiar ruta</translation>
+    </message>
+    <message>
+        <source>Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.</source>
+        <translation>Compatible con Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop y +100 controladores.</translation>
+    </message>
+    <message>
+        <source>Audio outputs</source>
+        <translation>Salidas Audio</translation>
+    </message>
+    </context>
 <context>
     <name>ControllerCard</name>
     <message>
@@ -1031,6 +1079,26 @@ poner otra imagen</translation>
     <message>
         <source>Load into DECK 2</source>
         <translation>Cargar en DECK 2</translation>
+    </message>
+<message>
+        <source>✓ Stream downloaded and loaded into %1</source>
+        <translation>✓ Stream descargado y cargado en %1</translation>
+    </message>
+    <message>
+        <source>Stream error: %1</source>
+        <translation>Error en el stream: %1</translation>
+    </message>
+    <message>
+        <source>DIRECT URL / WEB STREAMING</source>
+        <translation>URL DIRECTA / STREAMING WEB</translation>
+    </message>
+    <message>
+        <source>◀ Load into DECK 1</source>
+        <translation>◀ Cargar en DECK 1</translation>
+    </message>
+    <message>
+        <source>Load into DECK 2 ▶</source>
+        <translation>Cargar en DECK 2 ▶</translation>
     </message>
 </context>
 <context>
@@ -1440,7 +1508,43 @@ Cue</translation>
         <source>Traditional</source>
         <translation>Tradicional</translation>
     </message>
-</context>
+<message>
+        <source>APPEARANCE &amp; DISPLAY</source>
+        <translation>APARIENCIA &amp; PANTALLA</translation>
+    </message>
+    <message>
+        <source>Unnamed</source>
+        <translation>Sin nombre</translation>
+    </message>
+    <message>
+        <source>TOP BAR</source>
+        <translation>BARRA SUPERIOR</translation>
+    </message>
+    <message>
+        <source>LIBRARY &amp; COLLECTION</source>
+        <translation>BIBLIOTECA &amp; COLECCIÓN</translation>
+    </message>
+    <message>
+        <source>COLOR PALETTES</source>
+        <translation>PALETAS DE COLOR</translation>
+    </message>
+    <message>
+        <source>CUE MODES &amp; LOADING BEHAVIOR</source>
+        <translation>MODOS CUE &amp; COMPORTAMIENTO DE CARGA</translation>
+    </message>
+    <message>
+        <source>TIME FORMAT &amp; DISPLAY</source>
+        <translation>FORMATO DE TIEMPO &amp; VISUALIZACIÓN</translation>
+    </message>
+    <message>
+        <source>PITCH, SPEED &amp; SYNC</source>
+        <translation>PITCH, VELOCIDAD &amp; SINCRONIZACIÓN</translation>
+    </message>
+    <message>
+        <source>SPEED / PITCH BEND BUTTON STEPS</source>
+        <translation>PASOS DE BOTONES DE VELOCIDAD / PITCH BEND</translation>
+    </message>
+    </context>
 <context>
     <name>Library</name>
     <message>
@@ -1556,8 +1660,8 @@ Cue</translation>
         <translation>(No hay más subcarpetas)</translation>
     </message>
     <message>
-        <source>✓ Add &apos;%1&apos; to the library</source>
-        <translation>✓ Añadir &apos;%1&apos; a la Librería</translation>
+        <source>✓ Add '%1' to the library</source>
+        <translation>✓ Añadir '%1' a la Librería</translation>
     </message>
     <message>
         <source>Close</source>
@@ -1733,85 +1837,85 @@ Cue</translation>
     </message>
     <message>
         <source>This or a parent directory is already in your library.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>This or a listed directory does not exist or is inaccessible.
 Aborting the operation to avoid library inconsistencies</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>This directory can not be read.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>An unknown error occurred.
 Aborting the operation to avoid library inconsistencies</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>This directory can not be found.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Sources</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Music Directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Choose a music directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Icon</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Relink music directory to new location</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Save to proceed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Relink</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>keep already imported tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>hide imported tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>purge imported tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Save to import new folder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>File scanning...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Cancel</source>
@@ -1819,63 +1923,63 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Metadata</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Synchronise metadata with file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Synchronise metadata with Serato library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Prefer relative path on playlist export</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Track duplicate distance</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source> tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source> track</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Delete history playlist with less than</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search completion</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search history keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search-as-you-type timeout</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>sec</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Pitch slider for fuzz BPM search</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Reset</source>
@@ -1883,9 +1987,105 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
-</context>
+<message>
+        <source>HIDE</source>
+        <translation>OCULTAR</translation>
+    </message>
+    <message>
+        <source>PLAYLISTS</source>
+        <translation>PLAYLISTS</translation>
+    </message>
+    <message>
+        <source>Local music folders</source>
+        <translation>Carpetas de Música Local</translation>
+    </message>
+    <message>
+        <source>Scanning...</source>
+        <translation>Escaneando...</translation>
+    </message>
+    <message>
+        <source>✓ Collection ready</source>
+        <translation>✓ Colección lista</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Quitar</translation>
+    </message>
+    <message>
+        <source>No folders added yet. Use the buttons below to add one.</source>
+        <translation>No hay carpetas añadidas aún. Pulsa en los botones de abajo para añadir.</translation>
+    </message>
+    <message>
+        <source>Music (/sdcard)</source>
+        <translation>Música (/sdcard)</translation>
+    </message>
+    <message>
+        <source>Downloads (/Download)</source>
+        <translation>Descargas (/Download)</translation>
+    </message>
+    <message>
+        <source>Browse / other folder...</source>
+        <translation>Explorar / Otra Carpeta...</translation>
+    </message>
+    <message>
+        <source>Rescan music</source>
+        <translation>Re-escanear Música</translation>
+    </message>
+    <message>
+        <source>Device folder browser:</source>
+        <translation>Explorador de carpetas en el dispositivo:</translation>
+    </message>
+    <message>
+        <source>✓ Add '%1' to the library</source>
+        <translation>✓ Añadir '%1' a la Librería</translation>
+    </message>
+    <message>
+        <source>Streaming storage &amp; cache</source>
+        <translation>Almacenamiento &amp; Caché de Streaming</translation>
+    </message>
+    <message>
+        <source>Space used:</source>
+        <translation>Espacio en uso:</translation>
+    </message>
+    <message>
+        <source>Clear cache</source>
+        <translation>Vaciar Caché</translation>
+    </message>
+    <message>
+        <source>Library backup</source>
+        <translation>Copia de seguridad de la librería</translation>
+    </message>
+    <message>
+        <source>Back up now</source>
+        <translation>Hacer copia ahora</translation>
+    </message>
+    <message>
+        <source>Rekordbox stick backup</source>
+        <translation>Copia de seguridad del USB de Rekordbox</translation>
+    </message>
+    <message>
+        <source>Find sticks</source>
+        <translation>Buscar USB</translation>
+    </message>
+    <message>
+        <source>Search &amp; organization</source>
+        <translation>Búsqueda y Organización</translation>
+    </message>
+    <message>
+        <source>Collection pre-analysis (BPM &amp; Camelot key)</source>
+        <translation>Pre-análisis de Colección (BPM &amp; Tonalidad Camelot)</translation>
+    </message>
+    <message>
+        <source>Analyze tracks without BPM/key</source>
+        <translation>Analizar Pistas sin BPM/Key</translation>
+    </message>
+    <message>
+        <source>Re-analyze the whole collection</source>
+        <translation>Re-analizar Toda la Colección</translation>
+    </message>
+    </context>
 <context>
     <name>Loop</name>
     <message>
@@ -1946,6 +2146,22 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>XY PAD</source>
         <translation>XY PAD</translation>
+    </message>
+<message>
+        <source>Stems queue</source>
+        <translation>Cola de stems</translation>
+    </message>
+    <message>
+        <source>CLOSE</source>
+        <translation>CERRAR</translation>
+    </message>
+    <message>
+        <source>Stems ready: %1. If it is loaded on a deck, load it again to use them.</source>
+        <translation>Stems listos: %1. Si está cargada en un deck, vuelve a cargarla para usarlos.</translation>
+    </message>
+    <message>
+        <source>%1 couldn't be separated: %2</source>
+        <translation>No se pudo separar %1: %2</translation>
     </message>
 </context>
 <context>
@@ -2086,7 +2302,47 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Connecting...</source>
         <translation>Conectando...</translation>
     </message>
-</context>
+<message>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
+    </message>
+    <message>
+        <source>✓ Track ready and loaded into %1</source>
+        <translation>✓ Pista lista y cargada en %1</translation>
+    </message>
+    <message>
+        <source>Download error: %1</source>
+        <translation>Error al descargar: %1</translation>
+    </message>
+    <message>
+        <source>AUDIUS STREAMING (FREE MUSIC)</source>
+        <translation>AUDIUS STREAMING (MÚSICA LIBRE)</translation>
+    </message>
+    <message>
+        <source>Loading...</source>
+        <translation>Cargando...</translation>
+    </message>
+    <message>
+        <source>Trending</source>
+        <translation>Tendencias</translation>
+    </message>
+    <message>
+        <source>Trending</source>
+        <translation>Tendencias</translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation>Listo</translation>
+    </message>
+    <message>
+        <source>Stream</source>
+        <translation>Stream</translation>
+    </message>
+    <message>
+        <source>Explore music by genre or search for any track or artist</source>
+        <translation>Explora música por género o busca cualquier canción o artista</translation>
+    </message>
+    </context>
 <context>
     <name>QuickLoadDrawer</name>
     <message>
@@ -2118,6 +2374,10 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Colección local de pistas</translation>
     </message>
     <message>
+        <source>Open full library view</source>
+        <translation>Abrir Vista Completa de Librería</translation>
+    </message>
+<message>
         <source>Open full library view</source>
         <translation>Abrir Vista Completa de Librería</translation>
     </message>
@@ -2224,7 +2484,23 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>JaviLabarum, Socials &amp; Info</source>
         <translation>JaviLabarum, RRSS &amp; Info</translation>
     </message>
-</context>
+<message>
+        <source>Settings</source>
+        <translation>Preferencias</translation>
+    </message>
+    <message>
+        <source>Search settings...</source>
+        <translation>Buscar ajuste...</translation>
+    </message>
+    <message>
+        <source>Stems</source>
+        <translation>Stems</translation>
+    </message>
+    <message>
+        <source>Drums, bass, vocals with AI</source>
+        <translation>Batería, bajo y voz con IA</translation>
+    </message>
+    </context>
 <context>
     <name>SoundHardware</name>
     <message>
@@ -2348,8 +2624,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>¿Cómo conectar tus altavoces y auriculares?</translation>
     </message>
     <message>
-        <source>• &lt;b&gt;Main output (1-2)&lt;/b&gt;: sound for the audience. Connect your speakers to the rear RCA outputs of your controller.&lt;br&gt;• &lt;b&gt;CUE pre-listening (3-4)&lt;/b&gt;: private sound. Connect your headphones to the headphone jack of the controller.&lt;br&gt;• &lt;b&gt;Hybrid mode&lt;/b&gt;: no external speakers? Choose &lt;i&gt;&apos;Tablet + controller headphones&apos;&lt;/i&gt; so the music plays through the tablet and the pre-listening through your headphones.&lt;br&gt;• &lt;b&gt;Important&lt;/b&gt;: after choosing your profile, press the blue &lt;b&gt;&apos;Apply and save outputs&apos;&lt;/b&gt; button at the bottom.</source>
-        <translation>• &lt;b&gt;Salida Master (1-2)&lt;/b&gt;: Sonido para el público. Conecta tus altavoces a las clavijas RCA traseras de tu mesa.&lt;br&gt;• &lt;b&gt;Preescucha CUE (3-4)&lt;/b&gt;: Sonido privado. Conecta tus cascos a la clavija de auriculares de la mesa.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: ¿No tienes altavoces externos? Elige &lt;i&gt;&apos;Tablet + Auriculares Mesa&apos;&lt;/i&gt; para que la música salga por la tablet y la preescucha por los cascos.&lt;br&gt;• &lt;b&gt;Importante&lt;/b&gt;: Tras elegir tu perfil, pulsa el botón azul &lt;b&gt;&apos;Aplicar y guardar salidas&apos;&lt;/b&gt; abajo del todo.</translation>
+        <source>• &lt;b&gt;Main output (1-2)&lt;/b&gt;: sound for the audience. Connect your speakers to the rear RCA outputs of your controller.&lt;br&gt;• &lt;b&gt;CUE pre-listening (3-4)&lt;/b&gt;: private sound. Connect your headphones to the headphone jack of the controller.&lt;br&gt;• &lt;b&gt;Hybrid mode&lt;/b&gt;: no external speakers? Choose &lt;i&gt;'Tablet + controller headphones'&lt;/i&gt; so the music plays through the tablet and the pre-listening through your headphones.&lt;br&gt;• &lt;b&gt;Important&lt;/b&gt;: after choosing your profile, press the blue &lt;b&gt;'Apply and save outputs'&lt;/b&gt; button at the bottom.</source>
+        <translation>• &lt;b&gt;Salida Master (1-2)&lt;/b&gt;: Sonido para el público. Conecta tus altavoces a las clavijas RCA traseras de tu mesa.&lt;br&gt;• &lt;b&gt;Preescucha CUE (3-4)&lt;/b&gt;: Sonido privado. Conecta tus cascos a la clavija de auriculares de la mesa.&lt;br&gt;• &lt;b&gt;Modo Híbrido&lt;/b&gt;: ¿No tienes altavoces externos? Elige &lt;i&gt;'Tablet + Auriculares Mesa'&lt;/i&gt; para que la música salga por la tablet y la preescucha por los cascos.&lt;br&gt;• &lt;b&gt;Importante&lt;/b&gt;: Tras elegir tu perfil, pulsa el botón azul &lt;b&gt;'Aplicar y guardar salidas'&lt;/b&gt; abajo del todo.</translation>
     </message>
     <message>
         <source>Audio engine, latency &amp; quality</source>
@@ -2523,7 +2799,35 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Near-hi-fi quality</source>
         <translation>Calidad casi hi-fi</translation>
     </message>
-</context>
+<message>
+        <source>Quick audio output profiles</source>
+        <translation>Perfiles Rápidos de Salida de Audio</translation>
+    </message>
+    <message>
+        <source>How do I connect my speakers and headphones?</source>
+        <translation>¿Cómo conectar tus altavoces y auriculares?</translation>
+    </message>
+    <message>
+        <source>Audio engine, latency &amp; quality</source>
+        <translation>Motor de Audio, Latencia &amp; Calidad</translation>
+    </message>
+    <message>
+        <source>Ultra-low latency: instant response for scratching and fast mixing.</source>
+        <translation>Latencia Ultra-Baja: Respuesta instantánea para scratch y mezclas rápidas.</translation>
+    </message>
+    <message>
+        <source>Balanced latency: recommended for most Android phones (stable, no dropouts).</source>
+        <translation>Latencia Equilibrada: Recomendada para la mayoría de teléfonos Android (estable y sin cortes).</translation>
+    </message>
+    <message>
+        <source>Safe mode: maximum stability if you hear crackles or the phone is slow.</source>
+        <translation>Modo Seguro: Máxima estabilidad si notas chasquidos o si el móvil va lento.</translation>
+    </message>
+    <message>
+        <source>Advanced routing matrix (virtual cables)</source>
+        <translation>Matriz de Ruteo Avanzada (Cables Virtuales)</translation>
+    </message>
+    </context>
 <context>
     <name>SourceTree</name>
     <message>
@@ -2596,7 +2900,15 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Target:</source>
         <translation>Destino:</translation>
     </message>
-</context>
+<message>
+        <source>AUDIUS (free)</source>
+        <translation>AUDIUS (Libre)</translation>
+    </message>
+    <message>
+        <source>DIRECT URL / RADIO</source>
+        <translation>URL DIRECTA / RADIO</translation>
+    </message>
+    </context>
 <context>
     <name>SubsonicView</name>
     <message>
@@ -2739,7 +3051,71 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Loading...</source>
         <translation>Cargando...</translation>
     </message>
-</context>
+<message>
+        <source>Error: %1</source>
+        <translation>Error: %1</translation>
+    </message>
+    <message>
+        <source>✓ Track ready and loaded into %1</source>
+        <translation>✓ Pista lista y cargada en %1</translation>
+    </message>
+    <message>
+        <source>Download error: %1</source>
+        <translation>Error al descargar: %1</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Ajustes</translation>
+    </message>
+    <message>
+        <source>Connecting</source>
+        <translation>Conectando</translation>
+    </message>
+    <message>
+        <source>✓ Connect</source>
+        <translation>✓ Conectar</translation>
+    </message>
+    <message>
+        <source>Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
+        <translation>Compatible con Navidrome, Funkwhale, Ampache, Subsonic, Airsonic y Nextcloud Music.</translation>
+    </message>
+    <message>
+        <source>Clear cache</source>
+        <translation>Limpiar Caché</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation>Playlists</translation>
+    </message>
+    <message>
+        <source>◀ Back</source>
+        <translation>◀ Volver</translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation>Listo</translation>
+    </message>
+    <message>
+        <source>Cloud</source>
+        <translation>Nube</translation>
+    </message>
+    <message>
+        <source>Type an artist, title or album to search your server</source>
+        <translation>Escribe un artista, título o álbum para buscar en tu servidor</translation>
+    </message>
+    <message>
+        <source>Connect your Navidrome / Subsonic server in the settings above</source>
+        <translation>Conecta tu servidor Navidrome / Subsonic en Ajustes arriba</translation>
+    </message>
+    <message>
+        <source>Show tracks ▶</source>
+        <translation>Ver Pistas ▶</translation>
+    </message>
+    </context>
 <context>
     <name>SyncButton</name>
     <message>
@@ -2820,7 +3196,15 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Reanalyze (variable BPM)</source>
         <translation>Volver a analizar (BPM variable)</translation>
     </message>
-</context>
+<message>
+        <source>◀ Load Deck 1</source>
+        <translation>◀ Cargar en Deck 1</translation>
+    </message>
+    <message>
+        <source>Load Deck 2 ▶</source>
+        <translation>Cargar en Deck 2 ▶</translation>
+    </message>
+    </context>
 <context>
     <name>TrackList</name>
     <message>
@@ -2911,164 +3295,172 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>COPY</source>
         <translation>COPIAR</translation>
     </message>
-</context>
+<message>
+        <source>STEMS ✓</source>
+        <translation>STEMS ✓</translation>
+    </message>
+    <message>
+        <source>STEMS</source>
+        <translation>STEMS</translation>
+    </message>
+    </context>
 <context>
     <name>WMainMenuBar</name>
     <message>
         <source>Load Track to Deck &amp;%1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Rescan Library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>E&amp;xport Library to Engine DJ</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search in Current View...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Search in Tracks Library...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Create &amp;New Playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Create New &amp;Crate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Microphone Section</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Vinyl Control Section</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Preview Deck</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Cover Art</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Keywheel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Maximize Library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Show Auto DJ</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Enable Vinyl Control &amp;%1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Record Mix</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Enable Live &amp;Broadcasting</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Enable &amp;Keyboard Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Reload Skin</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Developer &amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Stats: &amp;Experiment Bucket</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Stats: &amp;Base Bucket</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>Deb&amp;ugger Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Community Support</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;User Manual</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Keyboard Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Settings directory</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Translate This Application</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;About</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Library</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Vinyl Control</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Developer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished" />
     </message>
 </context>
 <context>
@@ -3373,7 +3765,19 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>FX DEPTH: %1%</source>
         <translation>PROFUNDIDAD FX: %1%</translation>
     </message>
-</context>
+<message>
+        <source>XY TOUCH PAD</source>
+        <translation>PAD TÁCTIL XY</translation>
+    </message>
+    <message>
+        <source>◀ LOW PASS</source>
+        <translation>◀ PASO BAJO</translation>
+    </message>
+    <message>
+        <source>HIGH PASS ▶</source>
+        <translation>PASO ALTO ▶</translation>
+    </message>
+    </context>
 <context>
     <name>main</name>
     <message>
@@ -3538,7 +3942,7 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>mixxx::qml::QmlMobileLibraryProxy</name>
     <message>
-        <source>Backups need &quot;All files access&quot;. Allow it, then try again.</source>
+        <source>Backups need "All files access". Allow it, then try again.</source>
         <translation>Las copias necesitan «Acceso a todos los archivos». Actívalo y vuelve a intentarlo.</translation>
     </message>
     <message>
@@ -3550,7 +3954,7 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Copia guardada en %1</translation>
     </message>
     <message>
-        <source>Restoring needs &quot;All files access&quot;. Allow it, then try again.</source>
+        <source>Restoring needs "All files access". Allow it, then try again.</source>
         <translation>Restaurar necesita «Acceso a todos los archivos». Actívalo y vuelve a intentarlo.</translation>
     </message>
     <message>
@@ -3682,6 +4086,416 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>on</source>
         <translation>sí</translation>
+    </message>
+</context>
+<context>
+    <name>HotcueAndStem</name>
+    <message>
+        <source>DRUMS</source>
+        <translation>BATERÍA</translation>
+    </message>
+    <message>
+        <source>BASS</source>
+        <translation>BAJO</translation>
+    </message>
+    <message>
+        <source>VOCALS</source>
+        <translation>VOZ</translation>
+    </message>
+    <message>
+        <source>OTHER</source>
+        <translation>RESTO</translation>
+    </message>
+</context>
+<context>
+    <name>Stems</name>
+    <message>
+        <source>Stems</source>
+        <translation>Stems</translation>
+    </message>
+    <message>
+        <source>The download of %1 failed: %2</source>
+        <translation>Falló la descarga de %1: %2</translation>
+    </message>
+    <message>
+        <source>STEMS</source>
+        <translation>STEMS</translation>
+    </message>
+    <message>
+        <source>Splits the tracks you choose into drums, bass, vocals and the rest, so that you can mute or mix each part on the deck. In the library, select a track or open a list and tap STEMS. The stems are saved next to each track, in a hidden .stems folder, and they are used whenever you load the track. If its folder can't be written, they stay in the app.</source>
+        <translation>Separa las pistas que elijas en batería, bajo, voz y el resto, para silenciar o mezclar cada parte en el deck. En la biblioteca, selecciona una pista o abre una lista y pulsa STEMS. Los stems se guardan junto a cada pista, en una carpeta oculta .stems, y se usan siempre que cargues la pista. Si no se puede escribir en su carpeta, se quedan en la app.</translation>
+    </message>
+    <message>
+        <source>Separating uses a lot of CPU. While you play it may cause audio dropouts: better prepare your tracks before the session.</source>
+        <translation>Separar usa mucha CPU. Mientras pinchas puede provocar cortes de audio: mejor prepara tus pistas antes de la sesión.</translation>
+    </message>
+    <message>
+        <source>MODELS</source>
+        <translation>MODELOS</translation>
+    </message>
+    <message>
+        <source>Download the models you want to use. The times are for a 5 minute track and depend a lot on the device: tap MEASURE to know yours.</source>
+        <translation>Descarga los modelos que quieras usar. Los tiempos son para una pista de 5 minutos y dependen mucho del dispositivo: pulsa MEDIR para saber los del tuyo.</translation>
+    </message>
+    <message>
+        <source>Fast and light. Good quality, the vocals may sound a bit metallic. Its bass is reinforced with the low end of the track.</source>
+        <translation>Rápido y ligero. Buena calidad, la voz puede sonar algo metálica. Su bajo se refuerza con los graves de la pista.</translation>
+    </message>
+    <message>
+        <source>1–4 min per track · ~250 MB of memory</source>
+        <translation>1–4 min por pista · ~250 MB de memoria</translation>
+    </message>
+    <message>
+        <source>The best quality: cleaner vocals and bass. Slow and memory hungry: best to prepare playlists with the charger plugged in and without playing.</source>
+        <translation>La mejor calidad: voz y bajo más limpios. Lento y consume mucha memoria: mejor para preparar playlists con el cargador puesto y sin pinchar.</translation>
+    </message>
+    <message>
+        <source>8–30 min per track · 2–2.5 GB of memory</source>
+        <translation>8–30 min por pista · 2–2,5 GB de memoria</translation>
+    </message>
+    <message>
+        <source>This device has %1 GB of memory: HTDemucs may not fit.</source>
+        <translation>Este dispositivo tiene %1 GB de memoria: puede que HTDemucs no quepa.</translation>
+    </message>
+    <message>
+        <source>OPTIONS</source>
+        <translation>OPCIONES</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modelo</translation>
+    </message>
+    <message>
+        <source>ASK</source>
+        <translation>PREGUNTAR</translation>
+    </message>
+    <message>
+        <source>Size of the stem files</source>
+        <translation>Tamaño de los archivos de stems</translation>
+    </message>
+    <message>
+        <source>Per 5 minute track</source>
+        <translation>Por pista de 5 minutos</translation>
+    </message>
+    <message>
+        <source>LIGHT ~18 MB</source>
+        <translation>LIGERO ~18 MB</translation>
+    </message>
+    <message>
+        <source>NORMAL ~24 MB</source>
+        <translation>NORMAL ~24 MB</translation>
+    </message>
+    <message>
+        <source>HIGH ~36 MB</source>
+        <translation>ALTO ~36 MB</translation>
+    </message>
+    <message>
+        <source>While a deck plays</source>
+        <translation>Mientras suena un deck</translation>
+    </message>
+    <message>
+        <source>The queue waits until the decks stop</source>
+        <translation>La cola espera a que paren los decks</translation>
+    </message>
+    <message>
+        <source>Separates with half the CPU, more slowly</source>
+        <translation>Separa con la mitad de CPU, más despacio</translation>
+    </message>
+    <message>
+        <source>GO ON SLOWER</source>
+        <translation>SEGUIR MÁS LENTO</translation>
+    </message>
+    <message>
+        <source>PAUSE</source>
+        <translation>PAUSAR</translation>
+    </message>
+    <message>
+        <source>Only while charging</source>
+        <translation>Solo con el cargador</translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation>SÍ</translation>
+    </message>
+    <message>
+        <source>NO</source>
+        <translation>NO</translation>
+    </message>
+    <message>
+        <source>QUEUE</source>
+        <translation>COLA</translation>
+    </message>
+    <message>
+        <source>STORAGE</source>
+        <translation>ALMACENAMIENTO</translation>
+    </message>
+    <message>
+        <source>Stems kept in the app (tracks of folders that can't be written): %1 MB. The stems next to your tracks are deleted from the library, with STEMS.</source>
+        <translation>Stems guardados en la app (pistas de carpetas en las que no se puede escribir): %1 MB. Los stems que están junto a tus pistas se borran desde la biblioteca, con STEMS.</translation>
+    </message>
+    <message>
+        <source>DELETE</source>
+        <translation>BORRAR</translation>
+    </message>
+    <message>
+        <source>This device: ~%1 per 5 minute track</source>
+        <translation>Este dispositivo: ~%1 por pista de 5 minutos</translation>
+    </message>
+    <message>
+        <source>Downloading… %1%</source>
+        <translation>Descargando… %1%</translation>
+    </message>
+    <message>
+        <source>MEASURING…</source>
+        <translation>MIDIENDO…</translation>
+    </message>
+    <message>
+        <source>MEASURE</source>
+        <translation>MEDIR</translation>
+    </message>
+    <message>
+        <source>CANCEL</source>
+        <translation>CANCELAR</translation>
+    </message>
+    <message>
+        <source>⬇ %1 MB</source>
+        <translation>⬇ %1 MB</translation>
+    </message>
+</context>
+<context>
+    <name>StemsPopup</name>
+    <message>
+        <source>Nothing to separate: the tracks are already in the queue or can't be read.</source>
+        <translation>Nada que separar: las pistas ya están en la cola o no se pueden leer.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n track(s) added to the queue. Follow the progress in the top bar () or in Settings → Stems.</source>
+        <translation><numerusform>%n pista añadida a la cola. Sigue el progreso en la barra superior () o en Ajustes → Stems.</numerusform><numerusform>%n pistas añadidas a la cola. Sigue el progreso en la barra superior () o en Ajustes → Stems.</numerusform></translation>
+    </message>
+    <message>
+        <source>Separate into stems</source>
+        <translation>Separar en stems</translation>
+    </message>
+    <message>
+        <source>SELECTED TRACK</source>
+        <translation>PISTA SELECCIONADA</translation>
+    </message>
+    <message>
+        <source>WHOLE LIST</source>
+        <translation>TODA LA LISTA</translation>
+    </message>
+    <message>
+        <source>%1 · already has stems</source>
+        <translation>%1 · ya tiene stems</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n track(s) in the list</source>
+        <translation><numerusform>%n pista en la lista</numerusform><numerusform>%n pistas en la lista</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <source>%n with stems</source>
+        <translation><numerusform>%n con stems</numerusform><numerusform>%n con stems</numerusform></translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Modelo</translation>
+    </message>
+    <message>
+        <source>Fast and light</source>
+        <translation>Rápido y ligero</translation>
+    </message>
+    <message>
+        <source>1–4 min per track</source>
+        <translation>1–4 min por pista</translation>
+    </message>
+    <message>
+        <source>Best quality, slow</source>
+        <translation>La mejor calidad, lento</translation>
+    </message>
+    <message>
+        <source>8–30 min per track · 2.5 GB of memory</source>
+        <translation>8–30 min por pista · 2,5 GB de memoria</translation>
+    </message>
+    <message>
+        <source>Only %1 GB of memory is free now: HTDemucs may run out of memory. Close other apps or use Spleeter.</source>
+        <translation>Ahora solo hay %1 GB de memoria libres: HTDemucs puede quedarse sin memoria. Cierra otras apps o usa Spleeter.</translation>
+    </message>
+    <message>
+        <source>A deck is playing: the queue will wait until you stop the decks.</source>
+        <translation>Hay un deck sonando: la cola esperará a que pares los decks.</translation>
+    </message>
+    <message>
+        <source>A deck is playing: separating now may cause audio dropouts. It will go slower to leave CPU to the audio. You can make it wait in Settings → Stems.</source>
+        <translation>Hay un deck sonando: separar ahora puede provocar cortes de audio. Irá más lento para dejar CPU al audio. Puedes hacer que espere en Ajustes → Stems.</translation>
+    </message>
+    <message>
+        <source>Separate again the tracks that have stems</source>
+        <translation>Volver a separar las pistas que ya tienen stems</translation>
+    </message>
+    <message>
+        <source>YES</source>
+        <translation>SÍ</translation>
+    </message>
+    <message>
+        <source>NO</source>
+        <translation>NO</translation>
+    </message>
+    <message>
+        <source>DELETE STEMS</source>
+        <translation>BORRAR STEMS</translation>
+    </message>
+    <message>
+        <source>DELETE STEMS (%1)</source>
+        <translation>BORRAR STEMS (%1)</translation>
+    </message>
+    <message numerus="yes">
+        <source>Deleted the stems of %n track(s).</source>
+        <translation><numerusform>Borrados los stems de %n pista.</numerusform><numerusform>Borrados los stems de %n pistas.</numerusform></translation>
+    </message>
+    <message>
+        <source>CLOSE</source>
+        <translation>CERRAR</translation>
+    </message>
+    <message>
+        <source>SEPARATE %1</source>
+        <translation>SEPARAR %1</translation>
+    </message>
+    <message>
+        <source>SEPARATE</source>
+        <translation>SEPARAR</translation>
+    </message>
+    <message>
+        <source>This device: ~%1 per 5 minute track</source>
+        <translation>Este dispositivo: ~%1 por pista de 5 minutos</translation>
+    </message>
+    <message>
+        <source>%1% · CANCEL</source>
+        <translation>%1% · CANCELAR</translation>
+    </message>
+    <message>
+        <source>⬇ DOWNLOAD %1 MB</source>
+        <translation>⬇ DESCARGAR %1 MB</translation>
+    </message>
+</context>
+<context>
+    <name>StemsQueue</name>
+    <message>
+        <source>Reading the audio</source>
+        <translation>Leyendo el audio</translation>
+    </message>
+    <message>
+        <source>Loading the model</source>
+        <translation>Cargando el modelo</translation>
+    </message>
+    <message>
+        <source>Saving</source>
+        <translation>Guardando</translation>
+    </message>
+    <message>
+        <source>Separating</source>
+        <translation>Separando</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation>En pausa</translation>
+    </message>
+    <message>
+        <source>Waiting until the decks stop playing</source>
+        <translation>Esperando a que paren los decks</translation>
+    </message>
+    <message>
+        <source>Waiting for the charger</source>
+        <translation>Esperando al cargador</translation>
+    </message>
+    <message>
+        <source>Queue finished</source>
+        <translation>Cola terminada</translation>
+    </message>
+    <message>
+        <source>No tracks in the queue. Choose a track or a list in the library and tap STEMS.</source>
+        <translation>No hay pistas en la cola. Elige una pista o una lista en la biblioteca y pulsa STEMS.</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n track(s) waiting</source>
+        <translation><numerusform>%n pista pendiente</numerusform><numerusform>%n pistas pendientes</numerusform></translation>
+    </message>
+    <message>
+        <source>CANCEL ALL</source>
+        <translation>CANCELAR TODO</translation>
+    </message>
+    <message>
+        <source>▶ RESUME</source>
+        <translation>▶ REANUDAR</translation>
+    </message>
+    <message>
+        <source>⏸ PAUSE</source>
+        <translation>⏸ PAUSAR</translation>
+    </message>
+    <message>
+        <source>CLEAR DONE</source>
+        <translation>LIMPIAR TERMINADAS</translation>
+    </message>
+    <message>
+        <source>%1 left</source>
+        <translation>quedan %1</translation>
+    </message>
+    <message>
+        <source>Ready: reload the track to use its stems</source>
+        <translation>Listo: vuelve a cargar la pista para usar sus stems</translation>
+    </message>
+</context>
+<context>
+    <name>mixxx::stems::StemsManager</name>
+    <message>
+        <source>Track %1 of %2: %3%</source>
+        <translation>Pista %1 de %2: %3%</translation>
+    </message>
+    <message>
+        <source>Separating stems</source>
+        <translation>Separando stems</translation>
+    </message>
+</context>
+<context>
+    <name>stems</name>
+    <message>
+        <source>Canceled</source>
+        <translation>Cancelada</translation>
+    </message>
+    <message>
+        <source>The model is missing or damaged: download it again in Settings → Stems</source>
+        <translation>Falta el modelo o está dañado: vuelve a descargarlo en Ajustes → Stems</translation>
+    </message>
+    <message>
+        <source>The file can't be found</source>
+        <translation>No se encuentra el archivo</translation>
+    </message>
+    <message>
+        <source>The audio of the file can't be read</source>
+        <translation>No se puede leer el audio del archivo</translation>
+    </message>
+    <message>
+        <source>Too long: up to 20 minutes per track</source>
+        <translation>Demasiado larga: hasta 20 minutos por pista</translation>
+    </message>
+    <message>
+        <source>The stem file can't be saved</source>
+        <translation>No se puede guardar el archivo de stems</translation>
+    </message>
+    <message>
+        <source>Not enough memory: close other apps or use Spleeter</source>
+        <translation>No hay memoria suficiente: cierra otras apps o usa Spleeter</translation>
+    </message>
+    <message>
+        <source>The AI engine can't be loaded on this device</source>
+        <translation>El motor de IA no se puede cargar en este dispositivo</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>%1 min</source>
+        <translation>%1 min</translation>
     </message>
 </context>
 </TS>

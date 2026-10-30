@@ -51,6 +51,28 @@ jobs:
             /usr/share/swift /usr/local/share/vcpkg
           df -h /
 
+      - name: Mirror the stem separation models
+        # The models (Spleeter by Deezer and HTDemucs by Meta, both MIT,
+        # converted to ONNX) are served from this repo's own release so the
+        # app does not depend on another repo. Copied once.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view stems-models-v1 >/dev/null 2>&1; then
+            echo "Models already mirrored"
+            exit 0
+          fi
+          mkdir -p /tmp/models
+          if gh release download stems-models-v1 -R JaviLabarumDJ/mixxx-android -D /tmp/models; then
+            ls -lh /tmp/models
+            gh release create stems-models-v1 /tmp/models/* --target "${{ github.sha }}" \
+              --title "Stem separation models" \
+              --notes "Spleeter (Deezer, MIT) and HTDemucs (Meta, MIT) converted to ONNX. Downloaded by the app on demand."
+          else
+            echo "::warning::Could not download the stem models; stem separation will not find them."
+          fi
+          rm -rf /tmp/models
+
       - name: Set up signing key
         run: |
           if [ -z "${ANDROID_SIGNING_KEYSTORE_BASE64}" ]; then
@@ -100,6 +122,7 @@ jobs:
             -DVCPKG_DEFAULT_HOST_TRIPLET=x64-linux-release \
             -DQT6=ON -DQML=ON -DHID=ON -DBULK=ON \
             -DVINYLCONTROL=ON \
+            -DSTEM=ON \
             -DKEYFINDER=ON \
             -DBUILD_TESTING=OFF -DBUILD_BENCH=OFF \
             -DWARNINGS_FATAL=OFF \
