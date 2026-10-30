@@ -23,7 +23,7 @@
 namespace {
 
 const QString kReleasesUrl = QStringLiteral(
-        "https://api.github.com/repos/xhellvirax/mixxx-android/releases?per_page=20");
+        "https://api.github.com/repos/agenciapeluda/mixxx-scratch-android/releases?per_page=20");
 // Releases of the app are tagged e.g. "v1.5.3-android"; others (e.g. the
 // models of the stems) have no APK or another tag
 const QRegularExpression kReleaseTag(QStringLiteral("^v(\\d+\\.\\d+\\.\\d+)-android$"));
