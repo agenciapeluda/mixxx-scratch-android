@@ -23,7 +23,9 @@ struct ModelFile {
 };
 
 // Spleeter: Deezer's models converted to ONNX (MIT). HTDemucs: Meta's model
-// converted to ONNX (MIT), its matrix products quantized to 8 bits.
+// converted to ONNX by StemSplitio (MIT), fp16 weights.
+// Mirrored from huggingface.co/Best-Practice (spleeter-4stems-onnx,
+// htdemucs-onnx) to this repo's release stems-models-v1 by the CI.
 const QList<ModelFile> kSpleeterFiles = {
         {"spleeter-drums.fp16.onnx",
                 "drums.fp16.onnx",
@@ -43,10 +45,10 @@ const QList<ModelFile> kSpleeterFiles = {
                 "db47148ab1c52709ce694893f532c91abfe3edc4d46238939570e036a22878ca"},
 };
 const QList<ModelFile> kHTDemucsFiles = {
-        {"htdemucs-int8.onnx",
+        {"htdemucs-fp16weights.onnx",
                 "htdemucs.onnx",
-                156458446,
-                "3e1f78f51d771b1abd0220f2559f2e85bff0f73560a974092f74a1376b04f4bc"},
+                165612636,
+                "d05c269d0178d2a72ad484b10b11dd370193fc923201c3b27a99f848745db70a"},
 };
 
 const QList<ModelFile>& modelFiles(Model model) {

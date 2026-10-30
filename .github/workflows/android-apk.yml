@@ -52,26 +52,42 @@ jobs:
           df -h /
 
       - name: Mirror the stem separation models
-        # The models (Spleeter by Deezer and HTDemucs by Meta, both MIT,
-        # converted to ONNX) are served from this repo's own release so the
-        # app does not depend on another repo. Copied once.
+        # Spleeter 4stems (Deezer, MIT; ONNX by Best-Practice from the
+        # sherpa-onnx port, Apache-2.0) and HTDemucs (Meta, MIT; ONNX by
+        # StemSplitio, MIT) from Hugging Face to this repo's release, so the
+        # app downloads them from here. The sizes and SHA-256 must match
+        # src/stems/stemmodels.cpp.
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          if gh release view stems-models-v1 >/dev/null 2>&1; then
+          set -e
+          if gh release view stems-models-v1 --json assets --jq '.assets[].name' 2>/dev/null | grep -q htdemucs-fp16weights.onnx; then
             echo "Models already mirrored"
             exit 0
           fi
-          mkdir -p /tmp/models
-          if gh release download stems-models-v1 -R JaviLabarumDJ/mixxx-android -D /tmp/models; then
-            ls -lh /tmp/models
-            gh release create stems-models-v1 /tmp/models/* --target "${{ github.sha }}" \
+          mkdir -p /tmp/models && cd /tmp/models
+          HF=https://huggingface.co/Best-Practice
+          for s in drums bass other vocals; do
+            curl -fsSL -o "spleeter-$s.fp16.onnx" "$HF/spleeter-4stems-onnx/resolve/main/$s.fp16.onnx"
+          done
+          curl -fsSL -o htdemucs-fp16weights.onnx "$HF/htdemucs-onnx/resolve/main/htdemucs_fp16weights.onnx"
+          ok=1
+          for f in *.onnx; do
+            sum=$(sha256sum "$f" | cut -d' ' -f1); size=$(stat -c %s "$f")
+            echo "$f $size $sum"
+            if ! grep -q "$sum" "$GITHUB_WORKSPACE/src/stems/stemmodels.cpp"; then
+              echo "::error title=Stem model hash::$f size=$size sha256=$sum is not in stemmodels.cpp"
+              ok=0
+            fi
+          done
+          [ "$ok" = 1 ] || exit 1
+          gh release view stems-models-v1 >/dev/null 2>&1 || \
+            gh release create stems-models-v1 --target "${{ github.sha }}" \
               --title "Stem separation models" \
-              --notes "Spleeter (Deezer, MIT) and HTDemucs (Meta, MIT) converted to ONNX. Downloaded by the app on demand."
-          else
-            echo "::warning::Could not download the stem models; stem separation will not find them."
-          fi
-          rm -rf /tmp/models
+              --notes "Spleeter 4stems (Deezer, MIT) and HTDemucs (Meta, MIT) in ONNX, mirrored from huggingface.co/Best-Practice. Downloaded by the app on demand."
+          gh release upload stems-models-v1 *.onnx --clobber -R "${{ github.repository }}"
+          cd / && rm -rf /tmp/models
 
       - name: Set up signing key
         run: |
