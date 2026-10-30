@@ -161,7 +161,14 @@ jobs:
           done
 
       - name: Build APK
-        run: cmake --build build --target apk --parallel "$(nproc)"
+        shell: bash
+        run: |
+          set -o pipefail
+          if ! cmake --build build --target apk --parallel "$(nproc)" 2>&1 | tee build.log; then
+            grep -n -B2 -A6 -E "error:|Error [0-9]|FAILED" build.log | head -c 3500 \
+              | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g' | sed 's/^/::error title=Build::/'
+            exit 1
+          fi
 
       - name: ccache stats
         if: always()

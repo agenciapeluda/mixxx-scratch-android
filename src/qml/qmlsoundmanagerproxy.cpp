@@ -3,6 +3,7 @@
 #include <qqmlengine.h>
 
 #include <memory>
+#include <utility>
 
 #include "moc_qmlsoundmanagerproxy.cpp"
 #include "qml/qmlconfigproxy.h"
@@ -296,7 +297,8 @@ void QmlSoundManagerProxy::removeClashingOutputs() {
             }
         }
         if (clashes) {
-            qWarning() << "Dropping output" << candidate.second.getType()
+            qWarning() << "Dropping output"
+                       << AudioPath::getStringFromType(candidate.second.getType())
                        << "that shares channels with another output on"
                        << candidate.first.name;
         } else {
