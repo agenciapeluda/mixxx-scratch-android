@@ -86,6 +86,14 @@ Item {
                         text: loadDeck2Item.text
                     }
                 }
+                MenuItem {
+                    text: qsTr("Add to Auto DJ (bottom)")
+                    onTriggered: root.library.addToAutoDJ(root.currentTrack(), false)
+                }
+                MenuItem {
+                    text: qsTr("Add to Auto DJ (next)")
+                    onTriggered: root.library.addToAutoDJ(root.currentTrack(), true)
+                }
                 MenuSeparator {
                 }
 

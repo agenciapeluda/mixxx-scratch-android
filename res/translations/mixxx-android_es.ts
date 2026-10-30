@@ -2100,6 +2100,10 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>Auto DJ</source>
+        <translation>Auto DJ</translation>
+    </message>
+    <message>
         <source>Waves</source>
         <translation>Ondas</translation>
     </message>
@@ -2847,6 +2851,10 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>SourceTree</name>
     <message>
+        <source>Auto DJ</source>
+        <translation>Auto DJ</translation>
+    </message>
+    <message>
         <source>#</source>
         <translation>#</translation>
     </message>
@@ -3152,6 +3160,14 @@ Aborting the operation to avoid library inconsistencies</source>
 </context>
 <context>
     <name>Track</name>
+    <message>
+        <source>Add to Auto DJ (bottom)</source>
+        <translation>Agregar a Auto DJ (al final)</translation>
+    </message>
+    <message>
+        <source>Add to Auto DJ (next)</source>
+        <translation>Agregar a Auto DJ (a continuación)</translation>
+    </message>
     <message>
         <source>File</source>
         <translation>Archivo</translation>
@@ -4512,6 +4528,77 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>%1 min</source>
         <translation>%1 min</translation>
+    </message>
+</context>
+<context>
+    <name>AutoDJPanel</name>
+    <message>
+        <source>Intro → Outro</source>
+        <translation>Intro → Outro</translation>
+    </message>
+    <message>
+        <source>Fade at outro start</source>
+        <translation>Fundido al empezar el outro</translation>
+    </message>
+    <message>
+        <source>Full track</source>
+        <translation>Tema completo</translation>
+    </message>
+    <message>
+        <source>Skip silence</source>
+        <translation>Saltear silencio</translation>
+    </message>
+    <message>
+        <source>Skip silence, start at full volume</source>
+        <translation>Saltear silencio, empezar a volumen pleno</translation>
+    </message>
+    <message>
+        <source>Auto DJ</source>
+        <translation>Auto DJ</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Prendido</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Apagado</translation>
+    </message>
+    <message>
+        <source>Plays the Auto DJ queue and mixes between deck 1 and deck 2. Add tracks with the track menu → Add to Auto DJ.</source>
+        <translation>Reproduce la cola de Auto DJ y mezcla entre el deck 1 y el deck 2. Sumá temas desde el menú del tema → Agregar a Auto DJ.</translation>
+    </message>
+    <message>
+        <source>Fade now</source>
+        <translation>Mezclar ya</translation>
+    </message>
+    <message>
+        <source>Skip next</source>
+        <translation>Saltear el siguiente</translation>
+    </message>
+    <message>
+        <source>Shuffle queue</source>
+        <translation>Mezclar la cola</translation>
+    </message>
+    <message>
+        <source>Add random track</source>
+        <translation>Agregar tema al azar</translation>
+    </message>
+    <message>
+        <source>Transition</source>
+        <translation>Transición</translation>
+    </message>
+    <message>
+        <source>Fade time</source>
+        <translation>Duración del fundido</translation>
+    </message>
+    <message>
+        <source>%1 s</source>
+        <translation>%1 s</translation>
+    </message>
+    <message>
+        <source>Open the Auto DJ queue</source>
+        <translation>Abrir la cola de Auto DJ</translation>
     </message>
 </context>
 </TS>

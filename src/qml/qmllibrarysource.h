@@ -12,6 +12,7 @@
 
 #include "library/browse/browsefeature.h"
 #include "library/libraryfeature.h"
+#include "library/playlisttablemodel.h"
 #include "library/sidebarmodel.h"
 #include "library/trackset/crate/cratefeature.h"
 #include "library/trackset/playlistfeature.h"
@@ -22,6 +23,31 @@
 
 class LibraryTableModel;
 class TreeItemModel;
+
+/// Cutlab: the Auto DJ queue as a track list of the touch library
+class AutoDJQueueLibraryFeature final : public LibraryFeature {
+    Q_OBJECT
+  public:
+    AutoDJQueueLibraryFeature(Library* pLibrary, UserSettingsPointer pConfig);
+    ~AutoDJQueueLibraryFeature() override = default;
+
+    QVariant title() override {
+        return QCoreApplication::translate("AutoDJFeature", "Auto DJ");
+    }
+    TreeItemModel* sidebarModel() const override {
+        return m_pSidebarModel;
+    }
+    bool hasTrackTable() override {
+        return true;
+    }
+
+  public slots:
+    void activate() override;
+
+  private:
+    parented_ptr<PlaylistTableModel> m_pQueueModel;
+    parented_ptr<TreeItemModel> m_pSidebarModel;
+};
 class AllTrackLibraryFeature final : public LibraryFeature {
     Q_OBJECT
   public:
@@ -106,6 +132,21 @@ class QmlLibraryAllTrackSource : public QmlLibraryAbstractSource {
 
   private:
     std::unique_ptr<AllTrackLibraryFeature> m_pLibraryFeature;
+};
+
+class QmlLibraryAutoDJSource : public QmlLibraryAbstractSource {
+    Q_OBJECT
+    QML_NAMED_ELEMENT(LibraryAutoDJSource)
+  public:
+    explicit QmlLibraryAutoDJSource(QObject* parent = nullptr,
+            const QList<QmlLibraryTrackListColumn*>& columns = {});
+
+    LibraryFeature* internal() override {
+        return m_pLibraryFeature.get();
+    }
+
+  private:
+    std::unique_ptr<AutoDJQueueLibraryFeature> m_pLibraryFeature;
 };
 
 } // namespace qml

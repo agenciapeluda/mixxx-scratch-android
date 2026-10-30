@@ -193,6 +193,8 @@ class QmlLibraryProxy : public QObject {
     Q_INVOKABLE void searchInCurrentView();
     Q_INVOKABLE void searchInTracksLibrary();
     Q_INVOKABLE void showAutoDJ();
+    /// Cutlab: queues a track for Auto DJ (at the end, or next when top)
+    Q_INVOKABLE void addToAutoDJ(mixxx::qml::QmlTrackProxy* track, bool top = false);
     Q_INVOKABLE QString deckHotcueLabel(
             mixxx::qml::QmlTrackProxy* track,
             int hotcueNumber) const;

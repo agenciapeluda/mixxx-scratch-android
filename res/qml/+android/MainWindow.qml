@@ -73,6 +73,13 @@ Item {
             devToolsWindow.requestActivate();
         }
     }
+    Skin.AutoDJPanel {
+        id: autoDJPanel
+
+        anchors.centerIn: Overlay.overlay
+        parent: Overlay.overlay
+    }
+
     // Cutlab: the crossfader curve of the settings is kept in mixxx.cfg; the
     // desktop preferences apply it at startup, on Android this does.
     Item {
@@ -417,6 +424,26 @@ Item {
                         font.pixelSize: 10
                         onClicked: {
                             headSplitControl.value = (headSplitControl.value > 0) ? 0 : 1;
+                        }
+                    }
+
+                    Skin.Button {
+                        id: autoDJButton
+
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 64
+                        backgroundColor: autoDJEnabled.value > 0 ? Qt.rgba(0.17, 0.84, 0.48, 0.2) : "#1a1e28"
+                        normalColor: autoDJEnabled.value > 0 ? "#2bd67b" : "#b4b9c7"
+                        text: qsTr("Auto DJ")
+                        font.pixelSize: 10
+
+                        onClicked: autoDJPanel.open()
+
+                        Mixxx.ControlProxy {
+                            id: autoDJEnabled
+
+                            group: "[AutoDJ]"
+                            key: "enabled"
                         }
                     }
 

@@ -194,6 +194,10 @@ Mixxx.LibrarySourceTree {
         columns: root.defaultColumns
         label: qsTr("All...")
     }
+    Mixxx.LibraryAutoDJSource {
+        columns: root.playlistColumns()
+        label: qsTr("Auto DJ")
+    }
     Mixxx.LibraryFeatureSource {
         columns: root.playlistColumns()
         feature: Mixxx.LibraryFeatureSource.Feature.Playlists

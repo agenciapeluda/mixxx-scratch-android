@@ -62,11 +62,14 @@ Item {
     Drag.supportedActions: Qt.CopyAction
 
     Component.onCompleted: {
-        itemModel.append({
+        // Cutlab: djay-style deck. The platter and the tempo sit on the outer
+        // side of each deck (mirrored for decks 2 and 4), the waveform
+        // overview, transport and pads in the middle.
+        const main = {
             "type": "column",
             "items": [
                 {
-                    "type": "info"
+                    "type": "waveformOverview"
                 },
                 {
                     "type": "row",
@@ -75,66 +78,66 @@ Item {
                             "type": "column",
                             "items": [
                                 {
-                                    "type": "waveformOverview"
+                                    "type": "play"
                                 },
                                 {
-                                    "type": "row",
-                                    "items": [
-                                        {
-                                            "type": "column",
-                                            "items": [
-                                                {
-                                                    "type": "play"
-                                                },
-                                                {
-                                                    "type": "cue"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "column",
-                                            "items": [
-                                                {
-                                                    "type": "toolbar"
-                                                },
-                                                {
-                                                    "type": "row",
-                                                    "items": [
-                                                        {
-                                                            "type": "hotcueAndStem"
-                                                        },
-                                                        {
-                                                            "type": "beatjump",
-                                                            "minWidth": 650
-                                                        },
-                                                        {
-                                                            "type": "loop"
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                    "type": "cue"
                                 }
                             ]
                         },
                         {
                             "type": "column",
-                            "minWidth": 800,
                             "items": [
                                 {
-                                    "type": "spinny"
+                                    "type": "toolbar"
                                 },
                                 {
-                                    "type": "fxAssign"
+                                    "type": "row",
+                                    "items": [
+                                        {
+                                            "type": "hotcueAndStem"
+                                        },
+                                        {
+                                            "type": "beatjump",
+                                            "minWidth": 650
+                                        },
+                                        {
+                                            "type": "loop"
+                                        }
+                                    ]
                                 }
                             ]
-                        },
-                        {
-                            "type": "tempo",
-                            "minWidth": 220
                         }
                     ]
+                }
+            ]
+        };
+        const platter = {
+            "type": "column",
+            "minWidth": 560,
+            "items": [
+                {
+                    "type": "spinny"
+                },
+                {
+                    "type": "fxAssign"
+                }
+            ]
+        };
+        const tempo = {
+            "type": "tempo",
+            "minWidth": 220
+        };
+        const rightDeck = root.group === "[Channel2]" || root.group === "[Channel4]";
+        itemModel.append({
+            "type": "column",
+            "items": [
+                {
+                    "type": "info"
+                },
+                {
+                    "type": "row",
+                    "items": rightDeck ? [main, platter, tempo] : [tempo, platter, main]
                 }
             ]
         });

@@ -7,6 +7,7 @@
 
 #include "audio/frame.h"
 #include "control/controlproxy.h"
+#include "control/controlobject.h"
 #include "control/controlpushbutton.h"
 #include "control/pollingcontrolproxy.h"
 #include "engine/channels/enginechannel.h"
@@ -314,6 +315,10 @@ class AutoDJProcessor : public QObject {
     ControlProxy m_coCrossfader;
     PollingControlProxy m_coCrossfaderReverse;
 
+    // Cutlab: [AutoDJ],transition_time and [AutoDJ],transition_mode, so the
+    // QML interface can change them while Auto DJ runs
+    std::unique_ptr<ControlObject> m_pTransitionTimeControl;
+    std::unique_ptr<ControlObject> m_pTransitionModeControl;
     ControlPushButton m_shufflePlaylist;
     ControlPushButton m_skipNext;
     ControlPushButton m_addRandomTrack;

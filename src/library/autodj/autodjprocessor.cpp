@@ -1,5 +1,8 @@
 #include "library/autodj/autodjprocessor.h"
 
+#include <algorithm>
+#include <cmath>
+
 #include "engine/channels/enginedeck.h"
 #include "mixer/basetrackplayer.h"
 #include "mixer/playermanager.h"
@@ -198,6 +201,25 @@ AutoDJProcessor::AutoDJProcessor(
     m_transitionMode = m_pConfig->getValue(
             ConfigKey(kPreferenceGroup, kTransitionModePreferenceName),
             TransitionMode::FullIntroOutro);
+
+    m_pTransitionTimeControl = std::make_unique<ControlObject>(
+            ConfigKey(kControlGroup, QStringLiteral("transition_time")));
+    m_pTransitionTimeControl->forceSet(m_transitionTime);
+    m_pTransitionTimeControl->connectValueChangeRequest(this, [this](double value) {
+        const int seconds = static_cast<int>(std::round(value));
+        setTransitionTime(seconds);
+        m_pTransitionTimeControl->forceSet(seconds);
+    });
+    m_pTransitionModeControl = std::make_unique<ControlObject>(
+            ConfigKey(kControlGroup, QStringLiteral("transition_mode")));
+    m_pTransitionModeControl->forceSet(static_cast<int>(m_transitionMode));
+    m_pTransitionModeControl->connectValueChangeRequest(this, [this](double value) {
+        const int mode = std::clamp(static_cast<int>(std::round(value)),
+                static_cast<int>(TransitionMode::FullIntroOutro),
+                static_cast<int>(TransitionMode::FixedStartCenterSkipSilence));
+        setTransitionMode(static_cast<TransitionMode>(mode));
+        m_pTransitionModeControl->forceSet(mode);
+    });
 }
 
 void AutoDJProcessor::slotNumberOfDecksChanged(int decks) {

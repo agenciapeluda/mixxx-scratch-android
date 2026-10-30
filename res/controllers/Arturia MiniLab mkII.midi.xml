@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MixxxMIDIPreset schemaVersion="1" mixxxVersion="2.4.0+">
+    <info>
+        <name>Arturia MiniLab mkII</name>
+        <author>Cutlab</author>
+        <description>DJ mapping for the factory memory 1 of the Arturia MiniLab mkII. Top knobs: deck 1, bottom knobs: deck 2 (filter, high, mid, low, volume, drums, bass, vocals). Pads 1-8: hot cues of deck 1, pads 9-16 (Pad 1-8/9-16 button): hot cues of deck 2. Mod strip: crossfader.</description>
+        <manual>arturia_minilab_mkii</manual>
+    </info>
+    <settings>
+        <group label="Knobs">
+            <option variable="knobMode" type="enum" label="Knob mode">
+                <value label="Relative (factory memory 1)" default="true">relative</value>
+                <value label="Absolute (0-127)">absolute</value>
+            </option>
+            <option variable="padMode" type="enum" label="Pads">
+                <value label="Hot cues" default="true">hotcue</value>
+                <value label="Stems: mute drums, bass, other, vocals (pads 1-4 and 5-8 per deck)">stems</value>
+                <value label="Samplers 1-16">sampler</value>
+            </option>
+        </group>
+    </settings>
+    <controller id="ArturiaMiniLabMk2">
+        <scriptfiles>
+            <file functionprefix="ArturiaMiniLabMk2" filename="Arturia-MiniLab-mkII-scripts.js"/>
+        </scriptfiles>
+        <controls>
+            <control>
+                <description>PAD 1 (bank 1-8) - deck 1 hot cue 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 1 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (bank 1-8) - deck 1 hot cue 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (bank 1-8) - deck 1 hot cue 3</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (bank 1-8) - deck 1 hot cue 4</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (bank 1-8) - deck 1 hot cue 5</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x28</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x28</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (bank 1-8) - deck 1 hot cue 6</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x29</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x29</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (bank 1-8) - deck 1 hot cue 7</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x2a</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x2a</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (bank 1-8) - deck 1 hot cue 8</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x99</status>
+                <midino>0x2b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (bank 1-8) release</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank1</key>
+                <status>0x89</status>
+                <midino>0x2b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 9 (bank 9-16) - deck 2 hot cue 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x16</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 10 (bank 9-16) - deck 2 hot cue 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x17</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 11 (bank 9-16) - deck 2 hot cue 3</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x18</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 12 (bank 9-16) - deck 2 hot cue 4</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x19</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 13 (bank 9-16) - deck 2 hot cue 5</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x1a</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 14 (bank 9-16) - deck 2 hot cue 6</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x1b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 15 (bank 9-16) - deck 2 hot cue 7</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x1c</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 16 (bank 9-16) - deck 2 hot cue 8</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.padBank2</key>
+                <status>0xB0</status>
+                <midino>0x1d</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 1 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x70</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 2 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x4a</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 3 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x47</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 4 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x4c</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 5 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x4d</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 6 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x5d</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 7 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x49</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 8 - deck 1</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x4b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 9 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x72</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 10 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x12</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 11 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x13</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 12 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x10</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 13 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x11</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 14 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x5b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 15 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x4f</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>KNOB 16 - deck 2</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.knob</key>
+                <status>0xB0</status>
+                <midino>0x48</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>MOD strip - crossfader</description>
+                <group>[Master]</group>
+                <key>ArturiaMiniLabMk2.modStrip</key>
+                <status>0xB0</status>
+                <midino>0x01</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+        </controls>
+        <outputs/>
+    </controller>
+</MixxxMIDIPreset>

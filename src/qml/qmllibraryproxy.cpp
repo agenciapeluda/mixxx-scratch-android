@@ -18,6 +18,7 @@
 #include "library/export/libraryexporter.h"
 #endif
 #include "moc_qmllibraryproxy.cpp"
+#include "qml/qmltrackproxy.h"
 #include "preferences/colorpalettesettings.h"
 #include "qml/qmlconfigproxy.h"
 #include "qml/qmllibrarytracklistmodel.h"
@@ -363,6 +364,25 @@ void QmlLibraryProxy::searchInTracksLibrary() {
         return;
     }
     s_pLibrary->slotSearchInAllTracks();
+}
+
+void QmlLibraryProxy::addToAutoDJ(QmlTrackProxy* track, bool top) {
+    VERIFY_OR_DEBUG_ASSERT(s_pLibrary) {
+        return;
+    }
+    if (!track || !track->internal()) {
+        return;
+    }
+    const TrackId trackId = track->internal()->getId();
+    if (!trackId.isValid()) {
+        return;
+    }
+    s_pLibrary->trackCollectionManager()
+            ->internalCollection()
+            ->getPlaylistDAO()
+            .addTracksToAutoDJQueue(QList<TrackId>{trackId},
+                    top ? PlaylistDAO::AutoDJSendLoc::TOP
+                        : PlaylistDAO::AutoDJSendLoc::BOTTOM);
 }
 
 void QmlLibraryProxy::showAutoDJ() {
