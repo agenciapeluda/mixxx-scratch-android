@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MixxxMIDIPreset schemaVersion="1" mixxxVersion="2.4.0+">
+    <info>
+        <name>Teenage Engineering EP-136 K.O. Sidekick</name>
+        <author>Cutlab</author>
+        <description>The K.O.-sidekick as the mixer of decks 1 and 2: faders, 3-band EQ, gain, cue, FX (quick effect). With SELECT held: EQ knobs set the vocals, other and drums stems, gain sets the filter, cue plays/pauses, FX toggles sync. Mod stick: crossfader (option). Force pad: mix of effect unit 1 (SELECT: unit 2).</description>
+        <manual>teenage_engineering_ep_136</manual>
+    </info>
+    <settings>
+        <group label="Mod stick">
+            <option variable="modStick" type="enum" label="Mod stick">
+                <value label="Nothing (it springs back to the center)" default="true">none</value>
+                <value label="Crossfader">crossfader</value>
+            </option>
+        </group>
+    </settings>
+    <controller id="TEEP136">
+        <scriptfiles>
+            <file functionprefix="TEEP136" filename="Teenage-Engineering-EP-136-scripts.js"/>
+        </scriptfiles>
+        <controls>
+            <control>
+                <description>CH1 FADER</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x7</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 EQ HIGH</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x16</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 EQ MID</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x17</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 EQ LOW</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x18</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 GAIN (relative)</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x14</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 CUE</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x3</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 FX</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0xe</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + FADER</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x9</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + EQ HIGH: vocals stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x1b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + EQ MID: other stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x1c</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + EQ LOW: drums stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x1d</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + GAIN: filter</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x19</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + CUE: play/pause</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0x34</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH1 SELECT + FX: sync</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb0</status>
+                <midino>0xf</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 FADER</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x7</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 EQ HIGH</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x16</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 EQ MID</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x17</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 EQ LOW</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x18</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 GAIN (relative)</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x14</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 CUE</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x3</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 FX</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0xe</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + FADER</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x9</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + EQ HIGH: vocals stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x1b</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + EQ MID: other stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x1c</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + EQ LOW: drums stem</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x1d</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + GAIN: filter</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x19</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + CUE: play/pause</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0x34</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>CH2 SELECT + FX: sync</description>
+                <group>[Master]</group>
+                <key>TEEP136.channelControl</key>
+                <status>0xb1</status>
+                <midino>0xf</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>FORCE PAD: effect unit 1 mix</description>
+                <group>[Master]</group>
+                <key>TEEP136.forcePad</key>
+                <status>0xB2</status>
+                <midino>0x01</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>SELECT + FORCE PAD: effect unit 2 mix</description>
+                <group>[Master]</group>
+                <key>TEEP136.forcePad</key>
+                <status>0xB2</status>
+                <midino>0x02</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>MOD STICK (pitch bend): crossfader</description>
+                <group>[Master]</group>
+                <key>TEEP136.modStick</key>
+                <status>0xE2</status>
+                <midino>0x00</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+        </controls>
+        <outputs/>
+    </controller>
+</MixxxMIDIPreset>

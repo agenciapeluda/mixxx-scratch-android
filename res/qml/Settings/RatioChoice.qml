@@ -32,7 +32,7 @@ Item {
     FontMetrics {
         id: fontMetrics
 
-        font.capitalization: Font.AllUppercase
+        font.capitalization: Font.MixedCase
         font.pixelSize: 14
     }
     Rectangle {

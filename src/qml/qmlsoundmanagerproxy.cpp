@@ -244,6 +244,51 @@ void QmlSoundManagerProxy::addInput(QmlSoundInputDeviceProxy* device,
                     index));
 }
 
+void QmlSoundManagerProxy::setVinylControlInput(QmlSoundInputDeviceProxy* device,
+        unsigned char channelGroup,
+        unsigned char index) {
+    m_config = m_pSoundManager->getConfig();
+    auto& inputs = m_config.getInputsRef();
+    for (auto it = inputs.begin(); it != inputs.end();) {
+        if (it.value().getType() == AudioPathType::VinylControl &&
+                it.value().getIndex() == index) {
+            it = inputs.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    if (device && qml_owned_ptr<QmlSoundInputDeviceProxy>(device)) {
+        m_config.addInput(device->getDeviceId(),
+                AudioInput(AudioPathType::VinylControl,
+                        channelGroup,
+                        mixxx::audio::ChannelCount::stereo(),
+                        index));
+    }
+    commit();
+}
+
+QString QmlSoundManagerProxy::vinylControlInputName(unsigned char index) const {
+    const auto inputs = m_pSoundManager->getConfig().getInputs();
+    for (auto it = inputs.cbegin(); it != inputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::VinylControl &&
+                it.value().getIndex() == index) {
+            return it.key().name;
+        }
+    }
+    return QString();
+}
+
+int QmlSoundManagerProxy::vinylControlInputChannelGroup(unsigned char index) const {
+    const auto inputs = m_pSoundManager->getConfig().getInputs();
+    for (auto it = inputs.cbegin(); it != inputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::VinylControl &&
+                it.value().getIndex() == index) {
+            return it.value().getChannelGroup().getChannelBase();
+        }
+    }
+    return -1;
+}
+
 void QmlSoundManagerProxy::clearOutputs() {
     m_config.clearOutputs();
 }

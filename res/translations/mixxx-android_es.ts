@@ -1178,6 +1178,10 @@ Cue</translation>
 <context>
     <name>InfoBar</name>
     <message>
+        <source>Load</source>
+        <translation>Cargar</translation>
+    </message>
+    <message>
         <source>No track - press LOAD</source>
         <translation>Sin pista - Pulsa CARGAR</translation>
     </message>
@@ -3150,6 +3154,14 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Toolbar</name>
     <message>
+        <source>Pads</source>
+        <translation>Pads</translation>
+    </message>
+    <message>
+        <source>In / Out</source>
+        <translation>In / Out</translation>
+    </message>
+    <message>
         <source>GRID</source>
         <translation>REJILLA</translation>
     </message>
@@ -4051,6 +4063,30 @@ Aborting the operation to avoid library inconsistencies</source>
 </context>
 <context>
     <name>Turntables</name>
+    <message>
+        <source>Audio input</source>
+        <translation>Entrada de audio</translation>
+    </message>
+    <message>
+        <source>Choose the sound card and channels…</source>
+        <translation>Elegí la placa y los canales…</translation>
+    </message>
+    <message>
+        <source>channels</source>
+        <translation>canales</translation>
+    </message>
+    <message>
+        <source>No input (turn DVS off for this deck)</source>
+        <translation>Sin entrada (DVS apagado en este deck)</translation>
+    </message>
+    <message>
+        <source>Not routed</source>
+        <translation>Sin conectar</translation>
+    </message>
+    <message>
+        <source>Choose the sound card input of each turntable here, pick your timecode and turn on DVS on the deck. Start in REL mode. The sound card is used through Android audio, which handles inputs.</source>
+        <translation>Elegí acá la entrada de la placa para cada bandeja, el timecode y prendé DVS en el deck. Empezá en modo REL. La placa se usa con el audio de Android, que es el que maneja entradas.</translation>
+    </message>
     <message>
         <source>Turntables &amp; Crossfader</source>
         <translation>Bandejas y crossfader</translation>

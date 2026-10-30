@@ -19,7 +19,7 @@ Rectangle {
     readonly property bool isDeck2: group === "[Channel2]"
     readonly property color deckColor: isDeck1 ? "#7c8cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
     readonly property color deckBgColor: isDeck1 ? "#2c47b8" : (isDeck2 ? "#bf360c" : "#1a1e28")
-    readonly property string deckName: isDeck1 ? "DECK 1" : (isDeck2 ? "DECK 2" : (group === "[Channel3]" ? "DECK 3" : "DECK 4"))
+    readonly property string deckName: isDeck1 ? "Deck 1" : (isDeck2 ? "Deck 2" : (group === "[Channel3]" ? "Deck 3" : "Deck 4"))
 
     radius: 6
     color: "#181b22"
@@ -83,7 +83,7 @@ Rectangle {
                 anchors.centerIn: parent
                 font.weight: Font.DemiBold
                 font.pixelSize: (root.width < 360 || root.minimized) ? 9 : 11
-                font.letterSpacing: 1
+                font.letterSpacing: 0.2
                 color: "#ffffff"
                 text: root.deckName
             }
@@ -314,7 +314,7 @@ Rectangle {
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             font.pixelSize: (root.width < 360 || root.minimized) ? 9 : 11
-            text: (root.width < 360) ? "LOAD" : qsTr("LOAD")
+            text: qsTr("Load")
 
             onClicked: {
                 if (typeof root.Window?.window?.openQuickLoad === "function") {

@@ -58,7 +58,7 @@ Skin.ControlButton {
             anchors.horizontalCenter: parent.horizontalCenter
             color: root.value > 0 ? "#2bd67b" : (trackLoadedControl.value > 0 ? "#ffffff" : "#626262")
             font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
+            font.capitalization: Font.MixedCase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize
             horizontalAlignment: Text.AlignHCenter

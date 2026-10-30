@@ -104,7 +104,7 @@ Category {
             // ---------------- Vinyl control ----------------
             Card {
                 title: qsTr("Vinyl control (DVS)")
-                subtitle: qsTr("Route the turntable in Audio & Outputs (Deck → Vinyl Control) and turn on DVS on the deck. Start in REL mode.")
+                subtitle: qsTr("Choose the sound card input of each turntable here, pick your timecode and turn on DVS on the deck. Start in REL mode. The sound card is used through Android audio, which handles inputs.")
 
                 Repeater {
                     model: 2
@@ -127,6 +127,74 @@ Category {
                             font.pixelSize: 12
                             font.weight: Font.DemiBold
                             text: qsTr("Deck %1").arg(deckRow.index + 1)
+                        }
+                        Text {
+                            color: "#8a91a3"
+                            font.pixelSize: 12
+                            text: qsTr("Audio input")
+                        }
+                        Skin.ComboBox {
+                            id: inputBox
+
+                            property var routes: []
+
+                            function refresh() {
+                                const list = [{
+                                        "label": qsTr("Choose the sound card and channels…"),
+                                        "device": null,
+                                        "group": 0
+                                    }];
+                                const devices = Mixxx.SoundManager.availableInputDevices(Mixxx.SoundManager.getAPI());
+                                for (let d = 0; d < devices.length; d++) {
+                                    const device = devices[d];
+                                    for (let g = 0; g + 1 < Math.max(2, device.channelCount); g += 2) {
+                                        list.push({
+                                            "label": `${device.displayName} · ${qsTr("channels")} ${g + 1}-${g + 2}`,
+                                            "device": device,
+                                            "group": g
+                                        });
+                                    }
+                                }
+                                list.push({
+                                    "label": qsTr("No input (turn DVS off for this deck)"),
+                                    "device": null,
+                                    "group": -1
+                                });
+                                routes = list;
+                                model = list.map(r => r.label);
+                                currentIndex = 0;
+                            }
+
+                            Layout.columnSpan: 3
+                            Layout.fillWidth: true
+
+                            Component.onCompleted: refresh()
+                            onActivated: {
+                                const route = routes[currentIndex];
+                                if (currentIndex === 0) {
+                                    return;
+                                }
+                                // The USB driver of Mixxx only plays audio: inputs need Android audio
+                                Mixxx.MobileAudio.setAndroidUsbDirectMode(2);
+                                Mixxx.SoundManager.setVinylControlInput(route.device, Math.max(0, route.group), deckRow.index);
+                                currentRoute.text = route.group < 0 ? qsTr("Not routed") : route.label;
+                            }
+                        }
+                        Item {
+                            width: 1
+                        }
+                        Text {
+                            id: currentRoute
+
+                            Layout.columnSpan: 3
+                            Layout.fillWidth: true
+                            color: text === qsTr("Not routed") ? "#ff8f99" : "#6fe3a4"
+                            font.pixelSize: 11
+                            text: {
+                                const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
+                                const base = Mixxx.SoundManager.vinylControlInputChannelGroup(deckRow.index);
+                                return name === "" ? qsTr("Not routed") : `${name} · ${qsTr("channels")} ${base + 1}-${base + 2}`;
+                            }
                         }
                         Text {
                             color: "#8a91a3"

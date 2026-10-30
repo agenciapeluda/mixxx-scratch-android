@@ -26,7 +26,7 @@ Item {
     readonly property bool isDeck2: group === "[Channel2]"
     readonly property color deckColor: isDeck1 ? "#7c8cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
     readonly property color deckBgColor: isDeck1 ? "#2c47b8" : (isDeck2 ? "#bf360c" : "#1a1e28")
-    readonly property string deckName: isDeck1 ? "DECK 1" : (isDeck2 ? "DECK 2" : (group === "[Channel3]" ? "DECK 3" : "DECK 4"))
+    readonly property string deckName: isDeck1 ? "Deck 1" : (isDeck2 ? "Deck 2" : (group === "[Channel3]" ? "Deck 3" : "Deck 4"))
 
     onEnabledChanged: {
         if (!enabled) {
@@ -426,7 +426,7 @@ Item {
                 color: "#ffffff"
                 font.weight: Font.DemiBold
                 font.pixelSize: 10
-                font.letterSpacing: 1
+                font.letterSpacing: 0.2
             }
         }
 

@@ -156,6 +156,17 @@ class QmlSoundManagerProxy : public QObject {
     /// Re-reads the active configuration, which the engine may have changed
     /// (e.g. automatic routing to a DJ controller on Android).
     Q_INVOKABLE void reload();
+    /// Cutlab: routes channels channelGroup+1..channelGroup+2 of an input
+    /// device to the vinyl control (DVS) input of deck index+1, replacing
+    /// the previous routing of that deck, and applies the configuration.
+    /// A null device only removes the routing.
+    Q_INVOKABLE void setVinylControlInput(mixxx::qml::QmlSoundInputDeviceProxy* device,
+            unsigned char channelGroup,
+            unsigned char index);
+    /// The display name of the device routed to the vinyl control input of
+    /// deck index+1 and its first channel ("" when not routed)
+    Q_INVOKABLE QString vinylControlInputName(unsigned char index) const;
+    Q_INVOKABLE int vinylControlInputChannelGroup(unsigned char index) const;
     Q_INVOKABLE void clearOutputs();
     Q_INVOKABLE void clearInputs();
     Q_INVOKABLE bool hasMicInputs();

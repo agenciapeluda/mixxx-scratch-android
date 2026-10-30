@@ -41,7 +41,7 @@ AbstractButton {
             anchors.fill: parent
             color: Theme.white
             font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
+            font.capitalization: Font.MixedCase
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize
             horizontalAlignment: Text.AlignHCenter

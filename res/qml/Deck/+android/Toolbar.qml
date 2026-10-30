@@ -94,7 +94,7 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                text: "PADS"
+                text: qsTr("Pads")
                 font.weight: Font.DemiBold
                 font.pixelSize: 9
                 color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#9da5b4"
@@ -119,7 +119,7 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                text: "IN / OUT"
+                text: qsTr("In / Out")
                 font.weight: Font.DemiBold
                 font.pixelSize: 8
                 color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#9da5b4"
