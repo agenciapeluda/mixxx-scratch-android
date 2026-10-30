@@ -9,7 +9,7 @@ QtObject {
     property color buttonActiveColor: white
     property color buttonDisableColor: lightGray
     property int buttonFontPixelSize: 10
-    property color buttonNormalColor: midGray
+    property color buttonNormalColor: "#b4b9c7"
     property color crossfaderBarColor: blue
     property color crossfaderOrientationColor: lightGray
     property color darkGray: "#0b0d12"
@@ -58,9 +58,9 @@ QtObject {
     property color lightGray: "#6e7587"
     property color lightGray2: "#b4b9c7"
     property color lightGray3: "#8a91a3"
-    property color midGray: "#696969"
-    property color midGray2: "#676767"
-    property color midGray3: "#626262"
+    property color midGray: "#6e7587"
+    property color midGray2: "#6a7183"
+    property color midGray3: "#5a6072"
     property color panelSplitterBackground: backgroundColor
     property color panelSplitterHandle: midGray
     property color panelSplitterHandleActive: lightGray2

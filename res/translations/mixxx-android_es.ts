@@ -2100,6 +2100,22 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>MainWindow</name>
     <message>
+        <source>Waves</source>
+        <translation>Ondas</translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation>Librería</translation>
+    </message>
+    <message>
+        <source>Controls</source>
+        <translation>Controles</translation>
+    </message>
+    <message>
+        <source>Load %1</source>
+        <translation>Cargar %1</translation>
+    </message>
+    <message>
         <source>WAVE</source>
         <translation>WAVE</translation>
     </message>

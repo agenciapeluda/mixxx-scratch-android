@@ -278,9 +278,9 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 236 * root.shownTopBarViews / 4
                         visible: root.shownTopBarViews > 0
-                        color: "#181a20"
+                        color: "#12151c"
                         radius: 4
-                        border.color: "#2a2e39"
+                        border.color: "#232836"
                         border.width: 1
 
                         RowLayout {
@@ -292,9 +292,9 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 1 ? Theme.accentColor : "transparent"
+                                backgroundColor: root.viewMode === 1 ? "#2a2f3d" : "transparent"
                                 normalColor: root.viewMode === 1 ? "#ffffff" : "#8a91a3"
-                                text: "DJ"
+                                text: "Mix"
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 1
@@ -305,9 +305,9 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 3 ? Theme.accentColor : "transparent"
+                                backgroundColor: root.viewMode === 3 ? "#2a2f3d" : "transparent"
                                 normalColor: root.viewMode === 3 ? "#ffffff" : "#8a91a3"
-                                text: qsTr("WAVE")
+                                text: qsTr("Waves")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 3
@@ -318,9 +318,9 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 2 ? Theme.accentColor : "transparent"
+                                backgroundColor: root.viewMode === 2 ? "#2a2f3d" : "transparent"
                                 normalColor: root.viewMode === 2 ? "#ffffff" : "#8a91a3"
-                                text: qsTr("LIB")
+                                text: qsTr("Library")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 2
@@ -331,9 +331,9 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 0 ? Theme.accentColor : "transparent"
+                                backgroundColor: root.viewMode === 0 ? "#2a2f3d" : "transparent"
                                 normalColor: root.viewMode === 0 ? "#ffffff" : "#8a91a3"
-                                text: qsTr("CTL")
+                                text: qsTr("Controls")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
                                 onClicked: root.viewMode = 0
@@ -347,12 +347,12 @@ Item {
                         visible: root.topBarItemShown("load1")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 62
-                        activeColor: "#8aa8ff"
-                        backgroundColor: "#3d63e0"
-                        normalColor: "#ffffff"
+                        activeColor: "#ffffff"
+                        backgroundColor: Qt.rgba(0.31, 0.49, 1.0, 0.18)
+                        normalColor: "#8aa8ff"
                         font.weight: Font.DemiBold
                         font.pixelSize: 10
-                        text: qsTr("LOAD %1").arg(1)
+                        text: qsTr("Load %1").arg(1)
                         onClicked: root.openQuickLoad("[Channel1]")
                     }
 
@@ -361,12 +361,12 @@ Item {
                         visible: root.topBarItemShown("load2")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 62
-                        activeColor: "#f7c86a"
-                        backgroundColor: "#e2622a"
-                        normalColor: "#ffffff"
+                        activeColor: "#ffffff"
+                        backgroundColor: Qt.rgba(1.0, 0.48, 0.24, 0.18)
+                        normalColor: "#ff9f73"
                         font.weight: Font.DemiBold
                         font.pixelSize: 10
-                        text: qsTr("LOAD %1").arg(2)
+                        text: qsTr("Load %1").arg(2)
                         onClicked: root.openQuickLoad("[Channel2]")
                     }
 
@@ -375,9 +375,9 @@ Item {
                         visible: root.topBarItemShown("fx")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 42
-                        activeColor: "#e040fb"
-                        backgroundColor: root.showEffects ? "#4a148c" : "#1a1e28"
-                        normalColor: root.showEffects ? "#a78bfa" : "#b4b9c7"
+                        activeColor: "#ffffff"
+                        backgroundColor: root.showEffects ? "#2a2f3d" : "#1a1e28"
+                        normalColor: root.showEffects ? "#ffffff" : "#b4b9c7"
                         checkable: true
                         checked: root.showEffects
                         text: "FX"
@@ -392,8 +392,8 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 54
                         activeColor: "#7c8cff"
-                        backgroundColor: xyPadOverlay.visible ? "#006064" : "#1a1e28"
-                        normalColor: xyPadOverlay.visible ? "#7c8cff" : "#b4b9c7"
+                        backgroundColor: xyPadOverlay.visible ? "#2a2f3d" : "#1a1e28"
+                        normalColor: xyPadOverlay.visible ? "#ffffff" : "#b4b9c7"
                         checkable: true
                         checked: xyPadOverlay.visible
                         text: "XY"
@@ -408,11 +408,11 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 52
                         activeColor: "#ff8f57"
-                        backgroundColor: headSplitControl.value > 0 ? "#e2622a" : "#1a1e28"
-                        normalColor: headSplitControl.value > 0 ? "#ffffff" : "#b4b9c7"
+                        backgroundColor: headSplitControl.value > 0 ? "#2a2f3d" : "#1a1e28"
+                        normalColor: headSplitControl.value > 0 ? "#ff9f73" : "#b4b9c7"
                         checkable: true
                         checked: headSplitControl.value > 0
-                        text: "SPLIT"
+                        text: "Split"
                         font.weight: Font.DemiBold
                         font.pixelSize: 10
                         onClicked: {

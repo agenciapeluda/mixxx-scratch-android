@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.mixxx"
+    package="com.agenciapeluda.cutlab"
     android:installLocation="internalOnly"
     android:versionCode="18"
     android:versionName="1.8.0">

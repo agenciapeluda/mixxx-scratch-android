@@ -11,7 +11,7 @@ AbstractButton {
     property bool highlight: false
     property color normalColor: Theme.buttonNormalColor
     property color pressedColor: activeColor
-    property color backgroundColor: "#2B2B2B"
+    property color backgroundColor: "#1c202a"
     // A ◀ before or a ▶ after the text, drawn as triangles: Android draws
     // these signs as emoji
     property bool arrowLeft: false
@@ -22,66 +22,27 @@ AbstractButton {
     implicitHeight: 26
     implicitWidth: Math.max(52, label.implicitWidth + 16)
 
-    background: Item {
+    // Cutlab: flat surface, rounded, no shadows
+    background: Rectangle {
+        id: backgroundImage
+
         anchors.fill: parent
-
-        Rectangle {
-            id: backgroundImage
-
-            anchors.fill: parent
-            color: root.backgroundColor
-            radius: 2
-        }
-        DropShadow {
-            id: effect1
-
-            anchors.fill: backgroundImage
-            color: "#80000000"
-            horizontalOffset: 0
-            radius: 1.0
-            source: backgroundImage
-            verticalOffset: 0
-        }
-        InnerShadow {
-            id: effect2
-
-            anchors.fill: backgroundImage
-            color: "#2a2f3d"
-            horizontalOffset: 1
-            radius: 1
-            samples: 16
-            source: effect1
-            verticalOffset: 1
-        }
-        InnerShadow {
-            anchors.fill: backgroundImage
-            color: "#2a2f3d"
-            horizontalOffset: -1
-            radius: 1
-            samples: 16
-            source: effect2
-            verticalOffset: -1
-        }
+        border.color: "transparent"
+        border.width: 1
+        color: root.backgroundColor
+        radius: Math.min(8, height / 3)
     }
     contentItem: Item {
         anchors.fill: parent
 
-        Glow {
-            id: labelGlow
-
-            anchors.fill: parent
-            color: label.color
-            radius: 1
-            source: label
-            spread: 0.1
-        }
         Label {
             id: label
 
             anchors.fill: parent
             color: root.normalColor
-            font.weight: Font.DemiBold
-            font.capitalization: Font.AllUppercase
+            font.weight: Font.Medium
+            font.capitalization: Font.MixedCase
+            font.letterSpacing: 0.2
             font.family: Theme.fontFamily
             font.pixelSize: Theme.buttonFontPixelSize
             horizontalAlignment: Text.AlignHCenter
@@ -133,16 +94,12 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? "#5b6cff" : Theme.darkGray3
+                color: root.checked ? Qt.rgba(0.36, 0.42, 1.0, 0.45) : "#2a2f3d"
                 target: backgroundImage
             }
             PropertyChanges {
                 color: root.pressedColor
                 target: label
-            }
-            PropertyChanges {
-                target: labelGlow
-                visible: true
             }
         },
         State {
@@ -150,16 +107,13 @@ AbstractButton {
             when: (root.highlight || root.checked) && !root.pressed
 
             PropertyChanges {
-                color: "#2D4EA1"
+                border.color: Qt.rgba(0.49, 0.55, 1.0, 0.7)
+                color: Qt.rgba(0.36, 0.42, 1.0, 0.22)
                 target: backgroundImage
             }
             PropertyChanges {
                 color: root.activeColor
                 target: label
-            }
-            PropertyChanges {
-                target: labelGlow
-                visible: true
             }
         },
         State {
@@ -169,10 +123,6 @@ AbstractButton {
             PropertyChanges {
                 color: root.normalColor
                 target: label
-            }
-            PropertyChanges {
-                target: labelGlow
-                visible: false
             }
         }
     ]
