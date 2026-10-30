@@ -65,6 +65,8 @@ Category {
         Mixxx.Application.setConfigValue("[Mixer Profile]", "xFaderCurve", String(c[2]));
     }
 
+    signal devicesChanged
+
     label: qsTr("Turntables & Crossfader")
 
     Mixxx.ControlProxy {
@@ -105,6 +107,39 @@ Category {
             Card {
                 title: qsTr("Vinyl control (DVS)")
                 subtitle: qsTr("Choose the sound card input of each turntable here, pick your timecode and turn on DVS on the deck. Start in REL mode. The sound card is used through Android audio, which handles inputs.")
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    Skin.Button {
+                        Layout.preferredHeight: 36
+                        Layout.preferredWidth: 260
+                        text: qsTr("Find USB sound cards")
+
+                        onClicked: {
+                            usbStatus.text = qsTr("Reopening the sound cards…");
+                            Mixxx.SoundManager.useAndroidAudioForUsbDevices();
+                        }
+                    }
+                    Text {
+                        id: usbStatus
+
+                        Layout.fillWidth: true
+                        color: "#8a91a3"
+                        font.pixelSize: 11
+                        text: qsTr("If your sound card (EP-136, mixer…) is not in the list, tap here. If it still is missing, close and open the app.")
+                        wrapMode: Text.WordWrap
+                    }
+                    Connections {
+                        function onCommitted(error) {
+                            usbStatus.text = error ? error : qsTr("Done: choose the input of each deck below.");
+                            root.devicesChanged();
+                        }
+
+                        target: Mixxx.SoundManager
+                    }
+                }
 
                 Repeater {
                     model: 2
@@ -169,6 +204,14 @@ Category {
                             Layout.fillWidth: true
 
                             Component.onCompleted: refresh()
+
+                            Connections {
+                                function onDevicesChanged() {
+                                    inputBox.refresh();
+                                }
+
+                                target: root
+                            }
                             onActivated: {
                                 const route = routes[currentIndex];
                                 if (currentIndex === 0) {

@@ -4064,6 +4064,22 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Turntables</name>
     <message>
+        <source>Find USB sound cards</source>
+        <translation>Buscar placas USB</translation>
+    </message>
+    <message>
+        <source>Reopening the sound cards…</source>
+        <translation>Reabriendo las placas de sonido…</translation>
+    </message>
+    <message>
+        <source>If your sound card (EP-136, mixer…) is not in the list, tap here. If it still is missing, close and open the app.</source>
+        <translation>Si tu placa (EP-136, mixer…) no aparece en la lista, tocá acá. Si sigue sin aparecer, cerrá y abrí la app.</translation>
+    </message>
+    <message>
+        <source>Done: choose the input of each deck below.</source>
+        <translation>Listo: elegí abajo la entrada de cada deck.</translation>
+    </message>
+    <message>
         <source>Audio input</source>
         <translation>Entrada de audio</translation>
     </message>

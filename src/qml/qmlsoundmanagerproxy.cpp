@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "moc_qmlsoundmanagerproxy.cpp"
+#include "qml/qmlconfigproxy.h"
 #include "qml_owned_ptr.h"
 #include "soundio/soundmanager.h"
 #include "soundio/soundmanagerutil.h"
@@ -257,6 +258,11 @@ void QmlSoundManagerProxy::setVinylControlInput(QmlSoundInputDeviceProxy* device
             ++it;
         }
     }
+    // Two outputs on the same channels of a device make the whole
+    // configuration fail ("Two outputs cannot share channels..."), and then
+    // the vinyl control input is not applied either. Keep the main output
+    // and drop the clashing ones (e.g. headphones on the phone speaker).
+    removeClashingOutputs();
     if (device && qml_owned_ptr<QmlSoundInputDeviceProxy>(device)) {
         m_config.addInput(device->getDeviceId(),
                 AudioInput(AudioPathType::VinylControl,
@@ -264,6 +270,55 @@ void QmlSoundManagerProxy::setVinylControlInput(QmlSoundInputDeviceProxy* device
                         mixxx::audio::ChannelCount::stereo(),
                         index));
     }
+    commit();
+}
+
+void QmlSoundManagerProxy::removeClashingOutputs() {
+    auto& outputs = m_config.getOutputsRef();
+    QList<QPair<SoundDeviceId, AudioOutput>> kept;
+    // Main first, so it wins over headphones, booth...
+    QList<QPair<SoundDeviceId, AudioOutput>> ordered;
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::Main) {
+            ordered.prepend(qMakePair(it.key(), it.value()));
+        } else {
+            ordered.append(qMakePair(it.key(), it.value()));
+        }
+    }
+    for (const auto& candidate : std::as_const(ordered)) {
+        bool clashes = false;
+        for (const auto& existing : std::as_const(kept)) {
+            if (existing.first == candidate.first &&
+                    existing.second.getChannelGroup().clashesWith(
+                            candidate.second.getChannelGroup())) {
+                clashes = true;
+                break;
+            }
+        }
+        if (clashes) {
+            qWarning() << "Dropping output" << candidate.second.getType()
+                       << "that shares channels with another output on"
+                       << candidate.first.name;
+        } else {
+            kept.append(candidate);
+        }
+    }
+    outputs.clear();
+    for (const auto& output : std::as_const(kept)) {
+        outputs.insert(output.first, output.second);
+    }
+}
+
+void QmlSoundManagerProxy::useAndroidAudioForUsbDevices() {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (pConfig) {
+        // 2 = never use the USB driver of Mixxx (it only plays audio)
+        pConfig->setValue(ConfigKey(QStringLiteral("[Soundcard]"), QStringLiteral("AndroidUsbDirectMode")), 2);
+    }
+    // List the USB sound cards again, now through Android audio
+    m_pSoundManager->clearAndQueryDevices();
+    m_config = m_pSoundManager->getConfig();
+    removeClashingOutputs();
     commit();
 }
 
@@ -306,6 +361,7 @@ std::shared_ptr<SoundManager> QmlSoundManagerProxy::internal() const {
 }
 
 void QmlSoundManagerProxy::commit() {
+    removeClashingOutputs();
     m_commitInProgress.storeRelease(1);
     m_pSoundManager->closeActiveConfig(true);
 }

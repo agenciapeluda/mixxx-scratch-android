@@ -166,6 +166,9 @@ class QmlSoundManagerProxy : public QObject {
     /// The display name of the device routed to the vinyl control input of
     /// deck index+1 and its first channel ("" when not routed)
     Q_INVOKABLE QString vinylControlInputName(unsigned char index) const;
+    /// Stops using the USB driver of Mixxx (output only) so USB sound cards
+    /// show up as Android inputs, and reopens the sound devices.
+    Q_INVOKABLE void useAndroidAudioForUsbDevices();
     Q_INVOKABLE int vinylControlInputChannelGroup(unsigned char index) const;
     Q_INVOKABLE void clearOutputs();
     Q_INVOKABLE void clearInputs();
@@ -183,6 +186,8 @@ class QmlSoundManagerProxy : public QObject {
     void committed(const QString& error = {});
 
   private:
+    void removeClashingOutputs();
+
     static inline std::shared_ptr<SoundManager> s_pSoundManager;
 
     PollingControlProxy m_keylockEngine;
