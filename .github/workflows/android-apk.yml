@@ -1,0 +1,142 @@
+# Compila el APK de Android (arm64) del fork mixxx-scratch-android.
+#
+# - Cada push a la rama `scratch` y cada ejecución manual dejan el APK como
+#   artifact del run (Actions → el run → Artifacts).
+# - Un tag `vX.Y.Z-android` además crea una release de GitHub con el APK, que es
+#   lo que lee el actualizador de la app (src/qml/qmlappupdateproxy.cpp).
+#
+# Firma: si existen los secrets ANDROID_SIGNING_KEYSTORE_BASE64 y
+# ANDROID_SIGNING_PASSWORD se usa ese keystore (alias "mixxx"). Si no, se genera
+# uno temporal: el APK instala, pero cada build queda firmado distinto y no se
+# puede actualizar una sobre otra sin desinstalar.
+
+name: Android APK
+
+on:
+  push:
+    branches: [scratch]
+    tags: ["v*-android"]
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    env:
+      ANDROID_SIGNING_KEYSTORE_BASE64: ${{ secrets.ANDROID_SIGNING_KEYSTORE_BASE64 }}
+      ANDROID_SIGNING_PASSWORD: ${{ secrets.ANDROID_SIGNING_PASSWORD }}
+      BUILDENV_BASEPATH: /home/runner/buildenv
+      BUILDENV_RELEASE: TRUE
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Free up disk space
+        run: |
+          sudo apt-get autoremove -y && sudo apt-get clean
+          sudo rm -rf /home/packer /opt/az /opt/google /opt/microsoft /opt/pipx \
+            /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/go \
+            /opt/hostedtoolcache/node /opt/hostedtoolcache/PyPy \
+            /opt/hostedtoolcache/Python /usr/lib/google-cloud-sdk \
+            /usr/local/julia* /usr/local/share/powershell /usr/share/dotnet \
+            /usr/share/swift /usr/local/share/vcpkg
+          df -h /
+
+      - name: Set up signing key
+        run: |
+          if [ -z "${ANDROID_SIGNING_KEYSTORE_BASE64}" ]; then
+            echo "::warning::Sin keystore en los secrets: se firma con una clave temporal."
+            PASS=mixxxandroid
+            keytool -genkey -keystore "$GITHUB_WORKSPACE/mixxx.keystore" -alias mixxx \
+              -keyalg RSA -keysize 2048 -validity 365 \
+              -keypass "$PASS" -storepass "$PASS" -dname "CN=${{ github.actor }}"
+          else
+            echo "${ANDROID_SIGNING_KEYSTORE_BASE64}" | base64 -d > "$GITHUB_WORKSPACE/mixxx.keystore"
+            PASS="${ANDROID_SIGNING_PASSWORD}"
+          fi
+          {
+            echo "QT_ANDROID_KEYSTORE_ALIAS=mixxx"
+            echo "QT_ANDROID_KEYSTORE_KEY_PASS=${PASS}"
+            echo "QT_ANDROID_KEYSTORE_STORE_PASS=${PASS}"
+            echo "QT_ANDROID_KEYSTORE_PATH=$GITHUB_WORKSPACE/mixxx.keystore"
+          } >> "$GITHUB_ENV"
+
+      - name: Set up build environment
+        run: tools/android_buildenv.sh setup
+
+      - name: Restore ccache
+        id: ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: /home/runner/.cache/ccache
+          key: android-ccache-${{ github.ref_name }}-${{ hashFiles('src/**', 'CMakeLists.txt', 'cmake/**') }}
+          restore-keys: |
+            android-ccache-${{ github.ref_name }}-
+            android-ccache-
+
+      - name: Set up ccache
+        run: |
+          ccache --zero-stats
+          ccache --max-size=2G
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo
+          -DCMAKE_SYSTEM_NAME=Android
+          -DVCPKG_TARGET_TRIPLET=arm64-android-rel
+          -DVCPKG_DEFAULT_HOST_TRIPLET=x64-linux-release
+          -DQT6=ON -DQML=ON -DHID=ON -DBULK=ON
+          -DVINYLCONTROL=ON
+          -DKEYFINDER=ON
+          -DBUILD_TESTING=OFF -DBUILD_BENCH=OFF
+          -DWARNINGS_FATAL=OFF
+          -DDEBUG_ASSERTIONS_FATAL=OFF
+
+      - name: Build APK
+        run: cmake --build build --target apk --parallel "$(nproc)"
+
+      - name: ccache stats
+        if: always()
+        run: ccache --show-stats
+
+      - name: Save ccache
+        if: always() && steps.ccache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /home/runner/.cache/ccache
+          key: android-ccache-${{ github.ref_name }}-${{ hashFiles('src/**', 'CMakeLists.txt', 'cmake/**') }}
+
+      - name: Collect APK
+        id: apk
+        run: |
+          APK=$(find build/android-build/build/outputs/apk/release -name '*.apk' | grep -v unsigned | head -n 1)
+          [ -n "$APK" ] || APK=$(find build/android-build/build/outputs/apk/release -name '*.apk' | head -n 1)
+          VERSION=$(grep -oP 'android:versionName="\K[^"]+' packaging/android/AndroidManifest.xml)
+          mkdir -p out
+          cp "$APK" "out/mixxx-android-v${VERSION}.apk"
+          echo "file=out/mixxx-android-v${VERSION}.apk" >> "$GITHUB_OUTPUT"
+          ls -lh out
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mixxx-android-apk
+          path: ${{ steps.apk.outputs.file }}
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" "${{ steps.apk.outputs.file }}" \
+            --title "${{ github.ref_name }}" --notes "Build automática de ${{ github.sha }}"
