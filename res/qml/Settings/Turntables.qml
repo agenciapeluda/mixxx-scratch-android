@@ -155,6 +155,108 @@ Category {
                     }
                 }
 
+                // What reaches each input of the USB sound card: shows which
+                // pair carries the turntable before choosing it below
+                ColumnLayout {
+                    id: usbInputs
+
+                    property real lastBlocks: 0
+                    property bool receiving: false
+
+                    Layout.fillWidth: true
+                    spacing: 6
+
+                    Mixxx.ControlProxy {
+                        id: usbBlocks
+
+                        group: "[Cutlab]"
+                        key: "usb_in_blocks"
+                    }
+                    Mixxx.ControlProxy {
+                        id: usbChannels
+
+                        group: "[Cutlab]"
+                        key: "usb_in_channels"
+                    }
+                    Timer {
+                        interval: 1000
+                        repeat: true
+                        running: root.visible
+                        triggeredOnStart: true
+                        onTriggered: {
+                            usbInputs.receiving = usbBlocks.value !== usbInputs.lastBlocks;
+                            usbInputs.lastBlocks = usbBlocks.value;
+                        }
+                    }
+
+                    Text {
+                        color: "#969696"
+                        font.pixelSize: 12
+                        text: qsTr("Inputs of the USB sound card")
+                    }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 6
+
+                        Repeater {
+                            model: 8
+
+                            ColumnLayout {
+                                id: meter
+
+                                required property int index
+
+                                Layout.preferredWidth: 34
+                                spacing: 3
+                                opacity: meter.index < usbChannels.value || !usbInputs.receiving ? 1 : 0.3
+
+                                Mixxx.ControlProxy {
+                                    id: peak
+
+                                    group: "[Cutlab]"
+                                    key: `usb_in_peak_${meter.index + 1}`
+                                }
+
+                                Rectangle {
+                                    Layout.preferredWidth: 22
+                                    Layout.preferredHeight: 70
+                                    Layout.alignment: Qt.AlignHCenter
+                                    radius: 4
+                                    color: "#0e0e0e"
+                                    border.color: "#343434"
+
+                                    Rectangle {
+                                        anchors.bottom: parent.bottom
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        width: parent.width - 4
+                                        anchors.bottomMargin: 2
+                                        radius: 3
+                                        // A dB scale, -60 dB at the bottom
+                                        height: (parent.height - 4) * Math.max(0, Math.min(1, 1 + 20 * Math.log(Math.max(peak.value, 1e-6)) / Math.LN10 / 60))
+                                        color: peak.value > 0.9 ? "#ff453a" : (peak.value > 0.5 ? "#ff9f0a" : "#34c759")
+                                    }
+                                }
+                                Text {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    color: "#bebebe"
+                                    font.pixelSize: 11
+                                    text: String(meter.index + 1)
+                                }
+                            }
+                        }
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 10
+                            color: usbInputs.receiving ? "#34c759" : "#ff9f0a"
+                            font.pixelSize: 12
+                            wrapMode: Text.WordWrap
+                            text: usbInputs.receiving
+                                ? qsTr("Audio is arriving from the card (%1 channels). Play the record: the pair that moves is the one of the turntable, choose it below.").arg(Math.round(usbChannels.value))
+                                : qsTr("No audio from the card. Choose the card as the input of a deck below (the \"direct\" one), or tap Find USB sound cards.")
+                        }
+                    }
+                }
+
                 Repeater {
                     model: 2
 

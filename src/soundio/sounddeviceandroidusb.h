@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <atomic>
 #include <memory>
 #include <vector>
@@ -21,6 +23,9 @@ class AndroidUsbAudioDevice;
 /// processed on the USB event thread whenever the USB transfers need data.
 class SoundDeviceAndroidUsb : public SoundDevice {
   public:
+    // Cutlab: creates the [Cutlab] usb_in_* level controls of the inputs
+    static void createInputMeters();
+
     SoundDeviceAndroidUsb(UserSettingsPointer config,
             SoundManager* sm,
             std::shared_ptr<mixxx::androidusb::AndroidUsbAudioDevice> pDevice);
@@ -50,6 +55,9 @@ class SoundDeviceAndroidUsb : public SoundDevice {
     // Cutlab: audio input (vinyl control, microphone) of the sound card
     std::unique_ptr<FIFO<CSAMPLE>> m_pInputFifo;
     std::vector<CSAMPLE> m_captureScratch;
+    // Peak of each input channel since the last meter update
+    std::array<CSAMPLE, 8> m_inputPeaks{};
+    int m_framesSinceMeterUpdate = 0;
     std::vector<CSAMPLE> m_inputBuffer;
     void capture(const uint8_t* pData, int frames);
     SINT m_framesPerBuffer;

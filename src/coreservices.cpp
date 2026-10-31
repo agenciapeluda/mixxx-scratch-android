@@ -77,6 +77,7 @@
 #if defined(Q_OS_ANDROID)
 #include "util/androidcrashreport.h"
 #include "util/androidpermissions.h"
+#include "soundio/sounddeviceandroidusb.h"
 #endif
 
 #if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -529,6 +530,8 @@ void CoreServices::initialize(QApplication* pApp) {
     // Audio inputs (vinyl control timecode, microphone) need it before the
     // sound devices are opened.
     mixxx::android::requestAudioInputPermission();
+    // The input levels of the USB sound card, shown in the DVS settings
+    SoundDeviceAndroidUsb::createInputMeters();
 #endif
 
 #if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

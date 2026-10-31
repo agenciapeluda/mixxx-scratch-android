@@ -1,6 +1,7 @@
 #include "soundio/sounddeviceandroidusb.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 
 #include "control/controlobject.h"
@@ -17,6 +18,43 @@ constexpr int kUpdatesPerSecond = 30;
 constexpr int kTransferMillis = 2;
 // Lower bound of the audio queued at the USB controller
 constexpr int kMinQueuedMillis = 8;
+
+// Cutlab: what the inputs of the sound card receive, for the DVS settings.
+// [Cutlab] usb_in_peak_1..8 is the peak level of each input channel over
+// the last ~50 ms, usb_in_blocks counts the blocks of audio received and
+// usb_in_channels is the number of input channels of the card.
+const QString kCutlabGroup = QStringLiteral("[Cutlab]");
+constexpr int kMeteredChannels = 8;
+
+struct InputMeters {
+    std::array<ControlObject*, kMeteredChannels> peaks;
+    ControlObject* blocks;
+    ControlObject* channels;
+};
+
+const InputMeters& inputMeters() {
+    // Created once on the main thread with the first device, kept for the
+    // whole session so QML can follow them
+    static const InputMeters meters = [] {
+        InputMeters m;
+        for (int i = 0; i < kMeteredChannels; ++i) {
+            m.peaks[i] = new ControlObject(
+                    ConfigKey(kCutlabGroup, QStringLiteral("usb_in_peak_%1").arg(i + 1)));
+        }
+        m.blocks = new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("usb_in_blocks")));
+        m.channels = new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("usb_in_channels")));
+        return m;
+    }();
+    return meters;
+}
+
+} // namespace
+
+void SoundDeviceAndroidUsb::createInputMeters() {
+    inputMeters();
+}
+
+namespace {
 
 int nextPowerOfTwo(int value) {
     int result = 1;
@@ -48,6 +86,7 @@ SoundDeviceAndroidUsb::SoundDeviceAndroidUsb(UserSettingsPointer config,
     m_numInputChannels = mixxx::audio::ChannelCount(
             m_pDevice->hasCapture() ? m_pDevice->captureFormat().channels : 0);
     m_sampleRate = getDefaultSampleRate();
+    inputMeters();
 }
 
 SoundDeviceAndroidUsb::~SoundDeviceAndroidUsb() {
@@ -208,6 +247,28 @@ void SoundDeviceAndroidUsb::capture(const uint8_t* pData, int frames) {
         }
     }
     m_pInputFifo->write(m_captureScratch.data(), samples);
+
+    // Levels for the DVS settings, about 20 times a second
+    const int meteredChannels = std::min(format.channels, kMeteredChannels);
+    for (int frame = 0; frame < frames; ++frame) {
+        for (int c = 0; c < meteredChannels; ++c) {
+            const CSAMPLE level = std::fabs(m_captureScratch[frame * format.channels + c]);
+            if (level > m_inputPeaks[c]) {
+                m_inputPeaks[c] = level;
+            }
+        }
+    }
+    m_framesSinceMeterUpdate += frames;
+    if (m_framesSinceMeterUpdate >= static_cast<int>(m_sampleRate.value()) / 20) {
+        const InputMeters& meters = inputMeters();
+        for (int c = 0; c < kMeteredChannels; ++c) {
+            meters.peaks[c]->set(c < meteredChannels ? m_inputPeaks[c] : 0.0);
+            m_inputPeaks[c] = 0;
+        }
+        meters.channels->set(format.channels);
+        meters.blocks->set(meters.blocks->get() + 1);
+        m_framesSinceMeterUpdate = 0;
+    }
 }
 
 void SoundDeviceAndroidUsb::writeProcess(SINT framesPerBuffer) {

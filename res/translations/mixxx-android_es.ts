@@ -5089,6 +5089,18 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>DVS</translation>
     </message>
     <message>
+        <source>Inputs of the USB sound card</source>
+        <translation>Entradas de la placa USB</translation>
+    </message>
+    <message>
+        <source>Audio is arriving from the card (%1 channels). Play the record: the pair that moves is the one of the turntable, choose it below.</source>
+        <translation>Llega audio de la placa (%1 canales). Poné a girar el disco: el par que se mueve es el de la bandeja, elegilo abajo.</translation>
+    </message>
+    <message>
+        <source>No audio from the card. Choose the card as the input of a deck below (the "direct" one), or tap Find USB sound cards.</source>
+        <translation>No llega audio de la placa. Elegí la placa como entrada de un deck abajo (la que dice "directo"), o tocá Buscar placas USB.</translation>
+    </message>
+    <message>
         <source>DVS on</source>
         <translation>DVS prendido</translation>
     </message>
@@ -5099,6 +5111,17 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>With DVS on, the turntable moves this deck. It is the same as the DVS button next to the deck.</source>
         <translation>Con DVS prendido, la bandeja mueve este deck. Es lo mismo que el botón DVS al lado del deck.</translation>
+    </message>
+</context>
+<context>
+    <name>Settings</name>
+    <message>
+        <source>All settings</source>
+        <translation>Todos los ajustes</translation>
+    </message>
+    <message>
+        <source>Sound hardware, vinyl control, mixer…</source>
+        <translation>Hardware de sonido, control de vinilo, mezclador…</translation>
     </message>
 </context>
 </TS>

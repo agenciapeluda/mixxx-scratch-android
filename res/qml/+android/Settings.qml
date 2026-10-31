@@ -281,6 +281,41 @@ Popup {
                         }
                     }
 
+                    // Every setting of Mixxx, in the classic preferences
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 48
+                        radius: 10
+                        color: allSettingsArea.pressed ? "#2b2766" : "#232323"
+                        border.color: "#3a3a3d"
+                        border.width: 1
+                        visible: !searchSetting.active
+
+                        Column {
+                            anchors.left: parent.left
+                            anchors.leftMargin: 14
+                            anchors.verticalCenter: parent.verticalCenter
+                            spacing: 1
+
+                            Text {
+                                color: "#ffffff"
+                                font.pixelSize: 13
+                                text: qsTr("All settings")
+                            }
+                            Text {
+                                color: "#8b85ff"
+                                font.pixelSize: 10
+                                text: qsTr("Sound hardware, vinyl control, mixer…")
+                            }
+                        }
+                        MouseArea {
+                            id: allSettingsArea
+
+                            anchors.fill: parent
+                            onClicked: Mixxx.PreferencesDialog.show()
+                        }
+                    }
+
                     ListView {
                         id: settingResultList
 
