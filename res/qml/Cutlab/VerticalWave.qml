@@ -2,8 +2,8 @@ import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// The scrolling waveform of a deck turned upright: what is coming next
-// is above the red line. Drag it to scratch, pinch or use + and − to zoom.
+// The scrolling waveform of a deck turned upright, like djay: what is
+// coming next is below the red line and the track runs upwards. Drag it to scratch, pinch or use + and − to zoom.
 Item {
     id: root
 
@@ -18,15 +18,15 @@ Item {
         color: "#1a1a1c"
     }
 
-    // The horizontal waveform, turned a quarter to the left so the future
-    // of the track is up
+    // The horizontal waveform, turned a quarter to the right so the future
+    // of the track comes from below
     Skin.WaveformDisplay {
         id: wave
 
         anchors.centerIn: parent
         width: root.height
         height: root.width
-        rotation: -90
+        rotation: 90
         group: root.group
         isTouchMode: true
         showHud: false

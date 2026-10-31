@@ -208,10 +208,31 @@ void SoundManagerAndroid::autoRouteToController() {
     SoundManagerConfig& config = m_pSoundManager->m_config;
     // The Android enumerator suffixes USB devices with ": USB"
     SoundDevicePointer pController;
+    // Cutlab: a known DJ mixer/controller wins over other cards with many
+    // outputs (a sampler used only to take the timecode in, like the EP-133)
+    const auto isDjController = [](const SoundDevicePointer& pDevice) {
+        const QString name = pDevice->getDisplayName();
+        for (const auto* pBrand : {"Mixtour", "Reloop", "DDJ", "Pioneer", "Numark", "Rane",
+                     "Hercules", "Traktor", "Denon"}) {
+            if (name.contains(QLatin1String(pBrand), Qt::CaseInsensitive)) {
+                return true;
+            }
+        }
+        return false;
+    };
     for (const auto& pDevice : m_pSoundManager->m_pEnumerator->queryDevices()) {
-        if (pDevice->getNumOutputChannels() >= 4 &&
-                pDevice->getDisplayName().endsWith(QStringLiteral(": USB")) &&
-                (!pController ||
+        if (pDevice->getNumOutputChannels() < 4 ||
+                !pDevice->getDisplayName().endsWith(QStringLiteral(": USB"))) {
+            continue;
+        }
+        if (!pController) {
+            pController = pDevice;
+            continue;
+        }
+        const bool known = isDjController(pDevice);
+        const bool knownCurrent = isDjController(pController);
+        if ((known && !knownCurrent) ||
+                (known == knownCurrent &&
                         pDevice->getNumOutputChannels() > pController->getNumOutputChannels())) {
             pController = pDevice;
         }
@@ -254,18 +275,43 @@ void SoundManagerAndroid::prepareSetup() {
     keepVinylInputs();
 #ifdef __ANDROID_USB_AUDIO__
     // A USB sound card driven directly by Mixxx only plays at the rates it
-    // supports (e.g. 44.1 kHz for the DDJ-400), there is no resampling
+    // supports (e.g. 44.1 kHz for the DDJ-400), there is no resampling.
+    // Cutlab: with two cards (a controller playing and another one taking
+    // the timecode in, e.g. a Mixtour and an EP-133) the rate has to suit
+    // both, or the second card fails to open.
+    const auto inputs = config.getInputs();
+    QList<const SoundDeviceAndroidUsb*> usedCards;
     for (const auto& pDevice : m_pSoundManager->m_pEnumerator->queryDevices()) {
         const auto* pUsbDevice = dynamic_cast<const SoundDeviceAndroidUsb*>(pDevice.data());
-        if (!pUsbDevice || !isConfiguredOutput(config, pDevice)) {
-            continue;
+        if (pUsbDevice && (isConfiguredOutput(config, pDevice) ||
+                                  inputs.contains(pDevice->getDeviceId()))) {
+            usedCards.append(pUsbDevice);
         }
-        const int sampleRate = static_cast<int>(config.getSampleRate().value());
-        if (!pUsbDevice->usbDevice()->sampleRates().contains(sampleRate)) {
-            qInfo() << pDevice->getDisplayName() << "doesn't support" << sampleRate
-                    << "Hz, using" << pDevice->getDefaultSampleRate();
-            config.setSampleRate(pDevice->getDefaultSampleRate());
+    }
+    const auto suitsAll = [&usedCards](int rate) {
+        for (const auto* pCard : std::as_const(usedCards)) {
+            if (!pCard->usbDevice()->sampleRates().contains(rate)) {
+                return false;
+            }
         }
+        return true;
+    };
+    const int sampleRate = static_cast<int>(config.getSampleRate().value());
+    if (!usedCards.isEmpty() && !suitsAll(sampleRate)) {
+        int chosen = 0;
+        for (const int rate : {44100, 48000, 96000, 88200}) {
+            if (suitsAll(rate)) {
+                chosen = rate;
+                break;
+            }
+        }
+        if (chosen == 0) {
+            chosen = static_cast<int>(usedCards.first()->getDefaultSampleRate().value());
+            qWarning() << "The USB sound cards in use share no sample rate";
+        }
+        qInfo() << "Sample rate" << sampleRate << "Hz doesn't suit every USB sound card, using"
+                << chosen;
+        config.setSampleRate(mixxx::audio::SampleRate(chosen));
     }
 #endif
 }

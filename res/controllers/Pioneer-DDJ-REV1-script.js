@@ -232,6 +232,8 @@ PioneerDDJREV1.getPadNumber = function(control) {
  */
 PioneerDDJREV1.init = function() {
     engine.setValue("[EffectRack1_EffectUnit1]", "show_focus", 1);
+    // Cutlab: the splitter cable mode would pan the main mix to the right
+    engine.setValue("[Master]", "headSplit", 0);
     // Cutlab: FX1 plays on decks 1 and 3, FX2 on decks 2 and 4, fully wet,
     // so the FX buttons are heard as soon as an effect is on
     engine.setValue("[EffectRack1_EffectUnit1]", "group_[Channel1]_enable", 1);
@@ -825,4 +827,16 @@ PioneerDDJREV1.shiftPlay = function(channel, _control, value, _status, group) {
         }
         break;
     }
+};
+
+// MASTER CUE adds the main mix to the headphones next to the cued decks
+// (it used to switch on the splitter cable mode: cue on the left, main mix
+// on the right). The headphones stay stereo.
+PioneerDDJREV1.masterCuePressed = function(_channel, _control, value) {
+    if (value === 0) {
+        return;
+    }
+    engine.setValue("[Master]", "headSplit", 0);
+    const mix = engine.getValue("[Master]", "headMix");
+    engine.setValue("[Master]", "headMix", mix > -0.5 ? -1 : 0);
 };
