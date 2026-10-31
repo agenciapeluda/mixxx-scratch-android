@@ -211,7 +211,23 @@ Category {
                                 });
                                 routes = list;
                                 model = list.map(r => r.label);
-                                currentIndex = 0;
+                                currentIndex = currentRouteIndex();
+                            }
+                            // The entry of the input the deck uses now, so the
+                            // box shows it instead of the placeholder
+                            function currentRouteIndex() {
+                                const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
+                                const base = Mixxx.SoundManager.vinylControlInputChannelGroup(deckRow.index);
+                                if (name === "") {
+                                    return 0;
+                                }
+                                for (let i = 1; i < routes.length; i++) {
+                                    const device = routes[i].device;
+                                    if (device && (device.displayName === name || device.name === name) && routes[i].group === base) {
+                                        return i;
+                                    }
+                                }
+                                return 0;
                             }
 
                             Layout.columnSpan: 3
@@ -233,6 +249,9 @@ Category {
                                 }
                                 Mixxx.SoundManager.setVinylControlInput(route.device, Math.max(0, route.group), deckRow.index);
                                 currentRoute.text = route.group < 0 ? qsTr("Not routed") : route.label;
+                                // Choosing an input means using it: DVS on
+                                // for this deck, off with "No input"
+                                dvsEnabled.value = route.group < 0 ? 0 : 1;
                             }
                         }
                         Item {
@@ -249,6 +268,38 @@ Category {
                                 const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
                                 const base = Mixxx.SoundManager.vinylControlInputChannelGroup(deckRow.index);
                                 return name === "" ? qsTr("Not routed") : `${name} · ${qsTr("channels")} ${base + 1}-${base + 2}`;
+                            }
+                        }
+                        Text {
+                            color: "#969696"
+                            font.pixelSize: 12
+                            text: qsTr("DVS")
+                        }
+                        RowLayout {
+                            Layout.columnSpan: 3
+                            spacing: 12
+
+                            Skin.Button {
+                                Layout.preferredHeight: 40
+                                Layout.preferredWidth: 150
+                                activeColor: "#2bd67b"
+                                highlight: dvsEnabled.value > 0
+                                text: dvsEnabled.value > 0 ? qsTr("DVS on") : qsTr("DVS off")
+                                onClicked: dvsEnabled.value = dvsEnabled.value > 0 ? 0 : 1
+                            }
+                            Text {
+                                Layout.fillWidth: true
+                                color: "#969696"
+                                font.pixelSize: 12
+                                text: qsTr("With DVS on, the turntable moves this deck. It is the same as the DVS button next to the deck.")
+                                wrapMode: Text.WordWrap
+                            }
+
+                            Mixxx.ControlProxy {
+                                id: dvsEnabled
+
+                                group: deckRow.group
+                                key: "vinylcontrol_enabled"
                             }
                         }
                         Text {
@@ -279,7 +330,7 @@ Category {
                                 color: ["#969696", "#2bd67b", "#f5b544", "#ff5d6c"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
                                 font.pixelSize: 12
                                 text: [qsTr("DVS is off on this deck: turn it on with the DVS button of the deck."),
-                                    qsTr("Reading the timecode."),
+                                    qsTr("DVS on and the timecode is read well."),
                                     qsTr("Weak or unstable timecode: check the level and the needle."),
                                     qsTr("No timecode: check the input channels and the timecode type.")][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))] + "\n" + qsTr("Play the record: a clean ring in the box means the timecode is read. Flat or empty: wrong channels or no signal. A messy cloud: wrong timecode type or level.")
                                 wrapMode: Text.WordWrap

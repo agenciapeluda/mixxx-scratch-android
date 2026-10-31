@@ -4080,8 +4080,8 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>DVS apagado en este deck: prendelo con el botón DVS del deck.</translation>
     </message>
     <message>
-        <source>Reading the timecode.</source>
-        <translation>Leyendo el timecode.</translation>
+        <source>DVS on and the timecode is read well.</source>
+        <translation>DVS prendido y el timecode se lee bien.</translation>
     </message>
     <message>
         <source>Weak or unstable timecode: check the level and the needle.</source>
@@ -5080,6 +5080,25 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>Show tempo dials</source>
         <translation>Mostrar diales de tempo</translation>
+    </message>
+</context>
+<context>
+    <name>Turntables</name>
+    <message>
+        <source>DVS</source>
+        <translation>DVS</translation>
+    </message>
+    <message>
+        <source>DVS on</source>
+        <translation>DVS prendido</translation>
+    </message>
+    <message>
+        <source>DVS off</source>
+        <translation>DVS apagado</translation>
+    </message>
+    <message>
+        <source>With DVS on, the turntable moves this deck. It is the same as the DVS button next to the deck.</source>
+        <translation>Con DVS prendido, la bandeja mueve este deck. Es lo mismo que el botón DVS al lado del deck.</translation>
     </message>
 </context>
 </TS>
