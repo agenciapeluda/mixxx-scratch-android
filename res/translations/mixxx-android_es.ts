@@ -5089,6 +5089,26 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>DVS</translation>
     </message>
     <message>
+        <source>Apply the audio again</source>
+        <translation>Volver a aplicar el audio</translation>
+    </message>
+    <message>
+        <source>Copy diagnostics</source>
+        <translation>Copiar diagnóstico</translation>
+    </message>
+    <message>
+        <source>Copied: paste it in the chat.</source>
+        <translation>Copiado: pegalo en el chat.</translation>
+    </message>
+    <message>
+        <source>The audio engine is reading this input.</source>
+        <translation>El motor de audio está leyendo esta entrada.</translation>
+    </message>
+    <message>
+        <source>The audio engine is not using this input yet: choose it again or tap Apply the audio again.</source>
+        <translation>El motor de audio todavía no usa esta entrada: elegila de nuevo o tocá Volver a aplicar el audio.</translation>
+    </message>
+    <message>
         <source>Inputs of the USB sound card</source>
         <translation>Entradas de la placa USB</translation>
     </message>

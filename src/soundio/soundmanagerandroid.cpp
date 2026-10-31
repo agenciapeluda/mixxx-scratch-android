@@ -86,6 +86,56 @@ void SoundManagerAndroid::slotUsbDevicesChanged() {
 #endif
 }
 
+// Cutlab: the vinyl control inputs survive sound cards that show up late.
+// The configuration file drops the devices it doesn't find when it is read,
+// and USB sound cards driven by Mixxx appear a moment after the start, so
+// the input of the turntables was lost on every start. Each input is also
+// kept as "[Cutlab] vinyl_input_N" (device name|first channel) and put back
+// when its device is there again.
+void SoundManagerAndroid::keepVinylInputs() {
+    SoundManagerConfig& config = m_pSoundManager->m_config;
+    const UserSettingsPointer pSettings = m_pSoundManager->m_pConfig;
+    const auto devices = m_pSoundManager->m_pEnumerator->queryDevices();
+    const auto inputs = config.getInputs();
+    for (int index = 0; index < 4; ++index) {
+        const ConfigKey key(QStringLiteral("[Cutlab]"), QStringLiteral("vinyl_input_%1").arg(index + 1));
+        bool configured = false;
+        for (auto it = inputs.cbegin(); it != inputs.cend(); ++it) {
+            if (it.value().getType() == AudioPathType::VinylControl &&
+                    it.value().getIndex() == index) {
+                configured = true;
+                pSettings->setValue(key,
+                        QStringLiteral("%1|%2").arg(it.key().name).arg(
+                                it.value().getChannelGroup().getChannelBase()));
+                break;
+            }
+        }
+        if (configured) {
+            continue;
+        }
+        const QString saved = pSettings->getValueString(key);
+        const int separator = saved.lastIndexOf('|');
+        if (separator <= 0) {
+            continue;
+        }
+        const QString name = saved.left(separator);
+        const int channelBase = saved.mid(separator + 1).toInt();
+        for (const auto& pDevice : devices) {
+            if (pDevice->getDeviceId().name == name &&
+                    static_cast<int>(pDevice->getNumInputChannels()) >= channelBase + 2) {
+                config.addInput(pDevice->getDeviceId(),
+                        AudioInput(AudioPathType::VinylControl,
+                                static_cast<unsigned char>(channelBase),
+                                mixxx::audio::ChannelCount::stereo(),
+                                static_cast<unsigned char>(index)));
+                qInfo() << "Restored the vinyl control input" << index + 1 << "on" << name
+                        << "channels" << channelBase + 1 << "-" << channelBase + 2;
+                break;
+            }
+        }
+    }
+}
+
 void SoundManagerAndroid::autoRouteToController() {
     if (!m_pSoundManager->m_pConfig->getValue(kAutoRouteControllerKey, true)) {
         return;
@@ -134,6 +184,7 @@ void SoundManagerAndroid::prepareSetup() {
         config.writeToDisk();
     }
     autoRouteToController();
+    keepVinylInputs();
 #ifdef __ANDROID_USB_AUDIO__
     // A USB sound card driven directly by Mixxx only plays at the rates it
     // supports (e.g. 44.1 kHz for the DDJ-400), there is no resampling

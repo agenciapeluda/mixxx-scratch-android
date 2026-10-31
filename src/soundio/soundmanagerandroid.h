@@ -53,6 +53,7 @@ class SoundManagerAndroid : public QObject {
     /// Routes the outputs to a connected DJ controller sound card, see
     /// kAutoRouteControllerKey. Modifies and saves the SoundManagerConfig.
     void autoRouteToController();
+    void keepVinylInputs();
     /// Opens the built-in speaker (or any other output) if no physical
     /// output could be opened, so Mixxx never ends up without sound
     void openFallbackOutput(const std::vector<SoundDevicePointer>& devices,

@@ -148,10 +148,47 @@ Category {
                     Connections {
                         function onCommitted(error) {
                             usbStatus.text = error ? error : qsTr("Done: choose the input of each deck below.");
+                            usbStatus.color = error ? "#ff453a" : "#969696";
                             root.devicesChanged();
                         }
 
                         target: Mixxx.SoundManager
+                    }
+                }
+
+                // When DVS still doesn't work: open the cards again, or copy
+                // the whole sound setup to send it
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    Skin.Button {
+                        Layout.preferredHeight: 36
+                        Layout.preferredWidth: 200
+                        text: qsTr("Apply the audio again")
+                        onClicked: {
+                            usbStatus.text = qsTr("Reopening the sound cards…");
+                            Mixxx.SoundManager.reapply();
+                        }
+                    }
+                    Skin.Button {
+                        Layout.preferredHeight: 36
+                        Layout.preferredWidth: 200
+                        text: qsTr("Copy diagnostics")
+                        onClicked: {
+                            Mixxx.SoundManager.copyToClipboard(Mixxx.SoundManager.diagnostics());
+                            copiedText.visible = true;
+                        }
+                    }
+                    Text {
+                        id: copiedText
+
+                        Layout.fillWidth: true
+                        visible: false
+                        color: "#34c759"
+                        font.pixelSize: 11
+                        text: qsTr("Copied: paste it in the chat.")
+                        wrapMode: Text.WordWrap
                     }
                 }
 
@@ -366,10 +403,40 @@ Category {
                             Layout.fillWidth: true
                             color: text === qsTr("Not routed") ? "#ff8f99" : "#6fe3a4"
                             font.pixelSize: 11
-                            text: {
+                            function read() {
                                 const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
                                 const base = Mixxx.SoundManager.vinylControlInputChannelGroup(deckRow.index);
-                                return name === "" ? qsTr("Not routed") : `${name} · ${qsTr("channels")} ${base + 1}-${base + 2}`;
+                                text = name === "" ? qsTr("Not routed") : `${name} · ${qsTr("channels")} ${base + 1}-${base + 2}`;
+                            }
+
+                            Component.onCompleted: read()
+
+                            Connections {
+                                function onDevicesChanged() {
+                                    currentRoute.read();
+                                }
+
+                                target: root
+                            }
+                        }
+                        Item {
+                            width: 1
+                        }
+                        Text {
+                            Layout.columnSpan: 3
+                            Layout.fillWidth: true
+                            color: inputConfigured.value > 0 ? "#34c759" : "#ff9f0a"
+                            font.pixelSize: 11
+                            wrapMode: Text.WordWrap
+                            text: inputConfigured.value > 0
+                                ? qsTr("The audio engine is reading this input.")
+                                : qsTr("The audio engine is not using this input yet: choose it again or tap Apply the audio again.")
+
+                            Mixxx.ControlProxy {
+                                id: inputConfigured
+
+                                group: deckRow.group
+                                key: "input_configured"
                             }
                         }
                         Text {

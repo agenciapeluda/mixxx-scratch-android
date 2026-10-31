@@ -23,6 +23,9 @@ class QmlDlgPreferencesProxy : public QObject {
     static inline std::unique_ptr<QmlDlgPreferencesProxy> s_pInstance;
 
   private:
+#if defined(Q_OS_ANDROID)
+    void applyCutlabStyle();
+#endif
     static inline QJSEngine* s_pJsEngine = nullptr;
     std::shared_ptr<QDialog> m_pDlgPreferences;
 };

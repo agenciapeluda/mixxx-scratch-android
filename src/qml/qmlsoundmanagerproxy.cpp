@@ -2,6 +2,13 @@
 
 #include <qqmlengine.h>
 
+#include <QClipboard>
+#include <algorithm>
+#include <QDir>
+#include <QFile>
+#include <QGuiApplication>
+#include <QTextStream>
+
 #include <memory>
 #include <utility>
 
@@ -10,7 +17,9 @@
 #include "qml_owned_ptr.h"
 #include "soundio/soundmanager.h"
 #include "soundio/soundmanagerutil.h"
+#include "control/controlobject.h"
 #include "util/assert.h"
+#include "util/cmdlineargs.h"
 #include "util/scopedoverridecursor.h"
 
 namespace mixxx {
@@ -99,8 +108,10 @@ QmlSoundManagerProxy::QmlSoundManagerProxy(
             status = m_pSoundManager->setConfig(m_config);
         }
         if (status != SoundDeviceStatus::Ok) {
-            emit committed(m_pSoundManager->getLastErrorMessage(status));
+            m_lastError = m_pSoundManager->getLastErrorMessage(status);
+            emit committed(m_lastError);
         } else {
+            m_lastError.clear();
             emit committed();
         }
         m_config = m_pSoundManager->getConfig();
@@ -264,6 +275,14 @@ void QmlSoundManagerProxy::setVinylControlInput(QmlSoundInputDeviceProxy* device
     // the vinyl control input is not applied either. Keep the main output
     // and drop the clashing ones (e.g. headphones on the phone speaker).
     removeClashingOutputs();
+    if (!device) {
+        // "No input": forget the input kept for USB cards that appear late
+        if (const UserSettingsPointer pSettings = QmlConfigProxy::get()) {
+            pSettings->setValue(ConfigKey(QStringLiteral("[Cutlab]"),
+                                        QStringLiteral("vinyl_input_%1").arg(index + 1)),
+                    QString());
+        }
+    }
     if (device && qml_owned_ptr<QmlSoundInputDeviceProxy>(device)) {
         m_config.addInput(device->getDeviceId(),
                 AudioInput(AudioPathType::VinylControl,
@@ -362,6 +381,84 @@ bool QmlSoundManagerProxy::hasMicInputs() {
 
 std::shared_ptr<SoundManager> QmlSoundManagerProxy::internal() const {
     return m_pSoundManager;
+}
+
+void QmlSoundManagerProxy::reapply() {
+    m_config = m_pSoundManager->getConfig();
+    commit();
+}
+
+QString QmlSoundManagerProxy::diagnostics() const {
+    QString text;
+    QTextStream out(&text);
+    const SoundManagerConfig config = m_pSoundManager->getConfig();
+    out << "== Cutlab sound diagnostics ==\n";
+    out << "API: " << config.getAPI() << ", " << config.getSampleRate().value()
+        << " Hz, buffer " << config.getFramesPerBuffer() << " frames\n";
+    out << "Last error: " << (m_lastError.isEmpty() ? QStringLiteral("none") : m_lastError) << "\n";
+    out << "-- Devices --\n";
+    const auto devices = m_pSoundManager->getDeviceList(QString(), false, false);
+    for (const auto& pDevice : devices) {
+        out << pDevice->getDisplayName() << " [" << pDevice->getHostAPI() << "] in "
+            << static_cast<int>(pDevice->getNumInputChannels()) << " out "
+            << static_cast<int>(pDevice->getNumOutputChannels())
+            << (pDevice->isOpen() ? " OPEN" : "") << "\n";
+    }
+    out << "-- Outputs --\n";
+    const auto outputs = config.getOutputs();
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        out << it.value().getString() << " ch " << it.value().getChannelGroup().getChannelBase() + 1
+            << " -> " << it.key().name << "\n";
+    }
+    out << "-- Inputs --\n";
+    const auto inputs = config.getInputs();
+    for (auto it = inputs.cbegin(); it != inputs.cend(); ++it) {
+        out << it.value().getString() << " ch " << it.value().getChannelGroup().getChannelBase() + 1
+            << " <- " << it.key().name << "\n";
+    }
+    out << "-- Decks --\n";
+    for (int i = 1; i <= 2; ++i) {
+        const QString group = QStringLiteral("[Channel%1]").arg(i);
+        out << group << " input_configured " << ControlObject::get(ConfigKey(group, QStringLiteral("input_configured")))
+            << " vinyl_enabled " << ControlObject::get(ConfigKey(group, QStringLiteral("vinylcontrol_enabled")))
+            << " vinyl_status " << ControlObject::get(ConfigKey(group, QStringLiteral("vinylcontrol_status")))
+            << " vinyl_mode " << ControlObject::get(ConfigKey(group, QStringLiteral("vinylcontrol_mode"))) << "\n";
+    }
+    out << "USB in channels " << ControlObject::get(ConfigKey(QStringLiteral("[Cutlab]"), QStringLiteral("usb_in_channels")))
+        << " blocks " << ControlObject::get(ConfigKey(QStringLiteral("[Cutlab]"), QStringLiteral("usb_in_blocks")));
+    for (int c = 1; c <= 8; ++c) {
+        out << (c == 1 ? " peaks " : " ")
+            << QString::number(ControlObject::get(ConfigKey(QStringLiteral("[Cutlab]"),
+                                       QStringLiteral("usb_in_peak_%1").arg(c))),
+                       'f',
+                       3);
+    }
+    out << "\n-- Log (sound, USB, vinyl) --\n";
+    QFile log(QDir(CmdlineArgs::Instance().getSettingsPath()).filePath(QStringLiteral("mixxx.log")));
+    if (log.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QStringList lines = QString::fromUtf8(log.readAll()).split('\n');
+        QStringList kept;
+        for (const QString& line : lines) {
+            if (line.contains(QStringLiteral("Sound"), Qt::CaseInsensitive) ||
+                    line.contains(QStringLiteral("USB"), Qt::CaseInsensitive) ||
+                    line.contains(QStringLiteral("vinyl"), Qt::CaseInsensitive) ||
+                    line.contains(QStringLiteral("device"), Qt::CaseInsensitive) ||
+                    line.contains(QStringLiteral("Unable"), Qt::CaseInsensitive) ||
+                    line.contains(QStringLiteral("Error"), Qt::CaseInsensitive)) {
+                kept.append(line.left(300));
+            }
+        }
+        out << kept.mid(std::max<qsizetype>(0, kept.size() - 80)).join('\n');
+    } else {
+        out << "(no log file)";
+    }
+    return text;
+}
+
+void QmlSoundManagerProxy::copyToClipboard(const QString& text) const {
+    if (QClipboard* pClipboard = QGuiApplication::clipboard()) {
+        pClipboard->setText(text);
+    }
 }
 
 void QmlSoundManagerProxy::commit() {

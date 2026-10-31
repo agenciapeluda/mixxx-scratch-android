@@ -18,16 +18,21 @@ Item {
 
         // Sources as text tabs, and the deck that gets the track
         Rectangle {
+            id: sourceBar
+
+            // Narrow (phone upright): the deck buttons go on a second line
+            readonly property bool narrow: root.width < 720
+
             Layout.fillWidth: true
-            Layout.preferredHeight: 50
+            Layout.preferredHeight: narrow ? 96 : 50
             color: Cutlab.Style.topBar
 
             Row {
                 anchors.left: parent.left
                 anchors.leftMargin: 16
                 anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                spacing: 26
+                height: 50
+                spacing: 22
 
                 Repeater {
                     model: ["Navidrome / Subsonic", "Audius", qsTr("Link / radio")]
@@ -67,7 +72,7 @@ Item {
             Row {
                 anchors.right: parent.right
                 anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
+                y: sourceBar.narrow ? 54 : 8
                 spacing: 6
 
                 Text {

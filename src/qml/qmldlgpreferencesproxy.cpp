@@ -13,6 +13,11 @@ QmlDlgPreferencesProxy::QmlDlgPreferencesProxy(
         QObject* parent)
         : QObject(parent),
           m_pDlgPreferences(pDlgPreferences) {
+#if defined(Q_OS_ANDROID)
+    // Styled from the start: the dialog also opens from other places, e.g.
+    // the warning about a vinyl control without input
+    applyCutlabStyle();
+#endif
 }
 
 #if defined(Q_OS_ANDROID)
@@ -65,12 +70,22 @@ QDialogButtonBox QPushButton { min-width: 110px; }
 } // namespace
 #endif
 
+#if defined(Q_OS_ANDROID)
+void QmlDlgPreferencesProxy::applyCutlabStyle() {
+    if (!m_pDlgPreferences) {
+        return;
+    }
+    const QString style = QString::fromUtf8(kCutlabPreferencesStyle);
+    if (!m_pDlgPreferences->styleSheet().contains(style)) {
+        m_pDlgPreferences->setStyleSheet(m_pDlgPreferences->styleSheet() + style);
+    }
+}
+#endif
+
 void QmlDlgPreferencesProxy::show() {
 #if defined(Q_OS_ANDROID)
-    // Full screen and in the Cutlab look, set once
-    if (m_pDlgPreferences->styleSheet().isEmpty()) {
-        m_pDlgPreferences->setStyleSheet(QString::fromUtf8(kCutlabPreferencesStyle));
-    }
+    // Full screen and in the Cutlab look
+    applyCutlabStyle();
     m_pDlgPreferences->showMaximized();
 #else
     m_pDlgPreferences->show();

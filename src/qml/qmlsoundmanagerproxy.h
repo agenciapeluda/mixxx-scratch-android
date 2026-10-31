@@ -169,6 +169,15 @@ class QmlSoundManagerProxy : public QObject {
     /// Uses the USB driver of Cutlab for USB sound cards (it reads their
     /// inputs too), lists the devices again and reopens them.
     Q_INVOKABLE void useAndroidAudioForUsbDevices();
+    // Cutlab: the sound setup as text, to copy and send when DVS doesn't work
+    Q_INVOKABLE QString diagnostics() const;
+    Q_INVOKABLE void copyToClipboard(const QString& text) const;
+    // Applies the current configuration again (reopens the sound cards)
+    Q_INVOKABLE void reapply();
+    // The error of the last configuration applied from QML, empty if none
+    Q_INVOKABLE QString lastError() const {
+        return m_lastError;
+    }
     Q_INVOKABLE int vinylControlInputChannelGroup(unsigned char index) const;
     Q_INVOKABLE void clearOutputs();
     Q_INVOKABLE void clearInputs();
@@ -195,6 +204,7 @@ class QmlSoundManagerProxy : public QObject {
     std::shared_ptr<SoundManager> m_pSoundManager;
     SoundManagerConfig m_config;
     QAtomicInt m_commitInProgress;
+    QString m_lastError;
 };
 
 } // namespace qml
