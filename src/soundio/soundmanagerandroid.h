@@ -55,6 +55,7 @@ class SoundManagerAndroid : public QObject {
     void autoRouteToController();
     void keepVinylInputs();
     void removeClashingOutputs();
+    void plainOutputsForController();
     /// Opens the built-in speaker (or any other output) if no physical
     /// output could be opened, so Mixxx never ends up without sound
     void openFallbackOutput(const std::vector<SoundDevicePointer>& devices,

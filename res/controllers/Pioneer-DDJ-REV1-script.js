@@ -232,6 +232,14 @@ PioneerDDJREV1.getPadNumber = function(control) {
  */
 PioneerDDJREV1.init = function() {
     engine.setValue("[EffectRack1_EffectUnit1]", "show_focus", 1);
+    // Cutlab: FX1 plays on decks 1 and 3, FX2 on decks 2 and 4, fully wet,
+    // so the FX buttons are heard as soon as an effect is on
+    engine.setValue("[EffectRack1_EffectUnit1]", "group_[Channel1]_enable", 1);
+    engine.setValue("[EffectRack1_EffectUnit1]", "group_[Channel3]_enable", 1);
+    engine.setValue("[EffectRack1_EffectUnit2]", "group_[Channel2]_enable", 1);
+    engine.setValue("[EffectRack1_EffectUnit2]", "group_[Channel4]_enable", 1);
+    engine.setValue("[EffectRack1_EffectUnit1]", "mix", 1);
+    engine.setValue("[EffectRack1_EffectUnit2]", "mix", 1);
 
     for (let i = PioneerDDJREV1.zero; i < PioneerDDJREV1.channelCount; i++) {
         const channel = `[Channel${i + 1}]`;
@@ -659,10 +667,9 @@ PioneerDDJREV1.tempoSliderLSB = function(_channel, _control, value, _status, gro
  * @param {string} group The channel group tag
  */
 PioneerDDJREV1.syncPressed = function(_channel, _control, value, _status, group) {
-    if (engine.getValue(group, "sync_enabled") && value > 0) {
-        engine.setValue(group, "sync_enabled", 0);
-    } else {
-        engine.setValue(group, "beatsync", value);
+    // Cutlab: like djay, a press turns sync on or off; off keeps the tempo
+    if (value > 0) {
+        engine.setValue(group, "sync_enabled", engine.getValue(group, "sync_enabled") ? 0 : 1);
     }
 };
 /**
@@ -674,8 +681,10 @@ PioneerDDJREV1.syncPressed = function(_channel, _control, value, _status, group)
  * @param {string} group The channel group tag
  */
 PioneerDDJREV1.syncShiftPressed = function(_channel, _control, value, _status, group) {
+    // Cutlab: SHIFT + SYNC turns sync off and goes back to the original tempo
     if (value > PioneerDDJREV1.zero) {
-        engine.setValue(group, "sync_enabled", 1);
+        engine.setValue(group, "sync_enabled", 0);
+        engine.setValue(group, "rate", 0);
     }
 };
 

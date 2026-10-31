@@ -8,6 +8,9 @@ Row {
     required property string group
     property bool mirrored: false
     property real unit: 48
+    // The round button after cue: stems on the wide screen, all the deck
+    // tools (FX, stems, loops, cues, EQ) on the upright one
+    property string toolsIcon: "stems"
 
     signal stemsRequested
 
@@ -68,7 +71,7 @@ Row {
         width: transport.unit * 0.8
         height: width
         round: true
-        icon: "stems"
+        icon: transport.toolsIcon
         iconSize: width * 0.44
         onClicked: transport.stemsRequested()
     }

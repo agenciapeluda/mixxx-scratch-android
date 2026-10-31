@@ -156,6 +156,8 @@ Category {
                         spacing: 8
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Local music folders")
                             font.weight: Font.DemiBold
                             font.pixelSize: 14
@@ -172,6 +174,7 @@ Category {
                             border.width: 1
 
                             Text {
+                                elide: Text.ElideRight
                                 id: scannerStatusText
                                 anchors.centerIn: parent
                                 font.pixelSize: 11
@@ -183,6 +186,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         text: qsTr("Choose the folders on your device where you keep your music. Mixxx will watch them and index the tracks it finds automatically.")
                         font.pixelSize: 11
                         color: "#969696"
@@ -192,6 +196,8 @@ Category {
 
                     // --- LISTA DE CARPETAS MONITORIZADAS ---
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Folders currently added:")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -220,6 +226,8 @@ Category {
                                     spacing: 8
 
                                     Text {
+                                        elide: Text.ElideRight
+                                        Layout.minimumWidth: 0
                                         text: ""
                                         font.pixelSize: 14
                                     }
@@ -229,6 +237,7 @@ Category {
                                         spacing: 2
 
                                         Text {
+                                            Layout.minimumWidth: 0
                                             text: modelData.path
                                             font.weight: Font.DemiBold
                                             font.pixelSize: 11
@@ -238,6 +247,8 @@ Category {
                                         }
 
                                         Text {
+                                            elide: Text.ElideRight
+                                            Layout.minimumWidth: 0
                                             text: qsTr("%1 tracks indexed").arg(modelData.trackCount || 0) +
                                                   (modelData.totalSecond > 0 ? " • " + qsTr("%1 min").arg(Math.round(modelData.totalSecond / 60)) : "")
                                             font.pixelSize: 10
@@ -274,6 +285,8 @@ Category {
                                 anchors.centerIn: parent
                                 spacing: 8
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("No folders added yet. Use the buttons below to add one.")
                                     font.pixelSize: 11
                                     color: "#ff9f0a"
@@ -284,6 +297,8 @@ Category {
 
                     // --- ACCESOS RÁPIDOS ANDROID ---
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Shortcuts (standard Android locations):")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -394,6 +409,8 @@ Category {
                             spacing: 8
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("Device folder browser:")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 11
@@ -441,6 +458,8 @@ Category {
 
                             // Subdirectories flow
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("Subfolders in this location (tap to open):")
                                 font.pixelSize: 10
                                 color: "#969696"
@@ -464,8 +483,10 @@ Category {
                                         RowLayout {
                                             anchors.centerIn: parent
                                             spacing: 4
-                                            Text { text: ""; font.pixelSize: 11 }
+                                            Text { text: ""; font.pixelSize: 11; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                             Text {
+                                                elide: Text.ElideRight
+                                                Layout.minimumWidth: 0
                                                 id: dirLabel
                                                 text: modelData
                                                 color: "#e9e9e9"
@@ -483,6 +504,8 @@ Category {
                                 }
 
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     visible: !root.subDirectoriesList || root.subDirectoriesList.length === 0
                                     text: qsTr("(No more subfolders)")
                                     font.pixelSize: 10
@@ -544,6 +567,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Streaming storage & cache")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
@@ -552,6 +577,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         text: qsTr("Tracks played from streaming platforms (Navidrome, Audius, SoundCloud, Tidal) are stored locally so playback continues without dropouts even if the internet connection is lost.")
                         font.pixelSize: 11
                         color: "#969696"
@@ -577,12 +603,16 @@ Category {
                                 spacing: 8
 
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Space used:")
                                     font.pixelSize: 11
                                     color: "#bebebe"
                                 }
 
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: {
                                         var bytes = Mixxx.StreamingManager ? Mixxx.StreamingManager.cacheSizeBytes : 0;
                                         if (bytes <= 0) return qsTr("0 MB (cache empty)");
@@ -597,6 +627,7 @@ Category {
 
                                 // Shortened to the space left next to the size
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Path: %1").arg(Mixxx.StreamingManager ? Mixxx.StreamingManager.cacheDirectory : "")
                                     font.pixelSize: 10
                                     color: "#767676"
@@ -641,6 +672,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Library backup")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
@@ -649,6 +682,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         text: qsTr("Saves the library (tracks, BPM, key, cues, playlists, crates and history) and the settings to %1. That folder is kept when Mixxx is uninstalled or its data is cleared, so a backup can be restored afterwards.").arg(Mixxx.MobileLibrary.backupDirectory)
                         font.pixelSize: 11
                         color: "#969696"
@@ -677,6 +711,7 @@ Category {
                         }
 
                         Text {
+                            Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             text: root.backupMessage
                             font.pixelSize: 11
@@ -686,6 +721,8 @@ Category {
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         visible: root.backupList.length === 0
                         text: qsTr("No backups yet.")
                         font.pixelSize: 11
@@ -704,6 +741,8 @@ Category {
                             spacing: 12
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.fillWidth: true
                                 text: root.backupLabel(backupRow.modelData)
                                 font.pixelSize: 12
@@ -760,6 +799,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Rekordbox stick backup")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
@@ -768,6 +809,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         text: qsTr("Copies the Rekordbox export of a USB stick (playlists, analysis and tracks) to %1/<name>. The copy appears under Rekordbox in the library like the stick itself, also when the stick is not plugged in. Backing up the stick again only copies what changed, and deletes what was removed from the stick.").arg("/storage/emulated/0/Music/Mixxx/Rekordbox")
                         font.pixelSize: 11
                         color: "#969696"
@@ -795,6 +837,7 @@ Category {
                         }
 
                         Text {
+                            Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             visible: !Mixxx.MobileLibrary.rekordboxDrivesLoading && Mixxx.MobileLibrary.rekordboxDrives.length === 0
                             text: qsTr("Plug in a stick and tap Find sticks.")
@@ -860,6 +903,8 @@ Category {
                                 value: Mixxx.MobileLibrary.driveBackupProgress
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.fillWidth: true
                                 text: Mixxx.MobileLibrary.driveBackupFilesTotal > 0 ? qsTr("%1 of %2 files").arg(Mixxx.MobileLibrary.driveBackupFilesDone).arg(Mixxx.MobileLibrary.driveBackupFilesTotal) : qsTr("Reading the stick…")
                                 font.pixelSize: 11
@@ -880,6 +925,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         visible: driveBackupCard.message.length > 0
                         text: driveBackupCard.message
@@ -906,6 +952,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Search & organization")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
@@ -918,6 +966,8 @@ Category {
                         spacing: 12
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Autocomplete searches while typing")
                             font.pixelSize: 11
                             color: Theme.white
@@ -944,6 +994,8 @@ Category {
                         spacing: 12
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Sync metadata and ID3 tags when editing")
                             font.pixelSize: 11
                             color: Theme.white
@@ -977,6 +1029,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Collection pre-analysis (BPM & Camelot key)")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
@@ -985,6 +1039,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         text: qsTr("Calculates the BPM, beatgrid and musical key of your tracks in the background. Pre-analyzed tracks load instantly and the harmonic assistant can highlight compatible tracks.")
                         font.pixelSize: 11
                         color: "#969696"
@@ -1063,12 +1118,16 @@ Category {
                     anchors.centerIn: parent
                     spacing: 8
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.isScanning ? "" : (root.dirty ? "●" : "✓")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: (root.isScanning || root.dirty) ? "#ff9f0a" : "#34c759"
                     }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.isScanning ? qsTr("Scanning...") : (root.dirty ? qsTr("Unsaved changes") : qsTr("Collection ready"))
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -1091,8 +1150,10 @@ Category {
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: ""; font.pixelSize: 11 }
+                    Text { text: ""; font.pixelSize: 11; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.isScanning ? qsTr("Scanning...") : qsTr("Scan tracks")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -1125,6 +1186,7 @@ Category {
                 border.width: 1
 
                 Text {
+                    elide: Text.ElideRight
                     anchors.centerIn: parent
                     text: qsTr("Discard")
                     font.weight: Font.DemiBold
@@ -1160,12 +1222,16 @@ Category {
                     spacing: 8
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? "" : "✓"
                         font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? qsTr("Save library") : qsTr("Saved")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
@@ -1208,6 +1274,7 @@ Category {
             spacing: 12
 
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: qsTr("Re-analyze the whole collection?")
                 font.weight: Font.DemiBold
@@ -1217,6 +1284,7 @@ Category {
             }
 
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: qsTr("The waveforms, keys and the rest of the analysis are done again in the background. You can keep the beatgrids or analyze them again too.")
                 font.pixelSize: 11
@@ -1225,6 +1293,7 @@ Category {
             }
 
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: qsTr("Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.")
                 font.pixelSize: 11
@@ -1307,6 +1376,7 @@ Category {
             spacing: 12
 
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: qsTr("Restore the backup of %1?").arg(root.backupLabel(restorePopup.backupName))
                 font.weight: Font.DemiBold
@@ -1316,6 +1386,7 @@ Category {
             }
 
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: qsTr("Your current library and settings are replaced by the backup (a copy of them is kept). Mixxx closes; open it again to finish.")
                 font.pixelSize: 11
@@ -1324,6 +1395,7 @@ Category {
             }
 
             Text {
+                Layout.minimumWidth: 0
                 id: restoreMessage
 
                 Layout.fillWidth: true

@@ -138,9 +138,35 @@ Popup {
                 MouseArea {
                     anchors.fill: parent
                     anchors.margins: -6
-                    onClicked: enabledControl.value = autoSwitch.on ? 0 : 1
+                    onClicked: {
+                        const turningOn = !autoSwitch.on;
+                        enabledControl.value = turningOn ? 1 : 0;
+                        autoDJHint.visible = false;
+                        if (turningOn) {
+                            refusedCheck.restart();
+                        }
+                    }
+                }
+                // Auto DJ refuses to start without tracks in the queue or
+                // with both decks playing: say why
+                Timer {
+                    id: refusedCheck
+
+                    interval: 400
+                    onTriggered: autoDJHint.visible = enabledControl.value <= 0
                 }
             }
+        }
+        Text {
+            id: autoDJHint
+
+            Layout.fillWidth: true
+            visible: false
+            color: Cutlab.Style.cue
+            font.family: Cutlab.Style.font
+            font.pixelSize: 13
+            text: qsTr("Auto DJ didn't start: add tracks to the queue (hold a track in the library) and stop at least one deck, then try again.")
+            wrapMode: Text.WordWrap
         }
         Text {
             Layout.fillWidth: true

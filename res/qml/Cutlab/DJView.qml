@@ -34,6 +34,40 @@ Rectangle {
 
     color: Style.background
 
+    // Effect unit 1 plays on deck 1 and unit 2 on deck 2, like the FX of
+    // djay: an effect is heard as soon as it is on, from the screen or from
+    // a controller
+    Component.onCompleted: {
+        fxRoute1.value = 1;
+        fxRoute2.value = 1;
+        fxMix1.value = 1;
+        fxMix2.value = 1;
+    }
+    Mixxx.ControlProxy {
+        id: fxRoute1
+
+        group: "[EffectRack1_EffectUnit1]"
+        key: "group_[Channel1]_enable"
+    }
+    Mixxx.ControlProxy {
+        id: fxRoute2
+
+        group: "[EffectRack1_EffectUnit2]"
+        key: "group_[Channel2]_enable"
+    }
+    Mixxx.ControlProxy {
+        id: fxMix1
+
+        group: "[EffectRack1_EffectUnit1]"
+        key: "mix"
+    }
+    Mixxx.ControlProxy {
+        id: fxMix2
+
+        group: "[EffectRack1_EffectUnit2]"
+        key: "mix"
+    }
+
     function openLibrary(group) {
         library.open(group);
     }
@@ -156,10 +190,6 @@ Rectangle {
                 toggleRecording.value = 1;
                 toggleRecording.value = 0;
             }
-        }
-        CLMenuItem {
-            text: qsTr("XY effects pad")
-            onTriggered: root.xyPadRequested()
         }
         CLMenuItem {
             text: root.deckStyle === "dial" ? qsTr("Show turntables") : qsTr("Show tempo dials")
@@ -419,31 +449,34 @@ Rectangle {
         sourceComponent: PortraitView {
             recording: recording.value > 0
             onLibraryRequested: group => root.openLibrary(group)
-            onStemsRequested: group => {
-                stemsPopup.group = group;
-                stemsPopup.open();
+            onToolsRequested: group => {
+                toolsSheet.group = group;
+                toolsSheet.open();
             }
             onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
         }
     }
 
-    // The stems of a deck over the upright layout
+    // All the tools of a deck (FX first) over the upright layout
     Popup {
-        id: stemsPopup
+        id: toolsSheet
 
         property string group: "[Channel1]"
 
-        anchors.centerIn: parent
-        width: parent.width - 24
-        height: Math.min(parent.height * 0.6, 420)
+        x: 0
+        y: parent.height - height
+        width: parent.width
+        height: Math.min(parent.height * 0.62, 520)
         modal: true
         padding: 0
         background: Rectangle {
             color: Style.panel
-            radius: 12
+            radius: 16
         }
-        contentItem: StemsTool {
-            group: stemsPopup.group
+        contentItem: ToolPanel {
+            group: toolsSheet.group
+            tool: 3
+            onCloseRequested: toolsSheet.close()
         }
     }
 

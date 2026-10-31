@@ -137,6 +137,7 @@ Category {
                         }
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         id: usbStatus
 
                         Layout.fillWidth: true
@@ -181,6 +182,7 @@ Category {
                         }
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         id: copiedText
 
                         Layout.fillWidth: true
@@ -227,6 +229,8 @@ Category {
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         color: "#969696"
                         font.pixelSize: 11
                         text: qsTr("Inputs of the USB sound card")
@@ -274,6 +278,8 @@ Category {
                                     }
                                 }
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.alignment: Qt.AlignHCenter
                                     color: "#bebebe"
                                     font.pixelSize: 11
@@ -282,6 +288,7 @@ Category {
                             }
                         }
                         Text {
+                            Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             Layout.leftMargin: 10
                             color: usbInputs.receiving ? "#34c759" : "#ff9f0a"
@@ -309,6 +316,8 @@ Category {
                         rowSpacing: 6
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.columnSpan: 4
                             Layout.topMargin: deckRow.index ? 8 : 0
                             color: "#ffffff"
@@ -317,6 +326,8 @@ Category {
                             text: qsTr("Deck %1").arg(deckRow.index + 1)
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("Audio input")
@@ -397,6 +408,8 @@ Category {
                             width: 1
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             id: currentRoute
 
                             Layout.columnSpan: 3
@@ -423,6 +436,7 @@ Category {
                             width: 1
                         }
                         Text {
+                            Layout.minimumWidth: 0
                             Layout.columnSpan: 3
                             Layout.fillWidth: true
                             color: inputConfigured.value > 0 ? "#34c759" : "#ff9f0a"
@@ -440,6 +454,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("DVS")
@@ -457,6 +473,7 @@ Category {
                                 onClicked: dvsEnabled.value = dvsEnabled.value > 0 ? 0 : 1
                             }
                             Text {
+                                Layout.minimumWidth: 0
                                 Layout.fillWidth: true
                                 color: "#969696"
                                 font.pixelSize: 11
@@ -472,6 +489,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("Signal")
@@ -495,6 +514,7 @@ Category {
                                 }
                             }
                             Text {
+                                Layout.minimumWidth: 0
                                 Layout.fillWidth: true
                                 color: ["#969696", "#34c759", "#ff9f0a", "#ff6961"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
                                 font.pixelSize: 11
@@ -513,6 +533,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("Timecode")
@@ -531,6 +553,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("Speed")
@@ -547,6 +571,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             color: "#969696"
                             font.pixelSize: 11
                             text: qsTr("Lead-in (s)")
@@ -575,6 +601,8 @@ Category {
                     spacing: 12
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.preferredWidth: 90
                         color: "#969696"
                         font.pixelSize: 11
@@ -594,11 +622,79 @@ Category {
                         }
                     }
                 }
+                // Fine tuning of the cut: how far the fader travels before
+                // the channel is fully open (sharp for scratch)
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 12
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
+                        Layout.preferredWidth: 90
+                        color: "#969696"
+                        font.pixelSize: 11
+                        text: qsTr("Cut edge")
+                    }
+                    Slider {
+                        id: cutSlider
+
+                        // 0 soft (curve 2) … 1 razor sharp (curve 1000)
+                        readonly property real minLog: Math.log(2)
+                        readonly property real maxLog: Math.log(1000)
+
+                        Layout.fillWidth: true
+                        from: 0
+                        to: 1
+                        value: xfaderMode.value > 0 ? 0 : Math.max(0, Math.min(1, (Math.log(Math.max(2, xfaderCurve.value)) - minLog) / (maxLog - minLog)))
+                        onMoved: {
+                            const curve = Math.exp(minLog + value * (maxLog - minLog));
+                            xfaderMode.value = 0;
+                            xfaderCurve.value = curve;
+                            Mixxx.Application.setConfigValue("[Mixer Profile]", "xFaderMode", "0");
+                            Mixxx.Application.setConfigValue("[Mixer Profile]", "xFaderCurve", String(curve));
+                        }
+
+                        background: Rectangle {
+                            x: cutSlider.leftPadding
+                            y: cutSlider.topPadding + cutSlider.availableHeight / 2 - height / 2
+                            width: cutSlider.availableWidth
+                            height: 6
+                            radius: 3
+                            color: "#1e1e20"
+
+                            Rectangle {
+                                width: cutSlider.visualPosition * parent.width
+                                height: parent.height
+                                radius: 3
+                                color: "#635bff"
+                            }
+                        }
+                        handle: Rectangle {
+                            x: cutSlider.leftPadding + cutSlider.visualPosition * (cutSlider.availableWidth - width)
+                            y: cutSlider.topPadding + cutSlider.availableHeight / 2 - height / 2
+                            width: 24
+                            height: 24
+                            radius: 12
+                            color: "#e5e5ea"
+                        }
+                    }
+                    Text {
+                        Layout.minimumWidth: 0
+                        Layout.preferredWidth: 70
+                        color: "#d1d1d6"
+                        font.pixelSize: 11
+                        elide: Text.ElideRight
+                        text: cutSlider.value > 0.85 ? qsTr("Razor") : (cutSlider.value > 0.5 ? qsTr("Sharp") : qsTr("Soft"))
+                    }
+                }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.preferredWidth: 90
                         color: "#969696"
                         font.pixelSize: 11
@@ -643,12 +739,15 @@ Category {
             spacing: 10
 
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 color: "#ececec"
                 font.pixelSize: 14
                 font.weight: Font.DemiBold
                 text: card.title
             }
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: "#969696"
                 font.pixelSize: 11

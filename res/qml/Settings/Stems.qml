@@ -47,12 +47,15 @@ Category {
                     spacing: 6
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("STEMS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: "#837cff"
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         color: "#dbdbdb"
@@ -60,6 +63,7 @@ Category {
                         text: qsTr("Splits the tracks you choose into drums, bass, vocals and the rest, so that you can mute or mix each part on the deck. In the library, select a track or open a list and tap STEMS. The stems are saved next to each track, in a hidden .stems folder, and they are used whenever you load the track. If its folder can't be written, they stay in the app.")
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         color: "#ff9f0a"
@@ -77,12 +81,15 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("MODELS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: "#837cff"
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         color: "#969696"
@@ -108,6 +115,7 @@ Category {
                     }
 
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         visible: root.message !== ""
                         wrapMode: Text.WordWrap
@@ -126,6 +134,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("OPTIONS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
@@ -188,6 +198,8 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("QUEUE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
@@ -208,6 +220,8 @@ Category {
                     spacing: 8
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("STORAGE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
@@ -219,6 +233,7 @@ Category {
                         spacing: 8
 
                         Text {
+                            Layout.minimumWidth: 0
                             id: storedText
 
                             property int storedMb: Mixxx.Stems.storedStemsMb()
@@ -294,12 +309,15 @@ Category {
             spacing: 1
 
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 text: choiceRow.label
                 color: "#ffffff"
                 font.pixelSize: 11
             }
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 visible: choiceRow.hint !== ""
                 text: choiceRow.hint
@@ -376,12 +394,15 @@ Category {
                 spacing: 2
 
                 Text {
+                    elide: Text.ElideRight
+                    Layout.minimumWidth: 0
                     text: StemsText.modelLabel(modelRow.model) + (modelRow.installed ? "  ✓" : "")
                     color: modelRow.installed ? "#34c759" : "#ffffff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 11
                 }
                 Text {
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     text: modelRow.description
                     color: "#dbdbdb"
@@ -389,6 +410,7 @@ Category {
                     wrapMode: Text.WordWrap
                 }
                 Text {
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     text: modelRow.ranges
                     color: "#969696"
@@ -396,6 +418,8 @@ Category {
                     wrapMode: Text.WordWrap
                 }
                 Text {
+                    elide: Text.ElideRight
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     visible: modelRow.speed > 0
                     text: qsTr("This device: ~%1 per 5 minute track").arg(StemsText.trackTime(modelRow.speed))
@@ -404,6 +428,7 @@ Category {
                     font.weight: Font.DemiBold
                 }
                 Text {
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     visible: modelRow.warning !== ""
                     text: modelRow.warning
@@ -412,6 +437,8 @@ Category {
                     wrapMode: Text.WordWrap
                 }
                 Text {
+                    elide: Text.ElideRight
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     visible: modelRow.downloading
                     text: qsTr("Downloading… %1%").arg(Math.round(Mixxx.Stems.downloadProgress * 100))

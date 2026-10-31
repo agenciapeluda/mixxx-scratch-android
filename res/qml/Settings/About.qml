@@ -54,17 +54,23 @@ Category {
                         ColumnLayout {
                             spacing: 2
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: "Cutlab"
                                 font.pixelSize: 18
                                 font.weight: Font.DemiBold
                                 color: "#ececec"
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("by xhellvirax")
                                 font.pixelSize: 11
                                 color: "#bebebe"
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: `v${Mixxx.MobileApp.packageVersion} · Mixxx ${Mixxx.Application.version}`
                                 font.pixelSize: 11
                                 color: "#969696"
@@ -72,6 +78,7 @@ Category {
                         }
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         Layout.topMargin: 6
                         text: qsTr("Open source DJ software for Android: DVS, DJ controllers and a touch interface.")
@@ -100,6 +107,8 @@ Category {
                     RowLayout {
                         spacing: 8
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("UPDATES")
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
@@ -177,6 +186,7 @@ Category {
 
                     // What's new
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         visible: Mixxx.AppUpdate.releaseNotes !== "" && [Mixxx.AppUpdate.Available, Mixxx.AppUpdate.Downloading, Mixxx.AppUpdate.Verifying, Mixxx.AppUpdate.Downloaded].includes(Mixxx.AppUpdate.state)
                         text: Mixxx.AppUpdate.releaseNotes
@@ -220,6 +230,7 @@ Category {
                             }
                         }
                         Text {
+                            Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             text: qsTr("Look for updates when the app starts (once a day at most). Nothing is downloaded without asking.")
                             font.pixelSize: 10
@@ -250,12 +261,15 @@ Category {
                     spacing: 6
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Credits")
                         font.pixelSize: 11
                         font.weight: Font.DemiBold
                         color: "#ececec"
                     }
                     Text {
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         text: qsTr("Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.")
                         font.pixelSize: 11
@@ -263,6 +277,8 @@ Category {
                         wrapMode: Text.WordWrap
                     }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         text: "<a href=\"https://github.com/agenciapeluda/mixxx-scratch-android\">github.com/agenciapeluda/mixxx-scratch-android</a>"
                         textFormat: Text.RichText

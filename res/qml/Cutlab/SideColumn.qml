@@ -49,6 +49,17 @@ Rectangle {
         litColor: Style.accent
         highlighted: value > 0
         lit: false
+        // Hold: sync off and back to the original tempo
+        onPressAndHold: {
+            syncOff.value = 0;
+            rate.value = 0;
+        }
+    }
+    Mixxx.ControlProxy {
+        id: syncOff
+
+        group: root.group
+        key: "sync_enabled"
     }
 
     Column {

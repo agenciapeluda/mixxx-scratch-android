@@ -208,6 +208,10 @@ void SoundDeviceAndroidUsb::readProcess(SINT framesPerBuffer) {
         std::fill(m_inputBuffer.begin() + std::max(0, read), m_inputBuffer.begin() + samples, 0.0f);
     }
     composeInputBuffer(m_inputBuffer.data(), frames, 0, channels);
+    // Hand the inputs to their destinations (vinyl control, microphones).
+    // Without this the inputs were read but never reached the timecode
+    // decoder: the engine showed the input as used, the scope stayed empty.
+    m_pSoundManager->pushInputBuffers(m_audioInputs, frames);
 }
 
 void SoundDeviceAndroidUsb::capture(const uint8_t* pData, int frames) {

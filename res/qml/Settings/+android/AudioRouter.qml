@@ -424,6 +424,8 @@ Rectangle {
             visible: root.mode == AudioRouter.Mode.Advanced
 
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.alignment: Qt.AlignHCenter
                 Layout.margins: 15
                 color: '#626262'
@@ -559,6 +561,8 @@ Rectangle {
                     }
                 }
                 Text {
+                    elide: Text.ElideRight
+                    Layout.minimumWidth: 0
                     color: Theme.white
                     font.pixelSize: 13
                     text: qsTr("Multi-Soundcard Synchronization")
@@ -581,6 +585,8 @@ Rectangle {
             visible: root.mode != AudioRouter.Mode.Legacy
 
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.alignment: Qt.AlignHCenter
                 Layout.margins: 15
                 color: '#626262'

@@ -136,6 +136,27 @@ void SoundManagerAndroid::removeClashingOutputs() {
     }
 }
 
+// With the main output on a DJ controller (a sound card with headphones of
+// its own), the splitter cable mode and the mono mix make no sense: the
+// headphones played the main mix only on the left. Both are turned off.
+void SoundManagerAndroid::plainOutputsForController() {
+    const SoundManagerConfig& config = m_pSoundManager->m_config;
+    const auto outputs = config.getOutputs();
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        if (it.value().getType() != AudioPathType::Main) {
+            continue;
+        }
+        for (const auto& pDevice : m_pSoundManager->m_pEnumerator->queryDevices()) {
+            if (pDevice->getDeviceId() == it.key() &&
+                    static_cast<int>(pDevice->getNumOutputChannels()) >= 4) {
+                ControlObject::set(ConfigKey(QStringLiteral("[Master]"), QStringLiteral("headSplit")), 0.0);
+                ControlObject::set(ConfigKey(QStringLiteral("[Master]"), QStringLiteral("mono_mixdown")), 0.0);
+                return;
+            }
+        }
+    }
+}
+
 void SoundManagerAndroid::keepVinylInputs() {
     SoundManagerConfig& config = m_pSoundManager->m_config;
     const UserSettingsPointer pSettings = m_pSoundManager->m_pConfig;
@@ -229,6 +250,7 @@ void SoundManagerAndroid::prepareSetup() {
     }
     autoRouteToController();
     removeClashingOutputs();
+    plainOutputsForController();
     keepVinylInputs();
 #ifdef __ANDROID_USB_AUDIO__
     // A USB sound card driven directly by Mixxx only plays at the rates it

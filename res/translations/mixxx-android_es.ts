@@ -4617,6 +4617,10 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>AutoDJPanel</name>
     <message>
+        <source>Auto DJ didn't start: add tracks to the queue (hold a track in the library) and stop at least one deck, then try again.</source>
+        <translation>Auto DJ no arrancó: agregá temas a la cola (mantené apretado un tema en la biblioteca) y pará al menos un deck, y probá de nuevo.</translation>
+    </message>
+    <message>
         <source>Intro → Outro</source>
         <translation>Intro → Outro</translation>
     </message>
@@ -5119,6 +5123,22 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>No audio from the card. Choose the card as the input of a deck below (the "direct" one), or tap Find USB sound cards.</source>
         <translation>No llega audio de la placa. Elegí la placa como entrada de un deck abajo (la que dice "directo"), o tocá Buscar placas USB.</translation>
+    </message>
+    <message>
+        <source>Cut edge</source>
+        <translation>Borde de corte</translation>
+    </message>
+    <message>
+        <source>Razor</source>
+        <translation>Filoso</translation>
+    </message>
+    <message>
+        <source>Sharp</source>
+        <translation>Corto</translation>
+    </message>
+    <message>
+        <source>Soft</source>
+        <translation>Suave</translation>
     </message>
     <message>
         <source>DVS on</source>

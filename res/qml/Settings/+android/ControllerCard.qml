@@ -126,6 +126,8 @@ Item {
                 }
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 id: labelText
 
                 color: Theme.white
@@ -204,6 +206,8 @@ Item {
                         columns: 2
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
@@ -211,12 +215,16 @@ Item {
                             text: qsTr("Vendor")
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
                             font.pixelSize: 11
                             text: modelData.vendor
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
@@ -224,12 +232,16 @@ Item {
                             text: qsTr("Product")
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignLeft
                             color: Theme.white
                             font.pixelSize: 11
                             text: modelData.product
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
@@ -237,12 +249,16 @@ Item {
                             text: qsTr("Serial number")
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
                             font.pixelSize: 11
                             text: modelData.serialNumber
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
@@ -250,6 +266,8 @@ Item {
                             text: qsTr("Type")
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
                             font.pixelSize: 11
@@ -280,6 +298,7 @@ Item {
             }
         }
         Text {
+            elide: Text.ElideRight
             id: versionOrType
 
             anchors.leftMargin: 22
@@ -407,6 +426,7 @@ Item {
                     visible: controllerVisual.status == Image.Ready && visualMouseArea.containsMouse
                 }
                 Text {
+                    elide: Text.ElideRight
                     anchors.centerIn: parent
                     color: Theme.white
                     horizontalAlignment: Text.AlignHCenter
@@ -482,6 +502,7 @@ Item {
 
             contentItem: Item {
                 Text {
+                    elide: Text.ElideRight
                     id: mappingLabel
 
                     anchors.left: parent.left
@@ -528,6 +549,8 @@ Item {
                             columns: 2
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -535,6 +558,7 @@ Item {
                                 text: qsTr("Author")
                             }
                             Text {
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignRight
                                 Layout.maximumWidth: 280
                                 color: Theme.white
@@ -543,6 +567,8 @@ Item {
                                 wrapMode: Text.WordWrap
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -555,6 +581,8 @@ Item {
                                 value: root.modelData.mapping?.forumLink
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -567,6 +595,8 @@ Item {
                                 value: root.modelData.mapping?.wikiLink
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -574,6 +604,7 @@ Item {
                                 text: qsTr("Description")
                             }
                             Text {
+                                Layout.minimumWidth: 0
                                 Layout.alignment: Qt.AlignRight
                                 Layout.maximumWidth: 280
                                 color: Theme.white
@@ -608,6 +639,7 @@ Item {
                     width: itemDlgt.width
 
                     Text {
+                        Layout.minimumWidth: 0
                         color: Theme.deckTextColor
                         elide: Text.ElideRight
                         font: mappingsCombobox.font

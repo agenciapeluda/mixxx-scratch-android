@@ -460,6 +460,8 @@ Category {
                             spacing: 8
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("Quick audio output profiles")
                                 font.pixelSize: 14
                                 font.weight: Font.DemiBold
@@ -467,6 +469,8 @@ Category {
                             }
                             Item { Layout.fillWidth: true }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("Tap to configure automatically")
                                 font.pixelSize: 11
                                 color: "#969696"
@@ -476,7 +480,7 @@ Category {
                         // 4 Interactive Preset Cards (2x2 Grid)
                         GridLayout {
                             Layout.fillWidth: true
-                            columns: 2
+                            columns: root.width > 600 ? 2 : 1
                             columnSpacing: 10
                             rowSpacing: 10
 
@@ -498,8 +502,9 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 14 }
+                                        Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
+                                            Layout.minimumWidth: 0
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("Phone / Bluetooth")
@@ -508,6 +513,8 @@ Category {
                                             color: root.activePreset === "single" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
+                                            elide: Text.ElideRight
+                                            Layout.minimumWidth: 0
                                             text: root.activePreset === "single" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
@@ -515,6 +522,7 @@ Category {
                                         }
                                     }
                                     Text {
+                                        Layout.minimumWidth: 0
                                         text: qsTr("Single stereo output. All sound goes to the tablet speakers or Bluetooth headphones.")
                                         font.pixelSize: 11
                                         color: "#969696"
@@ -550,8 +558,9 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 14 }
+                                        Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
+                                            Layout.minimumWidth: 0
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("DJ splitter cable")
@@ -560,6 +569,8 @@ Category {
                                             color: root.activePreset === "splitter" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
+                                            elide: Text.ElideRight
+                                            Layout.minimumWidth: 0
                                             text: root.activePreset === "splitter" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
@@ -567,6 +578,7 @@ Category {
                                         }
                                     }
                                     Text {
+                                        Layout.minimumWidth: 0
                                         text: qsTr("Splitter cable on the jack: left channel = CUE (your headphones) and right channel = Main (speaker), both in mono.")
                                         font.pixelSize: 11
                                         color: "#bebebe"
@@ -602,8 +614,9 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 14 }
+                                        Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
+                                            Layout.minimumWidth: 0
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("DJ controller (RCA + headphones)")
@@ -612,6 +625,8 @@ Category {
                                             color: root.activePreset === "controller" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
+                                            elide: Text.ElideRight
+                                            Layout.minimumWidth: 0
                                             text: root.activePreset === "controller" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
@@ -619,6 +634,7 @@ Category {
                                         }
                                     }
                                     Text {
+                                        Layout.minimumWidth: 0
                                         text: qsTr("Pro audio: channels 1-2 to the main RCA output (speakers) and channels 3-4 to the headphone jack of the controller.")
                                         font.pixelSize: 11
                                         color: "#34c759"
@@ -654,8 +670,9 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 14 }
+                                        Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
+                                            Layout.minimumWidth: 0
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("Tablet + controller headphones (hybrid)")
@@ -664,6 +681,8 @@ Category {
                                             color: root.activePreset === "hybrid" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
+                                            elide: Text.ElideRight
+                                            Layout.minimumWidth: 0
                                             text: root.activePreset === "hybrid" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
@@ -671,6 +690,7 @@ Category {
                                         }
                                     }
                                     Text {
+                                        Layout.minimumWidth: 0
                                         text: qsTr("Main output through the tablet speakers and CUE pre-listening through the headphones (channels 3-4) of the controller.")
                                         font.pixelSize: 11
                                         color: "#c2c0ed"
@@ -726,8 +746,10 @@ Category {
                                 anchors.margins: 10
                                 spacing: 8
 
-                                Text { text: ""; font.pixelSize: 13 }
+                                Text { text: ""; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Custom routing active (virtual cables in the matrix)")
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
@@ -735,6 +757,8 @@ Category {
                                 }
                                 Item { Layout.fillWidth: true }
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Manual configuration in use")
                                     font.pixelSize: 11
                                     color: "#a6a6a6"
@@ -758,6 +782,8 @@ Category {
                                 spacing: 4
 
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("How do I connect my speakers and headphones?")
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
@@ -765,6 +791,7 @@ Category {
                                 }
 
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("• <b>Main output (1-2)</b>: sound for the audience. Connect your speakers to the rear RCA outputs of your controller.<br>• <b>CUE pre-listening (3-4)</b>: private sound. Connect your headphones to the headphone jack of the controller.<br>• <b>Hybrid mode</b>: no external speakers? Choose <i>'Tablet + controller headphones'</i> so the music plays through the tablet and the pre-listening through your headphones.<br>• <b>Important</b>: after choosing your profile, press the blue <b>'Apply and save outputs'</b> button at the bottom.")
                                     font.pixelSize: 11
                                     color: "#bebebe"
@@ -792,6 +819,8 @@ Category {
                         spacing: 12
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Audio engine, latency & quality")
                             font.pixelSize: 14
                             font.weight: Font.DemiBold
@@ -809,6 +838,8 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
@@ -830,6 +861,8 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
@@ -867,6 +900,8 @@ Category {
                                 RowLayout {
                                     Layout.fillWidth: true
                                     Text {
+                                        elide: Text.ElideRight
+                                        Layout.minimumWidth: 0
                                         Layout.fillWidth: true
                                         color: Theme.white
                                         font.pixelSize: 12
@@ -898,6 +933,8 @@ Category {
 
                                 // Latency explanation text
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: {
                                         const idx = audioBuffer.currentIndex;
                                         if (idx <= 1) return qsTr("Ultra-low latency: instant response for scratching and fast mixing.");
@@ -913,6 +950,8 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
@@ -933,6 +972,8 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
@@ -976,6 +1017,8 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     color: Theme.white
                                     font.pixelSize: 12
@@ -999,6 +1042,8 @@ Category {
                                 RowLayout {
                                     Layout.fillWidth: true
                                     Text {
+                                        elide: Text.ElideRight
+                                        Layout.minimumWidth: 0
                                         Layout.fillWidth: true
                                         color: Theme.white
                                         font.pixelSize: 12
@@ -1035,6 +1080,7 @@ Category {
                                     }
                                 }
                                 Text {
+                                    Layout.minimumWidth: 0
                                     Layout.fillWidth: true
                                     wrapMode: Text.WordWrap
                                     color: "#969696"
@@ -1081,6 +1127,8 @@ Category {
                             spacing: 8
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("Advanced routing matrix (virtual cables)")
                                 font.pixelSize: 13
                                 font.weight: Font.DemiBold
@@ -1097,6 +1145,7 @@ Category {
                                 border.width: 1
 
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: root.showAdvancedRouter ? qsTr("Hide matrix") : qsTr("Show full matrix")
                                     font.pixelSize: 11
@@ -1172,6 +1221,8 @@ Category {
                         spacing: 14
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Output delays (acoustic latency compensation)")
                             font.pixelSize: 14
                             font.weight: Font.DemiBold
@@ -1184,6 +1235,8 @@ Category {
                             rowSpacing: 10
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 id: mainDelayLabel
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -1201,6 +1254,8 @@ Category {
                             }
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 id: boothDelayLabel
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -1221,6 +1276,8 @@ Category {
                             }
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 id: headphoneDelayLabel
                                 Layout.fillWidth: true
                                 color: Theme.white
@@ -1275,6 +1332,7 @@ Category {
                 border.width: 1
 
                 Text {
+                    elide: Text.ElideRight
                     id: statusText
                     anchors.centerIn: parent
                     text: root.hasChanges ? qsTr("● Unsaved changes") : qsTr("✓ Audio configured")
@@ -1285,6 +1343,7 @@ Category {
             }
 
             Text {
+                Layout.minimumWidth: 0
                 id: errorMessage
                 Layout.fillWidth: true
                 elide: Text.ElideRight
@@ -1323,12 +1382,16 @@ Category {
                     spacing: 8
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.committing ? "" : (root.hasChanges ? "" : "✓")
                         font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.committing ? qsTr("Applying...") : qsTr("Apply and save outputs")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12

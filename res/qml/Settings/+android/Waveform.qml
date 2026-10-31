@@ -164,6 +164,8 @@ Category {
             spacing: 10
 
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 font.pixelSize: 13
@@ -233,6 +235,8 @@ Category {
                 color: Theme.darkGray3
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 font.pixelSize: 13
@@ -255,6 +259,7 @@ Category {
                 }
             }
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
                 text: qsTr("Simple, Filtered, HSV, RGB and Stacked are supported by the QML renderer.")
@@ -420,6 +425,7 @@ Category {
                 }
             }
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
                 text: qsTr("Split stereo signal is used by the RGB renderer.")
@@ -441,6 +447,7 @@ Category {
                 }
             }
             Text {
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
                 text: qsTr("High detail is retained for compatibility but is unavailable in the QML scene-graph renderer.")
@@ -554,6 +561,8 @@ Category {
                 color: Theme.darkGray3
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 font.pixelSize: 13
@@ -592,6 +601,8 @@ Category {
                 Layout.fillWidth: true
 
                 Text {
+                    elide: Text.ElideRight
+                    Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     color: Theme.white
                     text: qsTr("Cached waveforms occupy %1 on disk.").arg(Mixxx.Library.waveformCacheDiskUsage || qsTr("unknown"))
@@ -608,6 +619,8 @@ Category {
                 color: Theme.darkGray3
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 font.pixelSize: 13
@@ -615,11 +628,15 @@ Category {
                 text: qsTr("Graphics API Status")
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 text: qsTr("Qt Quick renderer: %1").arg(root.graphicsApiName)
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.white
                 text: Mixxx.Config.waveformAverageFrameRate > 0
@@ -627,6 +644,8 @@ Category {
                         : qsTr("Average frame rate: Measuring…")
             }
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
                 text: GraphicsInfo.api === GraphicsInfo.OpenGL ? "OpenGL " + GraphicsInfo.majorVersion + "." + GraphicsInfo.minorVersion : qsTr("Runtime API reported by Qt Quick")
@@ -664,12 +683,16 @@ Category {
                     anchors.centerIn: parent
                     spacing: 8
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? "●" : "✓"
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: root.dirty ? "#ff9f0a" : "#34c759"
                     }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? qsTr("Unsaved changes") : qsTr("Waveforms saved")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -680,6 +703,8 @@ Category {
 
             // Error message if any
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
@@ -702,8 +727,10 @@ Category {
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13 }
+                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -733,6 +760,7 @@ Category {
                 border.width: 1
 
                 Text {
+                    elide: Text.ElideRight
                     anchors.centerIn: parent
                     text: qsTr("Discard")
                     font.weight: Font.DemiBold
@@ -768,12 +796,16 @@ Category {
                     spacing: 8
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? "" : "✓"
                         font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? qsTr("Save waveforms") : qsTr("Saved")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12

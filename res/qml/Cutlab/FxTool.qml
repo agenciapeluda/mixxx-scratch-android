@@ -1,4 +1,5 @@
 import Mixxx 1.0 as Mixxx
+import QtQml
 import QtQuick
 
 // Effects of a deck, on the effect unit of the same number.
@@ -101,6 +102,13 @@ Item {
         key: "enabled"
     }
 
+    // The effects of a unit are off until enabled: the pads and the touch
+    // surface turn all three on, and off again when they end
+    function setSlotsEnabled(on) {
+        for (let i = 0; i < slotEnable.count; ++i) {
+            slotEnable.objectAt(i).value = on ? 1 : 0;
+        }
+    }
     function startPreset(index) {
         if (root.activePreset !== index && root.unit) {
             root.unit.loadPreset(index);
@@ -108,10 +116,34 @@ Item {
         root.activePreset = index;
         unitEnabled.value = 1;
         routing.value = 1;
+        unitMix.value = 1;
+        root.setSlotsEnabled(true);
+        // Full amount, like the instant effects of djay
+        unitSuper.parameter = 1;
     }
     function stopPreset() {
-        routing.value = 0;
+        root.setSlotsEnabled(false);
+        unitSuper.parameter = 0;
         root.activePreset = -1;
+    }
+
+    Instantiator {
+        id: slotEnable
+
+        model: 3
+
+        delegate: Mixxx.ControlProxy {
+            required property int index
+
+            group: `[EffectRack1_EffectUnit${root.unitNumber}_Effect${index + 1}]`
+            key: "enabled"
+        }
+    }
+    Mixxx.ControlProxy {
+        id: unitMix
+
+        group: root.unitGroup
+        key: "mix"
     }
 
     // Mode tabs
@@ -275,11 +307,14 @@ Item {
                 }
                 unitEnabled.value = 1;
                 routing.value = 1;
+                unitMix.value = 1;
+                root.setSlotsEnabled(true);
                 unitSuper.parameter = x;
                 quickFilter.parameter = y;
             }
             onReleased: {
-                routing.value = 0;
+                root.setSlotsEnabled(false);
+                unitSuper.parameter = 0;
                 quickFilter.reset();
             }
         }

@@ -12,7 +12,7 @@ Rectangle {
 
     signal libraryRequested(string group)
     signal menuRequested(Item anchor)
-    signal stemsRequested(string group)
+    signal toolsRequested(string group)
 
     color: Style.background
 
@@ -160,20 +160,33 @@ Rectangle {
                     spacing: 8
 
                     CLControlButton {
-                        width: root.unit * 1.2
-                        height: root.unit * 0.68
+                        width: root.unit * 1.1
+                        height: root.unit * 0.64
                         radius: height / 2
                         group: deckColumn.modelData
                         key: "sync_enabled"
                         mode: "toggle"
                         text: "SYNC"
-                        fontSize: 12
+                        fontSize: 11
                         highlighted: value > 0
                         lit: false
                     }
+                    // Turntable control of this deck
+                    CLControlButton {
+                        width: root.unit * 0.95
+                        height: root.unit * 0.64
+                        radius: height / 2
+                        group: deckColumn.modelData
+                        key: "vinylcontrol_enabled"
+                        mode: "toggle"
+                        text: "DVS"
+                        fontSize: 11
+                        litColor: Style.play
+                        visible: Mixxx.Application.vinylControlAvailable === true
+                    }
                     LoopControl {
-                        width: root.unit * 2.2
-                        height: root.unit * 0.68
+                        width: Math.max(80, deckColumn.width - root.unit * 2.05 - 40)
+                        height: root.unit * 0.64
                         group: deckColumn.modelData
                     }
                 }
@@ -204,7 +217,8 @@ Rectangle {
                     group: deckColumn.modelData
                     unit: Math.min(root.unit, (deckColumn.width - 40) / 4.5)
                     mirrored: deckColumn.index === 1
-                    onStemsRequested: root.stemsRequested(group)
+                    toolsIcon: "fx"
+                    onStemsRequested: root.toolsRequested(group)
                 }
             }
         }

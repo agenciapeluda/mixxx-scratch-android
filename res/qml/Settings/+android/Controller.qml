@@ -103,6 +103,7 @@ Category {
                             border.color: "#584fff"
                             border.width: 1
                             Text {
+                                elide: Text.ElideRight
                                 anchors.centerIn: parent
                                 text: "USB"
                                 font.weight: Font.DemiBold
@@ -117,12 +118,16 @@ Category {
                             spacing: 2
 
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: qsTr("DJ controllers & USB / MIDI devices")
                                 font.pixelSize: 14
                                 font.weight: Font.DemiBold
                                 color: "#ffffff"
                             }
                             Text {
+                                elide: Text.ElideRight
+                                Layout.minimumWidth: 0
                                 text: root.activeDevices.length > 0
                                       ? qsTr("✓ %1 controller(s) with a mapping").arg(root.activeDevices.length)
                                         + (root.unmappedDevices.length > 0 ? qsTr(" · %1 without a mapping").arg(root.unmappedDevices.length) : "")
@@ -186,6 +191,8 @@ Category {
                                 }
 
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: root.isRescanning ? qsTr("Searching...") : qsTr("Scan for USB devices")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
@@ -230,6 +237,8 @@ Category {
                         Layout.fillWidth: true
 
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("How do I connect my DJ controller to Android properly?")
                             font.pixelSize: 13
                             font.weight: Font.DemiBold
@@ -247,6 +256,7 @@ Category {
                             border.width: 1
 
                             Text {
+                                elide: Text.ElideRight
                                 anchors.centerIn: parent
                                 text: root.showGuide ? qsTr("Hide") : qsTr("Show guide")
                                 font.pixelSize: 11
@@ -280,6 +290,7 @@ Category {
                                 radius: 12
                                 color: "#0c02d1"
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: "1"
                                     color: "#ffffff"
@@ -292,12 +303,16 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 1
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("USB OTG Type-C adapter")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Use an OTG-capable USB-C to USB-B/A adapter or cable directly to the phone.")
                                     font.pixelSize: 11
                                     color: "#bebebe"
@@ -316,6 +331,7 @@ Category {
                                 radius: 12
                                 color: "#ff9f0a"
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: "2"
                                     color: "#ffffff"
@@ -328,12 +344,15 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 2
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Power supply: connect through a USB-C hub")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ff9f0a"
                                 }
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Tablets only supply ~500mA. To keep your controller (Pioneer DDJ-400, etc.) from flickering or disconnecting, connect the tablet charger to the USB-C PD port of the hub, the controller to a USB port of the hub, and the hub cable to the tablet.")
                                     font.pixelSize: 11
                                     color: "#dbdbdb"
@@ -354,6 +373,7 @@ Category {
                                 radius: 12
                                 color: "#34c759"
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: "3"
                                     color: "#ffffff"
@@ -366,12 +386,15 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 2
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("USB permission on Android")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("MIDI controllers (like the DDJ-400) need no permission. If Android asks 'Allow Mixxx to access the USB device?' (HID controllers), tick 'Always use for this device' and press OK.")
                                     font.pixelSize: 11
                                     color: "#bebebe"
@@ -392,6 +415,7 @@ Category {
                                 radius: 12
                                 color: "#261fa2"
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: "4"
                                     color: "#ffffff"
@@ -404,12 +428,15 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 3
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("Enable audio on the controller (main + CUE headphones)")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("• <b>Full DJ booth</b>: speakers to the RCA outputs of the controller and headphones to the front jack. Select the 'DJ controller' profile.<br>• <b>Hybrid mode</b>: if you have no external speakers, select 'Tablet + controller headphones' so the music plays through the tablet and the pre-listening through your headphones.")
                                     font.pixelSize: 11
                                     color: "#bebebe"
@@ -423,6 +450,7 @@ Category {
                                     radius: 6
                                     color: audioBtnMouse.pressed ? "#211b9a" : (audioBtnMouse.containsMouse ? "#8b85ff" : "#261fa2")
                                     Text {
+                                        elide: Text.ElideRight
                                         anchors.centerIn: parent
                                         text: qsTr("Go to audio outputs and profiles")
                                         font.weight: Font.DemiBold
@@ -451,6 +479,7 @@ Category {
                                 radius: 12
                                 color: "#837cff"
                                 Text {
+                                    elide: Text.ElideRight
                                     anchors.centerIn: parent
                                     text: "5"
                                     color: "#ffffff"
@@ -463,12 +492,15 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 4
                                 Text {
+                                    elide: Text.ElideRight
+                                    Layout.minimumWidth: 0
                                     text: qsTr("DJ mappings (.midi.xml / .js)")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ada9ff"
                                 }
                                 Text {
+                                    Layout.minimumWidth: 0
                                     text: qsTr("✓ <b>Pioneer DDJ-400</b>, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.<br>To add a new or modified mapping, copy it to the public Mixxx folder and press 'Scan for USB devices':")
                                     font.pixelSize: 11
                                     color: "#bebebe"
@@ -509,6 +541,7 @@ Category {
                                         color: copyMouse.pressed ? "#07008f" : (copyMouse.containsMouse ? "#0800a7" : "#262433")
 
                                         Text {
+                                            elide: Text.ElideRight
                                             anchors.centerIn: parent
                                             text: copyTimer.running ? qsTr("✓ Copied!") : qsTr("Copy path")
                                             font.pixelSize: 11
@@ -545,6 +578,7 @@ Category {
                             color: "#262626"
 
                             Text {
+                                elide: Text.ElideRight
                                 anchors.centerIn: parent
                                 text: qsTr("Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.")
                                 font.pixelSize: 11
@@ -570,12 +604,16 @@ Category {
                     spacing: 10
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.alignment: Qt.AlignHCenter
                         text: ""
                         font.pixelSize: 26
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.alignment: Qt.AlignHCenter
                         text: qsTr("No connected DJ controller was detected")
                         font.pixelSize: 13
@@ -584,6 +622,8 @@ Category {
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         Layout.alignment: Qt.AlignHCenter
                         text: qsTr("Connect your controller via USB OTG and press 'Scan for USB devices'")
                         font.pixelSize: 11
@@ -608,6 +648,8 @@ Category {
                     spacing: 12
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: ""
                         font.pixelSize: 18
                     }
@@ -616,12 +658,16 @@ Category {
                         Layout.fillWidth: true
                         spacing: 1
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: qsTr("Configuring: %1").arg(root.selectedController?.name || "")
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
                             color: "#ffffff"
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             text: root.selectedController?.mapping 
                                   ? qsTr("Assigned mapping: %1 (%2)").arg(root.selectedController.mapping.name).arg(root.selectedController.enabled ? qsTr("Enabled") : qsTr("Disabled"))
                                   : qsTr("Select its mapping in the drop-down list and press Save")
@@ -640,6 +686,7 @@ Category {
                         border.width: 1
 
                         Text {
+                            elide: Text.ElideRight
                             anchors.centerIn: parent
                             text: qsTr("Audio outputs")
                             font.pixelSize: 11
@@ -665,6 +712,7 @@ Category {
                         border.width: 1
 
                         Text {
+                            elide: Text.ElideRight
                             anchors.centerIn: parent
                             text: qsTr("Show all")
                             font.pixelSize: 11
@@ -777,6 +825,7 @@ Category {
                             radius: 4
 
                             Text {
+                                elide: Text.ElideRight
                                 anchors.centerIn: parent
                                 color: '#ffffff'
                                 font.pixelSize: 11
@@ -795,6 +844,8 @@ Category {
                             }
                         }
                         Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             color: '#ffffff'
                             font.pixelSize: 13
@@ -872,12 +923,16 @@ Category {
                     anchors.centerIn: parent
                     spacing: 8
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? "●" : (root.activeDevices.length > 0 ? "✓" : "")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
                         color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#908aff")
                     }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty 
                               ? qsTr("Unsaved changes")
                               : (root.selectedController 
@@ -892,6 +947,8 @@ Category {
 
             // Error message if any
             Text {
+                elide: Text.ElideRight
+                Layout.minimumWidth: 0
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
@@ -915,8 +972,10 @@ Category {
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13 }
+                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
@@ -947,6 +1006,7 @@ Category {
                 border.width: 1
 
                 Text {
+                    elide: Text.ElideRight
                     anchors.centerIn: parent
                     text: root.selectedController ? qsTr("Back to list") : qsTr("Discard")
                     font.weight: Font.DemiBold
@@ -983,12 +1043,16 @@ Category {
                     spacing: 8
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? "" : "✓"
                         font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
                         text: root.dirty ? qsTr("Save changes") : qsTr("Saved")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
