@@ -636,7 +636,7 @@ Category {
                 Layout.topMargin: 4
 
                 Skin.FormButton {
-                    activeColor: "#8a91a3"
+                    activeColor: "#969696"
                     backgroundColor: "#5a2a30"
                     enabled: !root.committing
                     opacity: enabled ? 1.0 : 0.5
@@ -659,8 +659,8 @@ Category {
                     text: ""
                 }
                 Skin.FormButton {
-                    activeColor: "#8a91a3"
-                    backgroundColor: root.hasChanges ? "#5b6cff" : Theme.darkGray3
+                    activeColor: "#969696"
+                    backgroundColor: root.hasChanges ? "#635bff" : Theme.darkGray3
                     enabled: root.hasChanges && !root.committing
                     opacity: enabled ? 1.0 : 0.5
                     text: "Save"

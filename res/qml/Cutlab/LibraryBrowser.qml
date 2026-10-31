@@ -246,16 +246,16 @@ Rectangle {
                 sourceSize.height: 32
             }
 
-            Menu {
+            CLMenu {
                 id: sourceMenu
 
                 y: sourceButton.height + 4
 
-                MenuItem {
+                CLMenuItem {
                     text: qsTr("Local music")
                     onTriggered: root.source = 0
                 }
-                MenuItem {
+                CLMenuItem {
                     text: qsTr("Streaming")
                     onTriggered: root.source = 1
                 }
@@ -340,21 +340,21 @@ Rectangle {
                 fillColor: "transparent"
                 onClicked: moreMenu.open()
 
-                Menu {
+                CLMenu {
                     id: moreMenu
 
                     y: moreButton.height
                     x: moreButton.width - width
 
-                    MenuItem {
+                    CLMenuItem {
                         text: qsTr("Rescan the library")
                         onTriggered: Mixxx.Library.rescanLibrary()
                     }
-                    MenuItem {
+                    CLMenuItem {
                         text: qsTr("Auto DJ…")
                         onTriggered: root.autoDJRequested()
                     }
-                    MenuItem {
+                    CLMenuItem {
                         text: qsTr("Library settings…")
                         onTriggered: root.settingsRequested()
                     }
@@ -585,7 +585,7 @@ Rectangle {
                         }
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            color: root.section === index ? Style.accent : Style.text
+                            color: root.section === index ? Style.accentText : Style.text
                             font.family: Style.font
                             font.pixelSize: 12
                             text: modelData.label
@@ -600,33 +600,33 @@ Rectangle {
         }
     }
 
-    Menu {
+    CLMenu {
         id: trackMenu
 
         property int row: -1
         property var track: null
 
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Load into deck 1")
             onTriggered: root.load(trackMenu.row, "[Channel1]")
         }
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Load into deck 2")
             onTriggered: root.load(trackMenu.row, "[Channel2]")
         }
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Play next in the queue")
             onTriggered: Mixxx.Library.addToAutoDJ(trackMenu.track, true)
         }
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Add to the end of the queue")
             onTriggered: Mixxx.Library.addToAutoDJ(trackMenu.track, false)
         }
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Separate stems…")
             onTriggered: stemsPopup.openFor(root.urlAt(trackMenu.row))
         }
-        MenuItem {
+        CLMenuItem {
             text: qsTr("Analyze")
             onTriggered: Mixxx.Library.analyze(trackMenu.track)
         }

@@ -80,7 +80,7 @@ Rectangle {
 
         anchors.top: tempo.bottom
         anchors.topMargin: 8
-        anchors.bottom: toolsButton.top
+        anchors.bottom: dvsButton.visible ? dvsButton.top : toolsButton.top
         anchors.bottomMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
@@ -143,6 +143,25 @@ Rectangle {
                 color: Math.abs(rate.value) < 0.0001 ? Style.play : Style.tick
             }
         }
+    }
+
+    // The deck follows the turntable (DVS); the mode is on the dial
+    CLControlButton {
+        id: dvsButton
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: toolsButton.top
+        anchors.bottomMargin: 8
+        width: Math.min(parent.width - 20, 80)
+        height: 30
+        radius: 15
+        group: root.group
+        key: "vinylcontrol_enabled"
+        mode: "toggle"
+        text: "DVS"
+        fontSize: 12
+        litColor: Style.play
+        visible: Mixxx.Application.vinylControlAvailable === true
     }
 
     CLButton {

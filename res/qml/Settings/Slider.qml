@@ -159,7 +159,7 @@ Item {
                 id: handleEffect1
 
                 anchors.fill: parent
-                color: "#1a2350"
+                color: "#353535"
                 horizontalOffset: 0
                 radius: 16.0
                 samples: 16
@@ -215,7 +215,7 @@ Item {
             id: effect2
 
             anchors.fill: backgroundInput
-            color: "#2a2f3d"
+            color: "#343434"
             horizontalOffset: 0
             radius: 12
             samples: 24

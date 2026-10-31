@@ -88,8 +88,8 @@ Item {
             width: 50
             height: 22
             radius: 3
-            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#e2622a" : "#3d63e0") : "#1a1e24"
-            border.color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#2f3745"
+            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#e2622a" : "#453de0") : "#1f1f1f"
+            border.color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#3a3a3a"
             border.width: 1
 
             Text {
@@ -97,7 +97,7 @@ Item {
                 text: qsTr("Pads")
                 font.weight: Font.DemiBold
                 font.pixelSize: 9
-                color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#9da5b4"
+                color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#a9a9a9"
             }
 
             MouseArea {
@@ -113,8 +113,8 @@ Item {
             width: 54
             height: 22
             radius: 3
-            color: (root.deck && root.deck.mobilePadView === 1) ? "#00838f" : "#1a1e24"
-            border.color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#2f3745"
+            color: (root.deck && root.deck.mobilePadView === 1) ? "#07008f" : "#1f1f1f"
+            border.color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#3a3a3a"
             border.width: 1
 
             Text {
@@ -122,7 +122,7 @@ Item {
                 text: qsTr("In / Out")
                 font.weight: Font.DemiBold
                 font.pixelSize: 8
-                color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#9da5b4"
+                color: (root.deck && root.deck.mobilePadView === 1) ? "#ffffff" : "#a9a9a9"
             }
 
             MouseArea {

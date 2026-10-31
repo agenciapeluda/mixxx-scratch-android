@@ -73,7 +73,7 @@ Item {
             // Loop
             Mixxx.WaveformMarkRange {
                 color: '#00b400'
-                disabledColor: '#FFFFFF'
+                disabledColor: '#ffffff'
                 disabledOpacity: 0.6
                 enabledControl: "loop_enabled"
                 endControl: "loop_end_position"
@@ -82,7 +82,7 @@ Item {
             }
             // Intro
             Mixxx.WaveformMarkRange {
-                color: '#2c5c9a'
+                color: '#312c9a'
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'after'
                 endControl: "intro_end_position"
@@ -91,7 +91,7 @@ Item {
             }
             // Outro
             Mixxx.WaveformMarkRange {
-                color: '#2c5c9a'
+                color: '#312c9a'
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'before'
                 endControl: "outro_end_position"
@@ -107,7 +107,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
         }
         Mixxx.WaveformRendererFiltered {
@@ -118,7 +118,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
             stacked: true
         }
@@ -145,7 +145,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
         }
         Mixxx.WaveformRendererStem {
@@ -159,8 +159,8 @@ Item {
             color: Qt.rgba(161 / 255, 161 / 255, 161 / 255, Mixxx.Config.waveformBeatGridAlpha / 100)
         }
         Mixxx.WaveformRendererMark {
-            playMarkerBackground: '#D9D9D9'
-            playMarkerColor: '#D9D9D9'
+            playMarkerBackground: '#d9d9d9'
+            playMarkerColor: '#d9d9d9'
             playMarkerPosition: Mixxx.Config.waveformPlayMarkerPosition
             untilMark.align: Mixxx.Config.waveformUntilMarkAlign === 0 ? Qt.AlignTop : Mixxx.Config.waveformUntilMarkAlign === 2 ? Qt.AlignBottom : Qt.AlignVCenter
             untilMark.showBeats: Mixxx.Config.waveformUntilMarkShowBeats
@@ -170,7 +170,7 @@ Item {
 
             defaultMark: Mixxx.WaveformMark {
                 align: "bottom|right"
-                color: "#00d9ff"
+                color: "#0d00ff"
                 endIcon: Qt.resolvedUrl("images/jump_%1.svg")
                 text: " %1 "
                 textColor: "#1a1a1a"
@@ -188,41 +188,41 @@ Item {
                 color: 'green'
                 control: "loop_start_position"
                 text: '↻'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'bottom|right'
                 color: 'green'
                 control: "loop_end_position"
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|right'
                 color: 'blue'
                 control: "intro_start_position"
                 text: '◢'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|left'
                 color: 'blue'
                 control: "intro_end_position"
                 text: '◢'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|right'
                 color: 'blue'
                 control: "outro_start_position"
                 text: '◣'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|left'
                 color: 'blue'
                 control: "outro_end_position"
                 text: '◣'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
         }
     }

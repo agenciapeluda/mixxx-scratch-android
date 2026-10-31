@@ -140,7 +140,7 @@ Category {
                         id: usbStatus
 
                         Layout.fillWidth: true
-                        color: "#8a91a3"
+                        color: "#969696"
                         font.pixelSize: 11
                         text: qsTr("If your sound card (EP-136, mixer…) is not in the list, tap here. If it still is missing, close and open the app.")
                         wrapMode: Text.WordWrap
@@ -172,13 +172,13 @@ Category {
                         Text {
                             Layout.columnSpan: 4
                             Layout.topMargin: deckRow.index ? 8 : 0
-                            color: deckRow.index ? "#ff7a3d" : "#4f7cff"
+                            color: deckRow.index ? "#ff7a3d" : "#584fff"
                             font.pixelSize: 12
                             font.weight: Font.DemiBold
                             text: qsTr("Deck %1").arg(deckRow.index + 1)
                         }
                         Text {
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: qsTr("Audio input")
                         }
@@ -252,7 +252,7 @@ Category {
                             }
                         }
                         Text {
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: qsTr("Signal")
                         }
@@ -263,8 +263,8 @@ Category {
                             Rectangle {
                                 Layout.preferredHeight: 120
                                 Layout.preferredWidth: 120
-                                border.color: "#232836"
-                                color: "#0b0d12"
+                                border.color: "#2c2c2c"
+                                color: "#0e0e0e"
                                 radius: 10
 
                                 Mixxx.VinylSignalQuality {
@@ -276,7 +276,7 @@ Category {
                             }
                             Text {
                                 Layout.fillWidth: true
-                                color: ["#8a91a3", "#2bd67b", "#f5b544", "#ff5d6c"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
+                                color: ["#969696", "#2bd67b", "#f5b544", "#ff5d6c"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
                                 font.pixelSize: 12
                                 text: [qsTr("DVS is off on this deck: turn it on with the DVS button of the deck."),
                                     qsTr("Reading the timecode."),
@@ -293,7 +293,7 @@ Category {
                             }
                         }
                         Text {
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: qsTr("Timecode")
                         }
@@ -311,7 +311,7 @@ Category {
                             }
                         }
                         Text {
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: qsTr("Speed")
                         }
@@ -327,7 +327,7 @@ Category {
                             }
                         }
                         Text {
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: qsTr("Lead-in (s)")
                         }
@@ -356,7 +356,7 @@ Category {
 
                     Text {
                         Layout.preferredWidth: 90
-                        color: "#8a91a3"
+                        color: "#969696"
                         font.pixelSize: 12
                         text: qsTr("Curve")
                     }
@@ -380,7 +380,7 @@ Category {
 
                     Text {
                         Layout.preferredWidth: 90
-                        color: "#8a91a3"
+                        color: "#969696"
                         font.pixelSize: 12
                         text: qsTr("Hamster")
                     }
@@ -409,9 +409,9 @@ Category {
         property string title
 
         Layout.fillWidth: true
-        border.color: "#232836"
+        border.color: "#2c2c2c"
         border.width: 1
-        color: "#12151c"
+        color: "#171717"
         implicitHeight: cardColumn.implicitHeight + 32
         radius: 12
 
@@ -423,14 +423,14 @@ Category {
             spacing: 10
 
             Text {
-                color: "#e8eaf0"
+                color: "#ececec"
                 font.pixelSize: 15
                 font.weight: Font.DemiBold
                 text: card.title
             }
             Text {
                 Layout.fillWidth: true
-                color: "#8a91a3"
+                color: "#969696"
                 font.pixelSize: 11
                 text: card.subtitle
                 visible: text !== ""

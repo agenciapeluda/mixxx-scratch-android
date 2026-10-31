@@ -1,4 +1,5 @@
 import QtQuick
+import "../../Cutlab" as Cutlab
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
@@ -81,8 +82,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#1c202a"
-            border.color: "#232836"
+            color: "#232323"
+            border.color: "#2c2c2c"
             border.width: 1
 
             RowLayout {
@@ -92,11 +93,11 @@ Item {
                 spacing: 8
 
                 Text {
-                    text: qsTr("AUDIUS STREAMING (FREE MUSIC)")
+                    text: qsTr("Audius: free music streaming")
                     font.weight: Font.DemiBold
                     font.pixelSize: 13
                     font.letterSpacing: 1
-                    color: "#a78bfa"
+                    color: "#918bfa"
                 }
 
                 Rectangle {
@@ -123,19 +124,16 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#b4b9c7"
+                    color: "#bebebe"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 320
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 120
-                    activeColor: "#a78bfa"
-                    backgroundColor: "#2a3040"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
-                    font.pixelSize: 11
+                    fillColor: Cutlab.Style.button
+                    fontSize: 13
                     text: root.isBusy ? qsTr("Loading...") : qsTr("Trending")
                     enabled: !root.isBusy
                     onClicked: {
@@ -150,8 +148,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#12151c"
-            border.color: "#232834"
+            color: "#171717"
+            border.color: "#2c2c2c"
             border.width: 1
 
             RowLayout {
@@ -168,8 +166,8 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 13
                     background: Rectangle {
-                        color: "#212632"
-                        border.color: searchInput.activeFocus ? "#ff8f57" : "#2e3646"
+                        color: "#2a2a2a"
+                        border.color: searchInput.activeFocus ? "#ff8f57" : "#3a3a3a"
                         border.width: 1
                         radius: 4
                     }
@@ -182,12 +180,12 @@ Item {
                     }
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 38
-                    backgroundColor: "#2a3140"
-                    normalColor: "#ffffff"
-                    text: ""
+                    fillColor: Cutlab.Style.button
+                    icon: "search"
+                    iconSize: 20
                     onClicked: searchInput.accepted()
                 }
 
@@ -217,8 +215,8 @@ Item {
                                 width: chipText.implicitWidth + 20
                                 height: 32
                                 radius: 16
-                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#e2622a" : "#1a1e28"
-                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#ff8f57" : "#323a4d"
+                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#e2622a" : "#212121"
+                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#ff8f57" : "#404040"
                                 border.width: 1
 
                                 Text {
@@ -267,7 +265,7 @@ Item {
                         implicitWidth: 10
                         implicitHeight: 40
                         radius: 5
-                        color: onlineScroll.pressed ? "#a78bfa" : "#4a5568"
+                        color: onlineScroll.pressed ? "#918bfa" : "#595959"
                     }
                 }
 
@@ -275,8 +273,8 @@ Item {
                     id: trackDelegate
                     width: tracksList.width
                     height: 58
-                    color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#1a1e28"
+                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
+                    border.color: "#212121"
                     border.width: 1
 
                     readonly property var track: modelData
@@ -294,7 +292,7 @@ Item {
                             Layout.preferredWidth: 42
                             Layout.preferredHeight: 42
                             radius: 4
-                            color: "#262d3d"
+                            color: "#323232"
                             clip: true
 
                             Image {
@@ -368,7 +366,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#6e7587"
+                            color: "#7a7a7a"
                         }
 
                         // Cache status badge
@@ -391,16 +389,12 @@ Item {
                         }
 
                         // Load Deck 1 Button
-                        Skin.Button {
+                        Cutlab.CLButton {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#8aa8ff"
-                            backgroundColor: "#3d63e0"
-                            normalColor: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                            arrowLeft: true
-                            text: "D1"
+                            fillColor: Cutlab.Style.button
+                            fontSize: 13
+                            text: "1"
                             enabled: !trackDelegate.isDownloading
                             onClicked: {
                                 Mixxx.StreamingManager.downloadAndLoad(
@@ -410,16 +404,12 @@ Item {
                         }
 
                         // Load Deck 2 Button
-                        Skin.Button {
+                        Cutlab.CLButton {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#f7c86a"
-                            backgroundColor: "#e2622a"
-                            normalColor: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                            arrowRight: true
-                            text: "D2"
+                            fillColor: Cutlab.Style.button
+                            fontSize: 13
+                            text: "2"
                             enabled: !trackDelegate.isDownloading
                             onClicked: {
                                 Mixxx.StreamingManager.downloadAndLoad(
@@ -455,7 +445,7 @@ Item {
                         Text {
                             text: qsTr("Explore music by genre or search for any track or artist")
                             font.pixelSize: 13
-                            color: "#6e7587"
+                            color: "#7a7a7a"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -469,7 +459,7 @@ Item {
                 width: 140
                 height: 40
                 radius: 6
-                color: "#1e2433"
+                color: "#282828"
                 border.color: "#ff8f57"
                 border.width: 1
                 visible: root.isBusy

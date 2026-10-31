@@ -376,7 +376,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        color: "#161922"
+        color: "#1c1c1c"
         height: root.compact ? 30 : 38
 
         Row {
@@ -392,15 +392,15 @@ Item {
                 readonly property bool usable: !root.streaming && (root.showTracks ? root.levelIndex !== null : root.levelHasAll)
 
                 anchors.verticalCenter: parent.verticalCenter
-                border.color: usable ? "#8a8d93" : "#1c202a"
+                border.color: usable ? "#8e8e8e" : "#232323"
                 border.width: 1
-                color: backMouse.pressed ? "#1c202a" : "transparent"
+                color: backMouse.pressed ? "#232323" : "transparent"
                 height: header.height - 8
                 width: height * 1.3
 
                 Text {
                     anchors.centerIn: parent
-                    color: parent.usable ? "#e8eaf0" : "#2a2f3d"
+                    color: parent.usable ? "#ececec" : "#343434"
                     font.pixelSize: root.compact ? 14 : 17
                     text: "←"
                 }
@@ -414,7 +414,7 @@ Item {
             }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                color: "#e8eaf0"
+                color: "#ececec"
                 elide: Text.ElideMiddle
                 font.pixelSize: root.compact ? 12 : 14
                 text: {
@@ -435,7 +435,7 @@ Item {
             // LOAD 1/2: the deck the tracks go to
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.loadTarget === "[Channel2]" ? "#ff7a3d" : "#4f7cff"
+                color: root.loadTarget === "[Channel2]" ? "#ff7a3d" : "#584fff"
                 height: loadText.implicitHeight + 6
                 visible: root.loadTarget.length > 0
                 width: loadText.implicitWidth + 14
@@ -463,11 +463,11 @@ Item {
             font.pixelSize: root.compact ? 12 : 14
             height: parent.height - 6
             placeholderText: qsTr("SEARCH")
-            placeholderTextColor: "#6c7078"
+            placeholderTextColor: "#727272"
             visible: !root.streaming
 
             background: Rectangle {
-                border.color: searchField.activeFocus ? "#e8eaf0" : "#2a2f3d"
+                border.color: searchField.activeFocus ? "#ececec" : "#343434"
                 border.width: 1
                 color: "#000000"
             }
@@ -480,7 +480,7 @@ Item {
             anchors.right: parent.right
             anchors.rightMargin: 6
             anchors.verticalCenter: parent.verticalCenter
-            border.color: root.streaming ? "#d4e157" : "#5a6072"
+            border.color: root.streaming ? "#d4e157" : "#666666"
             border.width: 1
             color: "#000000"
             height: parent.height - 8
@@ -490,7 +490,7 @@ Item {
                 id: streamingText
 
                 anchors.centerIn: parent
-                color: root.streaming ? "#d4e157" : "#8a91a3"
+                color: root.streaming ? "#d4e157" : "#969696"
                 font.weight: Font.DemiBold
                 font.pixelSize: root.compact ? 10 : 12
                 text: qsTr("STREAMING")
@@ -520,9 +520,9 @@ Item {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.top: parent.top
-            border.color: libraryControl.sidebarFocused && !root.showLevel ? "#e8eaf0" : "transparent"
+            border.color: libraryControl.sidebarFocused && !root.showLevel ? "#ececec" : "transparent"
             border.width: 1
-            color: "#161922"
+            color: "#1c1c1c"
             width: root.compact ? 64 : 78
 
             Column {
@@ -542,7 +542,7 @@ Item {
                             readonly property bool active: root.activeSection === index
                             readonly property bool atCursor: libraryControl.sidebarFocused && !root.showLevel && root.cursor === index
 
-                            color: active ? "#2a2f3d" : (sectionMouse.pressed ? "#1c202a" : "transparent")
+                            color: active ? "#343434" : (sectionMouse.pressed ? "#232323" : "transparent")
                             height: sectionColumn.buttonHeight
                             width: sectionColumn.width
 
@@ -555,7 +555,7 @@ Item {
                             }
                             Rectangle {
                                 anchors.fill: parent
-                                border.color: "#4f7cff"
+                                border.color: "#584fff"
                                 border.width: 2
                                 color: "transparent"
                                 visible: section.atCursor
@@ -574,14 +574,14 @@ Item {
                             // White line icons, as on a player
                             ColorOverlay {
                                 anchors.fill: sectionIcon
-                                color: section.active ? "#ffffff" : "#b0b3b8"
+                                color: section.active ? "#ffffff" : "#b4b4b4"
                                 source: sectionIcon
                             }
                             Text {
                                 anchors.bottom: parent.bottom
                                 anchors.bottomMargin: Math.round(parent.height * 0.08)
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                color: section.active ? "#ffffff" : "#b0b3b8"
+                                color: section.active ? "#ffffff" : "#b4b4b4"
                                 elide: Text.ElideRight
                                 font.pixelSize: root.compact ? 9 : 10
                                 horizontalAlignment: Text.AlignHCenter
@@ -609,9 +609,9 @@ Item {
             anchors.leftMargin: 3
             anchors.right: trackList.right
             anchors.top: parent.top
-            border.color: libraryControl.sidebarFocused ? "#e8eaf0" : "transparent"
+            border.color: libraryControl.sidebarFocused ? "#ececec" : "transparent"
             border.width: 1
-            color: "#0b0d12"
+            color: "#0e0e0e"
             visible: root.showLevel
 
             ListView {
@@ -627,7 +627,7 @@ Item {
 
                 // The tracks of the entry itself, e.g. all of a drive
                 header: Rectangle {
-                    color: root.cursor === -1 ? "#3d63e0" : (allMouse.pressed ? "#1c202a" : "#16181b")
+                    color: root.cursor === -1 ? "#453de0" : (allMouse.pressed ? "#232323" : "#181818")
                     height: root.levelHasAll ? (root.compact ? 40 : 46) : 0
                     visible: root.levelHasAll
                     width: ListView.view.width
@@ -660,7 +660,7 @@ Item {
                         required property var model
                         required property bool hasModelChildren
 
-                        color: root.cursor === index ? "#3d63e0" : (entryMouse.pressed ? "#1c202a" : (index % 2 === 0 ? "#0b0d12" : "#16181b"))
+                        color: root.cursor === index ? "#453de0" : (entryMouse.pressed ? "#232323" : (index % 2 === 0 ? "#0e0e0e" : "#181818"))
                         height: root.compact ? 40 : 46
                         width: ListView.view.width
 
@@ -680,7 +680,7 @@ Item {
                             anchors.right: parent.right
                             anchors.rightMargin: 14
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "#8a8d93"
+                            color: "#8e8e8e"
                             font.pixelSize: root.compact ? 15 : 17
                             text: entry.hasModelChildren || root.levelIsDrives ? "›" : ""
                         }
@@ -722,9 +722,9 @@ Item {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.top: parent.top
-            border.color: "#1c202a"
+            border.color: "#232323"
             border.width: 1
-            color: "#0b0d12"
+            color: "#0e0e0e"
             visible: !root.compact && root.width > 900
             width: 210
 
@@ -736,7 +736,7 @@ Item {
                 spacing: 6
 
                 Rectangle {
-                    color: "#16181b"
+                    color: "#181818"
                     height: width
                     width: parent.width
 
@@ -748,7 +748,7 @@ Item {
                     }
                     Text {
                         anchors.centerIn: parent
-                        color: "#2a2f3d"
+                        color: "#343434"
                         font.pixelSize: 40
                         text: "♪"
                         visible: root.cover.toString().length === 0
@@ -763,7 +763,7 @@ Item {
                     wrapMode: Text.Wrap
                 }
                 Text {
-                    color: "#8a91a3"
+                    color: "#969696"
                     elide: Text.ElideRight
                     font.pixelSize: 13
                     text: root.artist
@@ -795,7 +795,7 @@ Item {
                         Text {
                             anchors.left: parent.left
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "#8a91a3"
+                            color: "#969696"
                             font.pixelSize: 12
                             text: parent.modelData.label
                         }
@@ -830,9 +830,9 @@ Item {
         width: Math.min(460, root.width - 20)
 
         background: Rectangle {
-            border.color: "#5a6072"
+            border.color: "#666666"
             border.width: 1
-            color: "#16181b"
+            color: "#181818"
         }
         contentItem: Column {
             spacing: 12
@@ -845,7 +845,7 @@ Item {
                 width: parent.width
             }
             Text {
-                color: "#e8eaf0"
+                color: "#ececec"
                 font.pixelSize: 13
                 text: qsTr("To read Rekordbox and Engine DJ playlists from a USB drive, Android has to grant Mixxx access to all files. Enable it on the screen that opens, then tap the section again.")
                 width: parent.width
@@ -864,7 +864,7 @@ Item {
                 }
                 Skin.Button {
                     activeColor: "#ffffff"
-                    backgroundColor: "#3d63e0"
+                    backgroundColor: "#453de0"
                     font.weight: Font.DemiBold
                     height: 44
                     normalColor: "#ffffff"

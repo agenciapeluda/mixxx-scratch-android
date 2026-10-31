@@ -55,7 +55,7 @@ Popup {
         color: root.backgroundColor
         opacity: parent.radius < 0 ? Math.max(0.1, 1 + parent.radius / 8) : 1
         radius: 8
-        border.color: "#383c48"
+        border.color: "#404040"
         border.width: 1
     }
 
@@ -113,7 +113,7 @@ Popup {
             Rectangle {
                 Layout.fillHeight: true
                 Layout.preferredWidth: Math.min(230, Math.max(160, Math.floor(parent.width * 0.22)))
-                border.color: "#30343f"
+                border.color: "#383838"
                 border.width: 1
                 color: Theme.darkGray
                 radius: 6
@@ -168,7 +168,7 @@ Popup {
                             anchors.right: parent.right
                             anchors.rightMargin: 8
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "#bbdefb"
+                            color: "#bebbfb"
                             font.pixelSize: 12
                             font.weight: Font.DemiBold
                             text: "✕"
@@ -213,7 +213,7 @@ Popup {
 
                             readonly property bool isSelected: ListView.isCurrentItem
 
-                            color: isSelected ? "#1c202a" : (tapArea.pressed ? "#161922" : "transparent")
+                            color: isSelected ? "#232323" : (tapArea.pressed ? "#1c1c1c" : "transparent")
                             height: 48
                             radius: 8
                             width: ListView.view.width
@@ -248,7 +248,7 @@ Popup {
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#ffffff" : "#b4b9c7"
+                                        color: categoryDelegate.isSelected ? "#ffffff" : "#bebebe"
                                         elide: Text.ElideRight
                                         font.weight: categoryDelegate.isSelected ? Font.DemiBold : Font.Normal
                                         font.pixelSize: 13
@@ -257,7 +257,7 @@ Popup {
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#8a91a3" : "#5a6072"
+                                        color: categoryDelegate.isSelected ? "#969696" : "#666666"
                                         elide: Text.ElideRight
                                         font.pixelSize: 10
                                         text: qsTr(subtext)

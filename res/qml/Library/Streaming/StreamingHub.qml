@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
 import "../../Theme"
 import "../.." as Skin
+import "../../Cutlab" as Cutlab
 
 Item {
     id: root
@@ -15,97 +16,81 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        // ================= MULTI-PLATFORM SELECTOR BAR =================
+        // Sources as text tabs, and the deck that gets the track
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 46
-            color: "#12151c"
-            border.color: "#1a1e28"
-            border.width: 1
+            Layout.preferredHeight: 50
+            color: Cutlab.Style.topBar
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 8
-                anchors.rightMargin: 8
-                spacing: 8
+            Row {
+                anchors.left: parent.left
+                anchors.leftMargin: 16
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                spacing: 26
 
-                // Platforms tabs
-                RowLayout {
-                    Layout.fillHeight: true
-                    spacing: 8
+                Repeater {
+                    model: ["Navidrome / Subsonic", "Audius", qsTr("Link / radio")]
 
-                    Skin.Button {
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 170
-                        activeColor: "#7c8cff"
-                        backgroundColor: root.activePlatform === 0 ? "#00363a" : "#1a212d"
-                        normalColor: root.activePlatform === 0 ? "#7c8cff" : "#a9b3ff"
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 11
-                        text: "NAVIDROME / SUBSONIC"
-                        onClicked: root.activePlatform = 0
-                    }
+                    Item {
+                        required property int index
+                        required property string modelData
 
-                    Skin.Button {
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 130
-                        activeColor: "#a78bfa"
-                        backgroundColor: root.activePlatform === 1 ? "#4a148c" : "#1a212d"
-                        normalColor: root.activePlatform === 1 ? "#a78bfa" : "#e1bee7"
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 11
-                        text: qsTr("AUDIUS (free)")
-                        onClicked: root.activePlatform = 1
-                    }
+                        width: tabText.implicitWidth
+                        height: parent.height
 
-                    Skin.Button {
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 150
-                        activeColor: "#f5b544"
-                        backgroundColor: root.activePlatform === 2 ? "#4a3b00" : "#1a212d"
-                        normalColor: root.activePlatform === 2 ? "#f5b544" : "#f7d58f"
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 11
-                        text: qsTr("DIRECT URL / RADIO")
-                        onClicked: root.activePlatform = 2
+                        Text {
+                            id: tabText
+
+                            anchors.centerIn: parent
+                            color: root.activePlatform === parent.index ? Cutlab.Style.accentText : Cutlab.Style.text
+                            font.family: Cutlab.Style.font
+                            font.pixelSize: 16
+                            text: parent.modelData
+                        }
+                        Rectangle {
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            height: 3
+                            radius: 1.5
+                            color: Cutlab.Style.accent
+                            visible: root.activePlatform === parent.index
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: root.activePlatform = parent.index
+                        }
                     }
                 }
+            }
 
-                Item { Layout.fillWidth: true }
+            Row {
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 6
 
-                // Quick Deck Destination Indicator
-                Rectangle {
-                    Layout.preferredHeight: 32
-                    Layout.preferredWidth: 120
-                    radius: 4
-                    color: root.targetDeck === "[Channel1]" ? "#2c47b8" : "#bf360c"
-                    border.color: root.targetDeck === "[Channel1]" ? "#7c8cff" : "#ff7a3d"
-                    border.width: 1
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    rightPadding: 4
+                    color: Cutlab.Style.textSecondary
+                    font.family: Cutlab.Style.font
+                    font.pixelSize: 13
+                    text: qsTr("Load into")
+                }
+                Repeater {
+                    model: ["[Channel1]", "[Channel2]"]
 
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 4
-                        spacing: 4
+                    Cutlab.CLButton {
+                        required property int index
+                        required property string modelData
 
-                        Text {
-                            text: qsTr("Target:")
-                            color: "#b4b9c7"
-                            font.pixelSize: 10
-                        }
-
-                        Text {
-                            text: root.targetDeck === "[Channel1]" ? "DECK 1" : "DECK 2"
-                            color: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            root.targetDeck = (root.targetDeck === "[Channel1]") ? "[Channel2]" : "[Channel1]";
-                        }
+                        width: 40
+                        height: 34
+                        text: String(index + 1)
+                        fontSize: 15
+                        highlighted: root.targetDeck === modelData
+                        onClicked: root.targetDeck = modelData
                     }
                 }
             }

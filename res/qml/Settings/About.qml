@@ -29,8 +29,8 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 radius: 12
-                color: "#12151C"
-                border.color: "#232836"
+                color: "#171717"
+                border.color: "#2c2c2c"
                 border.width: 1
                 implicitHeight: identityCol.implicitHeight + 32
 
@@ -57,12 +57,17 @@ Category {
                                 text: "Cutlab"
                                 font.pixelSize: 20
                                 font.weight: Font.DemiBold
-                                color: "#E8EAF0"
+                                color: "#ececec"
+                            }
+                            Text {
+                                text: qsTr("by xhellvirax")
+                                font.pixelSize: 12
+                                color: "#bebebe"
                             }
                             Text {
                                 text: `v${Mixxx.MobileApp.packageVersion} · Mixxx ${Mixxx.Application.version}`
                                 font.pixelSize: 11
-                                color: "#8A91A3"
+                                color: "#969696"
                             }
                         }
                     }
@@ -71,7 +76,7 @@ Category {
                         Layout.topMargin: 6
                         text: qsTr("Open source DJ software for Android: DVS, DJ controllers and a touch interface.")
                         font.pixelSize: 12
-                        color: "#B4B9C7"
+                        color: "#bebebe"
                         wrapMode: Text.WordWrap
                     }
                 }
@@ -81,8 +86,8 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 radius: 8
-                color: "#12151c"
-                border.color: "#232836"
+                color: "#171717"
+                border.color: "#2c2c2c"
                 border.width: 1
                 implicitHeight: updatesCol.implicitHeight + 24
 
@@ -98,7 +103,7 @@ Category {
                             text: qsTr("UPDATES")
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
-                            color: "#7c8cff"
+                            color: "#837cff"
                             font.letterSpacing: 0.5
                         }
                     }
@@ -123,9 +128,9 @@ Category {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 150
                             visible: Mixxx.AppUpdate.state === Mixxx.AppUpdate.Available || (Mixxx.AppUpdate.state === Mixxx.AppUpdate.Failed && Mixxx.AppUpdate.latestVersion !== "")
-                            activeColor: "#7c8cff"
-                            backgroundColor: "#0d3640"
-                            normalColor: "#a9b3ff"
+                            activeColor: "#837cff"
+                            backgroundColor: "#262626"
+                            normalColor: "#ada9ff"
                             font.weight: Font.DemiBold
                             text: qsTr("DOWNLOAD")
                             onClicked: Mixxx.AppUpdate.download()
@@ -141,9 +146,9 @@ Category {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 150
                             visible: Mixxx.AppUpdate.state === Mixxx.AppUpdate.Downloaded
-                            activeColor: "#7c8cff"
-                            backgroundColor: "#0d3640"
-                            normalColor: "#a9b3ff"
+                            activeColor: "#837cff"
+                            backgroundColor: "#262626"
+                            normalColor: "#ada9ff"
                             font.weight: Font.DemiBold
                             text: qsTr("INSTALL")
                             onClicked: updateInstallPopup.open()
@@ -156,8 +161,8 @@ Category {
                         Layout.preferredHeight: 6
                         visible: Mixxx.AppUpdate.state === Mixxx.AppUpdate.Downloading
                         radius: 3
-                        color: "#0b0d12"
-                        border.color: "#232836"
+                        color: "#0e0e0e"
+                        border.color: "#2c2c2c"
                         border.width: 1
 
                         Rectangle {
@@ -166,7 +171,7 @@ Category {
                             anchors.bottom: parent.bottom
                             width: parent.width * Mixxx.AppUpdate.progress
                             radius: 3
-                            color: "#7c8cff"
+                            color: "#837cff"
                         }
                     }
 
@@ -177,8 +182,8 @@ Category {
                         text: Mixxx.AppUpdate.releaseNotes
                         textFormat: Text.MarkdownText
                         font.pixelSize: 11
-                        color: "#b4b9c7"
-                        linkColor: "#a9b3ff"
+                        color: "#bebebe"
+                        linkColor: "#ada9ff"
                         wrapMode: Text.WordWrap
                         onLinkActivated: link => Qt.openUrlExternally(link)
                     }
@@ -200,8 +205,8 @@ Category {
                                 implicitWidth: 48
                                 implicitHeight: 26
                                 radius: 13
-                                color: autoCheckSwitch.checked ? "#0d3640" : "#161922"
-                                border.color: autoCheckSwitch.checked ? "#7c8cff" : "#5a6072"
+                                color: autoCheckSwitch.checked ? "#262626" : "#1c1c1c"
+                                border.color: autoCheckSwitch.checked ? "#837cff" : "#666666"
                                 border.width: 1
 
                                 Rectangle {
@@ -210,7 +215,7 @@ Category {
                                     width: 20
                                     height: 20
                                     radius: 10
-                                    color: autoCheckSwitch.checked ? "#7c8cff" : "#6e7587"
+                                    color: autoCheckSwitch.checked ? "#837cff" : "#7a7a7a"
                                 }
                             }
                         }
@@ -218,7 +223,7 @@ Category {
                             Layout.fillWidth: true
                             text: qsTr("Look for updates when the app starts (once a day at most). Nothing is downloaded without asking.")
                             font.pixelSize: 10
-                            color: "#8a91a3"
+                            color: "#969696"
                             wrapMode: Text.WordWrap
                         }
                     }
@@ -233,8 +238,8 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 radius: 12
-                color: "#12151C"
-                border.color: "#232836"
+                color: "#171717"
+                border.color: "#2c2c2c"
                 border.width: 1
                 implicitHeight: creditsCol.implicitHeight + 32
 
@@ -248,13 +253,13 @@ Category {
                         text: qsTr("Credits")
                         font.pixelSize: 12
                         font.weight: Font.DemiBold
-                        color: "#E8EAF0"
+                        color: "#ececec"
                     }
                     Text {
                         Layout.fillWidth: true
-                        text: qsTr("Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license.")
+                        text: qsTr("Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.")
                         font.pixelSize: 11
-                        color: "#8A91A3"
+                        color: "#969696"
                         wrapMode: Text.WordWrap
                     }
                     Text {
@@ -262,8 +267,8 @@ Category {
                         text: "<a href=\"https://github.com/agenciapeluda/mixxx-scratch-android\">github.com/agenciapeluda/mixxx-scratch-android</a>"
                         textFormat: Text.RichText
                         font.pixelSize: 11
-                        color: "#8A91A3"
-                        linkColor: "#7C8CFF"
+                        color: "#969696"
+                        linkColor: "#837cff"
                         onLinkActivated: link => Qt.openUrlExternally(link)
                     }
                 }

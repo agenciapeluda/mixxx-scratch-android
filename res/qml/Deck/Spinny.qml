@@ -19,7 +19,7 @@ Item {
     Rectangle {
         id: spinner
 
-        color: '#BDBDBD'
+        color: '#bdbdbd'
         height: 140
         radius: width / 2
         width: 140
@@ -47,7 +47,7 @@ Item {
                 Rectangle {
                     id: tick
 
-                    color: '#0E0E0E'
+                    color: '#0e0e0e'
                     height: 70
                     width: 2
 
@@ -64,7 +64,7 @@ Item {
 
         anchors.centerIn: spinner
         clip: true
-        color: '#0E0E0E'
+        color: '#0e0e0e'
         height: trackLoadedControl.value ? spinner.height / 4 : 0
         radius: height / 2 - 5
         width: spinner.width / 2 - 10
@@ -85,7 +85,7 @@ Item {
             readonly property real bpm: bpmControl.value
             readonly property int precision: 2
 
-            color: '#BDBDBD'
+            color: '#bdbdbd'
             text: `${Math.round(bpm)}.${((bpm % 1) * Math.pow(10, precision)).toFixed().padEnd(precision, "0")}`
 
             Mixxx.ControlProxy {

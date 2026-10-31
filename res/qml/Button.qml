@@ -21,7 +21,7 @@ AbstractButton {
             id: backgroundImage
 
             anchors.fill: parent
-            color: '#2B2B2B'
+            color: '#2b2b2b'
             radius: 2
         }
         DropShadow {
@@ -38,7 +38,7 @@ AbstractButton {
             id: effect2
 
             anchors.fill: backgroundImage
-            color: "#2a2f3d"
+            color: "#343434"
             horizontalOffset: 1
             radius: 1
             samples: 16
@@ -47,7 +47,7 @@ AbstractButton {
         }
         InnerShadow {
             anchors.fill: backgroundImage
-            color: "#2a2f3d"
+            color: "#343434"
             horizontalOffset: -1
             radius: 1
             samples: 16
@@ -106,7 +106,7 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? "#5b6cff" : Theme.darkGray3
+                color: root.checked ? "#635bff" : Theme.darkGray3
                 target: backgroundImage
             }
             PropertyChanges {
@@ -123,7 +123,7 @@ AbstractButton {
             when: (root.highlight || root.checked) && !root.pressed
 
             PropertyChanges {
-                color: "#2D4EA1"
+                color: "#332da1"
                 target: backgroundImage
             }
             PropertyChanges {

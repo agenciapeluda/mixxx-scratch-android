@@ -11,9 +11,9 @@ Rectangle {
 
     readonly property real unit: Math.max(9, Math.min(height / 14, width / 11))
 
-    border.color: "#1c202a"
+    border.color: "#232323"
     border.width: 1
-    color: "#0b0d12"
+    color: "#0e0e0e"
 
     // A meter of the level of a channel
     component LevelMeter: Item {
@@ -35,7 +35,7 @@ Rectangle {
         }
         Rectangle {
             anchors.fill: parent
-            color: "#0f1117"
+            color: "#131313"
         }
         Rectangle {
             anchors.bottom: parent.bottom
@@ -130,13 +130,13 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Math.round(root.unit * 1.8)
-                border.color: pflControl.value > 0 ? "#ff7a3d" : "#2a2f3d"
-                color: pflControl.value > 0 ? "#3a1a08" : "#0f1117"
+                border.color: pflControl.value > 0 ? "#ff7a3d" : "#343434"
+                color: pflControl.value > 0 ? "#3a1a08" : "#131313"
                 radius: 2
 
                 Text {
                     anchors.centerIn: parent
-                    color: pflControl.value > 0 ? "#ff7a3d" : "#e8eaf0"
+                    color: pflControl.value > 0 ? "#ff7a3d" : "#ececec"
                     font.weight: Font.DemiBold
                     font.pixelSize: Math.round(root.unit * 0.95)
                     text: "CUE"
@@ -174,13 +174,13 @@ Rectangle {
         Channel {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            deckColor: "#4f7cff"
+            deckColor: "#584fff"
             group: "[Channel1]"
         }
         Rectangle {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
-            color: "#1c202a"
+            color: "#232323"
         }
         Channel {
             Layout.fillHeight: true

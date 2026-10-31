@@ -704,7 +704,7 @@ Item {
             property real radius: 12
 
             anchors.fill: parent
-            color: Qt.alpha('#00000010', hasHardwareAcceleration ? 1.0 : 0.6)
+            color: Qt.alpha('#00080808', hasHardwareAcceleration ? 1.0 : 0.6)
 
             Repeater {
                 model: hasHardwareAcceleration ? 1 : 0

@@ -59,7 +59,7 @@ Item {
             id: label
 
             anchors.verticalCenter: parent.verticalCenter
-            color: root.lit && !root.highlighted ? root.litColor : root.textColor
+            color: root.lit && !root.highlighted ? (root.litColor === Style.accent ? Style.accentText : root.litColor) : root.textColor
             font.family: Style.font
             font.pixelSize: root.fontSize
             font.weight: root.fontWeight

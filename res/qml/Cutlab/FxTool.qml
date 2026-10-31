@@ -2,6 +2,8 @@ import Mixxx 1.0 as Mixxx
 import QtQuick
 
 // Effects of a deck, on the effect unit of the same number.
+//  - Pad: touch and drag; across sets the effect amount, up and down the
+//    filter (high pass up, low pass down). Lifting the finger ends it.
 //  - Instant: a pad per effect chain preset, on while held (or latched
 //    with HOLD)
 //  - Manual: the three effects of the unit, each with ON and its knob
@@ -15,12 +17,82 @@ Item {
     property int mode: 0
     property bool hold: false
     property int activePreset: -1
+    // The chain presets that can be loaded, without the empty one
+    property var presets: []
+    readonly property var presetModel: Mixxx.EffectsManager.standardChainPresetModel
+
+    function readPresets() {
+        const model = root.presetModel;
+        if (!model) {
+            root.presets = [];
+            return;
+        }
+        const count = model.rowCount !== undefined ? model.rowCount() : model.count;
+        const list = [];
+        for (let i = 0; i < count; ++i) {
+            const item = model.get(i);
+            const name = (item.presetDisplay || item.name || "").toString().trim();
+            if (name !== "" && name !== "---") {
+                list.push({index: i, name: name});
+            }
+        }
+        root.presets = list;
+    }
+    function presetPosition() {
+        if (!root.unit) {
+            return -1;
+        }
+        for (let i = 0; i < root.presets.length; ++i) {
+            if (root.presets[i].index === root.unit.presetIndex) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    function stepPreset(step) {
+        if (root.presets.length === 0 || !root.unit) {
+            return;
+        }
+        const position = root.presetPosition();
+        const next = ((position < 0 ? 0 : position + step) + root.presets.length) % root.presets.length;
+        root.unit.loadPreset(root.presets[next].index);
+        root.activePreset = root.presets[next].index;
+    }
+
+    Component.onCompleted: readPresets()
+
+    Connections {
+        target: root.presetModel
+        ignoreUnknownSignals: true
+
+        function onModelReset() {
+            root.readPresets();
+        }
+        function onRowsInserted() {
+            root.readPresets();
+        }
+        function onRowsRemoved() {
+            root.readPresets();
+        }
+    }
 
     Mixxx.ControlProxy {
         id: routing
 
         group: root.unitGroup
         key: `group_${root.group}_enable`
+    }
+    Mixxx.ControlProxy {
+        id: unitSuper
+
+        group: root.unitGroup
+        key: "super1"
+    }
+    Mixxx.ControlProxy {
+        id: quickFilter
+
+        group: `[QuickEffectRack1_${root.group}]`
+        key: "super1"
     }
     Mixxx.ControlProxy {
         id: unitEnabled
@@ -53,12 +125,12 @@ Item {
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            color: root.hold ? Style.accent : Style.textSecondary
+            color: root.hold ? Style.accentText : Style.textSecondary
             font.family: Style.font
             font.pixelSize: 13
             font.weight: Font.Medium
             text: qsTr("HOLD")
-            visible: root.mode === 0
+            visible: root.mode === 1
 
             MouseArea {
                 anchors.fill: parent
@@ -72,14 +144,14 @@ Item {
             }
         }
         Repeater {
-            model: [qsTr("Instant"), qsTr("Manual")]
+            model: [qsTr("Pad"), qsTr("Instant"), qsTr("Manual")]
 
             Text {
                 required property int index
                 required property string modelData
 
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.mode === index ? Style.accent : Style.textSecondary
+                color: root.mode === index ? Style.accentText : Style.textSecondary
                 font.family: Style.font
                 font.pixelSize: 17
                 text: modelData
@@ -101,18 +173,19 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        visible: root.mode === 0
+        visible: root.mode === 1
         clip: true
         cellWidth: width / 4
         cellHeight: Math.max(56, height / 2)
-        model: Mixxx.EffectsManager.standardChainPresetModel
+        model: root.presets
         boundsBehavior: Flickable.StopAtBounds
 
         delegate: Item {
             id: cell
 
-            required property int index
-            required property string presetDisplay
+            required property var modelData
+            readonly property int index: modelData.index
+            readonly property string presetDisplay: modelData.name
 
             width: presetGrid.cellWidth
             height: presetGrid.cellHeight
@@ -141,13 +214,84 @@ Item {
         }
     }
 
+    // Pad: the effect chain on top, the touch surface below
+    Item {
+        anchors.top: tabs.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        visible: root.mode === 0
+
+        Rectangle {
+            id: presetBar
+
+            width: parent.width
+            height: 40
+            color: "#3c3c3f"
+
+            CLButton {
+                anchors.left: parent.left
+                height: parent.height
+                width: 48
+                icon: "prev"
+                iconSize: 16
+                bordered: false
+                fillColor: "transparent"
+                onClicked: root.stepPreset(-1)
+            }
+            Text {
+                anchors.centerIn: parent
+                width: parent.width - 110
+                color: Style.text
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignHCenter
+                font.family: Style.font
+                font.pixelSize: 17
+                font.weight: Font.Medium
+                text: root.unit && root.unit.presetName !== "" && root.unit.presetName !== "---" ? root.unit.presetName : qsTr("Pick an effect")
+            }
+            CLButton {
+                anchors.right: parent.right
+                height: parent.height
+                width: 48
+                icon: "next"
+                iconSize: 16
+                bordered: false
+                fillColor: "transparent"
+                onClicked: root.stepPreset(1)
+            }
+        }
+
+        XYSurface {
+            anchors.top: presetBar.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            topLabel: qsTr("HP")
+            bottomLabel: qsTr("LP")
+            onTouched: (x, y) => {
+                if (root.presetPosition() < 0) {
+                    root.stepPreset(0);
+                }
+                unitEnabled.value = 1;
+                routing.value = 1;
+                unitSuper.parameter = x;
+                quickFilter.parameter = y;
+            }
+            onReleased: {
+                routing.value = 0;
+                quickFilter.reset();
+            }
+        }
+    }
+
     // Manual: the three effects of the unit
     Column {
         anchors.top: tabs.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        visible: root.mode === 1
+        visible: root.mode === 2
 
         Repeater {
             model: 3

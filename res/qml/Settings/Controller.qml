@@ -117,7 +117,7 @@ Category {
                     required property int index
                     required property var modelData
 
-                    color: index % 2 == 0 ? '#0C0C0C' : '#272727'
+                    color: index % 2 == 0 ? '#0c0c0c' : '#272727'
                     height: 32
                     width: ListView.view.width
 
@@ -139,7 +139,7 @@ Category {
 
                             Text {
                                 anchors.centerIn: parent
-                                color: '#FFFFFF'
+                                color: '#ffffff'
                                 font.pixelSize: 14
                                 font.weight: Font.Medium
                                 text: {
@@ -157,13 +157,13 @@ Category {
                         }
                         Text {
                             Layout.fillWidth: true
-                            color: '#FFFFFF'
+                            color: '#ffffff'
                             font.pixelSize: 14
                             font.weight: Font.Medium
                             text: modelData.name
                         }
                         Skin.FormButton {
-                            activeColor: "#8a91a3"
+                            activeColor: "#969696"
                             text: "Create device"
                             visible: unknownDeviceRow.containsMouse || hovered || unknownDevicesList.currentIndex == index
 
@@ -189,7 +189,7 @@ Category {
                         anchors.leftMargin: 20
                         anchors.margins: 10
                         anchors.rightMargin: 20
-                        color: '#FFFFFF'
+                        color: '#ffffff'
                         font.pixelSize: 16
                         font.weight: Font.DemiBold
                         text: 'Other detected devices'
@@ -209,7 +209,7 @@ Category {
         visible: root.dirty || root.selectedController
 
         Skin.FormButton {
-            activeColor: "#8a91a3"
+            activeColor: "#969696"
             backgroundColor: "#5a2a30"
             opacity: enabled ? 1.0 : 0.5
             text: "Reset"
@@ -232,8 +232,8 @@ Category {
             text: ""
         }
         Skin.FormButton {
-            activeColor: "#8a91a3"
-            backgroundColor: "#2a2f3d"
+            activeColor: "#969696"
+            backgroundColor: "#343434"
             opacity: enabled ? 1.0 : 0.5
             text: "Cancel"
 
@@ -243,8 +243,8 @@ Category {
             }
         }
         Skin.FormButton {
-            activeColor: "#8a91a3"
-            backgroundColor: root.dirty ? "#5b6cff" : "#2a2f3d"
+            activeColor: "#969696"
+            backgroundColor: root.dirty ? "#635bff" : "#343434"
             opacity: enabled ? 1.0 : 0.5
             text: "Save"
 

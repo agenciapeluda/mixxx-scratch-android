@@ -22,7 +22,7 @@ Text {
         return "";
     }
 
-    color: update.state === Mixxx.AppUpdate.Failed ? "#ff8f99" : "#d5d8e0"
+    color: update.state === Mixxx.AppUpdate.Failed ? "#ff8f99" : "#dbdbdb"
     wrapMode: Text.WordWrap
     text: {
         switch (update.state) {

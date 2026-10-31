@@ -69,7 +69,7 @@ Item {
         anchors.margins: 8
         color: '#181818'
         radius: root.focused ? 18 : 22
-        border.color: root.focused ? "#2979ff" : (root.knownDevice ? "#2e7d32" : "#2a2f3d")
+        border.color: root.focused ? "#3429ff" : (root.knownDevice ? "#2e7d32" : "#343434")
         border.width: root.focused ? 2 : 1
 
         Item {
@@ -285,7 +285,7 @@ Item {
             anchors.leftMargin: 22
             anchors.rightMargin: root.focused ? undefined : 10
             anchors.topMargin: root.focused ? undefined : 17
-            color: '#FFFFFF'
+            color: '#ffffff'
             font.pixelSize: 10
             font.weight: Font.Light
             text: root.editable ? qsTr("User device") : qsTr("Supported since %1").arg(modelData.sinceVersion)

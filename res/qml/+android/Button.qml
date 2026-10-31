@@ -11,7 +11,7 @@ AbstractButton {
     property bool highlight: false
     property color normalColor: Theme.buttonNormalColor
     property color pressedColor: activeColor
-    property color backgroundColor: "#1c202a"
+    property color backgroundColor: "#232323"
     // A ◀ before or a ▶ after the text, drawn as triangles: Android draws
     // these signs as emoji
     property bool arrowLeft: false
@@ -94,7 +94,7 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? Qt.rgba(0.36, 0.42, 1.0, 0.45) : "#2a2f3d"
+                color: root.checked ? Qt.rgba(0.36, 0.42, 1.0, 0.45) : "#343434"
                 target: backgroundImage
             }
             PropertyChanges {

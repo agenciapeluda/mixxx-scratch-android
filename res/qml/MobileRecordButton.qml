@@ -14,13 +14,13 @@ Rectangle {
 
     readonly property bool recording: statusControl.value > 0
     property int fontPixelSize: 10
-    property color idleColor: "#1a1e28"
-    property color idleBorderColor: "#2a2f3d"
+    property color idleColor: "#212121"
+    property color idleBorderColor: "#343434"
 
     implicitHeight: 30
     implicitWidth: Math.max(recording ? 76 : 50, recRow.implicitWidth + 16)
     radius: 4
-    color: recording ? "#b71c1c" : (recMouse.pressed ? "#2e2124" : idleColor)
+    color: recording ? "#b71c1c" : (recMouse.pressed ? "#282828" : idleColor)
     border.color: recording ? "#ff5d6c" : idleBorderColor
     border.width: 1
 
@@ -58,13 +58,13 @@ Rectangle {
             Layout.preferredHeight: 8
             Layout.preferredWidth: 8
             radius: 4
-            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#6e7587"
+            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#7a7a7a"
         }
         Text {
             text: root.recording ? Mixxx.Recording.durationText : "REC"
             font.weight: Font.DemiBold
             font.pixelSize: root.fontPixelSize
-            color: root.recording ? "#ffffff" : "#b4b9c7"
+            color: root.recording ? "#ffffff" : "#bebebe"
         }
     }
 
@@ -91,7 +91,7 @@ Rectangle {
         padding: 18
 
         background: Rectangle {
-            color: "#12151c"
+            color: "#171717"
             radius: 10
             border.color: "#ff5d6c"
             border.width: 1
@@ -112,7 +112,7 @@ Rectangle {
                 Layout.fillWidth: true
                 text: qsTr("%1 recorded. It is in REC of the library.").arg(Mixxx.Recording.durationText)
                 font.pixelSize: 12
-                color: "#b4b9c7"
+                color: "#bebebe"
                 wrapMode: Text.WordWrap
             }
             RowLayout {

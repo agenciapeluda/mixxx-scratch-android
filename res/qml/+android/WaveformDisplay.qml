@@ -24,8 +24,8 @@ Item {
     readonly property var currentTrack: deckPlayer?.currentTrack
     readonly property bool isDeck1: group === "[Channel1]"
     readonly property bool isDeck2: group === "[Channel2]"
-    readonly property color deckColor: isDeck1 ? "#7c8cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
-    readonly property color deckBgColor: isDeck1 ? "#2c47b8" : (isDeck2 ? "#bf360c" : "#1a1e28")
+    readonly property color deckColor: isDeck1 ? "#837cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
+    readonly property color deckBgColor: isDeck1 ? "#332cb8" : (isDeck2 ? "#bf360c" : "#212121")
     readonly property string deckName: isDeck1 ? "Deck 1" : (isDeck2 ? "Deck 2" : (group === "[Channel3]" ? "Deck 3" : "Deck 4"))
 
     onEnabledChanged: {
@@ -113,7 +113,7 @@ Item {
             // Loop
             Mixxx.WaveformMarkRange {
                 color: '#00b400'
-                disabledColor: '#FFFFFF'
+                disabledColor: '#ffffff'
                 disabledOpacity: 0.6
                 enabledControl: "loop_enabled"
                 endControl: "loop_end_position"
@@ -122,7 +122,7 @@ Item {
             }
             // Intro
             Mixxx.WaveformMarkRange {
-                color: '#2c5c9a'
+                color: '#312c9a'
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'after'
                 endControl: "intro_end_position"
@@ -131,7 +131,7 @@ Item {
             }
             // Outro
             Mixxx.WaveformMarkRange {
-                color: '#2c5c9a'
+                color: '#312c9a'
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'before'
                 endControl: "outro_end_position"
@@ -147,7 +147,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
         }
         Mixxx.WaveformRendererFiltered {
@@ -158,7 +158,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
             stacked: true
         }
@@ -185,7 +185,7 @@ Item {
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
             highColor: '#D5C2A2'
-            lowColor: '#2154D7'
+            lowColor: '#2a21d7'
             midColor: '#97632D'
         }
         Mixxx.WaveformRendererStem {
@@ -199,8 +199,8 @@ Item {
             color: Qt.rgba(161 / 255, 161 / 255, 161 / 255, Mixxx.Config.waveformBeatGridAlpha / 100)
         }
         Mixxx.WaveformRendererMark {
-            playMarkerBackground: '#D9D9D9'
-            playMarkerColor: '#D9D9D9'
+            playMarkerBackground: '#d9d9d9'
+            playMarkerColor: '#d9d9d9'
             playMarkerPosition: Mixxx.Config.waveformPlayMarkerPosition
             untilMark.align: Mixxx.Config.waveformUntilMarkAlign === 0 ? Qt.AlignTop : Mixxx.Config.waveformUntilMarkAlign === 2 ? Qt.AlignBottom : Qt.AlignVCenter
             untilMark.showBeats: Mixxx.Config.waveformUntilMarkShowBeats
@@ -210,7 +210,7 @@ Item {
 
             defaultMark: Mixxx.WaveformMark {
                 align: "bottom|right"
-                color: "#00d9ff"
+                color: "#0d00ff"
                 endIcon: Qt.resolvedUrl("images/jump_%1.svg")
                 text: " %1 "
                 textColor: "#1a1a1a"
@@ -228,41 +228,41 @@ Item {
                 color: 'green'
                 control: "loop_start_position"
                 text: '↻'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'bottom|right'
                 color: 'green'
                 control: "loop_end_position"
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|right'
                 color: 'blue'
                 control: "intro_start_position"
                 text: '◢'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|left'
                 color: 'blue'
                 control: "intro_end_position"
                 text: '◢'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|right'
                 color: 'blue'
                 control: "outro_start_position"
                 text: '◣'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
             Mixxx.WaveformMark {
                 align: 'top|left'
                 color: 'blue'
                 control: "outro_end_position"
                 text: '◣'
-                textColor: '#FFFFFF'
+                textColor: '#ffffff'
             }
         }
     }
@@ -440,7 +440,7 @@ Item {
             height: 22
             width: keyBadgeText.implicitWidth + 12
             radius: 4
-            color: "#d0121722"
+            color: "#d01a1a1a"
             border.color: root.deckColor
             border.width: 1
 
@@ -464,8 +464,8 @@ Item {
             height: 22
             width: Math.min(320, trackInfoText.implicitWidth + 18)
             radius: 11
-            color: "#d0121722"
-            border.color: "#2a3547"
+            color: "#d01a1a1a"
+            border.color: "#383838"
             border.width: 1
 
             Text {
@@ -474,7 +474,7 @@ Item {
                 width: parent.width - 16
                 elide: Text.ElideRight
                 text: (root.currentTrack ? (root.currentTrack.artist ? root.currentTrack.artist + " - " : "") + root.currentTrack.title : "")
-                color: "#e0e6ed"
+                color: "#e6e6e6"
                 font.weight: Font.DemiBold
                 font.pixelSize: 10
             }

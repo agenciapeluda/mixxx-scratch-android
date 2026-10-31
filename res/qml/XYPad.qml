@@ -18,22 +18,22 @@ Rectangle {
 
     // The look, for the skins
     property string title: qsTr("XY TOUCH PAD")
-    property color accentColor: "#7c8cff"
-    property color deck1Color: "#7c8cff"
+    property color accentColor: "#837cff"
+    property color deck1Color: "#837cff"
     property color deck2Color: "#ff7a3d"
     property color wetColor: "#e040fb"
     property color holdColor: "#ab47bc"
-    property color buttonColor: "#1a222d"
-    property color buttonBorderColor: "#303e4f"
-    property color buttonTextColor: "#8a91a3"
-    property color surfaceColor: "#080b10"
-    property color surfaceBorderColor: "#1f2937"
+    property color buttonColor: "#242424"
+    property color buttonBorderColor: "#404040"
+    property color buttonTextColor: "#969696"
+    property color surfaceColor: "#0c0c0c"
+    property color surfaceBorderColor: "#2b2b2b"
     property int controlRadius: 4
     property int surfaceRadius: 8
 
     signal closeRequested()
 
-    color: "#e60a0d14"
+    color: "#e60f0f0f"
     radius: 12
     border.color: Qt.alpha(root.accentColor, 0.4)
     border.width: 1
@@ -204,7 +204,7 @@ Rectangle {
                     text: "DECK 1"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: root.targetDeck === "[Channel1]" ? "#001018" : root.buttonTextColor
+                    color: root.targetDeck === "[Channel1]" ? "#0c0c0c" : root.buttonTextColor
                 }
 
                 MouseArea {
@@ -263,8 +263,8 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 54
                 radius: root.controlRadius
-                color: resetMouse.pressed ? "#455a64" : "#1a1e28"
-                border.color: "#455a64"
+                color: resetMouse.pressed ? "#545454" : "#212121"
+                border.color: "#545454"
                 border.width: 1
 
                 Text {
@@ -272,7 +272,7 @@ Rectangle {
                     text: qsTr("RESET")
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: "#d5d8e0"
+                    color: "#dbdbdb"
                 }
 
                 MouseArea {
@@ -288,7 +288,7 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 28
                 radius: 14
-                color: closeMouse.pressed ? "#b71c1c" : "#2a2f3d"
+                color: closeMouse.pressed ? "#b71c1c" : "#343434"
 
                 Text {
                     anchors.centerIn: parent

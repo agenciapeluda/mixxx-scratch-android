@@ -50,9 +50,9 @@ Item {
 
             Layout.fillWidth: true
             Layout.preferredHeight: root.compact ? 30 : 40
-            border.color: "#1c202a"
+            border.color: "#232323"
             border.width: 1
-            color: "#0b0d12"
+            color: "#0e0e0e"
 
             Row {
                 anchors.left: parent.left
@@ -62,13 +62,13 @@ Item {
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#8a91a3"
+                    color: "#969696"
                     font.pixelSize: Math.round(bottomBar.height * 0.45)
                     text: ""
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#8a91a3"
+                    color: "#969696"
                     font.pixelSize: Math.round(bottomBar.height * 0.28)
                     text: qsTr("MIXING")
                 }
@@ -80,7 +80,7 @@ Item {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#8a91a3"
+                    color: "#969696"
                     font.pixelSize: Math.round(bottomBar.height * 0.28)
                     text: qsTr("LEVEL")
                 }
@@ -109,7 +109,7 @@ Item {
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#8a91a3"
+                    color: "#969696"
                     font.pixelSize: Math.round(bottomBar.height * 0.28)
                     text: qsTr("MASTER")
                 }

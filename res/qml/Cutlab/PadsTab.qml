@@ -83,7 +83,7 @@ Rectangle {
                     required property int index
                     required property string modelData
 
-                    color: root.mode === index ? Style.accent : Style.textSecondary
+                    color: root.mode === index ? Style.accentText : Style.textSecondary
                     font.family: Style.font
                     font.pixelSize: 17
                     text: modelData

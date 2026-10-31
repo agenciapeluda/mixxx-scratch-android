@@ -67,7 +67,7 @@ ApplicationWindow {
     property var themeDefaults: null
 
     // A skin can change the shared colors (Theme) through a skinTheme
-    // property of its main window, e.g. {"accentColor": "#3d63e0"}. The
+    // property of its main window, e.g. {"accentColor": "#453de0"}. The
     // values of the previous skin are undone first.
     function applySkinTheme(skinTheme) {
         if (root.themeDefaults === null) {
@@ -180,7 +180,7 @@ ApplicationWindow {
         padding: 18
 
         background: Rectangle {
-            color: "#12151c"
+            color: "#171717"
             radius: 10
             border.color: "#ff5d6c"
             border.width: 1
@@ -202,7 +202,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 text: qsTr("The music stops. The loaded tracks and the settings are saved.")
                 font.pixelSize: 12
-                color: "#b4b9c7"
+                color: "#bebebe"
                 wrapMode: Text.WordWrap
             }
 
@@ -238,7 +238,7 @@ ApplicationWindow {
     Rectangle {
         id: splash
         anchors.fill: parent
-        color: "#0b0d12"
+        color: "#0e0e0e"
         z: 99999
         visible: opacity > 0
 
@@ -306,7 +306,7 @@ ApplicationWindow {
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#E8EAF0"
+                color: "#ececec"
                 font.pixelSize: 30
                 font.weight: Font.DemiBold
                 font.letterSpacing: -0.5
@@ -317,7 +317,7 @@ ApplicationWindow {
             Text {
                 id: subtitleText
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#8A91A3"
+                color: "#969696"
                 font.pixelSize: 13
                 font.letterSpacing: 0.2
                 text: qsTr("DJ software for Android")
@@ -343,8 +343,8 @@ ApplicationWindow {
                     width: parent.width
                     height: 6
                     radius: 3
-                    color: "#12151c"
-                    border.color: "#232836"
+                    color: "#171717"
+                    border.color: "#2c2c2c"
                     border.width: 1
                     clip: true
 
@@ -355,7 +355,7 @@ ApplicationWindow {
                         anchors.bottom: parent.bottom
                         width: Math.max(6, parent.width * splash.progress)
                         radius: 3
-                        color: "#7c8cff"
+                        color: "#837cff"
 
                         Behavior on width {
                             NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
@@ -370,7 +370,7 @@ ApplicationWindow {
                     text: splash.progress >= 1.0 ? qsTr("Ready to mix!") : (splash.progress > 0.7 ? qsTr("Optimizing DJ controls...") : (splash.progress > 0.35 ? qsTr("Loading library and decks...") : qsTr("Starting audio engine...")))
                     font.pixelSize: 11
                     font.weight: Font.DemiBold
-                    color: "#8fa1b8"
+                    color: "#a3a3a3"
                 }
             }
         }

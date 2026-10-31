@@ -447,8 +447,8 @@ Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 100
                 activeColor: Theme.accentColor
-                backgroundColor: quickLoadBar.hasTracks ? "#2e3440" : "#262930"
-                normalColor: quickLoadBar.hasTracks ? "#ffffff" : "#6e7587"
+                backgroundColor: quickLoadBar.hasTracks ? "#373737" : "#2b2b2b"
+                normalColor: quickLoadBar.hasTracks ? "#ffffff" : "#7a7a7a"
                 enabled: quickLoadBar.hasTracks
                 font.weight: Font.DemiBold
                 // Marked when the selected track has stems

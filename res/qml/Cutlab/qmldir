@@ -3,9 +3,13 @@ CLButton 1.0 CLButton.qml
 CLControlButton 1.0 CLControlButton.qml
 CLFader 1.0 CLFader.qml
 CLKnob 1.0 CLKnob.qml
+CLMenu 1.0 CLMenu.qml
+CLMenuItem 1.0 CLMenuItem.qml
 DJView 1.0 DJView.qml
+DeckDial 1.0 DeckDial.qml
 DeckHeader 1.0 DeckHeader.qml
 DeckTransport 1.0 DeckTransport.qml
+DvsBadge 1.0 DvsBadge.qml
 EqTool 1.0 EqTool.qml
 FxTool 1.0 FxTool.qml
 HotcuePads 1.0 HotcuePads.qml
@@ -17,6 +21,7 @@ NodeRow 1.0 NodeRow.qml
 Pad 1.0 Pad.qml
 PadsTab 1.0 PadsTab.qml
 Platter 1.0 Platter.qml
+PortraitView 1.0 PortraitView.qml
 RollPads 1.0 RollPads.qml
 SamplePads 1.0 SamplePads.qml
 SideColumn 1.0 SideColumn.qml
@@ -26,3 +31,4 @@ TrackRow 1.0 TrackRow.qml
 TransportBar 1.0 TransportBar.qml
 VerticalWave 1.0 VerticalWave.qml
 VuBar 1.0 VuBar.qml
+XYSurface 1.0 XYSurface.qml

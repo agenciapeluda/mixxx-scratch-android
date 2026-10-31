@@ -1,7 +1,7 @@
 pragma Singleton
 import QtQuick
 
-// Colors and sizes of the Cutlab layout: neutral grays, one blue accent,
+// Colors of the Cutlab layout: neutral grays, the Cutlab indigo as accent,
 // green for what is playing and a red playhead.
 QtObject {
     readonly property string font: "Roboto"
@@ -22,7 +22,10 @@ QtObject {
     readonly property color textSecondary: "#9d9da3"
     readonly property color textDim: "#6c6c72"
 
-    readonly property color accent: "#2f8cff"
+    readonly property color accent: "#635bff"
+    // The accent for text and icons on dark grays, easier to read
+    readonly property color accentText: "#8b85ff"
+    readonly property color accentDark: "#2b2766"
     readonly property color play: "#34c759"
     readonly property color cue: "#ff9f0a"
     readonly property color playhead: "#ff2d2d"

@@ -640,8 +640,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#12151c"
-        border.color: "#232836"
+        color: "#171717"
+        border.color: "#2c2c2c"
         border.width: 1
         radius: 8
 
@@ -695,7 +695,7 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
                 radius: 6
-                color: resetMouse.pressed ? "#5c2b2b" : (resetMouse.containsMouse ? "#4a2222" : "#371e1e")
+                color: resetMouse.pressed ? "#5c2b2b" : (resetMouse.containsMouse ? "#4a2222" : "#2b2b2b")
                 border.color: "#772b2b"
                 border.width: 1
 
@@ -728,7 +728,7 @@ Category {
                 Layout.preferredWidth: 110
                 radius: 6
                 visible: root.dirty
-                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#262a35" : "#262626")
+                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#2e2e2e" : "#262626")
                 border.color: "#555555"
                 border.width: 1
 
@@ -759,8 +759,8 @@ Category {
                 radius: 6
                 color: root.dirty
                        ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#2bd67b" : "#22b868"))
-                       : (saveMouse.pressed ? "#2c47b8" : (saveMouse.containsMouse ? "#4f7cff" : "#4f7cff"))
-                border.color: root.dirty ? "#6fe3a4" : "#8aa8ff"
+                       : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
+                border.color: root.dirty ? "#6fe3a4" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {

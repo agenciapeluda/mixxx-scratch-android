@@ -22,7 +22,7 @@ AbstractButton {
             id: content
 
             anchors.fill: parent
-            color: root.category == ActionButton.Category.Action ? '#2D4EA1' : root.category == ActionButton.Category.Danger ? '#5a2a30' : Theme.darkGray3
+            color: root.category == ActionButton.Category.Action ? '#332da1' : root.category == ActionButton.Category.Danger ? '#5a2a30' : Theme.darkGray3
             radius: 4
         }
         DropShadow {

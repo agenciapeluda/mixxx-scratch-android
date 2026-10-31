@@ -7,7 +7,7 @@ AbstractButton {
     id: root
 
     property color activeColor: Theme.deckActiveColor
-    property color backgroundColor: "#2a2f3d"
+    property color backgroundColor: "#343434"
     property bool highlight: false
     property color normalColor: Theme.white
     property color pressedColor: activeColor
@@ -54,7 +54,7 @@ AbstractButton {
             id: dropEffect
 
             anchors.fill: parent
-            color: "#0E0E0E"
+            color: "#0e0e0e"
             horizontalOffset: 0
             radius: 4.0
             source: topInnerEffect
@@ -112,16 +112,16 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                backgroundImage.color: root.checked ? "#5b6cff" : root.backgroundColor
+                backgroundImage.color: root.checked ? "#635bff" : root.backgroundColor
             }
             PropertyChanges {
                 label.color: root.pressedColor
             }
             PropertyChanges {
-                bottomInnerEffect.color: '#2a2f3d'
+                bottomInnerEffect.color: '#343434'
             }
             PropertyChanges {
-                topInnerEffect.color: '#2a2f3d'
+                topInnerEffect.color: '#343434'
             }
             PropertyChanges {
                 labelGlow.visible: true
@@ -132,16 +132,16 @@ AbstractButton {
             when: (root.highlight || root.checked) && !root.pressed
 
             PropertyChanges {
-                backgroundImage.color: "#2D4EA1"
+                backgroundImage.color: "#332da1"
             }
             PropertyChanges {
                 label.color: root.activeColor
             }
             PropertyChanges {
-                bottomInnerEffect.color: '#2a2f3d'
+                bottomInnerEffect.color: '#343434'
             }
             PropertyChanges {
-                topInnerEffect.color: '#2a2f3d'
+                topInnerEffect.color: '#343434'
             }
             PropertyChanges {
                 labelGlow.visible: true

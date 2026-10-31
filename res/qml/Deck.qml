@@ -368,7 +368,7 @@ Item {
                 editLabel.color: Theme.midGray
                 editLabel.font.pixelSize: 14
                 editLabel.text: "Spinny"
-                editOverlay.color: "#BDBDBD"
+                editOverlay.color: "#bdbdbd"
                 editOverlay.radius: height
                 height: 140
                 width: 140

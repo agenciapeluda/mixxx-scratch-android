@@ -27,7 +27,7 @@ Popup {
         Layout.fillWidth: true
         Layout.preferredHeight: 44
         activeColor: Theme.accentColor
-        backgroundColor: "#2e3440"
+        backgroundColor: "#373737"
         normalColor: "#ffffff"
         enabled: root.editable
         font.weight: Font.DemiBold

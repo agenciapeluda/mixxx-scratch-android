@@ -13,7 +13,7 @@ Item {
     property string label: ""
     // The ring lights from the middle, for controls whose default is there
     property bool bipolar: true
-    property color color: "#2f9bff"
+    property color color: "#392fff"
     // The drag that turns the knob from one end to the other
     property real dragRange: 160
     readonly property real value: control.parameter
@@ -57,7 +57,7 @@ Item {
             const from = root.bipolar ? Math.PI * 1.5 : start;
             ctx.lineCap = "round";
             ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = "#1c202a";
+            ctx.strokeStyle = "#232323";
             ctx.beginPath();
             ctx.arc(center, center, radius, start, end);
             ctx.stroke();
@@ -103,7 +103,7 @@ Item {
 
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: "#8a91a3"
+        color: "#969696"
         font.pixelSize: Math.max(8, Math.min(13, Math.round(root.width * 0.22)))
         text: root.label
         visible: root.label.length > 0

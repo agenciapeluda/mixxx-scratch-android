@@ -13,8 +13,8 @@ Popup {
     property int activeTab: 0 // 0: Local Library, 1: Streaming Hub
 
     readonly property bool isDeck1: targetDeck === "[Channel1]"
-    readonly property color deckColor: isDeck1 ? "#7c8cff" : "#ff7a3d"
-    readonly property color deckBgColor: isDeck1 ? "#2c47b8" : "#bf360c"
+    readonly property color deckColor: isDeck1 ? "#837cff" : "#ff7a3d"
+    readonly property color deckBgColor: isDeck1 ? "#332cb8" : "#bf360c"
     readonly property string deckName: isDeck1 ? "DECK 1" : "DECK 2"
 
     modal: true
@@ -23,7 +23,7 @@ Popup {
     dim: true
 
     background: Rectangle {
-        color: "#12151c"
+        color: "#171717"
         border.color: root.deckColor
         border.width: 2
         radius: 8
@@ -53,8 +53,8 @@ Popup {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
-            color: "#181d26"
-            border.color: "#283040"
+            color: "#1f1f1f"
+            border.color: "#343434"
             border.width: 1
 
             RowLayout {
@@ -93,9 +93,9 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 130
-                    activeColor: root.isDeck1 ? "#ff7a3d" : "#7c8cff"
-                    backgroundColor: "#202736"
-                    normalColor: root.isDeck1 ? "#f7c86a" : "#a9b3ff"
+                    activeColor: root.isDeck1 ? "#ff7a3d" : "#837cff"
+                    backgroundColor: "#2b2b2b"
+                    normalColor: root.isDeck1 ? "#f7c86a" : "#ada9ff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: root.isDeck1 ? qsTr("GO TO DECK 2") : qsTr("GO TO DECK 1")
@@ -110,9 +110,9 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 110
-                    activeColor: "#7c8cff"
-                    backgroundColor: root.activeTab === 0 ? "#1e3a47" : "#1a1e28"
-                    normalColor: root.activeTab === 0 ? "#7c8cff" : "#8a91a3"
+                    activeColor: "#837cff"
+                    backgroundColor: root.activeTab === 0 ? "#333333" : "#212121"
+                    normalColor: root.activeTab === 0 ? "#837cff" : "#969696"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("LOCAL MUSIC")
@@ -123,8 +123,8 @@ Popup {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 120
                     activeColor: "#00ffff"
-                    backgroundColor: root.activeTab === 1 ? "#123a2a" : "#1a1e28"
-                    normalColor: root.activeTab === 1 ? "#00ffff" : "#a9b3ff"
+                    backgroundColor: root.activeTab === 1 ? "#123a2a" : "#212121"
+                    normalColor: root.activeTab === 1 ? "#00ffff" : "#ada9ff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("STREAMING HUB")
@@ -167,7 +167,7 @@ Popup {
 
                         Text {
                             text: qsTr("Local track collection")
-                            color: "#b4b9c7"
+                            color: "#bebebe"
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
                         }
@@ -177,9 +177,9 @@ Popup {
                         Skin.Button {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 210
-                            activeColor: "#7c8cff"
-                            backgroundColor: "#1c2b38"
-                            normalColor: "#a9b3ff"
+                            activeColor: "#837cff"
+                            backgroundColor: "#2a2a2a"
+                            normalColor: "#ada9ff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: qsTr("Open full library view")

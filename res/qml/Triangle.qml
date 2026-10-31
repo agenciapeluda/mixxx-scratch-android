@@ -7,7 +7,7 @@ Canvas {
 
     // Points to the right, else to the left
     property bool pointsRight: true
-    property color color: "#c0c4ca"
+    property color color: "#c5c5c5"
 
     implicitHeight: 10
     implicitWidth: 10

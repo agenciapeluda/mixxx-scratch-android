@@ -23,7 +23,7 @@ Item {
                 required property string modelData
 
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.mode === index ? Style.accent : Style.textSecondary
+                color: root.mode === index ? Style.accentText : Style.textSecondary
                 font.family: Style.font
                 font.pixelSize: 17
                 text: modelData

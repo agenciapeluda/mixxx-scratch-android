@@ -331,7 +331,7 @@ Rectangle {
     }
 
     clip: true
-    color: '#0E0E0E'
+    color: '#0e0e0e'
     radius: 5
 
     onModeChanged: {

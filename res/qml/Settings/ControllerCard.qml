@@ -270,7 +270,7 @@ Item {
             anchors.leftMargin: 22
             anchors.rightMargin: root.focused ? undefined : 10
             anchors.topMargin: root.focused ? undefined : 17
-            color: '#FFFFFF'
+            color: '#ffffff'
             font.pixelSize: 10
             font.weight: Font.Light
             text: root.editable ? 'User device' : `Supported since ${modelData.sinceVersion}`

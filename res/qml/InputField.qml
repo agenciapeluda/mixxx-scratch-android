@@ -32,7 +32,7 @@ FocusScope {
         samples: 24
         horizontalOffset: 0
         verticalOffset: 0
-        color: "#2a2f3d"
+        color: "#343434"
     }
     TextInput {
         id: inputField
@@ -42,7 +42,7 @@ FocusScope {
         anchors.margins: 7
         focus: true
         clip: true
-        color: acceptableInput ? "#FFFFFF" : "#5a2a30"
+        color: acceptableInput ? "#ffffff" : "#5a2a30"
         horizontalAlignment: TextInput.AlignLeft
     }
 }

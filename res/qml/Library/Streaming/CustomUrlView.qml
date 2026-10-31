@@ -1,4 +1,5 @@
 import QtQuick
+import "../../Cutlab" as Cutlab
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
@@ -51,7 +52,7 @@ Item {
                 spacing: 10
 
                 Text {
-                    text: qsTr("DIRECT URL / WEB STREAMING")
+                    text: qsTr("Link to a file or a web stream")
                     color: "#f5b544"
                     font.weight: Font.DemiBold
                     font.pixelSize: 14
@@ -71,8 +72,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 110
-            color: "#16181f"
-            border.color: "#232836"
+            color: "#1a1a1a"
+            border.color: "#2c2c2c"
             border.width: 1
             radius: 6
 
@@ -97,9 +98,9 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 12
                     background: Rectangle {
-                        color: "#202533"
+                        color: "#2a2a2a"
                         radius: 4
-                        border.color: customUrlInput.activeFocus ? "#f5b544" : "#323b50"
+                        border.color: customUrlInput.activeFocus ? "#f5b544" : "#414141"
                         border.width: 1
                     }
                 }
@@ -116,21 +117,17 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 11
                         background: Rectangle {
-                            color: "#1c202a"
+                            color: "#232323"
                             radius: 3
-                            border.color: "#232836"
+                            border.color: "#2c2c2c"
                         }
                     }
 
-                    Skin.Button {
+                    Cutlab.CLButton {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 140
-                        activeColor: "#8aa8ff"
-                        backgroundColor: "#3d63e0"
-                        normalColor: "#ffffff"
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 11
-                        arrowLeft: true
+                        fillColor: Cutlab.Style.button
+                        fontSize: 13
                         text: qsTr("Load into DECK 1")
 
                         onClicked: {
@@ -149,15 +146,11 @@ Item {
                         }
                     }
 
-                    Skin.Button {
+                    Cutlab.CLButton {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 140
-                        activeColor: "#f7c86a"
-                        backgroundColor: "#e2622a"
-                        normalColor: "#ffffff"
-                        font.weight: Font.DemiBold
-                        font.pixelSize: 11
-                        arrowRight: true
+                        fillColor: Cutlab.Style.button
+                        fontSize: 13
                         text: qsTr("Load into DECK 2")
 
                         onClicked: {

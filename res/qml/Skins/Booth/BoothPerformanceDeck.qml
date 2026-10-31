@@ -19,7 +19,7 @@ Rectangle {
     property bool compact: false
     // hotcue, beatjump or beatloop
     property string padMode: "hotcue"
-    readonly property color deckColor: deckNumber === 1 ? "#4f7cff" : "#ff7a3d"
+    readonly property color deckColor: deckNumber === 1 ? "#584fff" : "#ff7a3d"
     readonly property bool loaded: trackLoadedControl.value > 0
     readonly property real unit: Math.max(9, Math.min(height / 14, width / 34))
 
@@ -31,9 +31,9 @@ Rectangle {
         return root.pad(Math.floor(total / 60), 2) + ":" + root.pad(total % 60, 2);
     }
 
-    border.color: "#1c202a"
+    border.color: "#232323"
     border.width: 1
-    color: "#0b0d12"
+    color: "#0e0e0e"
 
     Mixxx.ControlProxy {
         id: trackLoadedControl
@@ -137,14 +137,14 @@ Rectangle {
         signal released
         signal pressAndHold
 
-        border.color: on ? onColor : "#2a2f3d"
+        border.color: on ? onColor : "#343434"
         border.width: 1
-        color: buttonTap.pressed ? "#1c202a" : (on ? Qt.alpha(onColor, 0.18) : "#0f1117")
+        color: buttonTap.pressed ? "#232323" : (on ? Qt.alpha(onColor, 0.18) : "#131313")
         radius: 2
 
         Text {
             anchors.fill: parent
-            color: smallButton.on ? smallButton.onColor : "#e8eaf0"
+            color: smallButton.on ? smallButton.onColor : "#ececec"
             fontSizeMode: Text.Fit
             font.weight: Font.DemiBold
             font.pixelSize: Math.round(root.unit * 1.05)
@@ -190,11 +190,11 @@ Rectangle {
                 return false;
             }
         }
-        readonly property color litColor: root.padMode === "hotcue" ? hotcueColor : "#2f9bff"
+        readonly property color litColor: root.padMode === "hotcue" ? hotcueColor : "#392fff"
 
-        border.color: padTap.pressed ? "#ffffff" : (lit ? litColor : "#1c202a")
+        border.color: padTap.pressed ? "#ffffff" : (lit ? litColor : "#232323")
         border.width: 1
-        color: padTap.pressed ? "#1c202a" : "#0f1117"
+        color: padTap.pressed ? "#232323" : "#131313"
 
         Mixxx.ControlProxy {
             id: hotcueStatus
@@ -241,7 +241,7 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                color: padItem.hotcueSet ? "#000000" : "#5a6072"
+                color: padItem.hotcueSet ? "#000000" : "#666666"
                 font.weight: Font.DemiBold
                 font.pixelSize: Math.round(letter.height * 0.75)
                 text: String.fromCharCode(65 + padItem.index)
@@ -252,7 +252,7 @@ Rectangle {
             anchors.leftMargin: root.padMode === "hotcue" ? 5 : 0
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
-            color: padItem.lit ? "#ffffff" : "#8a91a3"
+            color: padItem.lit ? "#ffffff" : "#969696"
             elide: Text.ElideRight
             font.pixelSize: Math.round(root.unit * 1.05)
             horizontalAlignment: root.padMode === "hotcue" ? Text.AlignLeft : Text.AlignHCenter
@@ -384,12 +384,12 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Math.round(root.unit * 1.8)
-                border.color: "#1c202a"
-                color: modeTap.pressed ? "#1c202a" : "#0f1117"
+                border.color: "#232323"
+                color: modeTap.pressed ? "#232323" : "#131313"
 
                 Text {
                     anchors.centerIn: parent
-                    color: "#e8eaf0"
+                    color: "#ececec"
                     font.pixelSize: Math.round(root.unit * 1.0)
                     text: {
                         switch (root.padMode) {
@@ -465,7 +465,7 @@ Rectangle {
 
             Text {
                 Layout.fillWidth: true
-                color: parent.looping ? "#ff7a3d" : "#8a8e96"
+                color: parent.looping ? "#ff7a3d" : "#909090"
                 font.weight: Font.DemiBold
                 font.letterSpacing: 1
                 font.pixelSize: Math.round(root.unit * 0.95)
@@ -476,9 +476,9 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Math.round(root.unit * 3.8)
-                border.color: parent.looping ? "#ff7a3d" : "#5a6072"
+                border.color: parent.looping ? "#ff7a3d" : "#666666"
                 border.width: parent.looping ? 2 : 1
-                color: loopTap.pressed ? "#5a2a08" : (parent.looping ? "#ff7a3d" : "#0f1117")
+                color: loopTap.pressed ? "#5a2a08" : (parent.looping ? "#ff7a3d" : "#131313")
                 radius: 3
 
                 Column {
@@ -497,7 +497,7 @@ Rectangle {
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: loopEnabledControl.value > 0 ? "#000000" : "#8a8e96"
+                        color: loopEnabledControl.value > 0 ? "#000000" : "#909090"
                         font.weight: Font.DemiBold
                         font.pixelSize: Math.round(root.unit * 0.8)
                         text: loopEnabledControl.value > 0 ? qsTr("EXIT") : qsTr("BEATS")
@@ -594,7 +594,7 @@ Rectangle {
                 Layout.preferredHeight: Math.round(root.unit * 2.2)
                 label: syncLeaderControl.value > 0 ? qsTr("MASTER") : "SYNC"
                 on: syncControl.value > 0 || syncLeaderControl.value > 0
-                onColor: syncLeaderControl.value > 0 ? "#ff7a3d" : "#2f9bff"
+                onColor: syncLeaderControl.value > 0 ? "#ff7a3d" : "#392fff"
                 onPressAndHold: syncLeaderControl.value = syncLeaderControl.value > 0 ? 0 : 1
                 onPressed: syncControl.value = syncControl.value > 0 ? 0 : 1
             }
@@ -606,7 +606,7 @@ Rectangle {
                 Layout.preferredWidth: parent.buttonSize
                 border.color: cueIndicatorControl.value > 0 ? "#ff9a1f" : "#8a5a20"
                 border.width: 2
-                color: cueTap.pressed ? "#3a2408" : "#0f1117"
+                color: cueTap.pressed ? "#3a2408" : "#131313"
                 radius: width / 2
 
                 Text {
@@ -628,7 +628,7 @@ Rectangle {
                 Layout.preferredWidth: parent.buttonSize
                 border.color: playControl.value > 0 ? "#3ad33a" : "#2a6a2a"
                 border.width: 2
-                color: playTap.pressed ? "#0c2a0c" : "#0f1117"
+                color: playTap.pressed ? "#0c2a0c" : "#131313"
                 radius: width / 2
 
                 // Drawn, as the fonts of some phones lack the pause sign and
@@ -685,7 +685,7 @@ Rectangle {
                 id: platter
 
                 anchors.centerIn: parent
-                border.color: "#2a2f3d"
+                border.color: "#343434"
                 border.width: Math.max(2, Math.round(jogArea.size * 0.04))
                 color: "#000000"
                 height: jogArea.size
@@ -695,7 +695,7 @@ Rectangle {
                 Rectangle {
                     anchors.fill: parent
                     anchors.margins: Math.round(jogArea.size * 0.1)
-                    border.color: "#161922"
+                    border.color: "#1c1c1c"
                     border.width: 1
                     color: "transparent"
                     radius: width / 2
@@ -744,7 +744,7 @@ Rectangle {
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        color: "#8a91a3"
+                        color: "#969696"
                         font.pixelSize: Math.round(jogArea.size * 0.075)
                         text: {
                             const percent = (rateRatioControl.value - 1) * 100;

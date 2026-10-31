@@ -8,10 +8,10 @@ MenuItem {
     property color disabledTextColor: "#494949"
     property string fontFamily: "Open Sans"
     property int fontPixelSize: 14
-    property color hoverColor: "#2c454f"
+    property color hoverColor: "#3e3e3e"
     property color hoverTextColor: "#ffffff"
     property url submenuArrowSource
-    property color textColor: "#c2b3a5"
+    property color textColor: "#b3b3b3"
 
     implicitHeight: visible ? 22 : 0
     implicitWidth: Math.max(160, contentItem.implicitWidth + leftPadding + rightPadding)

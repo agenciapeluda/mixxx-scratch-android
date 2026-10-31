@@ -444,9 +444,9 @@ Category {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: presetsCol.implicitHeight + 28
-                    color: "#181f2a"
+                    color: "#212121"
                     radius: 12
-                    border.color: "#283b54"
+                    border.color: "#2a2854"
                     border.width: 1
 
                     ColumnLayout {
@@ -463,13 +463,13 @@ Category {
                                 text: qsTr("Quick audio output profiles")
                                 font.pixelSize: 15
                                 font.weight: Font.DemiBold
-                                color: "#8aa8ff"
+                                color: "#908aff"
                             }
                             Item { Layout.fillWidth: true }
                             Text {
                                 text: qsTr("Tap to configure automatically")
                                 font.pixelSize: 11
-                                color: "#8a91a3"
+                                color: "#969696"
                             }
                         }
 
@@ -486,8 +486,8 @@ Category {
                                 Layout.preferredHeight: Math.max(96, presetCol1.implicitHeight + 20)
                                 Layout.fillHeight: true
                                 radius: 10
-                                color: root.activePreset === "single" ? "#1e3a5f" : (p1Mouse.containsMouse ? "#212b38" : "#1a222c")
-                                border.color: root.activePreset === "single" ? "#42a5f5" : "#324050"
+                                color: root.activePreset === "single" ? "#25225b" : (p1Mouse.containsMouse ? "#2c2c2c" : "#232323")
+                                border.color: root.activePreset === "single" ? "#4b42f5" : "#414141"
                                 border.width: root.activePreset === "single" ? 2 : 1
 
                                 ColumnLayout {
@@ -505,19 +505,19 @@ Category {
                                             text: qsTr("Phone / Bluetooth")
                                             font.pixelSize: 13
                                             font.weight: Font.DemiBold
-                                            color: root.activePreset === "single" ? "#ffffff" : "#d5d8e0"
+                                            color: root.activePreset === "single" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
                                             text: root.activePreset === "single" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
-                                            color: "#8aa8ff"
+                                            color: "#908aff"
                                         }
                                     }
                                     Text {
                                         text: qsTr("Single stereo output. All sound goes to the tablet speakers or Bluetooth headphones.")
                                         font.pixelSize: 11
-                                        color: "#8a91a3"
+                                        color: "#969696"
                                         wrapMode: Text.WordWrap
                                         Layout.fillWidth: true
                                     }
@@ -538,8 +538,8 @@ Category {
                                 Layout.preferredHeight: Math.max(96, presetCol2.implicitHeight + 20)
                                 Layout.fillHeight: true
                                 radius: 10
-                                color: root.activePreset === "splitter" ? "#3e2723" : (p2Mouse.containsMouse ? "#2d221f" : "#1e1a19")
-                                border.color: root.activePreset === "splitter" ? "#ff7043" : "#4e342e"
+                                color: root.activePreset === "splitter" ? "#303030" : (p2Mouse.containsMouse ? "#262626" : "#1c1c1c")
+                                border.color: root.activePreset === "splitter" ? "#ff7043" : "#3e3e3e"
                                 border.width: root.activePreset === "splitter" ? 2 : 1
 
                                 ColumnLayout {
@@ -557,7 +557,7 @@ Category {
                                             text: qsTr("DJ splitter cable")
                                             font.pixelSize: 13
                                             font.weight: Font.DemiBold
-                                            color: root.activePreset === "splitter" ? "#ffffff" : "#d5d8e0"
+                                            color: root.activePreset === "splitter" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
                                             text: root.activePreset === "splitter" ? qsTr("✓ ACTIVE") : ""
@@ -569,7 +569,7 @@ Category {
                                     Text {
                                         text: qsTr("Splitter cable on the jack: left channel = CUE (your headphones) and right channel = Main (speaker), both in mono.")
                                         font.pixelSize: 11
-                                        color: "#b4b9c7"
+                                        color: "#bebebe"
                                         wrapMode: Text.WordWrap
                                         Layout.fillWidth: true
                                     }
@@ -590,8 +590,8 @@ Category {
                                 Layout.preferredHeight: Math.max(96, presetCol3.implicitHeight + 20)
                                 Layout.fillHeight: true
                                 radius: 10
-                                color: root.activePreset === "controller" ? "#1b3a24" : (p3Mouse.containsMouse ? "#1c2b1e" : "#172218")
-                                border.color: root.activePreset === "controller" ? "#66bb6a" : "#2e4c34"
+                                color: root.activePreset === "controller" ? "#1b3a24" : (p3Mouse.containsMouse ? "#242424" : "#1c1c1c")
+                                border.color: root.activePreset === "controller" ? "#66bb6a" : "#3d3d3d"
                                 border.width: root.activePreset === "controller" ? 2 : 1
 
                                 ColumnLayout {
@@ -609,7 +609,7 @@ Category {
                                             text: qsTr("DJ controller (RCA + headphones)")
                                             font.pixelSize: 13
                                             font.weight: Font.DemiBold
-                                            color: root.activePreset === "controller" ? "#ffffff" : "#d5d8e0"
+                                            color: root.activePreset === "controller" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
                                             text: root.activePreset === "controller" ? qsTr("✓ ACTIVE") : ""
@@ -642,8 +642,8 @@ Category {
                                 Layout.preferredHeight: Math.max(96, presetCol4.implicitHeight + 20)
                                 Layout.fillHeight: true
                                 radius: 10
-                                color: root.activePreset === "hybrid" ? "#311b92" : (p4Mouse.containsMouse ? "#211a36" : "#191624")
-                                border.color: root.activePreset === "hybrid" ? "#b388ff" : "#4527a0"
+                                color: root.activePreset === "hybrid" ? "#211b92" : (p4Mouse.containsMouse ? "#282828" : "#1d1d1d")
+                                border.color: root.activePreset === "hybrid" ? "#8e88ff" : "#2d27a0"
                                 border.width: root.activePreset === "hybrid" ? 2 : 1
 
                                 ColumnLayout {
@@ -661,19 +661,19 @@ Category {
                                             text: qsTr("Tablet + controller headphones (hybrid)")
                                             font.pixelSize: 13
                                             font.weight: Font.DemiBold
-                                            color: root.activePreset === "hybrid" ? "#ffffff" : "#d5d8e0"
+                                            color: root.activePreset === "hybrid" ? "#ffffff" : "#dbdbdb"
                                         }
                                         Text {
                                             text: root.activePreset === "hybrid" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
-                                            color: "#b388ff"
+                                            color: "#8e88ff"
                                         }
                                     }
                                     Text {
                                         text: qsTr("Main output through the tablet speakers and CUE pre-listening through the headphones (channels 3-4) of the controller.")
                                         font.pixelSize: 11
-                                        color: "#d1c4e9"
+                                        color: "#c2c0ed"
                                         wrapMode: Text.WordWrap
                                         Layout.fillWidth: true
                                     }
@@ -695,7 +695,7 @@ Category {
                             Layout.preferredHeight: presetMessageText.implicitHeight + 16
                             radius: 8
                             visible: root.presetMessage.length > 0
-                            color: root.presetError ? "#3b1d1d" : "#16261c"
+                            color: root.presetError ? "#2c2c2c" : "#1e1e1e"
                             border.color: root.presetError ? "#ef5350" : "#66bb6a"
                             border.width: 1
 
@@ -717,8 +717,8 @@ Category {
                             Layout.preferredHeight: 38
                             radius: 8
                             visible: root.activePreset === "custom"
-                            color: "#1c2130"
-                            border.color: "#38bdf8"
+                            color: "#262626"
+                            border.color: "#4238f8"
                             border.width: 1
 
                             RowLayout {
@@ -731,13 +731,13 @@ Category {
                                     text: qsTr("Custom routing active (virtual cables in the matrix)")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
-                                    color: "#38bdf8"
+                                    color: "#4238f8"
                                 }
                                 Item { Layout.fillWidth: true }
                                 Text {
                                     text: qsTr("Manual configuration in use")
                                     font.pixelSize: 11
-                                    color: "#94a3b8"
+                                    color: "#a6a6a6"
                                 }
                             }
                         }
@@ -747,8 +747,8 @@ Category {
                             Layout.fillWidth: true
                             Layout.preferredHeight: audioExplCol.implicitHeight + 16
                             radius: 8
-                            color: "#141c24"
-                            border.color: "#213144"
+                            color: "#1c1c1c"
+                            border.color: "#333333"
                             border.width: 1
 
                             ColumnLayout {
@@ -761,13 +761,13 @@ Category {
                                     text: qsTr("How do I connect my speakers and headphones?")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
-                                    color: "#90caf9"
+                                    color: "#9590f9"
                                 }
 
                                 Text {
                                     text: qsTr("• <b>Main output (1-2)</b>: sound for the audience. Connect your speakers to the rear RCA outputs of your controller.<br>• <b>CUE pre-listening (3-4)</b>: private sound. Connect your headphones to the headphone jack of the controller.<br>• <b>Hybrid mode</b>: no external speakers? Choose <i>'Tablet + controller headphones'</i> so the music plays through the tablet and the pre-listening through your headphones.<br>• <b>Important</b>: after choosing your profile, press the blue <b>'Apply and save outputs'</b> button at the bottom.")
                                     font.pixelSize: 11
-                                    color: "#b4b9c7"
+                                    color: "#bebebe"
                                     wrapMode: Text.WordWrap
                                     Layout.fillWidth: true
                                 }
@@ -905,7 +905,7 @@ Category {
                                         return qsTr("Safe mode: maximum stability if you hear crackles or the phone is slow.");
                                     }
                                     font.pixelSize: 11
-                                    color: audioBuffer.currentIndex <= 1 ? "#8aa8ff" : (audioBuffer.currentIndex <= 3 ? "#81c784" : "#f7c86a")
+                                    color: audioBuffer.currentIndex <= 1 ? "#908aff" : (audioBuffer.currentIndex <= 3 ? "#81c784" : "#f7c86a")
                                 }
                             }
 
@@ -1037,7 +1037,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     wrapMode: Text.WordWrap
-                                    color: "#8a91a3"
+                                    color: "#969696"
                                     font.pixelSize: 11
                                     text: qsTr("Mixxx drives the USB sound card directly when Android cannot use all of its channels (e.g. the headphones of a DJ controller). Changes take effect after restarting Mixxx.")
                                 }
@@ -1084,7 +1084,7 @@ Category {
                                 text: qsTr("Advanced routing matrix (virtual cables)")
                                 font.pixelSize: 14
                                 font.weight: Font.DemiBold
-                                color: "#b4b9c7"
+                                color: "#bebebe"
                             }
                             Item { Layout.fillWidth: true }
 
@@ -1092,8 +1092,8 @@ Category {
                                 width: 150
                                 height: 28
                                 radius: 6
-                                color: toggleRouterMouse.containsMouse ? "#2e3b4e" : "#222c3a"
-                                border.color: "#3f51b5"
+                                color: toggleRouterMouse.containsMouse ? "#3e3e3e" : "#2e2e2e"
+                                border.color: "#3e37bd"
                                 border.width: 1
 
                                 Text {
@@ -1101,7 +1101,7 @@ Category {
                                     text: root.showAdvancedRouter ? qsTr("Hide matrix") : qsTr("Show full matrix")
                                     font.pixelSize: 11
                                     font.weight: Font.DemiBold
-                                    color: "#90caf9"
+                                    color: "#9590f9"
                                 }
 
                                 MouseArea {
@@ -1254,8 +1254,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#12151c"
-        border.color: "#283548"
+        color: "#171717"
+        border.color: "#383838"
         border.width: 1
         radius: 8
 
@@ -1270,7 +1270,7 @@ Category {
                 Layout.preferredHeight: 30
                 Layout.preferredWidth: statusText.implicitWidth + 20
                 radius: 15
-                color: root.hasChanges ? "#3e2723" : "#1b5e20"
+                color: root.hasChanges ? "#303030" : "#1b5e20"
                 border.color: root.hasChanges ? "#ff9800" : "#4caf50"
                 border.width: 1
 
@@ -1298,7 +1298,7 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 130
                 activeColor: "#ff5d6c"
-                backgroundColor: "#2a1b1b"
+                backgroundColor: "#222222"
                 normalColor: "#ff8f99"
                 font.weight: Font.DemiBold
                 font.pixelSize: 12
@@ -1314,8 +1314,8 @@ Category {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 230
                 radius: 8
-                color: root.committing ? "#3d63e0" : (root.hasChanges ? "#22b868" : (applyMouse.containsMouse ? "#2979ff" : "#4f7cff"))
-                border.color: root.hasChanges ? "#b9f6ca" : "#8aa8ff"
+                color: root.committing ? "#453de0" : (root.hasChanges ? "#22b868" : (applyMouse.containsMouse ? "#3429ff" : "#584fff"))
+                border.color: root.hasChanges ? "#b9f6ca" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {

@@ -8,21 +8,21 @@ import QtQuick.Controls
 Menu {
     id: root
 
-    property color backgroundColor: "#151517"
-    property color borderColor: "#262a35"
+    property color backgroundColor: "#161616"
+    property color borderColor: "#2e2e2e"
     property url checkedSource
     property color disabledTextColor: "#494949"
     property string fontFamily: "Open Sans"
     property int fontPixelSize: 14
-    property color hoverColor: "#2c454f"
+    property color hoverColor: "#3e3e3e"
     property color hoverTextColor: "#ffffff"
-    property color separatorBottomColor: "#262a35"
+    property color separatorBottomColor: "#2e2e2e"
     property color separatorTopColor: "#000000"
     required property Mixxx.EffectSlotProxy slot1
     required property Mixxx.EffectSlotProxy slot2
     required property Mixxx.EffectSlotProxy slot3
     property url submenuArrowSource
-    property color textColor: "#c2b3a5"
+    property color textColor: "#b3b3b3"
     required property Mixxx.EffectUnitProxy unit
 
     bottomPadding: 5

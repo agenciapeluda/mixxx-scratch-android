@@ -50,12 +50,12 @@ Category {
                         text: qsTr("STEMS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
                     Text {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#d5d8e0"
+                        color: "#dbdbdb"
                         font.pixelSize: 11
                         text: qsTr("Splits the tracks you choose into drums, bass, vocals and the rest, so that you can mute or mix each part on the deck. In the library, select a track or open a list and tap STEMS. The stems are saved next to each track, in a hidden .stems folder, and they are used whenever you load the track. If its folder can't be written, they stay in the app.")
                     }
@@ -80,12 +80,12 @@ Category {
                         text: qsTr("MODELS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
                     Text {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#8a91a3"
+                        color: "#969696"
                         font.pixelSize: 11
                         text: qsTr("Download the models you want to use. The times are for a 5 minute track and depend a lot on the device: tap MEASURE to know yours.")
                     }
@@ -129,7 +129,7 @@ Category {
                         text: qsTr("OPTIONS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
 
                     ChoiceRow {
@@ -191,7 +191,7 @@ Category {
                         text: qsTr("QUEUE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
 
                     Skin.StemsQueue {
@@ -211,7 +211,7 @@ Category {
                         text: qsTr("STORAGE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
 
                     RowLayout {
@@ -225,7 +225,7 @@ Category {
 
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            color: "#d5d8e0"
+                            color: "#dbdbdb"
                             font.pixelSize: 11
                             text: qsTr("Stems kept in the app (tracks of folders that can't be written): %1 MB. The stems next to your tracks are deleted from the library, with STEMS.").arg(storedMb)
 
@@ -263,9 +263,9 @@ Category {
 
         Layout.fillWidth: true
         implicitHeight: (holder.children.length > 0 ? holder.children[0].implicitHeight : 0) + 24
-        color: "#12151c"
+        color: "#171717"
         radius: 8
-        border.color: "#232836"
+        border.color: "#2c2c2c"
         border.width: 1
 
         Item {
@@ -303,7 +303,7 @@ Category {
                 Layout.fillWidth: true
                 visible: choiceRow.hint !== ""
                 text: choiceRow.hint
-                color: "#6e7587"
+                color: "#7a7a7a"
                 font.pixelSize: 10
                 wrapMode: Text.WordWrap
             }
@@ -318,8 +318,8 @@ Category {
                 implicitWidth: Math.max(80, choiceMetrics.width + 24)
                 implicitHeight: 32
                 activeColor: "#ffffff"
-                backgroundColor: choiceRow.value === modelData.value ? "#1e3a5f" : "#1a1e28"
-                normalColor: choiceRow.value === modelData.value ? "#ffffff" : "#8a91a3"
+                backgroundColor: choiceRow.value === modelData.value ? "#25225b" : "#212121"
+                normalColor: choiceRow.value === modelData.value ? "#ffffff" : "#969696"
                 highlight: choiceRow.value === modelData.value
                 font.weight: Font.DemiBold
                 font.pixelSize: 11
@@ -352,8 +352,8 @@ Category {
         Layout.fillWidth: true
         implicitHeight: modelLayout.implicitHeight + 16
         radius: 6
-        color: "#1a1e27"
-        border.color: installed ? "#2e7d32" : "#262c38"
+        color: "#202020"
+        border.color: installed ? "#2e7d32" : "#2f2f2f"
         border.width: 1
 
         Connections {
@@ -384,14 +384,14 @@ Category {
                 Text {
                     Layout.fillWidth: true
                     text: modelRow.description
-                    color: "#d5d8e0"
+                    color: "#dbdbdb"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
                 Text {
                     Layout.fillWidth: true
                     text: modelRow.ranges
-                    color: "#8a91a3"
+                    color: "#969696"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
@@ -399,7 +399,7 @@ Category {
                     Layout.fillWidth: true
                     visible: modelRow.speed > 0
                     text: qsTr("This device: ~%1 per 5 minute track").arg(StemsText.trackTime(modelRow.speed))
-                    color: "#4fc3f7"
+                    color: "#574ff7"
                     font.pixelSize: 10
                     font.weight: Font.DemiBold
                 }
@@ -415,7 +415,7 @@ Category {
                     Layout.fillWidth: true
                     visible: modelRow.downloading
                     text: qsTr("Downloading… %1%").arg(Math.round(Mixxx.Stems.downloadProgress * 100))
-                    color: "#4fc3f7"
+                    color: "#574ff7"
                     font.pixelSize: 10
                 }
             }
@@ -426,7 +426,7 @@ Category {
                 implicitHeight: 34
                 enabled: !Mixxx.Stems.benchmarking && Mixxx.Stems.pendingCount === 0
                 activeColor: "#ffffff"
-                backgroundColor: "#2e3440"
+                backgroundColor: "#373737"
                 normalColor: "#ffffff"
                 font.weight: Font.DemiBold
                 text: Mixxx.Stems.benchmarking ? qsTr("MEASURING…") : qsTr("MEASURE")

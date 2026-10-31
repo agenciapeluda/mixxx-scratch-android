@@ -1,4 +1,5 @@
 import QtQuick
+import "../../Cutlab" as Cutlab
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
@@ -104,8 +105,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#1c202a"
-            border.color: "#232836"
+            color: "#232323"
+            border.color: "#2c2c2c"
             border.width: 1
 
             RowLayout {
@@ -115,11 +116,11 @@ Item {
                 spacing: 8
 
                 Text {
-                    text: "NAVIDROME / SUBSONIC"
+                    text: "Navidrome / Subsonic"
                     font.weight: Font.DemiBold
                     font.pixelSize: 13
                     font.letterSpacing: 1
-                    color: "#7c8cff"
+                    color: "#837cff"
                 }
 
                 Rectangle {
@@ -146,18 +147,15 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#b4b9c7"
+                    color: "#bebebe"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 280
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 100
-                    activeColor: "#7c8cff"
-                    backgroundColor: root.showSettings ? "#0097a7" : "#2a3040"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    highlighted: root.showSettings
                     text: root.showSettings ? qsTr("▲ Hide") : qsTr("Settings")
                     onClicked: root.showSettings = !root.showSettings
                 }
@@ -172,8 +170,8 @@ Item {
             implicitHeight: 90
             visible: root.showSettings
             clip: true
-            color: "#141720"
-            border.color: "#262c3a"
+            color: "#1a1a1a"
+            border.color: "#303030"
             border.width: 1
 
             Behavior on Layout.preferredHeight {
@@ -198,8 +196,8 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#1f2430"
-                            border.color: serverUrlField.activeFocus ? "#7c8cff" : "#2a2f3d"
+                            color: "#282828"
+                            border.color: serverUrlField.activeFocus ? "#837cff" : "#343434"
                             border.width: 1
                             radius: 4
                         }
@@ -215,8 +213,8 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#1f2430"
-                            border.color: userField.activeFocus ? "#7c8cff" : "#2a2f3d"
+                            color: "#282828"
+                            border.color: userField.activeFocus ? "#837cff" : "#343434"
                             border.width: 1
                             radius: 4
                         }
@@ -233,21 +231,18 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#1f2430"
-                            border.color: passField.activeFocus ? "#7c8cff" : "#2a2f3d"
+                            color: "#282828"
+                            border.color: passField.activeFocus ? "#837cff" : "#343434"
                             border.width: 1
                             radius: 4
                         }
                         onEditingFinished: Mixxx.StreamingManager.subsonicPassword = text
                     }
 
-                    Skin.Button {
+                    Cutlab.CLButton {
                         Layout.preferredHeight: 34
                         Layout.preferredWidth: 110
-                        activeColor: "#2bd67b"
-                        backgroundColor: "#00897b"
-                        normalColor: "#ffffff"
-                        font.weight: Font.DemiBold
+                        highlighted: true
                         text: root.isBusy ? qsTr("Connecting") : qsTr("✓ Connect")
                         enabled: !root.isBusy
                         onClicked: {
@@ -268,16 +263,15 @@ Item {
                     Text {
                         text: qsTr("Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.")
                         font.pixelSize: 11
-                        color: "#6e7587"
+                        color: "#7a7a7a"
                         Layout.fillWidth: true
                     }
 
-                    Skin.Button {
+                    Cutlab.CLButton {
                         Layout.preferredHeight: 26
                         Layout.preferredWidth: 140
-                        backgroundColor: "#262b36"
-                        normalColor: "#8a91a3"
-                        font.pixelSize: 10
+                        fillColor: Cutlab.Style.button
+                        fontSize: 13
                         text: qsTr("Clear cache")
                         onClicked: {
                             Mixxx.StreamingManager.clearCache();
@@ -292,8 +286,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#12151c"
-            border.color: "#232834"
+            color: "#171717"
+            border.color: "#2c2c2c"
             border.width: 1
 
             RowLayout {
@@ -301,13 +295,10 @@ Item {
                 anchors.margins: 5
                 spacing: 8
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 100
-                    activeColor: "#7c8cff"
-                    backgroundColor: root.activeMode === "search" ? "#006064" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    highlighted: root.activeMode === "search"
                     text: qsTr("Search")
                     onClicked: {
                         root.activeMode = "search";
@@ -318,13 +309,10 @@ Item {
                     }
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 105
-                    activeColor: "#7c8cff"
-                    backgroundColor: root.activeMode === "playlists" ? "#006064" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    highlighted: root.activeMode === "playlists"
                     text: qsTr("Playlists")
                     onClicked: {
                         root.isBusy = true;
@@ -341,8 +329,8 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 13
                     background: Rectangle {
-                        color: "#212632"
-                        border.color: searchInput.activeFocus ? "#7c8cff" : "#2e3646"
+                        color: "#2a2a2a"
+                        border.color: searchInput.activeFocus ? "#837cff" : "#3a3a3a"
                         border.width: 1
                         radius: 4
                     }
@@ -355,12 +343,12 @@ Item {
                     }
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 34
                     Layout.preferredWidth: 40
-                    backgroundColor: "#2a3140"
-                    normalColor: "#ffffff"
-                    text: ""
+                    fillColor: Cutlab.Style.button
+                    icon: "search"
+                    iconSize: 20
                     onClicked: searchInput.accepted()
                 }
             }
@@ -371,7 +359,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.activeMode === "playlist_tracks" ? 34 : 0
             visible: root.activeMode === "playlist_tracks"
-            color: "#1c2833"
+            color: "#282828"
             clip: true
 
             RowLayout {
@@ -379,22 +367,19 @@ Item {
                 anchors.margins: 4
                 spacing: 8
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.preferredHeight: 26
                     Layout.preferredWidth: 80
-                    backgroundColor: "#2e4053"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
-                    arrowLeft: true
+                    fillColor: Cutlab.Style.button
                     text: qsTr("Back")
                     onClicked: root.activeMode = "playlists"
                 }
 
                 Text {
-                    text: "" + root.currentPlaylistName
+                    text: root.currentPlaylistName
                     font.weight: Font.DemiBold
                     font.pixelSize: 13
-                    color: "#a9b3ff"
+                    color: "#ada9ff"
                     Layout.fillWidth: true
                 }
             }
@@ -422,7 +407,7 @@ Item {
                         implicitWidth: 10
                         implicitHeight: 40
                         radius: 5
-                        color: subScroll.pressed ? "#7c8cff" : "#4a5568"
+                        color: subScroll.pressed ? "#837cff" : "#595959"
                     }
                 }
 
@@ -430,8 +415,8 @@ Item {
                     id: trackDelegate
                     width: tracksList.width
                     height: 56
-                    color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#1a1e28"
+                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
+                    border.color: "#212121"
                     border.width: 1
 
                     readonly property var song: modelData
@@ -449,7 +434,7 @@ Item {
                             Layout.preferredWidth: 40
                             Layout.preferredHeight: 40
                             radius: 4
-                            color: "#262d3d"
+                            color: "#323232"
                             clip: true
 
                             Image {
@@ -489,7 +474,7 @@ Item {
                                 Text {
                                     text: song.artist + (song.album ? (" • " + song.album) : "")
                                     font.pixelSize: 11
-                                    color: "#8a91a3"
+                                    color: "#969696"
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -500,7 +485,7 @@ Item {
                         Rectangle {
                             Layout.preferredHeight: 18
                             Layout.preferredWidth: formatText.implicitWidth + 8
-                            color: "#1c2130"
+                            color: "#262626"
                             radius: 3
 
                             Text {
@@ -509,7 +494,7 @@ Item {
                                 text: (song.suffix ? song.suffix : "MP3") + (song.bitRate ? (" " + song.bitRate + "k") : "")
                                 font.pixelSize: 9
                                 font.weight: Font.DemiBold
-                                color: "#38bdf8"
+                                color: "#4238f8"
                             }
                         }
 
@@ -522,7 +507,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#6e7587"
+                            color: "#7a7a7a"
                         }
 
                         // Offline Cache Status Pill
@@ -531,7 +516,7 @@ Item {
                             Layout.preferredWidth: cacheStatusText.implicitWidth + 10
                             radius: 10
                             color: song.isCached ? "#00e67622" : "#0288d122"
-                            border.color: song.isCached ? "#2bd67b" : "#0288d1"
+                            border.color: song.isCached ? "#2bd67b" : "#0c02d1"
                             border.width: 1
 
                             Text {
@@ -539,22 +524,18 @@ Item {
                                 anchors.centerIn: parent
                                 font.pixelSize: 9
                                 font.weight: Font.DemiBold
-                                color: song.isCached ? "#2bd67b" : "#0288d1"
+                                color: song.isCached ? "#2bd67b" : "#0c02d1"
                                 text: song.isCached ? qsTr("Ready") : qsTr("Cloud")
                             }
                         }
 
                         // Load Deck 1 Button
-                        Skin.Button {
+                        Cutlab.CLButton {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#8aa8ff"
-                            backgroundColor: "#3d63e0"
-                            normalColor: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                            arrowLeft: true
-                            text: "D1"
+                            fillColor: Cutlab.Style.button
+                            fontSize: 13
+                            text: "1"
                             enabled: !trackDelegate.isDownloading
                             onClicked: {
                                 Mixxx.StreamingManager.downloadAndLoad(
@@ -564,16 +545,12 @@ Item {
                         }
 
                         // Load Deck 2 Button
-                        Skin.Button {
+                        Cutlab.CLButton {
                             Layout.preferredHeight: 34
                             Layout.preferredWidth: 80
-                            activeColor: "#f7c86a"
-                            backgroundColor: "#e2622a"
-                            normalColor: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                            arrowRight: true
-                            text: "D2"
+                            fillColor: Cutlab.Style.button
+                            fontSize: 13
+                            text: "2"
                             enabled: !trackDelegate.isDownloading
                             onClicked: {
                                 Mixxx.StreamingManager.downloadAndLoad(
@@ -590,7 +567,7 @@ Item {
                         height: 3
                         visible: trackDelegate.isDownloading
                         width: parent.width * Math.max(0.05, trackDelegate.downloadProg)
-                        color: "#7c8cff"
+                        color: "#837cff"
                     }
                 }
 
@@ -611,7 +588,7 @@ Item {
                                 ? qsTr("Type an artist, title or album to search your server")
                                 : qsTr("Connect your Navidrome / Subsonic server in the settings above")
                             font.pixelSize: 13
-                            color: "#6e7587"
+                            color: "#7a7a7a"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -636,8 +613,8 @@ Item {
                 delegate: Rectangle {
                     width: playlistsList.width
                     height: 52
-                    color: index % 2 === 0 ? "#171a22" : "#13161e"
-                    border.color: "#1a1e28"
+                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
+                    border.color: "#212121"
                     border.width: 1
 
                     RowLayout {
@@ -667,19 +644,15 @@ Item {
                             Text {
                                 text: qsTr("%1 tracks").arg(modelData.songCount)
                                 font.pixelSize: 11
-                                color: "#8a91a3"
+                                color: "#969696"
                             }
                         }
 
-                        Skin.Button {
+                        Cutlab.CLButton {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 95
-                            activeColor: "#7c8cff"
-                            backgroundColor: "#006064"
-                            normalColor: "#ffffff"
-                            font.weight: Font.DemiBold
-                            font.pixelSize: 11
-                            arrowRight: true
+                            highlighted: true
+                            fontSize: 13
                             text: qsTr("Show tracks")
                             onClicked: {
                                 root.currentPlaylistName = modelData.name;
@@ -698,8 +671,8 @@ Item {
                 width: 140
                 height: 40
                 radius: 6
-                color: "#1e2433"
-                border.color: "#7c8cff"
+                color: "#282828"
+                border.color: "#837cff"
                 border.width: 1
                 visible: root.isBusy
 
@@ -710,7 +683,7 @@ Item {
                     Text {
                         text: ""
                         font.pixelSize: 16
-                        color: "#7c8cff"
+                        color: "#837cff"
                         RotationAnimation on rotation {
                             from: 0
                             to: 360

@@ -16,8 +16,12 @@
         <translation>Créditos</translation>
     </message>
     <message>
-        <source>Based on Mixxx (mixxx.org) and on the Android port by JaviLabarumDJ and Angelos Exarchos. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license.</source>
-        <translation>Basado en Mixxx (mixxx.org) y en el port para Android de JaviLabarumDJ y Angelos Exarchos. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT.</translation>
+        <source>Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.</source>
+        <translation>Cutlab está hecho por xhellvirax. Es un fork del port de Mixxx para Android de JaviLabarumDJ y Angelos Exarchos, que a su vez se basa en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografía de la interfaz: Roboto, licencia Apache 2.0.</translation>
+    </message>
+    <message>
+        <source>by xhellvirax</source>
+        <translation>por xhellvirax</translation>
     </message>
     <message>
         <source>About</source>
@@ -25,7 +29,7 @@
     </message>
     <message>
         <source>DJ / CREATOR</source>
-        <translation>DJ / CREADOR</translation>
+        <translation>DJ / creador</translation>
     </message>
     <message>
         <source>DJ, producer and app developer. Bringing a professional mixing experience and real touch control to Android devices.</source>
@@ -33,7 +37,7 @@
     </message>
     <message>
         <source>WHY THIS APP?</source>
-        <translation>¿POR QUÉ ESTA APLICACIÓN?</translation>
+        <translation>¿por qué esta aplicación?</translation>
     </message>
     <message>
         <source>For a long time, DJ software on phones has been held back by expensive subscriptions, unacceptable latency or unprofessional interfaces.
@@ -55,7 +59,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>FOLLOW ME ON SOCIAL MEDIA</source>
-        <translation>SÍGUEME EN MIS REDES SOCIALES</translation>
+        <translation>Sígueme en mis redes sociales</translation>
     </message>
     <message>
         <source>Tap any network to open the profile and see sessions, tips, news and updates:</source>
@@ -63,7 +67,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>THANKS</source>
-        <translation>GRACIAS</translation>
+        <translation>Gracias</translation>
     </message>
     <message>
         <source>Contributor of this app: switchable skins and the Booth skin, beatgrid editing and corrections, Rekordbox playlists, dates and beatgrids, library and drive backups, controller navigation, the DDJ-FLX4 options and SMART CFX, and fixes for the effects and Rekordbox.</source>
@@ -71,15 +75,15 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>UPDATES</source>
-        <translation>ACTUALIZACIONES</translation>
+        <translation>Actualizaciones</translation>
     </message>
     <message>
         <source>CHECK NOW</source>
-        <translation>BUSCAR AHORA</translation>
+        <translation>Buscar ahora</translation>
     </message>
     <message>
         <source>DOWNLOAD</source>
-        <translation>DESCARGAR</translation>
+        <translation>Descargar</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -87,7 +91,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>INSTALL</source>
-        <translation>INSTALAR</translation>
+        <translation>Instalar</translation>
     </message>
     <message>
         <source>Look for updates when Mixxx starts (once a day at most). The versions are read from the GitHub releases of Mixxx Android, and nothing is downloaded without asking.</source>
@@ -165,11 +169,11 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>INSTALL</source>
-        <translation>INSTALAR</translation>
+        <translation>Instalar</translation>
     </message>
     <message>
         <source>DOWNLOAD</source>
-        <translation>DESCARGAR</translation>
+        <translation>Descargar</translation>
     </message>
 </context>
 <context>
@@ -192,7 +196,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>INSTALL</source>
-        <translation>INSTALAR</translation>
+        <translation>Instalar</translation>
     </message>
 </context>
 <context>
@@ -415,19 +419,19 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>½ BEAT</source>
-        <translation>½ BEAT</translation>
+        <translation>½ Beat</translation>
     </message>
     <message>
         <source>SET DOWNBEAT HERE</source>
-        <translation>PRIMER TIEMPO AQUÍ</translation>
+        <translation>Primer tiempo aquí</translation>
     </message>
     <message>
         <source>EARLIER</source>
-        <translation>ANTES</translation>
+        <translation>Antes</translation>
     </message>
     <message>
         <source>LATER</source>
-        <translation>DESPUÉS</translation>
+        <translation>Después</translation>
     </message>
     <message>
         <source>BPM ÷2</source>
@@ -439,23 +443,23 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>MATCH OTHER DECK</source>
-        <translation>IGUALAR AL OTRO DECK</translation>
+        <translation>Igualar al otro deck</translation>
     </message>
     <message>
         <source>UNDO</source>
-        <translation>DESHACER</translation>
+        <translation>Deshacer</translation>
     </message>
     <message>
         <source>LOCK GRID</source>
-        <translation>BLOQUEAR REJILLA</translation>
+        <translation>Bloquear rejilla</translation>
     </message>
     <message>
         <source>RE-ANALYZE</source>
-        <translation>RE-ANALIZAR</translation>
+        <translation>Re-analizar</translation>
     </message>
     <message>
         <source>CLOSE</source>
-        <translation>CERRAR</translation>
+        <translation>Cerrar</translation>
     </message>
 <message>
         <source>Grid locked – tap to unlock</source>
@@ -463,57 +467,57 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>‹ EARLIER</source>
-        <translation>‹ ANTES</translation>
+        <translation>‹ Antes</translation>
     </message>
     <message>
         <source>LATER ›</source>
-        <translation>DESPUÉS ›</translation>
+        <translation>Después ›</translation>
     </message>
     <message>
         <source>LOCK GRID</source>
-        <translation>BLOQUEAR REJILLA</translation>
+        <translation>Bloquear rejilla</translation>
     </message>
     </context>
 <context>
     <name>BoothBeatFx</name>
     <message>
         <source>LEVEL/DEPTH %1%</source>
-        <translation>LEVEL/DEPTH %1%</translation>
+        <translation>Level/depth %1%</translation>
     </message>
     <message>
         <source>EFFECT AMOUNT %1%</source>
-        <translation>CANTIDAD DE EFECTO %1%</translation>
+        <translation>Cantidad de efecto %1%</translation>
     </message>
     <message>
         <source>CH SELECT</source>
-        <translation>CH SELECT</translation>
+        <translation>Ch select</translation>
     </message>
     <message>
         <source>MASTER</source>
-        <translation>MASTER</translation>
+        <translation>Master</translation>
     </message>
 </context>
 <context>
     <name>BoothBrowse</name>
     <message>
         <source>TRACK</source>
-        <translation>TRACK</translation>
+        <translation>Track</translation>
     </message>
     <message>
         <source>PLAYLIST</source>
-        <translation>PLAYLIST</translation>
+        <translation>Playlist</translation>
     </message>
     <message>
         <source>CRATE</source>
-        <translation>CRATE</translation>
+        <translation>Crate</translation>
     </message>
     <message>
         <source>HISTORY</source>
-        <translation>HISTORY</translation>
+        <translation>History</translation>
     </message>
     <message>
         <source>FOLDER</source>
-        <translation>FOLDER</translation>
+        <translation>Folder</translation>
     </message>
     <message>
         <source>REC</source>
@@ -521,31 +525,31 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>STREAMING</source>
-        <translation>STREAMING</translation>
+        <translation>Streaming</translation>
     </message>
     <message>
         <source>BROWSE</source>
-        <translation>BROWSE</translation>
+        <translation>Browse</translation>
     </message>
     <message>
         <source>LOAD TO DECK %1</source>
-        <translation>CARGAR EN DECK %1</translation>
+        <translation>Cargar en deck %1</translation>
     </message>
     <message>
         <source>SEARCH</source>
-        <translation>BUSCAR</translation>
+        <translation>Buscar</translation>
     </message>
     <message>
         <source>ALL TRACKS</source>
-        <translation>TODAS LAS PISTAS</translation>
+        <translation>Todas las pistas</translation>
     </message>
     <message>
         <source>KEY</source>
-        <translation>TONALIDAD</translation>
+        <translation>Tonalidad</translation>
     </message>
     <message>
         <source>ADDED</source>
-        <translation>AÑADIDA</translation>
+        <translation>Añadida</translation>
     </message>
     <message>
         <source>Permission to read USB</source>
@@ -557,64 +561,64 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>NOT NOW</source>
-        <translation>AHORA NO</translation>
+        <translation>Ahora no</translation>
     </message>
     <message>
         <source>GRANT PERMISSION</source>
-        <translation>DAR PERMISO</translation>
+        <translation>Dar permiso</translation>
     </message>
 </context>
 <context>
     <name>BoothDeckPanel</name>
     <message>
         <source>DECK</source>
-        <translation>DECK</translation>
+        <translation>Deck</translation>
     </message>
     <message>
         <source>MASTER TEMPO</source>
-        <translation>MASTER TEMPO</translation>
+        <translation>Master tempo</translation>
     </message>
     <message>
         <source>TIME</source>
-        <translation>TIME</translation>
+        <translation>Time</translation>
     </message>
     <message>
         <source>TEMPO</source>
-        <translation>TEMPO</translation>
+        <translation>Tempo</translation>
     </message>
     <message>
         <source>MASTER</source>
-        <translation>MASTER</translation>
+        <translation>Master</translation>
     </message>
     <message>
         <source>REMAIN</source>
-        <translation>REMAIN</translation>
+        <translation>Remain</translation>
     </message>
 </context>
 <context>
     <name>BoothDjView</name>
     <message>
         <source>MIXING</source>
-        <translation>MIXING</translation>
+        <translation>Mixing</translation>
     </message>
     <message>
         <source>LEVEL</source>
-        <translation>LEVEL</translation>
+        <translation>Level</translation>
     </message>
     <message>
         <source>MASTER</source>
-        <translation>MASTER</translation>
+        <translation>Master</translation>
     </message>
 </context>
 <context>
     <name>BoothMixer</name>
     <message>
         <source>TRIM</source>
-        <translation>TRIM</translation>
+        <translation>Trim</translation>
     </message>
     <message>
         <source>HIGH</source>
-        <translation>HIGH</translation>
+        <translation>High</translation>
     </message>
     <message>
         <source>MID</source>
@@ -626,65 +630,65 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>FILTER</source>
-        <translation>FILTRO</translation>
+        <translation>Filtro</translation>
     </message>
 </context>
 <context>
     <name>BoothPerformanceDeck</name>
     <message>
         <source>FINE</source>
-        <translation>FINE</translation>
+        <translation>Fine</translation>
     </message>
     <message>
         <source>BEAT JUMP</source>
-        <translation>BEAT JUMP</translation>
+        <translation>Beat jump</translation>
     </message>
     <message>
         <source>BEAT LOOP</source>
-        <translation>BEAT LOOP</translation>
+        <translation>Beat loop</translation>
     </message>
     <message>
         <source>HOT CUE</source>
-        <translation>HOT CUE</translation>
+        <translation>Hot CUE</translation>
     </message>
     <message>
         <source>EXIT</source>
-        <translation>SALIR</translation>
+        <translation>Salir</translation>
     </message>
     <message>
         <source>BEATS</source>
-        <translation>BEATS</translation>
+        <translation>Beats</translation>
     </message>
     <message>
         <source>GRID</source>
-        <translation>REJILLA</translation>
+        <translation>Rejilla</translation>
     </message>
     <message>
         <source>SLIP</source>
-        <translation>SLIP</translation>
+        <translation>Slip</translation>
     </message>
     <message>
         <source>MASTER</source>
-        <translation>MASTER</translation>
+        <translation>Master</translation>
     </message>
 </context>
 <context>
     <name>BoothSourceTree</name>
     <message>
         <source>TRACK</source>
-        <translation>PISTA</translation>
+        <translation>Pista</translation>
     </message>
     <message>
         <source>ARTIST</source>
-        <translation>ARTISTA</translation>
+        <translation>Artista</translation>
     </message>
     <message>
         <source>KEY</source>
-        <translation>TONALIDAD</translation>
+        <translation>Tonalidad</translation>
     </message>
     <message>
         <source>ADDED</source>
-        <translation>AÑADIDA</translation>
+        <translation>Añadida</translation>
     </message>
     <message>
         <source>All...</source>
@@ -714,7 +718,7 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>✓ %1 controller(s) with a mapping</source>
-        <translation>✓ %1 controladora(s) con mapeo</translation>
+        <translation>%1 controladora(s) con mapeo</translation>
     </message>
     <message>
         <source> · %1 without a mapping</source>
@@ -790,11 +794,11 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.&lt;br&gt;To add a new or modified mapping, copy it to the public Mixxx folder and press 'Scan for USB devices':</source>
-        <translation>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Mixxx y pulsa 'Buscar Dispositivos USB':</translation>
+        <translation>&lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Mixxx y pulsa 'Buscar Dispositivos USB':</translation>
     </message>
     <message>
         <source>✓ Copied!</source>
-        <translation>✓ ¡Copiado!</translation>
+        <translation>¡Copiado!</translation>
     </message>
     <message>
         <source>Copy path</source>
@@ -1050,7 +1054,7 @@ poner otra imagen</translation>
     </message>
     <message>
         <source>✓ Stream downloaded and loaded into %1</source>
-        <translation>✓ Stream descargado y cargado en %1</translation>
+        <translation>Stream descargado y cargado en %1</translation>
     </message>
     <message>
         <source>Stream error: %1</source>
@@ -1058,7 +1062,7 @@ poner otra imagen</translation>
     </message>
     <message>
         <source>DIRECT URL / WEB STREAMING</source>
-        <translation>URL DIRECTA / STREAMING WEB</translation>
+        <translation>URL directa / streaming web</translation>
     </message>
     <message>
         <source>URL of the audio file or stream:</source>
@@ -1082,7 +1086,7 @@ poner otra imagen</translation>
     </message>
 <message>
         <source>✓ Stream downloaded and loaded into %1</source>
-        <translation>✓ Stream descargado y cargado en %1</translation>
+        <translation>Stream descargado y cargado en %1</translation>
     </message>
     <message>
         <source>Stream error: %1</source>
@@ -1090,7 +1094,7 @@ poner otra imagen</translation>
     </message>
     <message>
         <source>DIRECT URL / WEB STREAMING</source>
-        <translation>URL DIRECTA / STREAMING WEB</translation>
+        <translation>URL directa / streaming web</translation>
     </message>
     <message>
         <source>◀ Load into DECK 1</source>
@@ -1187,7 +1191,7 @@ Cue</translation>
     </message>
     <message>
         <source>LOAD</source>
-        <translation>CARGAR</translation>
+        <translation>Cargar</translation>
     </message>
 </context>
 <context>
@@ -1270,7 +1274,7 @@ Cue</translation>
     </message>
     <message>
         <source>TOP BAR</source>
-        <translation>BARRA SUPERIOR</translation>
+        <translation>Barra superior</translation>
     </message>
     <message>
         <source>Choose the views and buttons shown at the top of the screen. At least one view stays visible.</source>
@@ -1278,7 +1282,7 @@ Cue</translation>
     </message>
     <message>
         <source>WAVE</source>
-        <translation>WAVE</translation>
+        <translation>Wave</translation>
     </message>
     <message>
         <source>LIB</source>
@@ -1290,7 +1294,7 @@ Cue</translation>
     </message>
     <message>
         <source>LOAD %1</source>
-        <translation>LOAD %1</translation>
+        <translation>Load %1</translation>
     </message>
     <message>
         <source>LIBRARY &amp; COLLECTION</source>
@@ -1314,7 +1318,7 @@ Cue</translation>
     </message>
     <message>
         <source>COLOR PALETTES</source>
-        <translation>PALETAS DE COLOR</translation>
+        <translation>Paletas de color</translation>
     </message>
     <message>
         <source>Track palette</source>
@@ -1446,7 +1450,7 @@ Cue</translation>
     </message>
     <message>
         <source>SPEED / PITCH BEND BUTTON STEPS</source>
-        <translation>PASOS DE BOTONES DE VELOCIDAD / PITCH BEND</translation>
+        <translation>Pasos de botones de velocidad / pitch bend</translation>
     </message>
     <message>
         <source>Temporary fine (%)</source>
@@ -1522,7 +1526,7 @@ Cue</translation>
     </message>
     <message>
         <source>TOP BAR</source>
-        <translation>BARRA SUPERIOR</translation>
+        <translation>Barra superior</translation>
     </message>
     <message>
         <source>LIBRARY &amp; COLLECTION</source>
@@ -1530,7 +1534,7 @@ Cue</translation>
     </message>
     <message>
         <source>COLOR PALETTES</source>
-        <translation>PALETAS DE COLOR</translation>
+        <translation>Paletas de color</translation>
     </message>
     <message>
         <source>CUE MODES &amp; LOADING BEHAVIOR</source>
@@ -1546,22 +1550,22 @@ Cue</translation>
     </message>
     <message>
         <source>SPEED / PITCH BEND BUTTON STEPS</source>
-        <translation>PASOS DE BOTONES DE VELOCIDAD / PITCH BEND</translation>
+        <translation>Pasos de botones de velocidad / pitch bend</translation>
     </message>
     </context>
 <context>
     <name>Library</name>
     <message>
         <source>LOCAL MUSIC</source>
-        <translation>MÚSICA LOCAL</translation>
+        <translation>Música local</translation>
     </message>
     <message>
         <source>STREAMING HUB</source>
-        <translation>STREAMING HUB</translation>
+        <translation>Streaming hub</translation>
     </message>
     <message>
         <source>SIDEBAR</source>
-        <translation>PANEL LATERAL</translation>
+        <translation>Panel lateral</translation>
     </message>
     <message>
         <source>Search your local collection...</source>
@@ -1577,11 +1581,11 @@ Cue</translation>
     </message>
     <message>
         <source>NOT NOW</source>
-        <translation>AHORA NO</translation>
+        <translation>Ahora no</translation>
     </message>
     <message>
         <source>GRANT PERMISSION</source>
-        <translation>DAR PERMISO</translation>
+        <translation>Dar permiso</translation>
     </message>
     <message>
         <source>Music Library</source>
@@ -1597,7 +1601,7 @@ Cue</translation>
     </message>
     <message>
         <source>✓ Collection ready</source>
-        <translation>✓ Colección lista</translation>
+        <translation>Colección lista</translation>
     </message>
     <message>
         <source>Choose the folders on your device where you keep your music. Mixxx will watch them and index the tracks it finds automatically.</source>
@@ -1637,7 +1641,7 @@ Cue</translation>
     </message>
     <message>
         <source>▲ Hide browser</source>
-        <translation>▲ Ocultar Explorador</translation>
+        <translation>Ocultar Explorador</translation>
     </message>
     <message>
         <source>Browse / other folder...</source>
@@ -1665,7 +1669,7 @@ Cue</translation>
     </message>
     <message>
         <source>✓ Add '%1' to the library</source>
-        <translation>✓ Añadir '%1' a la Librería</translation>
+        <translation>Añadir '%1' a la Librería</translation>
     </message>
     <message>
         <source>Close</source>
@@ -1741,7 +1745,7 @@ Cue</translation>
     </message>
     <message>
         <source>BACK UP</source>
-        <translation>COPIAR</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>%1 of %2 files</source>
@@ -1753,7 +1757,7 @@ Cue</translation>
     </message>
     <message>
         <source>STOP</source>
-        <translation>DETENER</translation>
+        <translation>Detener</translation>
     </message>
     <message>
         <source>Search &amp; organization</source>
@@ -1825,11 +1829,11 @@ Cue</translation>
     </message>
     <message>
         <source>KEEP BEATGRIDS</source>
-        <translation>MANTENER REJILLAS</translation>
+        <translation>Mantener rejillas</translation>
     </message>
     <message>
         <source>ALSO BEATGRIDS</source>
-        <translation>TAMBIÉN REJILLAS</translation>
+        <translation>También rejillas</translation>
     </message>
     <message>
         <source>Restore the backup of %1?</source>
@@ -1995,11 +1999,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
 <message>
         <source>HIDE</source>
-        <translation>OCULTAR</translation>
+        <translation>Ocultar</translation>
     </message>
     <message>
         <source>PLAYLISTS</source>
-        <translation>PLAYLISTS</translation>
+        <translation>Playlists</translation>
     </message>
     <message>
         <source>Local music folders</source>
@@ -2011,7 +2015,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Collection ready</source>
-        <translation>✓ Colección lista</translation>
+        <translation>Colección lista</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -2043,7 +2047,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Add '%1' to the library</source>
-        <translation>✓ Añadir '%1' a la Librería</translation>
+        <translation>Añadir '%1' a la Librería</translation>
     </message>
     <message>
         <source>Streaming storage &amp; cache</source>
@@ -2125,7 +2129,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>WAVE</source>
-        <translation>WAVE</translation>
+        <translation>Wave</translation>
     </message>
     <message>
         <source>LIB</source>
@@ -2137,7 +2141,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>LOAD %1</source>
-        <translation>LOAD %1</translation>
+        <translation>Load %1</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -2145,7 +2149,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>DECK %1</source>
-        <translation>DECK %1</translation>
+        <translation>Deck %1</translation>
     </message>
     <message>
         <source>Bars</source>
@@ -2153,23 +2157,23 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>QUANTIZE</source>
-        <translation>QUANTIZE</translation>
+        <translation>Quantize</translation>
     </message>
     <message>
         <source>SLIP</source>
-        <translation>SLIP</translation>
+        <translation>Slip</translation>
     </message>
     <message>
         <source>BROWSE</source>
-        <translation>BROWSE</translation>
+        <translation>Browse</translation>
     </message>
     <message>
         <source>UTILITY</source>
-        <translation>UTILITY</translation>
+        <translation>Utility</translation>
     </message>
     <message>
         <source>XY PAD</source>
-        <translation>XY PAD</translation>
+        <translation>XY pad</translation>
     </message>
 <message>
         <source>Stems queue</source>
@@ -2177,7 +2181,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>CLOSE</source>
-        <translation>CERRAR</translation>
+        <translation>Cerrar</translation>
     </message>
     <message>
         <source>Stems ready: %1. If it is loaded on a deck, load it again to use them.</source>
@@ -2241,7 +2245,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>STOP</source>
-        <translation>PARAR</translation>
+        <translation>Parar</translation>
     </message>
 </context>
 <context>
@@ -2260,7 +2264,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Track ready and loaded into %1</source>
-        <translation>✓ Pista lista y cargada en %1</translation>
+        <translation>Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Deck 1</source>
@@ -2280,11 +2284,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>AUDIUS STREAMING (FREE MUSIC)</source>
-        <translation>AUDIUS STREAMING (MÚSICA LIBRE)</translation>
+        <translation>AUDIUS streaming (música libre)</translation>
     </message>
     <message>
         <source>● Free online</source>
-        <translation>● Online Libre</translation>
+        <translation>Online Libre</translation>
     </message>
     <message>
         <source>Loading...</source>
@@ -2332,7 +2336,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Track ready and loaded into %1</source>
-        <translation>✓ Pista lista y cargada en %1</translation>
+        <translation>Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Download error: %1</source>
@@ -2340,7 +2344,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>AUDIUS STREAMING (FREE MUSIC)</source>
-        <translation>AUDIUS STREAMING (MÚSICA LIBRE)</translation>
+        <translation>AUDIUS streaming (música libre)</translation>
     </message>
     <message>
         <source>Loading...</source>
@@ -2375,23 +2379,23 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>GO TO DECK 2</source>
-        <translation>IR A DECK 2</translation>
+        <translation>Ir A deck 2</translation>
     </message>
     <message>
         <source>GO TO DECK 1</source>
-        <translation>IR A DECK 1</translation>
+        <translation>Ir A deck 1</translation>
     </message>
     <message>
         <source>LOCAL MUSIC</source>
-        <translation>MÚSICA LOCAL</translation>
+        <translation>Música local</translation>
     </message>
     <message>
         <source>STREAMING HUB</source>
-        <translation>STREAMING HUB</translation>
+        <translation>Streaming hub</translation>
     </message>
     <message>
         <source>CLOSE</source>
-        <translation>CERRAR</translation>
+        <translation>Cerrar</translation>
     </message>
     <message>
         <source>Local track collection</source>
@@ -2601,7 +2605,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ ACTIVE</source>
-        <translation>✓ ACTIVO</translation>
+        <translation>Activo</translation>
     </message>
     <message>
         <source>Single stereo output. All sound goes to the tablet speakers or Bluetooth headphones.</source>
@@ -2793,11 +2797,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>● Unsaved changes</source>
-        <translation>● Cambios pendientes</translation>
+        <translation>Cambios pendientes</translation>
     </message>
     <message>
         <source>✓ Audio configured</source>
-        <translation>✓ Audio configurado</translation>
+        <translation>Audio configurado</translation>
     </message>
     <message>
         <source>Discard</source>
@@ -2922,7 +2926,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>DIRECT URL / RADIO</source>
-        <translation>URL DIRECTA / RADIO</translation>
+        <translation>URL directa / radio</translation>
     </message>
     <message>
         <source>Target:</source>
@@ -2934,7 +2938,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>DIRECT URL / RADIO</source>
-        <translation>URL DIRECTA / RADIO</translation>
+        <translation>URL directa / radio</translation>
     </message>
     </context>
 <context>
@@ -2957,7 +2961,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Track ready and loaded into %1</source>
-        <translation>✓ Pista lista y cargada en %1</translation>
+        <translation>Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Deck 1</source>
@@ -2977,15 +2981,15 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>● Connected</source>
-        <translation>● Conectado</translation>
+        <translation>Conectado</translation>
     </message>
     <message>
         <source>● Disconnected</source>
-        <translation>● Desconectado</translation>
+        <translation>Desconectado</translation>
     </message>
     <message>
         <source>▲ Hide</source>
-        <translation>▲ Ocultar</translation>
+        <translation>Ocultar</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -3009,7 +3013,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Connect</source>
-        <translation>✓ Conectar</translation>
+        <translation>Conectar</translation>
     </message>
     <message>
         <source>Connecting to the server...</source>
@@ -3085,7 +3089,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Track ready and loaded into %1</source>
-        <translation>✓ Pista lista y cargada en %1</translation>
+        <translation>Pista lista y cargada en %1</translation>
     </message>
     <message>
         <source>Download error: %1</source>
@@ -3101,7 +3105,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>✓ Connect</source>
-        <translation>✓ Conectar</translation>
+        <translation>Conectar</translation>
     </message>
     <message>
         <source>Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.</source>
@@ -3163,7 +3167,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>GRID</source>
-        <translation>REJILLA</translation>
+        <translation>Rejilla</translation>
     </message>
     <message>
         <source>Beatgrid</source>
@@ -3257,15 +3261,15 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>+ PLAYLIST</source>
-        <translation>+ PLAYLIST</translation>
+        <translation>+ Playlist</translation>
     </message>
     <message>
         <source>+ ALL</source>
-        <translation>+ TODAS</translation>
+        <translation>+ Todas</translation>
     </message>
     <message>
         <source>⬇ COPY</source>
-        <translation>⬇ COPIAR</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Could not add to %1</source>
@@ -3285,11 +3289,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>SELECTED TRACK</source>
-        <translation>PISTA SELECCIONADA</translation>
+        <translation>Pista seleccionada</translation>
     </message>
     <message>
         <source>ALL TRACKS</source>
-        <translation>TODAS LAS PISTAS</translation>
+        <translation>Todas las pistas</translation>
     </message>
     <message>
         <source>%1 (locked)</source>
@@ -3305,7 +3309,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>CREATE</source>
-        <translation>CREAR</translation>
+        <translation>Crear</translation>
     </message>
     <message>
         <source>A playlist named %1 already exists. Choose it in the list above to add to it.</source>
@@ -3329,23 +3333,23 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>STOP</source>
-        <translation>DETENER</translation>
+        <translation>Detener</translation>
     </message>
     <message>
         <source>CLOSE</source>
-        <translation>CERRAR</translation>
+        <translation>Cerrar</translation>
     </message>
     <message>
         <source>COPY</source>
-        <translation>COPIAR</translation>
+        <translation>Copiar</translation>
     </message>
 <message>
         <source>STEMS ✓</source>
-        <translation>STEMS ✓</translation>
+        <translation>Stems ✓</translation>
     </message>
     <message>
         <source>STEMS</source>
-        <translation>STEMS</translation>
+        <translation>Stems</translation>
     </message>
     </context>
 <context>
@@ -3522,11 +3526,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>REMAIN</source>
-        <translation>RESTA</translation>
+        <translation>Resta</translation>
     </message>
     <message>
         <source>TIME</source>
-        <translation>TIEMPO</translation>
+        <translation>Tiempo</translation>
     </message>
 </context>
 <context>
@@ -3779,47 +3783,47 @@ Aborting the operation to avoid library inconsistencies</source>
     <name>XYPad</name>
     <message>
         <source>XY TOUCH PAD</source>
-        <translation>PAD TÁCTIL XY</translation>
+        <translation>Pad táctil XY</translation>
     </message>
     <message>
         <source>RESET</source>
-        <translation>RESET</translation>
+        <translation>Reset</translation>
     </message>
     <message>
         <source>LOW PASS</source>
-        <translation>PASO BAJO</translation>
+        <translation>Paso bajo</translation>
     </message>
     <message>
         <source>HIGH PASS</source>
-        <translation>PASO ALTO</translation>
+        <translation>Paso alto</translation>
     </message>
     <message>
         <source>FILTER: NEUTRAL</source>
-        <translation>FILTRO: NEUTRO</translation>
+        <translation>Filtro: neutro</translation>
     </message>
     <message>
         <source>FILTER: LPF %1%</source>
-        <translation>FILTRO: LPF %1%</translation>
+        <translation>Filtro: lpf %1%</translation>
     </message>
     <message>
         <source>FILTER: HPF %1%</source>
-        <translation>FILTRO: HPF %1%</translation>
+        <translation>Filtro: hpf %1%</translation>
     </message>
     <message>
         <source>FX DEPTH: %1%</source>
-        <translation>PROFUNDIDAD FX: %1%</translation>
+        <translation>Profundidad FX: %1%</translation>
     </message>
 <message>
         <source>XY TOUCH PAD</source>
-        <translation>PAD TÁCTIL XY</translation>
+        <translation>Pad táctil XY</translation>
     </message>
     <message>
         <source>◀ LOW PASS</source>
-        <translation>◀ PASO BAJO</translation>
+        <translation>◀ Paso bajo</translation>
     </message>
     <message>
         <source>HIGH PASS ▶</source>
-        <translation>PASO ALTO ▶</translation>
+        <translation>Paso alto ▶</translation>
     </message>
     </context>
 <context>
@@ -3842,7 +3846,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>QUIT</source>
-        <translation>SALIR</translation>
+        <translation>Salir</translation>
     </message>
     <message>
         <source>By JaviLabarumDJ on Android</source>
@@ -4204,11 +4208,11 @@ Aborting the operation to avoid library inconsistencies</source>
     <name>HotcueAndStem</name>
     <message>
         <source>DRUMS</source>
-        <translation>BATERÍA</translation>
+        <translation>Batería</translation>
     </message>
     <message>
         <source>BASS</source>
-        <translation>BAJO</translation>
+        <translation>Bajo</translation>
     </message>
     <message>
         <source>VOCALS</source>
@@ -4216,7 +4220,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>OTHER</source>
-        <translation>RESTO</translation>
+        <translation>Resto</translation>
     </message>
 </context>
 <context>
@@ -4231,7 +4235,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>STEMS</source>
-        <translation>STEMS</translation>
+        <translation>Stems</translation>
     </message>
     <message>
         <source>Splits the tracks you choose into drums, bass, vocals and the rest, so that you can mute or mix each part on the deck. In the library, select a track or open a list and tap STEMS. The stems are saved next to each track, in a hidden .stems folder, and they are used whenever you load the track. If its folder can't be written, they stay in the app.</source>
@@ -4243,7 +4247,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>MODELS</source>
-        <translation>MODELOS</translation>
+        <translation>Modelos</translation>
     </message>
     <message>
         <source>Download the models you want to use. The times are for a 5 minute track and depend a lot on the device: tap MEASURE to know yours.</source>
@@ -4271,7 +4275,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>OPTIONS</source>
-        <translation>OPCIONES</translation>
+        <translation>Opciones</translation>
     </message>
     <message>
         <source>Model</source>
@@ -4279,7 +4283,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>ASK</source>
-        <translation>PREGUNTAR</translation>
+        <translation>Preguntar</translation>
     </message>
     <message>
         <source>Size of the stem files</source>
@@ -4291,15 +4295,15 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>LIGHT ~18 MB</source>
-        <translation>LIGERO ~18 MB</translation>
+        <translation>Ligero ~18 MB</translation>
     </message>
     <message>
         <source>NORMAL ~24 MB</source>
-        <translation>NORMAL ~24 MB</translation>
+        <translation>Normal ~24 MB</translation>
     </message>
     <message>
         <source>HIGH ~36 MB</source>
-        <translation>ALTO ~36 MB</translation>
+        <translation>Alto ~36 MB</translation>
     </message>
     <message>
         <source>While a deck plays</source>
@@ -4315,11 +4319,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>GO ON SLOWER</source>
-        <translation>SEGUIR MÁS LENTO</translation>
+        <translation>Seguir más lento</translation>
     </message>
     <message>
         <source>PAUSE</source>
-        <translation>PAUSAR</translation>
+        <translation>Pausar</translation>
     </message>
     <message>
         <source>Only while charging</source>
@@ -4335,11 +4339,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>QUEUE</source>
-        <translation>COLA</translation>
+        <translation>Cola</translation>
     </message>
     <message>
         <source>STORAGE</source>
-        <translation>ALMACENAMIENTO</translation>
+        <translation>Almacenamiento</translation>
     </message>
     <message>
         <source>Stems kept in the app (tracks of folders that can't be written): %1 MB. The stems next to your tracks are deleted from the library, with STEMS.</source>
@@ -4347,7 +4351,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>DELETE</source>
-        <translation>BORRAR</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>This device: ~%1 per 5 minute track</source>
@@ -4359,19 +4363,19 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>MEASURING…</source>
-        <translation>MIDIENDO…</translation>
+        <translation>Midiendo…</translation>
     </message>
     <message>
         <source>MEASURE</source>
-        <translation>MEDIR</translation>
+        <translation>Medir</translation>
     </message>
     <message>
         <source>CANCEL</source>
-        <translation>CANCELAR</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>⬇ %1 MB</source>
-        <translation>⬇ %1 MB</translation>
+        <translation>%1 MB</translation>
     </message>
 </context>
 <context>
@@ -4390,11 +4394,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>SELECTED TRACK</source>
-        <translation>PISTA SELECCIONADA</translation>
+        <translation>Pista seleccionada</translation>
     </message>
     <message>
         <source>WHOLE LIST</source>
-        <translation>TODA LA LISTA</translation>
+        <translation>Toda la lista</translation>
     </message>
     <message>
         <source>%1 · already has stems</source>
@@ -4454,11 +4458,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>DELETE STEMS</source>
-        <translation>BORRAR STEMS</translation>
+        <translation>Borrar stems</translation>
     </message>
     <message>
         <source>DELETE STEMS (%1)</source>
-        <translation>BORRAR STEMS (%1)</translation>
+        <translation>Borrar stems (%1)</translation>
     </message>
     <message numerus="yes">
         <source>Deleted the stems of %n track(s).</source>
@@ -4466,15 +4470,15 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>CLOSE</source>
-        <translation>CERRAR</translation>
+        <translation>Cerrar</translation>
     </message>
     <message>
         <source>SEPARATE %1</source>
-        <translation>SEPARAR %1</translation>
+        <translation>Separar %1</translation>
     </message>
     <message>
         <source>SEPARATE</source>
-        <translation>SEPARAR</translation>
+        <translation>Separar</translation>
     </message>
     <message>
         <source>This device: ~%1 per 5 minute track</source>
@@ -4482,11 +4486,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>%1% · CANCEL</source>
-        <translation>%1% · CANCELAR</translation>
+        <translation>%1% · Cancelar</translation>
     </message>
     <message>
-        <source>⬇ DOWNLOAD %1 MB</source>
-        <translation>⬇ DESCARGAR %1 MB</translation>
+        <source>Download %1 MB</source>
+        <translation>Descargar %1 MB</translation>
     </message>
 </context>
 <context>
@@ -4533,19 +4537,19 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>CANCEL ALL</source>
-        <translation>CANCELAR TODO</translation>
+        <translation>Cancelar todo</translation>
     </message>
     <message>
         <source>▶ RESUME</source>
-        <translation>▶ REANUDAR</translation>
+        <translation>Reanudar</translation>
     </message>
     <message>
         <source>⏸ PAUSE</source>
-        <translation>⏸ PAUSAR</translation>
+        <translation>Pausar</translation>
     </message>
     <message>
         <source>CLEAR DONE</source>
-        <translation>LIMPIAR TERMINADAS</translation>
+        <translation>Limpiar terminadas</translation>
     </message>
     <message>
         <source>%1 left</source>
@@ -4719,27 +4723,27 @@ Aborting the operation to avoid library inconsistencies</source>
     <name>EqTool</name>
     <message>
         <source>FILTER</source>
-        <translation>FILTRO</translation>
+        <translation>Filtro</translation>
     </message>
     <message>
         <source>GAIN</source>
-        <translation>GANANCIA</translation>
+        <translation>Ganancia</translation>
     </message>
     <message>
         <source>HI</source>
-        <translation>AGUDOS</translation>
+        <translation>Agudos</translation>
     </message>
     <message>
         <source>KILL</source>
-        <translation>CORTE</translation>
+        <translation>Corte</translation>
     </message>
     <message>
         <source>LOW</source>
-        <translation>GRAVES</translation>
+        <translation>Graves</translation>
     </message>
     <message>
         <source>MID</source>
-        <translation>MEDIOS</translation>
+        <translation>Medios</translation>
     </message>
 </context>
 <context>
@@ -4906,19 +4910,19 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>FILTER</source>
-        <translation>FILTRO</translation>
+        <translation>Filtro</translation>
     </message>
     <message>
         <source>HI</source>
-        <translation>AGUDOS</translation>
+        <translation>Agudos</translation>
     </message>
     <message>
         <source>LOW</source>
-        <translation>GRAVES</translation>
+        <translation>Graves</translation>
     </message>
     <message>
         <source>MID</source>
-        <translation>MEDIOS</translation>
+        <translation>Medios</translation>
     </message>
 </context>
 <context>
@@ -5010,6 +5014,72 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>Stems</source>
         <translation>Stems</translation>
+    </message>
+</context>
+<context>
+    <name>AutoDJPanel</name>
+    <message>
+        <source>Plays the queue and mixes between deck 1 and deck 2. Add tracks by holding a track in the library → Add to the end of the queue.</source>
+        <translation>Reproduce la cola y mezcla entre el deck 1 y el deck 2. Para sumar temas, mantené apretado un tema en la biblioteca → Agregar al final de la cola.</translation>
+    </message>
+    <message>
+        <source>Open the queue</source>
+        <translation>Abrir la cola</translation>
+    </message>
+</context>
+<context>
+    <name>StreamingHub</name>
+    <message>
+        <source>Link / radio</source>
+        <translation>Link / radio</translation>
+    </message>
+    <message>
+        <source>Load into</source>
+        <translation>Cargar en</translation>
+    </message>
+</context>
+<context>
+    <name>OnlineStreamView</name>
+    <message>
+        <source>Audius: free music streaming</source>
+        <translation>Audius: streaming de música libre</translation>
+    </message>
+</context>
+<context>
+    <name>CustomUrlView</name>
+    <message>
+        <source>Link to a file or a web stream</source>
+        <translation>Link a un archivo o a un stream web</translation>
+    </message>
+</context>
+<context>
+    <name>FxTool</name>
+    <message>
+        <source>Pad</source>
+        <translation>Pad</translation>
+    </message>
+    <message>
+        <source>Pick an effect</source>
+        <translation>Elegí un efecto</translation>
+    </message>
+    <message>
+        <source>HP</source>
+        <translation>HP</translation>
+    </message>
+    <message>
+        <source>LP</source>
+        <translation>LP</translation>
+    </message>
+</context>
+<context>
+    <name>DJView</name>
+    <message>
+        <source>Show turntables</source>
+        <translation>Mostrar bandejas</translation>
+    </message>
+    <message>
+        <source>Show tempo dials</source>
+        <translation>Mostrar diales de tempo</translation>
     </message>
 </context>
 </TS>

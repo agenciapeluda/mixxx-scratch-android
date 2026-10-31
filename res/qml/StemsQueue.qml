@@ -47,7 +47,7 @@ ColumnLayout {
 
         Text {
             Layout.fillWidth: true
-            color: Mixxx.Stems.hold !== "" ? "#f7c86a" : "#d5d8e0"
+            color: Mixxx.Stems.hold !== "" ? "#f7c86a" : "#dbdbdb"
             font.pixelSize: 12
             wrapMode: Text.WordWrap
             text: {
@@ -64,7 +64,7 @@ ColumnLayout {
             implicitWidth: 110
             implicitHeight: 34
             activeColor: "#ffffff"
-            backgroundColor: Mixxx.Stems.hold === "paused" ? "#1e5f3a" : "#2e3440"
+            backgroundColor: Mixxx.Stems.hold === "paused" ? "#1e5f3a" : "#373737"
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             text: Mixxx.Stems.hold === "paused" ? qsTr("▶ RESUME") : qsTr("⏸ PAUSE")
@@ -88,7 +88,7 @@ ColumnLayout {
             implicitWidth: 160
             implicitHeight: 34
             activeColor: "#ffffff"
-            backgroundColor: "#2e3440"
+            backgroundColor: "#373737"
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             text: qsTr("CLEAR DONE")
@@ -109,8 +109,8 @@ ColumnLayout {
             Layout.fillWidth: true
             implicitHeight: rowLayout.implicitHeight + 12
             radius: 6
-            color: running ? "#1e2a3a" : "#1a1e27"
-            border.color: running ? "#42a5f5" : "#262c38"
+            color: running ? "#2c2c2c" : "#202020"
+            border.color: running ? "#4b42f5" : "#2f2f2f"
             border.width: 1
 
             // Progress of the running track
@@ -121,7 +121,7 @@ ColumnLayout {
                 height: 3
                 radius: 2
                 width: parent.width * Mixxx.Stems.progress
-                color: "#42a5f5"
+                color: "#4b42f5"
             }
 
             RowLayout {
@@ -161,7 +161,7 @@ ColumnLayout {
                     }
                     Text {
                         Layout.fillWidth: true
-                        color: row.modelData.state === "failed" ? "#ef9a9a" : "#8a91a3"
+                        color: row.modelData.state === "failed" ? "#ef9a9a" : "#969696"
                         font.pixelSize: 10
                         elide: Text.ElideRight
                         text: {
@@ -191,7 +191,7 @@ ColumnLayout {
                     implicitWidth: 36
                     implicitHeight: 30
                     activeColor: "#ffffff"
-                    backgroundColor: "#2e3440"
+                    backgroundColor: "#373737"
                     normalColor: "#ef9a9a"
                     font.weight: Font.DemiBold
                     font.pixelSize: 16

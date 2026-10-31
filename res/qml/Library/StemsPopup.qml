@@ -1,4 +1,5 @@
 import QtQuick
+import "../Cutlab" as Cutlab
 import QtQuick.Controls
 import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
@@ -74,12 +75,12 @@ Popup {
     width: Math.min(560, parent ? parent.width - 20 : 560)
     height: Math.min(contentLayout.implicitHeight + 32, parent ? parent.height - 20 : 600)
     modal: true
-    padding: 16
+    padding: 22
 
     background: Rectangle {
-        color: "#12151c"
-        radius: 10
-        border.color: "#232836"
+        color: Cutlab.Style.panelDark
+        radius: 16
+        border.color: "#3e3e41"
         border.width: 1
     }
 
@@ -126,8 +127,8 @@ Popup {
                 Layout.fillWidth: true
                 text: qsTr("Separate into stems")
                 color: "#ffffff"
-                font.weight: Font.DemiBold
-                font.pixelSize: 15
+                font.weight: Font.Medium
+                font.pixelSize: 20
             }
 
             // What: the selected track or the whole list
@@ -136,25 +137,19 @@ Popup {
                 visible: root.trackUrl.toString().length > 0
                 spacing: 8
 
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.fillWidth: true
-                    implicitHeight: 34
-                    activeColor: "#ffffff"
-                    highlight: !root.allTracks
-                    backgroundColor: !root.allTracks ? "#1e3a5f" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    implicitHeight: 42
+                    highlighted: !root.allTracks
+                    fillColor: Cutlab.Style.button
                     text: qsTr("SELECTED TRACK")
                     onClicked: root.allTracks = false
                 }
-                Skin.Button {
+                Cutlab.CLButton {
                     Layout.fillWidth: true
-                    implicitHeight: 34
-                    activeColor: "#ffffff"
-                    highlight: root.allTracks
-                    backgroundColor: root.allTracks ? "#1e3a5f" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    implicitHeight: 42
+                    highlighted: root.allTracks
+                    fillColor: Cutlab.Style.button
                     text: qsTr("WHOLE LIST")
                     onClicked: root.allTracks = true
                 }
@@ -163,7 +158,7 @@ Popup {
             Text {
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                color: "#d5d8e0"
+                color: "#dbdbdb"
                 font.pixelSize: 12
                 text: {
                     if (!root.allTracks)
@@ -175,8 +170,8 @@ Popup {
             // The model
             Text {
                 text: qsTr("Model")
-                color: "#8a91a3"
-                font.pixelSize: 11
+                color: "#969696"
+                font.pixelSize: 13
             }
 
             RowLayout {
@@ -202,7 +197,7 @@ Popup {
                 visible: root.model === "htdemucs" && root.freeMemoryMb >= 0 && root.freeMemoryMb < 2500
                 wrapMode: Text.WordWrap
                 color: "#f7c86a"
-                font.pixelSize: 11
+                font.pixelSize: 13
                 text: qsTr("Only %1 GB of memory is free now: HTDemucs may run out of memory. Close other apps or use Spleeter.").arg((root.freeMemoryMb / 1024).toFixed(1))
             }
 
@@ -211,9 +206,9 @@ Popup {
                 Layout.fillWidth: true
                 visible: root.anyDeckPlaying
                 implicitHeight: playingText.implicitHeight + 16
-                radius: 6
+                radius: 10
                 color: "#3a2a12"
-                border.color: "#ff9800"
+                border.color: "#ff9f0a"
                 border.width: 1
 
                 Text {
@@ -223,7 +218,7 @@ Popup {
                     anchors.margins: 8
                     wrapMode: Text.WordWrap
                     color: "#ffcc80"
-                    font.pixelSize: 11
+                    font.pixelSize: 13
                     text: Mixxx.Stems.whilePlaying === "pause"
                             ? qsTr("A deck is playing: the queue will wait until you stop the decks.")
                             : qsTr("A deck is playing: separating now may cause audio dropouts. It will go slower to leave CPU to the audio. You can make it wait in Settings → Stems.")
@@ -240,28 +235,22 @@ Popup {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text: qsTr("Separate again the tracks that have stems")
-                    color: "#d5d8e0"
-                    font.pixelSize: 11
+                    color: "#dbdbdb"
+                    font.pixelSize: 13
                 }
-                Skin.Button {
+                Cutlab.CLButton {
                     implicitWidth: 70
                     implicitHeight: 30
-                    activeColor: "#ffffff"
-                    highlight: root.replace
-                    backgroundColor: root.replace ? "#1e3a5f" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    highlighted: root.replace
+                    fillColor: Cutlab.Style.button
                     text: qsTr("YES")
                     onClicked: root.replace = true
                 }
-                Skin.Button {
+                Cutlab.CLButton {
                     implicitWidth: 70
                     implicitHeight: 30
-                    activeColor: "#ffffff"
-                    highlight: !root.replace
-                    backgroundColor: !root.replace ? "#1e3a5f" : "#1a1e28"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    highlighted: !root.replace
+                    fillColor: Cutlab.Style.button
                     text: qsTr("NO")
                     onClicked: root.replace = false
                 }
@@ -280,14 +269,11 @@ Popup {
                 Layout.fillWidth: true
                 spacing: 8
 
-                Skin.Button {
+                Cutlab.CLButton {
                     visible: root.stemTracks > 0
                     implicitWidth: 150
-                    implicitHeight: 38
-                    activeColor: "#ffffff"
-                    backgroundColor: "#5f1e1e"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    implicitHeight: 46
+                    fillColor: "#4a1d1b"
                     text: root.allTracks ? qsTr("DELETE STEMS (%1)").arg(root.stemTracks) : qsTr("DELETE STEMS")
                     onClicked: {
                         const deleted = root.allTracks
@@ -302,25 +288,19 @@ Popup {
                     Layout.fillWidth: true
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     implicitWidth: 100
-                    implicitHeight: 38
-                    activeColor: "#ffffff"
-                    backgroundColor: "#2e3440"
-                    normalColor: "#ffffff"
-                    font.weight: Font.DemiBold
+                    implicitHeight: 46
+                    fillColor: Cutlab.Style.button
                     text: qsTr("CLOSE")
                     onClicked: root.close()
                 }
 
-                Skin.Button {
+                Cutlab.CLButton {
                     implicitWidth: 170
-                    implicitHeight: 38
+                    implicitHeight: 46
                     enabled: root.modelInstalled && root.tracksToSeparate > 0 && !closeTimer.running
-                    activeColor: "#ffffff"
-                    backgroundColor: enabled ? "#1e5f3a" : "#262930"
-                    normalColor: enabled ? "#ffffff" : "#6e7587"
-                    font.weight: Font.DemiBold
+                    highlighted: enabled
                     text: root.allTracks ? qsTr("SEPARATE %1").arg(root.tracksToSeparate) : qsTr("SEPARATE")
                     onClicked: root.separate()
                 }
@@ -345,8 +325,8 @@ Popup {
         Layout.preferredWidth: 1
         implicitHeight: choiceLayout.implicitHeight + 16
         radius: 8
-        color: chosen ? "#1e3a5f" : "#1a1e27"
-        border.color: chosen ? "#42a5f5" : "#232836"
+        color: chosen ? Cutlab.Style.accentDark : Cutlab.Style.button
+        border.color: chosen ? Cutlab.Style.accent : "#3e3e41"
         border.width: chosen ? 2 : 1
 
         MouseArea {
@@ -364,7 +344,7 @@ Popup {
             spacing: 3
 
             Text {
-                text: StemsText.modelLabel(choice.name) + (choice.chosen ? "  ✓" : "")
+                text: StemsText.modelLabel(choice.name)
                 color: "#ffffff"
                 font.weight: Font.DemiBold
                 font.pixelSize: 12
@@ -372,29 +352,27 @@ Popup {
             Text {
                 Layout.fillWidth: true
                 text: choice.summary
-                color: "#d5d8e0"
-                font.pixelSize: 10
+                color: "#dbdbdb"
+                font.pixelSize: 12
                 wrapMode: Text.WordWrap
             }
             Text {
                 Layout.fillWidth: true
                 text: choice.speed > 0 ? qsTr("This device: ~%1 per 5 minute track").arg(StemsText.trackTime(choice.speed)) : choice.ranges
-                color: choice.speed > 0 ? "#4fc3f7" : "#8a91a3"
-                font.pixelSize: 10
+                color: choice.speed > 0 ? "#574ff7" : "#969696"
+                font.pixelSize: 12
                 wrapMode: Text.WordWrap
             }
-            Skin.Button {
+            Cutlab.CLButton {
                 Layout.fillWidth: true
                 visible: !choice.installed
                 implicitHeight: 30
                 enabled: choice.downloading || Mixxx.Stems.downloadingModel === ""
-                activeColor: "#ffffff"
-                backgroundColor: choice.downloading ? "#5f1e1e" : "#1e5f3a"
-                normalColor: "#ffffff"
-                font.weight: Font.DemiBold
+                fillColor: "#4a1d1b"
+                highlighted: !choice.downloading
                 text: choice.downloading
                         ? qsTr("%1% · CANCEL").arg(Math.round(Mixxx.Stems.downloadProgress * 100))
-                        : qsTr("⬇ DOWNLOAD %1 MB").arg(Mixxx.Stems.modelSizeMb(choice.name))
+                        : qsTr("Download %1 MB").arg(Mixxx.Stems.modelSizeMb(choice.name))
                 onClicked: {
                     root.model = choice.name;
                     if (choice.downloading)

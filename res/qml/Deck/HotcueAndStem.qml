@@ -26,7 +26,7 @@ Item {
         key: "track_loaded"
     }
     Rectangle {
-        color: '#0E0E0E'
+        color: '#0e0e0e'
 
         states: [
             State {
@@ -134,7 +134,7 @@ Item {
                             id: backgroundImage
 
                             anchors.fill: parent
-                            color: hotcue.isSet ? hotcue.color : '#2B2B2B'
+                            color: hotcue.isSet ? hotcue.color : '#2b2b2b'
 
                             MouseArea {
                                 id: activator
@@ -157,7 +157,7 @@ Item {
                             id: effect2
 
                             anchors.fill: parent
-                            color: "#2a2f3d"
+                            color: "#343434"
                             horizontalOffset: 1
                             radius: 12
                             samples: 24
@@ -167,7 +167,7 @@ Item {
                         }
                         InnerShadow {
                             anchors.fill: parent
-                            color: "#2a2f3d"
+                            color: "#343434"
                             horizontalOffset: -1
                             radius: 12
                             samples: 24
@@ -295,7 +295,7 @@ Item {
                                 id: effect2
 
                                 anchors.fill: parent
-                                color: "#2a2f3d"
+                                color: "#343434"
                                 horizontalOffset: 2
                                 radius: 4.0
                                 samples: 24
@@ -306,7 +306,7 @@ Item {
                             }
                             InnerShadow {
                                 anchors.fill: parent
-                                color: "#2a2f3d"
+                                color: "#343434"
                                 horizontalOffset: -2
                                 radius: 4.0
                                 samples: 24
@@ -498,7 +498,7 @@ Item {
                 layer.samples: 4
 
                 ShapePath {
-                    fillColor: '#D9D9D9'
+                    fillColor: '#d9d9d9'
                     startX: 10
                     startY: 4
 
@@ -544,7 +544,7 @@ Item {
 
             contentItem: Item {
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -557,7 +557,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -570,7 +570,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -583,7 +583,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -596,7 +596,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -609,7 +609,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
@@ -622,7 +622,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#D9D9D9'
+                    color: '#d9d9d9'
                     height: 1
 
                     anchors {
