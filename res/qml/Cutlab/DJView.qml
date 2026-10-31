@@ -169,16 +169,6 @@ Rectangle {
             text: qsTr("Settings")
             onTriggered: root.settingsRequested()
         }
-        MenuSeparator {
-            contentItem: Rectangle {
-                implicitHeight: 1
-                color: "#3e3e41"
-            }
-        }
-        CLMenuItem {
-            text: qsTr("Classic layout")
-            onTriggered: root.classicLayoutRequested()
-        }
     }
 
     // ===== Middle =====

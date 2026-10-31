@@ -379,6 +379,12 @@ QmlApplication::QmlApplication(
             &PlayerManager::noVinylControlInputConfigured,
             this,
             [showNoInputConfiguredWarning]() {
+#if defined(Q_OS_ANDROID)
+                // Cutlab: straight to the DVS settings of the interface
+                Q_UNUSED(showNoInputConfiguredWarning);
+                QmlApplicationProxy::requestSoundInputSetup();
+                return;
+#endif
                 showNoInputConfiguredWarning(
                         tr("There is no input device selected for this vinyl "
                            "control.\n"

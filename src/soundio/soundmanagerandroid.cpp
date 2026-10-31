@@ -92,6 +92,50 @@ void SoundManagerAndroid::slotUsbDevicesChanged() {
 // the input of the turntables was lost on every start. Each input is also
 // kept as "[Cutlab] vinyl_input_N" (device name|first channel) and put back
 // when its device is there again.
+// Two outputs on the same channels of a device make the whole setup fail
+// ("Two outputs cannot share channels"), and with it the vinyl inputs. It
+// happens when the headphones stay on the phone speaker together with the
+// main output. Keep the main output and drop the outputs that clash.
+void SoundManagerAndroid::removeClashingOutputs() {
+    SoundManagerConfig& config = m_pSoundManager->m_config;
+    auto& outputs = config.getOutputsRef();
+    QList<QPair<SoundDeviceId, AudioOutput>> ordered;
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::Main) {
+            ordered.prepend(qMakePair(it.key(), it.value()));
+        } else {
+            ordered.append(qMakePair(it.key(), it.value()));
+        }
+    }
+    QList<QPair<SoundDeviceId, AudioOutput>> kept;
+    bool dropped = false;
+    for (const auto& candidate : std::as_const(ordered)) {
+        bool clashes = false;
+        for (const auto& existing : std::as_const(kept)) {
+            if (existing.first == candidate.first &&
+                    existing.second.getChannelGroup().clashesWith(
+                            candidate.second.getChannelGroup())) {
+                clashes = true;
+                break;
+            }
+        }
+        if (clashes) {
+            dropped = true;
+            qWarning() << "Dropping output" << AudioPath::getStringFromType(candidate.second.getType())
+                       << "that shares channels with another output on" << candidate.first.name;
+        } else {
+            kept.append(candidate);
+        }
+    }
+    if (!dropped) {
+        return;
+    }
+    outputs.clear();
+    for (const auto& output : std::as_const(kept)) {
+        outputs.insert(output.first, output.second);
+    }
+}
+
 void SoundManagerAndroid::keepVinylInputs() {
     SoundManagerConfig& config = m_pSoundManager->m_config;
     const UserSettingsPointer pSettings = m_pSoundManager->m_pConfig;
@@ -184,6 +228,7 @@ void SoundManagerAndroid::prepareSetup() {
         config.writeToDisk();
     }
     autoRouteToController();
+    removeClashingOutputs();
     keepVinylInputs();
 #ifdef __ANDROID_USB_AUDIO__
     // A USB sound card driven directly by Mixxx only plays at the rates it

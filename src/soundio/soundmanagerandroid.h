@@ -54,6 +54,7 @@ class SoundManagerAndroid : public QObject {
     /// kAutoRouteControllerKey. Modifies and saves the SoundManagerConfig.
     void autoRouteToController();
     void keepVinylInputs();
+    void removeClashingOutputs();
     /// Opens the built-in speaker (or any other output) if no physical
     /// output could be opened, so Mixxx never ends up without sound
     void openFallbackOutput(const std::vector<SoundDevicePointer>& devices,

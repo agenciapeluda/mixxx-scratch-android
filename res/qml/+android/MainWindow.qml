@@ -21,7 +21,9 @@ Item {
     property int viewMode: 1
     // The Cutlab performance screen (turntables, upright waveforms, pads and
     // a full screen library) or the classic Mixxx layout below it
-    property bool cutlabLayout: Mixxx.Application.configValue("[Cutlab]", "layout", "dj") !== "classic"
+    // Always the Cutlab screen: one interface, the classic one stays in the
+    // code only
+    property bool cutlabLayout: true
 
     function setCutlabLayout(on) {
         Mixxx.Application.setConfigValue("[Cutlab]", "layout", on ? "dj" : "classic");
@@ -243,9 +245,7 @@ Item {
                         settingsPopup.open();
                     }
                 }
-                onPressAndHold: {
-                    Mixxx.PreferencesDialog.show();
-                }
+
             }
 
             // Progress of the stem separation, opens its queue
@@ -983,6 +983,18 @@ Item {
             onAutoDJRequested: autoDJPanel.open()
             onXyPadRequested: xyPadOverlay.visible = true
             onClassicLayoutRequested: root.setCutlabLayout(false)
+        }
+    }
+
+    // A deck asked for DVS without an input: the DVS settings
+    Connections {
+        target: Mixxx.Application
+
+        function onSoundInputSetupRequested() {
+            settingsPopup.activeCategoryIndex = 2;
+            if (!settingsPopup.opened) {
+                settingsPopup.open();
+            }
         }
     }
 

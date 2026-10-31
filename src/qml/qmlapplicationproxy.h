@@ -40,6 +40,11 @@ class QmlApplicationProxy : public QObject {
 
   public:
     explicit QmlApplicationProxy(QObject* pParent = nullptr);
+    ~QmlApplicationProxy() override {
+        if (s_pInstance == this) {
+            s_pInstance = nullptr;
+        }
+    }
 
     bool keyboardShortcutsEnabled() const;
     void setKeyboardShortcutsEnabled(bool enabled);
@@ -94,7 +99,16 @@ class QmlApplicationProxy : public QObject {
         s_reloadCallback = std::move(reloadCallback);
     }
 
+    // Cutlab: asks the interface to open the DVS settings (a deck without
+    // vinyl control input), instead of the desktop preferences
+    static void requestSoundInputSetup() {
+        if (s_pInstance) {
+            emit s_pInstance->soundInputSetupRequested();
+        }
+    }
+
   signals:
+    void soundInputSetupRequested();
     void applicationMenuRequested();
     void keyboardShortcutsEnabledChanged();
     void menuShortcutsChanged();
@@ -108,6 +122,7 @@ class QmlApplicationProxy : public QObject {
     static inline std::shared_ptr<KeyboardEventFilter> s_pKeyboardEventFilter;
     static inline VinylControlManager* s_pVinylControlManager{nullptr};
     static inline std::function<void()> s_reloadCallback;
+    static inline QmlApplicationProxy* s_pInstance = nullptr;
 };
 
 } // namespace qml

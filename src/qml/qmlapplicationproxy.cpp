@@ -25,6 +25,7 @@ namespace qml {
 
 QmlApplicationProxy::QmlApplicationProxy(QObject* pParent)
         : QObject(pParent) {
+    s_pInstance = this;
     VERIFY_OR_DEBUG_ASSERT(s_pKeyboardEventFilter) {
         return;
     }
