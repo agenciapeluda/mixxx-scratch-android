@@ -11,7 +11,7 @@ AbstractButton {
     property bool highlight: false
     property color normalColor: Theme.buttonNormalColor
     property color pressedColor: activeColor
-    property color backgroundColor: "#232323"
+    property color backgroundColor: "#262628"
     // A ◀ before or a ▶ after the text, drawn as triangles: Android draws
     // these signs as emoji
     property bool arrowLeft: false
@@ -27,10 +27,10 @@ AbstractButton {
         id: backgroundImage
 
         anchors.fill: parent
-        border.color: "transparent"
+        border.color: "#3a3a3d"
         border.width: 1
         color: root.backgroundColor
-        radius: Math.min(8, height / 3)
+        radius: Math.min(9, height / 3)
     }
     contentItem: Item {
         anchors.fill: parent
@@ -94,7 +94,7 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? Qt.rgba(0.36, 0.42, 1.0, 0.45) : "#343434"
+                color: root.checked ? "#5149d6" : "#3a3a3d"
                 target: backgroundImage
             }
             PropertyChanges {
@@ -107,12 +107,14 @@ AbstractButton {
             when: (root.highlight || root.checked) && !root.pressed
 
             PropertyChanges {
-                border.color: Qt.rgba(0.49, 0.55, 1.0, 0.7)
-                color: Qt.rgba(0.36, 0.42, 1.0, 0.22)
+                // Selected: solid Cutlab indigo with white text, the same
+                // for every selector of the app
+                border.color: "#635bff"
+                color: "#635bff"
                 target: backgroundImage
             }
             PropertyChanges {
-                color: root.activeColor
+                color: "#ffffff"
                 target: label
             }
         },

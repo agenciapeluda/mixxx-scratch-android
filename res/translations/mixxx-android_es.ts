@@ -2498,11 +2498,11 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Interface</source>
-        <translation>Interfaz</translation>
+        <translation>Interfaz y decks</translation>
     </message>
     <message>
         <source>Theme, Decks, Display</source>
-        <translation>Tema, Decks, Visualización</translation>
+        <translation>Idioma, pantalla, pitch y cue</translation>
     </message>
     <message>
         <source>About</source>

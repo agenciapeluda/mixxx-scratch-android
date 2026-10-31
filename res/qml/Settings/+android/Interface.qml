@@ -194,9 +194,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: card1Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -208,14 +208,14 @@ Category {
                             Text {
                                 text: qsTr("APPEARANCE & DISPLAY")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
-                                color: "#7c8cff"
+                                font.pixelSize: 12
+                                color: "#ffffff"
                             }
 
                             // Applied immediately, independently of the Save button
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Language"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Language"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: languageInput
 
@@ -265,14 +265,16 @@ Category {
                                 Layout.fillWidth: true
                                 visible: false
                                 text: qsTr("Library and effect names change after restarting Mixxx.")
-                                color: "#f7c86a"
+                                color: "#ff9f0a"
                                 font.pixelSize: 11
                                 wrapMode: Text.WordWrap
                             }
 
                             RowLayout {
+                                // Cutlab: one interface only
+                                visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Skin"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Skin"); color: Theme.white; font.pixelSize: 12 }
                                 // Applied immediately, like the language: the
                                 // interface is reloaded with the other skin
                                 Skin.ComboBox {
@@ -293,7 +295,7 @@ Category {
                                 // Not used on Android (no light theme yet)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Theme color"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Theme color"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: colorInput
                                     Layout.preferredWidth: 180
@@ -306,7 +308,7 @@ Category {
                                 // Not used on Android (the skins have one layout)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Layout"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Layout"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: layoutInput
                                     Layout.preferredWidth: 180
@@ -319,7 +321,7 @@ Category {
                                 // Not used on Android (no mouse to hover with)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Tooltips"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Tooltips"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: tooltipsInput
                                     options: ["off", "library", "all"]
@@ -329,7 +331,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Keep screen on (screensaver)"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Keep screen on (screensaver)"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: disableScreensaverInput
                                     options: ["no", "while running", "while playing"]
@@ -341,7 +343,7 @@ Category {
                                 // Not used on Android (always fullscreen)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Start in fullscreen"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Start in fullscreen"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: startFullscreenInput
                                     options: ["on", "off"]
@@ -353,7 +355,7 @@ Category {
                                 // Not used on Android (the top bar of the skins is always shown)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Auto-hide top bar"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Auto-hide top bar"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: autoHideMenuBarInput
                                     options: ["on", "off"]
@@ -365,11 +367,13 @@ Category {
 
                     // Items shown in the top bar. Applied immediately.
                     Rectangle {
+                        // Cutlab: not needed with the single Cutlab screen
+                        visible: false
                         Layout.fillWidth: true
                         implicitHeight: topBarCol.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -381,13 +385,13 @@ Category {
                             Text {
                                 text: qsTr("TOP BAR")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
-                                color: "#7c8cff"
+                                font.pixelSize: 12
+                                color: "#ffffff"
                             }
                             Text {
                                 Layout.fillWidth: true
                                 text: qsTr("Choose the views and buttons shown at the top of the screen. At least one view stays visible.")
-                                color: "#8a91a3"
+                                color: "#8e8e93"
                                 font.pixelSize: 11
                                 wrapMode: Text.WordWrap
                             }
@@ -426,7 +430,7 @@ Category {
                                         implicitWidth: 72
                                         implicitHeight: 34
                                         activeColor: Theme.accentColor
-                                        backgroundColor: shown ? "#1e3a5f" : "#1a1e28"
+                                        backgroundColor: shown ? "#1e3a5f" : "#262628"
                                         normalColor: shown ? "#ffffff" : "#607d8b"
                                         font.weight: Font.DemiBold
                                         font.pixelSize: 11
@@ -452,9 +456,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: card2Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -466,13 +470,13 @@ Category {
                             Text {
                                 text: qsTr("LIBRARY & COLLECTION")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
+                                font.pixelSize: 12
                                 color: "#a9b3ff"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Search completions"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Search completions"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: searchCompletionInput
                                     options: ["on", "off"]
@@ -484,7 +488,7 @@ Category {
                                 // Not used on Android (keyboard shortcuts)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Search history"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Search history"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: searchHistoryKeyboardInput
                                     options: ["on", "off"]
@@ -494,7 +498,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("BPM column decimals"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("BPM column decimals"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.SpinBox {
                                     id: bpmPrecisionInput
                                     Layout.preferredWidth: 140
@@ -509,7 +513,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Track row height"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Track row height"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.Slider {
                                     id: libraryRowHeightInput
                                     Layout.preferredWidth: 200
@@ -526,6 +530,8 @@ Category {
 
                     // CARD 3: PALETAS DE COLOR
                     Rectangle {
+                        // Cutlab: not needed with the single Cutlab screen
+                        visible: false
                         id: colorPane
                         readonly property var defaultPalette: Mixxx.Config.getHotcueColorPalette(hotcuePaletteComboBox.currentText)
                         property int hotcuePaletteColorIndex: 0
@@ -534,9 +540,9 @@ Category {
 
                         Layout.fillWidth: true
                         implicitHeight: card3Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -548,13 +554,13 @@ Category {
                             Text {
                                 text: qsTr("COLOR PALETTES")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
+                                font.pixelSize: 12
                                 color: "#a78bfa"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Track palette"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Track palette"); color: Theme.white; font.pixelSize: 12 }
                                 ColorPaletteComboBox {
                                     id: trackPaletteComboBox
                                     Layout.preferredWidth: 220
@@ -564,7 +570,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Hotcue palette"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Hotcue palette"); color: Theme.white; font.pixelSize: 12 }
                                 ColorPaletteComboBox {
                                     id: hotcuePaletteComboBox
                                     Layout.preferredWidth: 220
@@ -574,7 +580,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Default hotcue color"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Default hotcue color"); color: Theme.white; font.pixelSize: 12 }
                                 DefaultColorSelector {
                                     id: hotcuePaletteInput
                                     Layout.preferredWidth: colorPane.defaultPalette.length * 18
@@ -586,7 +592,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Default loop color"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Default loop color"); color: Theme.white; font.pixelSize: 12 }
                                 DefaultColorSelector {
                                     id: loopPaletteInput
                                     Layout.preferredWidth: colorPane.defaultPalette.length * 18
@@ -600,7 +606,7 @@ Category {
                                 // Not used on Android (not saved by Mixxx)
                                 visible: false
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Default beatjump color"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Default beatjump color"); color: Theme.white; font.pixelSize: 12 }
                                 DefaultColorSelector {
                                     id: jumpPaletteInput
                                     Layout.preferredWidth: colorPane.defaultPalette.length * 18
@@ -612,7 +618,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Key colors"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Key colors"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: keyPaletteInput
                                     options: ["on", "off"]
@@ -623,7 +629,7 @@ Category {
                             RowLayout {
                                 Layout.fillWidth: true
                                 visible: keyPaletteInput.selected === "on"
-                                Text { Layout.fillWidth: true; text: qsTr("Key palette"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Key palette"); color: Theme.white; font.pixelSize: 12 }
                                 ColorPaletteComboBox {
                                     id: keyPaletteComboBox
                                     Layout.preferredWidth: 220
@@ -657,9 +663,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard1Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -671,13 +677,13 @@ Category {
                             Text {
                                 text: qsTr("CUE MODES & LOADING BEHAVIOR")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
-                                color: "#7c8cff"
+                                font.pixelSize: 12
+                                color: "#ffffff"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Cue mode"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Cue mode"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: cueModeInput
                                     Layout.preferredWidth: 190
@@ -688,7 +694,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Track load point"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Track load point"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: trackLoadPointInput
                                     Layout.preferredWidth: 190
@@ -699,7 +705,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Set intro start to main cue"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Set intro start to main cue"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: setIntroStartToMainCueInput
                                     options: ["on", "off"]
@@ -709,7 +715,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Loading a track when deck is playing"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Loading a track when deck is playing"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: loadingTrackWhenPlayingInput
                                     options: ["reject", "allow", "when stopped"]
@@ -719,7 +725,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Double-tap LOAD to clone deck"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Double-tap LOAD to clone deck"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: doublePressLoadToCloneInput
                                     options: ["on", "off"]
@@ -733,9 +739,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard2Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -747,13 +753,13 @@ Category {
                             Text {
                                 text: qsTr("TIME FORMAT & DISPLAY")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
+                                font.pixelSize: 12
                                 color: "#a9b3ff"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Time format"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Time format"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: timeMode
                                     Layout.preferredWidth: 200
@@ -777,7 +783,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Track time display"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Track time display"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: trackTimeDisplayInput
                                     options: ["elapsed", "remaining", "both"]
@@ -791,9 +797,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard3Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -805,13 +811,13 @@ Category {
                             Text {
                                 text: qsTr("PITCH, SPEED & SYNC")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
-                                color: "#f7c86a"
+                                font.pixelSize: 12
+                                color: "#ff9f0a"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Pitch slider range"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Pitch slider range"); color: Theme.white; font.pixelSize: 12 }
                                 Skin.ComboBox {
                                     id: sliderRangeInput
                                     readonly property list<int> values: [4, 6, 8, 10, 16, 24, 50, 90]
@@ -823,7 +829,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Pitch fader orientation"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Pitch fader orientation"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: sliderOrientationInput
                                     options: ["down", "up"]
@@ -833,7 +839,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("BPM sync algorithm"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("BPM sync algorithm"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: syncModeInput
                                     options: ["follow soft leader", "use steady"]
@@ -843,7 +849,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Reset speed on track load"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Reset speed on track load"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: resetOnTrackLoadInput
                                     options: ["none", "key", "both", "tempo"]
@@ -853,7 +859,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Keylock mode"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Keylock mode"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: keylockModeInput
                                     options: ["original key", "current key"]
@@ -863,7 +869,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Keyunlock mode"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Keyunlock mode"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: keyunlockModeInput
                                     options: ["reset key", "keep key"]
@@ -873,7 +879,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Pitch bend behavior"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Pitch bend behavior"); color: Theme.white; font.pixelSize: 12 }
                                 RatioChoice {
                                     id: pitchBendBehaviourInput
                                     options: ["abrupt jump", "smooth ramping"]
@@ -883,7 +889,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Ramping sensitivity"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Ramping sensitivity"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.Slider {
                                     id: rampingSensitivityInput
                                     Layout.preferredWidth: 200
@@ -901,9 +907,9 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         implicitHeight: deckCard4Col.implicitHeight + 20
-                        color: "#12151c"
+                        color: "#232325"
                         radius: 8
-                        border.color: "#232836"
+                        border.color: "#2c2c2e"
                         border.width: 1
 
                         ColumnLayout {
@@ -915,13 +921,13 @@ Category {
                             Text {
                                 text: qsTr("SPEED / PITCH BEND BUTTON STEPS")
                                 font.weight: Font.DemiBold
-                                font.pixelSize: 13
-                                color: "#b4b9c7"
+                                font.pixelSize: 12
+                                color: "#d1d1d6"
                             }
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Temporary fine (%)"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Temporary fine (%)"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.SpinBox {
                                     id: adjustmentButtonsTemporaryFineInput
                                     Layout.preferredWidth: 140
@@ -936,7 +942,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Temporary coarse (%)"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Temporary coarse (%)"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.SpinBox {
                                     id: adjustmentButtonsTemporaryCoarseInput
                                     Layout.preferredWidth: 140
@@ -951,7 +957,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Permanent fine (%)"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Permanent fine (%)"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.SpinBox {
                                     id: adjustmentButtonsPermanentFineInput
                                     Layout.preferredWidth: 140
@@ -966,7 +972,7 @@ Category {
 
                             RowLayout {
                                 Layout.fillWidth: true
-                                Text { Layout.fillWidth: true; text: qsTr("Permanent coarse (%)"); color: Theme.white; font.pixelSize: 13 }
+                                Text { Layout.fillWidth: true; text: qsTr("Permanent coarse (%)"); color: Theme.white; font.pixelSize: 12 }
                                 SettingComponents.SpinBox {
                                     id: adjustmentButtonsPermanentCoarseInput
                                     Layout.preferredWidth: 140
@@ -992,8 +998,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#12151c"
-        border.color: "#232836"
+        color: "#232325"
+        border.color: "#2c2c2e"
         border.width: 1
         radius: 8
 
@@ -1009,8 +1015,8 @@ Category {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
-                color: buttonActions.hasChanges ? "#332200" : "#0d2b1a"
-                border.color: buttonActions.hasChanges ? "#f5b544" : "#22b868"
+                color: buttonActions.hasChanges ? "#2e2616" : "#1d2a21"
+                border.color: buttonActions.hasChanges ? "#ff9f0a" : "#34c759"
                 border.width: 1
 
                 RowLayout {
@@ -1020,14 +1026,14 @@ Category {
                     Text {
                         text: buttonActions.hasChanges ? "●" : "✓"
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
-                        color: buttonActions.hasChanges ? "#f5b544" : "#2bd67b"
+                        font.pixelSize: 12
+                        color: buttonActions.hasChanges ? "#ff9f0a" : "#34c759"
                     }
                     Text {
                         text: buttonActions.hasChanges ? qsTr("Unsaved changes") : qsTr("Interface configured")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: buttonActions.hasChanges ? "#f7d58f" : "#b9f6ca"
+                        font.pixelSize: 11
+                        color: buttonActions.hasChanges ? "#ff9f0a" : "#34c759"
                     }
                 }
             }
@@ -1037,8 +1043,8 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff5d6c"
-                font.pixelSize: 12
+                color: "#ff6961"
+                font.pixelSize: 11
                 text: ""
             }
 
@@ -1049,19 +1055,19 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
                 radius: 6
-                color: resetMouse.pressed ? "#5c2b2b" : (resetMouse.containsMouse ? "#4a2222" : "#371e1e")
-                border.color: "#772b2b"
+                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#371e1e")
+                border.color: "#ff6961"
                 border.width: 1
 
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff8f99"; font.pixelSize: 14 }
+                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13 }
                     Text {
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: "#ffcdd2"
+                        font.pixelSize: 11
+                        color: "#ff6961"
                     }
                 }
 
@@ -1097,7 +1103,7 @@ Category {
                     anchors.centerIn: parent
                     text: qsTr("Discard")
                     font.weight: Font.DemiBold
-                    font.pixelSize: 13
+                    font.pixelSize: 12
                     color: "#e0e0e0"
                 }
 
@@ -1126,9 +1132,9 @@ Category {
                 Layout.preferredWidth: 220
                 radius: 6
                 color: buttonActions.hasChanges
-                       ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#2bd67b" : "#22b868"))
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
                        : (saveMouse.pressed ? "#2c47b8" : (saveMouse.containsMouse ? "#4f7cff" : "#4f7cff"))
-                border.color: buttonActions.hasChanges ? "#6fe3a4" : "#8aa8ff"
+                border.color: buttonActions.hasChanges ? "#34c759" : "#8aa8ff"
                 border.width: 1.5
 
                 RowLayout {
@@ -1137,14 +1143,14 @@ Category {
 
                     Text {
                         text: buttonActions.hasChanges ? "" : "✓"
-                        font.pixelSize: 14
+                        font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
                         text: buttonActions.hasChanges ? qsTr("Save interface") : qsTr("Saved")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#ffffff"
                     }
                 }

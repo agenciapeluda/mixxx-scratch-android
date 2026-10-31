@@ -85,7 +85,7 @@ Rectangle {
 
                     color: root.mode === index ? Style.accentText : Style.textSecondary
                     font.family: Style.font
-                    font.pixelSize: 17
+                    font.pixelSize: 15
                     text: modelData
 
                     MouseArea {

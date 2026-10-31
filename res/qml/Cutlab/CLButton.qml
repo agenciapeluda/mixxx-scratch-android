@@ -17,7 +17,7 @@ Item {
     property bool bordered: true
     // Whether being lit also colors the border, or only the label
     property bool litBorder: true
-    property int fontSize: Math.max(11, Math.min(18, Math.round(height * 0.32)))
+    property int fontSize: Math.max(11, Math.min(16, Math.round(height * 0.28)))
     property int fontWeight: Font.Medium
     property bool round: false
     readonly property alias pressed: mouse.pressed

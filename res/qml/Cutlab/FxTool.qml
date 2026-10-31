@@ -153,7 +153,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 color: root.mode === index ? Style.accentText : Style.textSecondary
                 font.family: Style.font
-                font.pixelSize: 17
+                font.pixelSize: 15
                 text: modelData
 
                 MouseArea {
@@ -246,7 +246,7 @@ Item {
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
                 font.family: Style.font
-                font.pixelSize: 17
+                font.pixelSize: 15
                 font.weight: Font.Medium
                 text: root.unit && root.unit.presetName !== "" && root.unit.presetName !== "---" ? root.unit.presetName : qsTr("Pick an effect")
             }

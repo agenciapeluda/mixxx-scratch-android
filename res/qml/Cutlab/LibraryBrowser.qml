@@ -270,7 +270,7 @@ Rectangle {
             color: Style.text
             elide: Text.ElideRight
             font.family: Style.font
-            font.pixelSize: 20
+            font.pixelSize: 17
             text: root.source === 0 && root.page ? root.page.title : ""
             visible: !root.searching
         }

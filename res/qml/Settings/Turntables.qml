@@ -148,7 +148,7 @@ Category {
                     Connections {
                         function onCommitted(error) {
                             usbStatus.text = error ? error : qsTr("Done: choose the input of each deck below.");
-                            usbStatus.color = error ? "#ff453a" : "#969696";
+                            usbStatus.color = error ? "#ff6961" : "#969696";
                             root.devicesChanged();
                         }
 
@@ -228,7 +228,7 @@ Category {
 
                     Text {
                         color: "#969696"
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         text: qsTr("Inputs of the USB sound card")
                     }
                     RowLayout {
@@ -270,7 +270,7 @@ Category {
                                         radius: 3
                                         // A dB scale, -60 dB at the bottom
                                         height: (parent.height - 4) * Math.max(0, Math.min(1, 1 + 20 * Math.log(Math.max(peak.value, 1e-6)) / Math.LN10 / 60))
-                                        color: peak.value > 0.9 ? "#ff453a" : (peak.value > 0.5 ? "#ff9f0a" : "#34c759")
+                                        color: peak.value > 0.9 ? "#ff6961" : (peak.value > 0.5 ? "#ff9f0a" : "#34c759")
                                     }
                                 }
                                 Text {
@@ -285,7 +285,7 @@ Category {
                             Layout.fillWidth: true
                             Layout.leftMargin: 10
                             color: usbInputs.receiving ? "#34c759" : "#ff9f0a"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             wrapMode: Text.WordWrap
                             text: usbInputs.receiving
                                 ? qsTr("Audio is arriving from the card (%1 channels). Play the record: the pair that moves is the one of the turntable, choose it below.").arg(Math.round(usbChannels.value))
@@ -311,14 +311,14 @@ Category {
                         Text {
                             Layout.columnSpan: 4
                             Layout.topMargin: deckRow.index ? 8 : 0
-                            color: deckRow.index ? "#ff7a3d" : "#584fff"
-                            font.pixelSize: 12
+                            color: "#ffffff"
+                            font.pixelSize: 11
                             font.weight: Font.DemiBold
                             text: qsTr("Deck %1").arg(deckRow.index + 1)
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Audio input")
                         }
                         Skin.ComboBox {
@@ -401,7 +401,7 @@ Category {
 
                             Layout.columnSpan: 3
                             Layout.fillWidth: true
-                            color: text === qsTr("Not routed") ? "#ff8f99" : "#6fe3a4"
+                            color: text === qsTr("Not routed") ? "#ff6961" : "#34c759"
                             font.pixelSize: 11
                             function read() {
                                 const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
@@ -441,7 +441,7 @@ Category {
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("DVS")
                         }
                         RowLayout {
@@ -451,7 +451,7 @@ Category {
                             Skin.Button {
                                 Layout.preferredHeight: 40
                                 Layout.preferredWidth: 150
-                                activeColor: "#2bd67b"
+                                activeColor: "#34c759"
                                 highlight: dvsEnabled.value > 0
                                 text: dvsEnabled.value > 0 ? qsTr("DVS on") : qsTr("DVS off")
                                 onClicked: dvsEnabled.value = dvsEnabled.value > 0 ? 0 : 1
@@ -459,7 +459,7 @@ Category {
                             Text {
                                 Layout.fillWidth: true
                                 color: "#969696"
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: qsTr("With DVS on, the turntable moves this deck. It is the same as the DVS button next to the deck.")
                                 wrapMode: Text.WordWrap
                             }
@@ -473,7 +473,7 @@ Category {
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Signal")
                         }
                         RowLayout {
@@ -496,8 +496,8 @@ Category {
                             }
                             Text {
                                 Layout.fillWidth: true
-                                color: ["#969696", "#2bd67b", "#f5b544", "#ff5d6c"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
-                                font.pixelSize: 12
+                                color: ["#969696", "#34c759", "#ff9f0a", "#ff6961"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
+                                font.pixelSize: 11
                                 text: [qsTr("DVS is off on this deck: turn it on with the DVS button of the deck."),
                                     qsTr("DVS on and the timecode is read well."),
                                     qsTr("Weak or unstable timecode: check the level and the needle."),
@@ -514,7 +514,7 @@ Category {
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Timecode")
                         }
                         Skin.ComboBox {
@@ -532,7 +532,7 @@ Category {
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Speed")
                         }
                         Setting.RatioChoice {
@@ -548,7 +548,7 @@ Category {
                         }
                         Text {
                             color: "#969696"
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Lead-in (s)")
                         }
                         SpinBox {
@@ -577,7 +577,7 @@ Category {
                     Text {
                         Layout.preferredWidth: 90
                         color: "#969696"
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         text: qsTr("Curve")
                     }
                     Setting.RatioChoice {
@@ -601,7 +601,7 @@ Category {
                     Text {
                         Layout.preferredWidth: 90
                         color: "#969696"
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         text: qsTr("Hamster")
                     }
                     Setting.RatioChoice {
@@ -644,7 +644,7 @@ Category {
 
             Text {
                 color: "#ececec"
-                font.pixelSize: 15
+                font.pixelSize: 14
                 font.weight: Font.DemiBold
                 text: card.title
             }

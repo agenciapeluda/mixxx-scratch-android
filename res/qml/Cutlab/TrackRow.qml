@@ -54,7 +54,7 @@ Rectangle {
             color: Style.text
             elide: Text.ElideRight
             font.family: Style.font
-            font.pixelSize: 15
+            font.pixelSize: 14
             text: root.track ? (root.track.title !== "" ? root.track.title : decodeURIComponent(root.track.trackLocationUrl.toString().replace(/^.*\//, ""))) : ""
         }
         Text {
@@ -62,7 +62,7 @@ Rectangle {
             color: Style.textSecondary
             elide: Text.ElideRight
             font.family: Style.font
-            font.pixelSize: 13
+            font.pixelSize: 12
             text: root.track ? root.track.artist : ""
         }
     }

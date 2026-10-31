@@ -106,7 +106,7 @@ Item {
             color: Style.textSecondary
             elide: Text.ElideRight
             font.family: Style.font
-            font.pixelSize: Math.max(10, Math.round(root.height * 0.19))
+            font.pixelSize: Math.max(10, Math.round(root.height * 0.17))
             text: root.loaded && root.currentTrack ? root.currentTrack.artist : ""
         }
         Text {
@@ -119,7 +119,7 @@ Item {
             color: Style.text
             elide: Text.ElideRight
             font.family: Style.font
-            font.pixelSize: Math.max(12, Math.round(root.height * 0.25))
+            font.pixelSize: Math.max(12, Math.round(root.height * 0.22))
             text: root.loaded && root.currentTrack ? root.currentTrack.title : qsTr("Tap to load a track")
             opacity: root.loaded ? 1 : 0.5
         }

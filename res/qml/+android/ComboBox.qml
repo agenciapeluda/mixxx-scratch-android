@@ -36,49 +36,14 @@ ComboBox {
 
     indicator.width: 20
 
-    background: Item {
-        Rectangle {
-            id: background
-
-            anchors.fill: parent
-            anchors.margins: 4
-            border.color: '#000000'
-            border.width: 1
-            color: '#232323'
-            radius: 4
-        }
-        InnerShadow {
-            id: bottomInnerEffect
-
-            anchors.fill: parent
-            color: "#40000000"
-            horizontalOffset: -2
-            radius: 4
-            samples: 16
-            source: background
-            spread: 0.3
-            verticalOffset: -2
-        }
-        InnerShadow {
-            id: topInnerEffect
-
-            anchors.fill: parent
-            color: "#40000000"
-            horizontalOffset: 2
-            radius: 4
-            samples: 16
-            source: bottomInnerEffect
-            spread: 0.3
-            verticalOffset: 2
-        }
-        DropShadow {
-            anchors.fill: parent
-            color: "#40000000"
-            horizontalOffset: 0
-            radius: 4.0
-            source: topInnerEffect
-            verticalOffset: 0
-        }
+    // Cutlab: flat, rounded, with a thin border; indigo while open
+    background: Rectangle {
+        anchors.fill: parent
+        anchors.margins: 3
+        border.color: root.popup.visible ? "#635bff" : "#4a4a4d"
+        border.width: 1
+        color: root.down ? "#333336" : "#262628"
+        radius: 9
     }
     contentItem: Text {
         clip: root.clip
@@ -100,21 +65,43 @@ ComboBox {
         implicitHeight: root.itemHeight
         width: ListView.view ? ListView.view.width : root.popup.width
 
+        readonly property bool selected: root.currentIndex === itemDlgt.index
+
         background: Rectangle {
-            border.color: itemDlgt.highlighted ? "#837cff" : "transparent"
-            border.width: 1
-            color: itemDlgt.down ? "#343434" : (itemDlgt.highlighted ? "#212121" : "transparent")
-            radius: 4
+            color: itemDlgt.down ? "#3a3a3d" : (itemDlgt.highlighted ? "#2f2f32" : "transparent")
+            radius: 8
         }
-        contentItem: Text {
-            color: itemDlgt.highlighted ? "#ffffff" : Theme.deckTextColor
-            elide: Text.ElideRight
-            font.pixelSize: Math.max(12, root.font.pixelSize)
-            font.bold: itemDlgt.highlighted
-            text: root.textAt(itemDlgt.index)
-            verticalAlignment: Text.AlignVCenter
-            leftPadding: 10
-            rightPadding: 10
+        // The chosen entry is ticked and in the accent color
+        contentItem: Item {
+            implicitHeight: itemText.implicitHeight
+
+            Text {
+                id: itemText
+
+                anchors.left: parent.left
+                anchors.right: tick.left
+                anchors.verticalCenter: parent.verticalCenter
+                color: itemDlgt.selected ? "#8b85ff" : "#e5e5ea"
+                elide: Text.ElideRight
+                font.pixelSize: Math.max(12, root.font.pixelSize)
+                font.weight: itemDlgt.selected ? Font.Medium : Font.Normal
+                text: root.textAt(itemDlgt.index)
+                leftPadding: 10
+                rightPadding: 8
+            }
+            Image {
+                id: tick
+
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                width: 16
+                height: 16
+                source: "Cutlab/icons/check_lit.svg"
+                sourceSize.width: 32
+                sourceSize.height: 32
+                visible: itemDlgt.selected
+            }
         }
 
         onClicked: {

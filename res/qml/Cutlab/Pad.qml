@@ -56,7 +56,7 @@ Rectangle {
         fontSizeMode: Text.HorizontalFit
         minimumPixelSize: 10
         font.family: Style.font
-        font.pixelSize: Math.max(11, Math.min(22, root.height * 0.2, root.width * 0.2))
+        font.pixelSize: Math.max(11, Math.min(18, root.height * 0.18, root.width * 0.18))
         text: root.text
     }
     Text {

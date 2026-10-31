@@ -49,7 +49,7 @@ Category {
                     Text {
                         text: qsTr("STEMS")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#837cff"
                     }
                     Text {
@@ -62,7 +62,7 @@ Category {
                     Text {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#f7c86a"
+                        color: "#ff9f0a"
                         font.pixelSize: 11
                         text: qsTr("Separating uses a lot of CPU. While you play it may cause audio dropouts: better prepare your tracks before the session.")
                     }
@@ -79,7 +79,7 @@ Category {
                     Text {
                         text: qsTr("MODELS")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#837cff"
                     }
                     Text {
@@ -111,7 +111,7 @@ Category {
                         Layout.fillWidth: true
                         visible: root.message !== ""
                         wrapMode: Text.WordWrap
-                        color: "#ef9a9a"
+                        color: "#ff6961"
                         font.pixelSize: 11
                         text: root.message
                     }
@@ -128,7 +128,7 @@ Category {
                     Text {
                         text: qsTr("OPTIONS")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#837cff"
                     }
 
@@ -190,7 +190,7 @@ Category {
                     Text {
                         text: qsTr("QUEUE")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#837cff"
                     }
 
@@ -210,7 +210,7 @@ Category {
                     Text {
                         text: qsTr("STORAGE")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#837cff"
                     }
 
@@ -242,7 +242,7 @@ Category {
                             implicitHeight: 34
                             enabled: storedText.storedMb > 0
                             activeColor: "#ffffff"
-                            backgroundColor: "#5f1e1e"
+                            backgroundColor: "#2e1c1c"
                             normalColor: "#ffffff"
                             font.weight: Font.DemiBold
                             text: qsTr("DELETE")
@@ -297,7 +297,7 @@ Category {
                 Layout.fillWidth: true
                 text: choiceRow.label
                 color: "#ffffff"
-                font.pixelSize: 12
+                font.pixelSize: 11
             }
             Text {
                 Layout.fillWidth: true
@@ -353,7 +353,7 @@ Category {
         implicitHeight: modelLayout.implicitHeight + 16
         radius: 6
         color: "#202020"
-        border.color: installed ? "#2e7d32" : "#2f2f2f"
+        border.color: installed ? "#34c759" : "#2f2f2f"
         border.width: 1
 
         Connections {
@@ -377,9 +377,9 @@ Category {
 
                 Text {
                     text: StemsText.modelLabel(modelRow.model) + (modelRow.installed ? "  ✓" : "")
-                    color: modelRow.installed ? "#81c784" : "#ffffff"
+                    color: modelRow.installed ? "#34c759" : "#ffffff"
                     font.weight: Font.DemiBold
-                    font.pixelSize: 12
+                    font.pixelSize: 11
                 }
                 Text {
                     Layout.fillWidth: true
@@ -407,7 +407,7 @@ Category {
                     Layout.fillWidth: true
                     visible: modelRow.warning !== ""
                     text: modelRow.warning
-                    color: "#f7c86a"
+                    color: "#ff9f0a"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
@@ -441,7 +441,7 @@ Category {
                 implicitHeight: 34
                 enabled: modelRow.downloading || Mixxx.Stems.downloadingModel === ""
                 activeColor: "#ffffff"
-                backgroundColor: modelRow.installed || modelRow.downloading ? "#5f1e1e" : "#1e5f3a"
+                backgroundColor: modelRow.installed || modelRow.downloading ? "#2e1c1c" : "#1d2a21"
                 normalColor: "#ffffff"
                 font.weight: Font.DemiBold
                 text: {

@@ -55,13 +55,13 @@ Category {
                             spacing: 2
                             Text {
                                 text: "Cutlab"
-                                font.pixelSize: 20
+                                font.pixelSize: 18
                                 font.weight: Font.DemiBold
                                 color: "#ececec"
                             }
                             Text {
                                 text: qsTr("by xhellvirax")
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 color: "#bebebe"
                             }
                             Text {
@@ -75,7 +75,7 @@ Category {
                         Layout.fillWidth: true
                         Layout.topMargin: 6
                         text: qsTr("Open source DJ software for Android: DVS, DJ controllers and a touch interface.")
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         color: "#bebebe"
                         wrapMode: Text.WordWrap
                     }
@@ -102,7 +102,7 @@ Category {
                         Text {
                             text: qsTr("UPDATES")
                             font.weight: Font.DemiBold
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             color: "#837cff"
                             font.letterSpacing: 0.5
                         }
@@ -114,7 +114,7 @@ Category {
 
                         Skin.AppUpdateStatusText {
                             Layout.fillWidth: true
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                         }
 
                         Skin.Button {
@@ -251,7 +251,7 @@ Category {
 
                     Text {
                         text: qsTr("Credits")
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         font.weight: Font.DemiBold
                         color: "#ececec"
                     }

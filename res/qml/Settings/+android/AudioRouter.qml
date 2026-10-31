@@ -427,7 +427,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.margins: 15
                 color: '#626262'
-                font.pixelSize: 14
+                font.pixelSize: 13
                 text: qsTr("Inputs")
             }
             ListView {
@@ -560,7 +560,7 @@ Rectangle {
                 }
                 Text {
                     color: Theme.white
-                    font.pixelSize: 14
+                    font.pixelSize: 13
                     text: qsTr("Multi-Soundcard Synchronization")
                 }
                 Item {
@@ -584,7 +584,7 @@ Rectangle {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.margins: 15
                 color: '#626262'
-                font.pixelSize: 14
+                font.pixelSize: 13
                 text: qsTr("Outputs")
             }
             ListView {

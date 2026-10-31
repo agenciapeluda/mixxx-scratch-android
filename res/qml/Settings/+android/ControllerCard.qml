@@ -69,7 +69,7 @@ Item {
         anchors.margins: 8
         color: '#181818'
         radius: root.focused ? 18 : 22
-        border.color: root.focused ? "#3429ff" : (root.knownDevice ? "#2e7d32" : "#343434")
+        border.color: root.focused ? "#3429ff" : (root.knownDevice ? "#34c759" : "#343434")
         border.width: root.focused ? 2 : 1
 
         Item {
@@ -110,7 +110,7 @@ Item {
                 id: nameInput
 
                 color: Theme.white
-                font.pixelSize: 16
+                font.pixelSize: 14
                 font.weight: Font.DemiBold
                 text: label.value
                 visible: false
@@ -129,7 +129,7 @@ Item {
                 id: labelText
 
                 color: Theme.white
-                font.pixelSize: 16
+                font.pixelSize: 14
                 font.weight: Font.DemiBold
                 text: label.value
                 visible: !nameInput.visible
@@ -207,52 +207,52 @@ Item {
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Vendor")
                         }
                         Text {
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: modelData.vendor
                         }
                         Text {
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Product")
                         }
                         Text {
                             Layout.alignment: Qt.AlignLeft
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: modelData.product
                         }
                         Text {
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Serial number")
                         }
                         Text {
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: modelData.serialNumber
                         }
                         Text {
                             Layout.alignment: Qt.AlignLeft
                             Layout.fillWidth: true
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: qsTr("Type")
                         }
                         Text {
                             Layout.alignment: Qt.AlignRight
                             color: Theme.white
-                            font.pixelSize: 12
+                            font.pixelSize: 11
                             text: {
                                 switch (modelData.type) {
                                 case Mixxx.ControllerDevice.Type.MIDI:
@@ -488,7 +488,7 @@ Item {
                     anchors.margins: 6
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    color: mappingsCombobox.currentIndex >= 0 ? Theme.deckTextColor : "#f7c86a"
+                    color: mappingsCombobox.currentIndex >= 0 ? Theme.deckTextColor : "#ff9f0a"
                     font: mappingsCombobox.font
                     text: mappingsCombobox.currentIndex >= 0 
                           ? mappingsCombobox.model[mappingsCombobox.currentIndex]?.name 
@@ -531,14 +531,14 @@ Item {
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: qsTr("Author")
                             }
                             Text {
                                 Layout.alignment: Qt.AlignRight
                                 Layout.maximumWidth: 280
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: (root.modelData.mapping?.author || 'N/A') + (root.modelData.mapping?.isUserMapping(Mixxx.Config) ? qsTr(" (edited by you)") : '')
                                 wrapMode: Text.WordWrap
                             }
@@ -546,7 +546,7 @@ Item {
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: qsTr("Forum Link")
                             }
                             ControllerMappingLink {
@@ -558,7 +558,7 @@ Item {
                                 Layout.alignment: Qt.AlignLeft
                                 Layout.fillWidth: true
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: qsTr("Wiki Link")
                             }
                             ControllerMappingLink {
@@ -570,14 +570,14 @@ Item {
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                                 Layout.fillWidth: true
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 text: qsTr("Description")
                             }
                             Text {
                                 Layout.alignment: Qt.AlignRight
                                 Layout.maximumWidth: 280
                                 color: Theme.white
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 horizontalAlignment: Text.AlignJustify
                                 text: root.modelData.mapping?.description || 'N/A'
                                 wrapMode: Text.WordWrap

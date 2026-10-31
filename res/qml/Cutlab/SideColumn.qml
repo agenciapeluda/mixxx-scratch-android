@@ -70,7 +70,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Style.text
             font.family: Style.font
-            font.pixelSize: Math.max(15, Math.min(22, Math.round(root.height * 0.07)))
+            font.pixelSize: Math.max(14, Math.min(20, Math.round(root.height * 0.06)))
             text: bpm.value > 0 ? bpm.value.toFixed(1) : "--.-"
         }
     }

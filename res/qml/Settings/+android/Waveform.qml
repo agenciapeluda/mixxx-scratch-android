@@ -166,7 +166,7 @@ Category {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.pixelSize: 14
+                font.pixelSize: 13
                 font.weight: Font.DemiBold
                 text: qsTr("Overview Waveforms")
             }
@@ -235,7 +235,7 @@ Category {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.pixelSize: 14
+                font.pixelSize: 13
                 font.weight: Font.DemiBold
                 text: qsTr("Scrolling Waveforms")
             }
@@ -556,7 +556,7 @@ Category {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.pixelSize: 14
+                font.pixelSize: 13
                 font.weight: Font.DemiBold
                 text: qsTr("Caching")
             }
@@ -610,7 +610,7 @@ Category {
             Text {
                 Layout.fillWidth: true
                 color: Theme.white
-                font.pixelSize: 14
+                font.pixelSize: 13
                 font.weight: Font.DemiBold
                 text: qsTr("Graphics API Status")
             }
@@ -655,8 +655,8 @@ Category {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
-                color: root.dirty ? "#332200" : "#0d2b1a"
-                border.color: root.dirty ? "#f5b544" : "#22b868"
+                color: root.dirty ? "#2e2616" : "#1d2a21"
+                border.color: root.dirty ? "#ff9f0a" : "#34c759"
                 border.width: 1
 
                 RowLayout {
@@ -666,14 +666,14 @@ Category {
                     Text {
                         text: root.dirty ? "●" : "✓"
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
-                        color: root.dirty ? "#f5b544" : "#2bd67b"
+                        font.pixelSize: 12
+                        color: root.dirty ? "#ff9f0a" : "#34c759"
                     }
                     Text {
                         text: root.dirty ? qsTr("Unsaved changes") : qsTr("Waveforms saved")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: root.dirty ? "#f7d58f" : "#b9f6ca"
+                        font.pixelSize: 11
+                        color: root.dirty ? "#ff9f0a" : "#34c759"
                     }
                 }
             }
@@ -683,8 +683,8 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff5d6c"
-                font.pixelSize: 12
+                color: "#ff6961"
+                font.pixelSize: 11
                 text: ""
             }
 
@@ -695,19 +695,19 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
                 radius: 6
-                color: resetMouse.pressed ? "#5c2b2b" : (resetMouse.containsMouse ? "#4a2222" : "#2b2b2b")
-                border.color: "#772b2b"
+                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#2b2b2b")
+                border.color: "#ff6961"
                 border.width: 1
 
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff8f99"; font.pixelSize: 14 }
+                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13 }
                     Text {
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: "#ffcdd2"
+                        font.pixelSize: 11
+                        color: "#ff6961"
                     }
                 }
 
@@ -736,7 +736,7 @@ Category {
                     anchors.centerIn: parent
                     text: qsTr("Discard")
                     font.weight: Font.DemiBold
-                    font.pixelSize: 13
+                    font.pixelSize: 12
                     color: "#e0e0e0"
                 }
 
@@ -758,9 +758,9 @@ Category {
                 Layout.preferredWidth: 230
                 radius: 6
                 color: root.dirty
-                       ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#2bd67b" : "#22b868"))
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
                        : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
-                border.color: root.dirty ? "#6fe3a4" : "#908aff"
+                border.color: root.dirty ? "#34c759" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {
@@ -769,14 +769,14 @@ Category {
 
                     Text {
                         text: root.dirty ? "" : "✓"
-                        font.pixelSize: 14
+                        font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
                         text: root.dirty ? qsTr("Save waveforms") : qsTr("Saved")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#ffffff"
                     }
                 }
@@ -802,7 +802,7 @@ Category {
         Text {
             anchors.fill: parent
             color: Theme.white
-            font.pixelSize: 14
+            font.pixelSize: 13
             text: parent.label
             verticalAlignment: Text.AlignVCenter
         }

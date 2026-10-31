@@ -17,8 +17,12 @@ Popup {
     property var categoryItems: []
     // Skins can give the window their own title and colors
     property string title: qsTr("Settings")
-    property color headerColor: Theme.darkGray3
-    property color backgroundColor: Theme.darkGray2
+    property color headerColor: "#1c1c1e"
+    property color backgroundColor: "#1c1c1e"
+    // Phone upright (narrow): one column, the list of categories first and
+    // then the chosen page with a back arrow
+    readonly property bool narrow: width < 720
+    property bool showingPage: false
 
     function updateActiveCategory() {
         root.activeCategory?.deactivated();
@@ -40,6 +44,7 @@ Popup {
 
     onOpened: {
         resetSearch();
+        root.showingPage = false;
     }
 
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -54,8 +59,8 @@ Popup {
         anchors.fill: parent
         color: root.backgroundColor
         opacity: parent.radius < 0 ? Math.max(0.1, 1 + parent.radius / 8) : 1
-        radius: 8
-        border.color: "#404040"
+        radius: 12
+        border.color: "#2c2c2e"
         border.width: 1
     }
 
@@ -66,7 +71,7 @@ Popup {
         // Top navigation bar with Back / Title / Close button
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
+            Layout.preferredHeight: 44
             color: root.headerColor
             radius: 6
 
@@ -74,32 +79,60 @@ Popup {
                 anchors.fill: parent
                 anchors.margins: 4
 
-                Skin.Button {
+                // Back: to the categories when a page fills the screen,
+                // otherwise closes the settings
+                Item {
                     id: backButton
-                    Layout.preferredHeight: 32
-                    Layout.preferredWidth: 105
-                    activeColor: Theme.accentColor
-                    font.weight: Font.DemiBold
-                    text: qsTr("← Back")
-                    onClicked: root.close()
+
+                    Layout.preferredHeight: 36
+                    Layout.preferredWidth: 44
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: 20
+                        height: 20
+                        source: "Cutlab/icons/back.svg"
+                        sourceSize.width: 48
+                        sourceSize.height: 48
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            if (root.narrow && root.showingPage) {
+                                root.showingPage = false;
+                            } else {
+                                root.close();
+                            }
+                        }
+                    }
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    color: Theme.white
-                    font.weight: Font.DemiBold
-                    font.pixelSize: 15
-                    horizontalAlignment: Text.AlignHCenter
-                    text: root.title
+                    color: "#ffffff"
+                    font.weight: Font.Medium
+                    font.pixelSize: 16
+                    elide: Text.ElideRight
+                    text: root.narrow && root.showingPage && root.activeCategory ? root.activeCategory.label : root.title
                 }
 
-                Skin.Button {
-                    id: closeButton
-                    Layout.preferredHeight: 32
-                    Layout.preferredWidth: 42
-                    activeColor: Theme.accentColor
-                    text: "✕"
-                    onClicked: root.close()
+                Item {
+                    Layout.preferredWidth: 44
+                    Layout.preferredHeight: 36
+                    visible: !root.narrow
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: 18
+                        height: 18
+                        source: "Cutlab/icons/close.svg"
+                        sourceSize.width: 48
+                        sourceSize.height: 48
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: root.close()
+                    }
                 }
             }
         }
@@ -112,11 +145,12 @@ Popup {
             // Left Sidebar: Categories
             Rectangle {
                 Layout.fillHeight: true
-                Layout.preferredWidth: Math.min(230, Math.max(160, Math.floor(parent.width * 0.22)))
-                border.color: "#383838"
-                border.width: 1
-                color: Theme.darkGray
-                radius: 6
+                Layout.fillWidth: root.narrow
+                Layout.preferredWidth: root.narrow ? parent.width : Math.min(240, Math.max(170, Math.floor(parent.width * 0.24)))
+                visible: !root.narrow || !root.showingPage
+                border.color: "transparent"
+                color: "#161617"
+                radius: 10
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -213,8 +247,8 @@ Popup {
 
                             readonly property bool isSelected: ListView.isCurrentItem
 
-                            color: isSelected ? "#232323" : (tapArea.pressed ? "#1c1c1c" : "transparent")
-                            height: 48
+                            color: isSelected && !root.narrow ? "#2b2b2e" : (tapArea.pressed ? "#242426" : "transparent")
+                            height: 46
                             radius: 8
                             width: ListView.view.width
 
@@ -226,7 +260,7 @@ Popup {
                                 height: 22
                                 radius: 1.5
                                 color: Theme.accentColor
-                                visible: categoryDelegate.isSelected
+                                visible: categoryDelegate.isSelected && !root.narrow
                             }
 
                             RowLayout {
@@ -248,26 +282,30 @@ Popup {
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#ffffff" : "#bebebe"
+                                        color: categoryDelegate.isSelected && !root.narrow ? "#ffffff" : "#d1d1d6"
                                         elide: Text.ElideRight
-                                        font.weight: categoryDelegate.isSelected ? Font.DemiBold : Font.Normal
+                                        font.weight: categoryDelegate.isSelected && !root.narrow ? Font.Medium : Font.Normal
                                         font.pixelSize: 13
                                         text: qsTr(label)
                                     }
 
                                     Text {
                                         Layout.fillWidth: true
-                                        color: categoryDelegate.isSelected ? "#969696" : "#666666"
+                                        color: "#8e8e93"
                                         elide: Text.ElideRight
                                         font.pixelSize: 10
                                         text: qsTr(subtext)
                                     }
                                 }
-                            }
 
-                            TapHandler {
-                                onTapped: {
-                                    categoryList.currentIndex = index;
+                                Image {
+                                    Layout.preferredWidth: 14
+                                    Layout.preferredHeight: 14
+                                    source: "Cutlab/icons/chevron_right.svg"
+                                    sourceSize.width: 32
+                                    sourceSize.height: 32
+                                    opacity: 0.6
+                                    visible: root.narrow
                                 }
                             }
 
@@ -276,6 +314,7 @@ Popup {
                                 anchors.fill: parent
                                 onClicked: {
                                     categoryList.currentIndex = index;
+                                    root.showingPage = true;
                                 }
                             }
                         }
@@ -345,6 +384,7 @@ Popup {
             ColumnLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                visible: !root.narrow || root.showingPage
                 spacing: 4
 
                 Rectangle {

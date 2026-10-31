@@ -461,7 +461,7 @@ Category {
 
                             Text {
                                 text: qsTr("Quick audio output profiles")
-                                font.pixelSize: 15
+                                font.pixelSize: 14
                                 font.weight: Font.DemiBold
                                 color: "#908aff"
                             }
@@ -498,12 +498,12 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 16 }
+                                        Text { text: ""; font.pixelSize: 14 }
                                         Text {
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("Phone / Bluetooth")
-                                            font.pixelSize: 13
+                                            font.pixelSize: 12
                                             font.weight: Font.DemiBold
                                             color: root.activePreset === "single" ? "#ffffff" : "#dbdbdb"
                                         }
@@ -539,7 +539,7 @@ Category {
                                 Layout.fillHeight: true
                                 radius: 10
                                 color: root.activePreset === "splitter" ? "#303030" : (p2Mouse.containsMouse ? "#262626" : "#1c1c1c")
-                                border.color: root.activePreset === "splitter" ? "#ff7043" : "#3e3e3e"
+                                border.color: root.activePreset === "splitter" ? "#ff6961" : "#3e3e3e"
                                 border.width: root.activePreset === "splitter" ? 2 : 1
 
                                 ColumnLayout {
@@ -550,12 +550,12 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 16 }
+                                        Text { text: ""; font.pixelSize: 14 }
                                         Text {
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("DJ splitter cable")
-                                            font.pixelSize: 13
+                                            font.pixelSize: 12
                                             font.weight: Font.DemiBold
                                             color: root.activePreset === "splitter" ? "#ffffff" : "#dbdbdb"
                                         }
@@ -563,7 +563,7 @@ Category {
                                             text: root.activePreset === "splitter" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
-                                            color: "#ffab91"
+                                            color: "#ff6961"
                                         }
                                     }
                                     Text {
@@ -590,8 +590,8 @@ Category {
                                 Layout.preferredHeight: Math.max(96, presetCol3.implicitHeight + 20)
                                 Layout.fillHeight: true
                                 radius: 10
-                                color: root.activePreset === "controller" ? "#1b3a24" : (p3Mouse.containsMouse ? "#242424" : "#1c1c1c")
-                                border.color: root.activePreset === "controller" ? "#66bb6a" : "#3d3d3d"
+                                color: root.activePreset === "controller" ? "#1d2a21" : (p3Mouse.containsMouse ? "#242424" : "#1c1c1c")
+                                border.color: root.activePreset === "controller" ? "#34c759" : "#3d3d3d"
                                 border.width: root.activePreset === "controller" ? 2 : 1
 
                                 ColumnLayout {
@@ -602,12 +602,12 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 16 }
+                                        Text { text: ""; font.pixelSize: 14 }
                                         Text {
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("DJ controller (RCA + headphones)")
-                                            font.pixelSize: 13
+                                            font.pixelSize: 12
                                             font.weight: Font.DemiBold
                                             color: root.activePreset === "controller" ? "#ffffff" : "#dbdbdb"
                                         }
@@ -615,13 +615,13 @@ Category {
                                             text: root.activePreset === "controller" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
-                                            color: "#81c784"
+                                            color: "#34c759"
                                         }
                                     }
                                     Text {
                                         text: qsTr("Pro audio: channels 1-2 to the main RCA output (speakers) and channels 3-4 to the headphone jack of the controller.")
                                         font.pixelSize: 11
-                                        color: "#a5d6a7"
+                                        color: "#34c759"
                                         wrapMode: Text.WordWrap
                                         Layout.fillWidth: true
                                     }
@@ -654,12 +654,12 @@ Category {
 
                                     RowLayout {
                                         Layout.fillWidth: true
-                                        Text { text: ""; font.pixelSize: 16 }
+                                        Text { text: ""; font.pixelSize: 14 }
                                         Text {
                                             Layout.fillWidth: true
                                             elide: Text.ElideRight
                                             text: qsTr("Tablet + controller headphones (hybrid)")
-                                            font.pixelSize: 13
+                                            font.pixelSize: 12
                                             font.weight: Font.DemiBold
                                             color: root.activePreset === "hybrid" ? "#ffffff" : "#dbdbdb"
                                         }
@@ -696,7 +696,7 @@ Category {
                             radius: 8
                             visible: root.presetMessage.length > 0
                             color: root.presetError ? "#2c2c2c" : "#1e1e1e"
-                            border.color: root.presetError ? "#ef5350" : "#66bb6a"
+                            border.color: root.presetError ? "#ff6961" : "#34c759"
                             border.width: 1
 
                             Text {
@@ -706,8 +706,8 @@ Category {
                                 text: (root.presetError ? "" : (root.presetChosen ? "" : "")) + root.presetMessage
                                       + (root.presetChosen && !root.presetError ? qsTr(" — press Save to apply it.") : "")
                                 wrapMode: Text.WordWrap
-                                font.pixelSize: 12
-                                color: root.presetError ? "#ffcdd2" : "#c8e6c9"
+                                font.pixelSize: 11
+                                color: root.presetError ? "#ff6961" : "#34c759"
                             }
                         }
 
@@ -726,10 +726,10 @@ Category {
                                 anchors.margins: 10
                                 spacing: 8
 
-                                Text { text: ""; font.pixelSize: 14 }
+                                Text { text: ""; font.pixelSize: 13 }
                                 Text {
                                     text: qsTr("Custom routing active (virtual cables in the matrix)")
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                     font.weight: Font.DemiBold
                                     color: "#4238f8"
                                 }
@@ -759,7 +759,7 @@ Category {
 
                                 Text {
                                     text: qsTr("How do I connect my speakers and headphones?")
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                     font.weight: Font.DemiBold
                                     color: "#9590f9"
                                 }
@@ -793,7 +793,7 @@ Category {
 
                         Text {
                             text: qsTr("Audio engine, latency & quality")
-                            font.pixelSize: 15
+                            font.pixelSize: 14
                             font.weight: Font.DemiBold
                             color: "#ffffff"
                         }
@@ -811,7 +811,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     color: Theme.white
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     text: qsTr("Audio API")
                                 }
                                 RatioChoice {
@@ -832,7 +832,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     color: Theme.white
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     text: qsTr("Sample rate")
                                 }
                                 RatioChoice {
@@ -869,7 +869,7 @@ Category {
                                     Text {
                                         Layout.fillWidth: true
                                         color: Theme.white
-                                        font.pixelSize: 13
+                                        font.pixelSize: 12
                                         text: qsTr("Latency / audio buffer")
                                     }
                                     Skin.ComboBox {
@@ -888,7 +888,7 @@ Category {
                                             audioBuffer.currentIndex = cur;
                                         }
                                         clip: true
-                                        font.pixelSize: 12
+                                        font.pixelSize: 11
                                         spacing: 2
                                         onCurrentIndexChanged: {
                                             root.hasChanges = true;
@@ -905,7 +905,7 @@ Category {
                                         return qsTr("Safe mode: maximum stability if you hear crackles or the phone is slow.");
                                     }
                                     font.pixelSize: 11
-                                    color: audioBuffer.currentIndex <= 1 ? "#908aff" : (audioBuffer.currentIndex <= 3 ? "#81c784" : "#f7c86a")
+                                    color: audioBuffer.currentIndex <= 1 ? "#908aff" : (audioBuffer.currentIndex <= 3 ? "#34c759" : "#ff9f0a")
                                 }
                             }
 
@@ -915,7 +915,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     color: Theme.white
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     text: qsTr("Main mix mode")
                                 }
                                 RatioChoice {
@@ -935,7 +935,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     color: Theme.white
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     text: qsTr("Keylock quality")
                                 }
                                 RatioChoice {
@@ -978,7 +978,7 @@ Category {
                                 Text {
                                     Layout.fillWidth: true
                                     color: Theme.white
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     text: qsTr("Main mix")
                                 }
                                 RatioChoice {
@@ -1001,7 +1001,7 @@ Category {
                                     Text {
                                         Layout.fillWidth: true
                                         color: Theme.white
-                                        font.pixelSize: 13
+                                        font.pixelSize: 12
                                         text: qsTr("Mixxx USB driver")
                                     }
                                     RatioChoice {
@@ -1082,7 +1082,7 @@ Category {
 
                             Text {
                                 text: qsTr("Advanced routing matrix (virtual cables)")
-                                font.pixelSize: 14
+                                font.pixelSize: 13
                                 font.weight: Font.DemiBold
                                 color: "#bebebe"
                             }
@@ -1173,7 +1173,7 @@ Category {
 
                         Text {
                             text: qsTr("Output delays (acoustic latency compensation)")
-                            font.pixelSize: 15
+                            font.pixelSize: 14
                             font.weight: Font.DemiBold
                             color: "#ffffff"
                         }
@@ -1187,7 +1187,7 @@ Category {
                                 id: mainDelayLabel
                                 Layout.fillWidth: true
                                 color: Theme.white
-                                font.pixelSize: 14
+                                font.pixelSize: 13
                                 opacity: enabled ? 1 : 0.5
                                 text: qsTr("Main output delay")
                             }
@@ -1205,7 +1205,7 @@ Category {
                                 Layout.fillWidth: true
                                 color: Theme.white
                                 enabled: boothEnabled.value
-                                font.pixelSize: 14
+                                font.pixelSize: 13
                                 opacity: enabled ? 1 : 0.5
                                 text: qsTr("Booth output delay")
                             }
@@ -1225,7 +1225,7 @@ Category {
                                 Layout.fillWidth: true
                                 color: Theme.white
                                 enabled: headEnabled.value
-                                font.pixelSize: 14
+                                font.pixelSize: 13
                                 opacity: enabled ? 1 : 0.5
                                 text: qsTr("Headphone output delay (CUE)")
                             }
@@ -1270,8 +1270,8 @@ Category {
                 Layout.preferredHeight: 30
                 Layout.preferredWidth: statusText.implicitWidth + 20
                 radius: 15
-                color: root.hasChanges ? "#303030" : "#1b5e20"
-                border.color: root.hasChanges ? "#ff9800" : "#4caf50"
+                color: root.hasChanges ? "#303030" : "#1d2a21"
+                border.color: root.hasChanges ? "#ff9f0a" : "#34c759"
                 border.width: 1
 
                 Text {
@@ -1280,7 +1280,7 @@ Category {
                     text: root.hasChanges ? qsTr("● Unsaved changes") : qsTr("✓ Audio configured")
                     font.weight: Font.DemiBold
                     font.pixelSize: 11
-                    color: root.hasChanges ? "#f7c86a" : "#81c784"
+                    color: root.hasChanges ? "#ff9f0a" : "#34c759"
                 }
             }
 
@@ -1288,8 +1288,8 @@ Category {
                 id: errorMessage
                 Layout.fillWidth: true
                 elide: Text.ElideRight
-                font.pixelSize: 12
-                color: "#ff5d6c"
+                font.pixelSize: 11
+                color: "#ff6961"
                 text: ""
             }
 
@@ -1297,11 +1297,11 @@ Category {
                 visible: root.hasChanges
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 130
-                activeColor: "#ff5d6c"
+                activeColor: "#ff6961"
                 backgroundColor: "#222222"
-                normalColor: "#ff8f99"
+                normalColor: "#ff6961"
                 font.weight: Font.DemiBold
-                font.pixelSize: 12
+                font.pixelSize: 11
                 text: qsTr("Discard")
                 onClicked: {
                     errorMessage.text = "";
@@ -1314,8 +1314,8 @@ Category {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 230
                 radius: 8
-                color: root.committing ? "#453de0" : (root.hasChanges ? "#22b868" : (applyMouse.containsMouse ? "#3429ff" : "#584fff"))
-                border.color: root.hasChanges ? "#b9f6ca" : "#908aff"
+                color: root.committing ? "#453de0" : (root.hasChanges ? "#34c759" : (applyMouse.containsMouse ? "#3429ff" : "#584fff"))
+                border.color: root.hasChanges ? "#34c759" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {
@@ -1324,14 +1324,14 @@ Category {
 
                     Text {
                         text: root.committing ? "" : (root.hasChanges ? "" : "✓")
-                        font.pixelSize: 14
+                        font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
                         text: root.committing ? qsTr("Applying...") : qsTr("Apply and save outputs")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#ffffff"
                     }
                 }

@@ -118,7 +118,7 @@ Category {
 
                             Text {
                                 text: qsTr("DJ controllers & USB / MIDI devices")
-                                font.pixelSize: 16
+                                font.pixelSize: 14
                                 font.weight: Font.DemiBold
                                 color: "#ffffff"
                             }
@@ -129,8 +129,8 @@ Category {
                                       : (root.unmappedDevices.length > 0
                                          ? qsTr("%1 device(s) detected without a mapping").arg(root.unmappedDevices.length)
                                          : qsTr("No USB controller is currently detected"))
-                                font.pixelSize: 12
-                                color: root.activeDevices.length > 0 ? "#4caf50" : (root.unmappedDevices.length > 0 ? "#f7c86a" : "#9e9e9e")
+                                font.pixelSize: 11
+                                color: root.activeDevices.length > 0 ? "#34c759" : (root.unmappedDevices.length > 0 ? "#ff9f0a" : "#9e9e9e")
                             }
                         }
 
@@ -187,7 +187,7 @@ Category {
 
                                 Text {
                                     text: root.isRescanning ? qsTr("Searching...") : qsTr("Scan for USB devices")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
@@ -231,7 +231,7 @@ Category {
 
                         Text {
                             text: qsTr("How do I connect my DJ controller to Android properly?")
-                            font.pixelSize: 14
+                            font.pixelSize: 13
                             font.weight: Font.DemiBold
                             color: "#9590f9"
                         }
@@ -284,7 +284,7 @@ Category {
                                     text: "1"
                                     color: "#ffffff"
                                     font.weight: Font.DemiBold
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                 }
                             }
 
@@ -293,7 +293,7 @@ Category {
                                 spacing: 1
                                 Text {
                                     text: qsTr("USB OTG Type-C adapter")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
@@ -314,13 +314,13 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#f57c00"
+                                color: "#ff9f0a"
                                 Text {
                                     anchors.centerIn: parent
                                     text: "2"
                                     color: "#ffffff"
                                     font.weight: Font.DemiBold
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                 }
                             }
 
@@ -329,9 +329,9 @@ Category {
                                 spacing: 2
                                 Text {
                                     text: qsTr("Power supply: connect through a USB-C hub")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
-                                    color: "#ffa726"
+                                    color: "#ff9f0a"
                                 }
                                 Text {
                                     text: qsTr("Tablets only supply ~500mA. To keep your controller (Pioneer DDJ-400, etc.) from flickering or disconnecting, connect the tablet charger to the USB-C PD port of the hub, the controller to a USB port of the hub, and the hub cable to the tablet.")
@@ -352,13 +352,13 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#388e3c"
+                                color: "#34c759"
                                 Text {
                                     anchors.centerIn: parent
                                     text: "3"
                                     color: "#ffffff"
                                     font.weight: Font.DemiBold
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                 }
                             }
 
@@ -367,7 +367,7 @@ Category {
                                 spacing: 2
                                 Text {
                                     text: qsTr("USB permission on Android")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
@@ -396,7 +396,7 @@ Category {
                                     text: "4"
                                     color: "#ffffff"
                                     font.weight: Font.DemiBold
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                 }
                             }
 
@@ -405,7 +405,7 @@ Category {
                                 spacing: 3
                                 Text {
                                     text: qsTr("Enable audio on the controller (main + CUE headphones)")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ffffff"
                                 }
@@ -421,7 +421,7 @@ Category {
                                     Layout.preferredWidth: 260
                                     Layout.preferredHeight: 30
                                     radius: 6
-                                    color: audioBtnMouse.pressed ? "#211b9a" : (audioBtnMouse.containsMouse ? "#8e24aa" : "#261fa2")
+                                    color: audioBtnMouse.pressed ? "#211b9a" : (audioBtnMouse.containsMouse ? "#8b85ff" : "#261fa2")
                                     Text {
                                         anchors.centerIn: parent
                                         text: qsTr("Go to audio outputs and profiles")
@@ -455,7 +455,7 @@ Category {
                                     text: "5"
                                     color: "#ffffff"
                                     font.weight: Font.DemiBold
-                                    font.pixelSize: 12
+                                    font.pixelSize: 11
                                 }
                             }
 
@@ -464,7 +464,7 @@ Category {
                                 spacing: 4
                                 Text {
                                     text: qsTr("DJ mappings (.midi.xml / .js)")
-                                    font.pixelSize: 13
+                                    font.pixelSize: 12
                                     font.weight: Font.DemiBold
                                     color: "#ada9ff"
                                 }
@@ -506,7 +506,7 @@ Category {
                                         Layout.preferredWidth: 150
                                         Layout.preferredHeight: 28
                                         radius: 4
-                                        color: copyMouse.pressed ? "#07008f" : (copyMouse.containsMouse ? "#0800a7" : "#00695c")
+                                        color: copyMouse.pressed ? "#07008f" : (copyMouse.containsMouse ? "#0800a7" : "#262433")
 
                                         Text {
                                             anchors.centerIn: parent
@@ -548,7 +548,7 @@ Category {
                                 anchors.centerIn: parent
                                 text: qsTr("Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.")
                                 font.pixelSize: 11
-                                color: "#81c784"
+                                color: "#34c759"
                             }
                         }
                     }
@@ -572,13 +572,13 @@ Category {
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         text: ""
-                        font.pixelSize: 32
+                        font.pixelSize: 26
                     }
 
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         text: qsTr("No connected DJ controller was detected")
-                        font.pixelSize: 14
+                        font.pixelSize: 13
                         font.weight: Font.DemiBold
                         color: "#9e9e9e"
                     }
@@ -586,7 +586,7 @@ Category {
                     Text {
                         Layout.alignment: Qt.AlignHCenter
                         text: qsTr("Connect your controller via USB OTG and press 'Scan for USB devices'")
-                        font.pixelSize: 12
+                        font.pixelSize: 11
                         color: "#616161"
                     }
                 }
@@ -609,7 +609,7 @@ Category {
 
                     Text {
                         text: ""
-                        font.pixelSize: 22
+                        font.pixelSize: 18
                     }
 
                     ColumnLayout {
@@ -618,7 +618,7 @@ Category {
                         Text {
                             text: qsTr("Configuring: %1").arg(root.selectedController?.name || "")
                             font.weight: Font.DemiBold
-                            font.pixelSize: 13
+                            font.pixelSize: 12
                             color: "#ffffff"
                         }
                         Text {
@@ -626,7 +626,7 @@ Category {
                                   ? qsTr("Assigned mapping: %1 (%2)").arg(root.selectedController.mapping.name).arg(root.selectedController.enabled ? qsTr("Enabled") : qsTr("Disabled"))
                                   : qsTr("Select its mapping in the drop-down list and press Save")
                             font.pixelSize: 11
-                            color: root.selectedController?.mapping ? "#a7ffeb" : "#f7d58f"
+                            color: root.selectedController?.mapping ? "#34c759" : "#ff9f0a"
                         }
                     }
 
@@ -636,7 +636,7 @@ Category {
                         Layout.preferredHeight: 32
                         radius: 6
                         color: audioNavMouse.pressed ? "#1a148c" : (audioNavMouse.containsMouse ? "#261fa2" : "#211b9a")
-                        border.color: "#ce93d8"
+                        border.color: "#8b85ff"
                         border.width: 1
 
                         Text {
@@ -779,7 +779,7 @@ Category {
                             Text {
                                 anchors.centerIn: parent
                                 color: '#ffffff'
-                                font.pixelSize: 12
+                                font.pixelSize: 11
                                 font.weight: Font.Medium
                                 text: {
                                     switch (modelData.type) {
@@ -797,7 +797,7 @@ Category {
                         Text {
                             Layout.fillWidth: true
                             color: '#ffffff'
-                            font.pixelSize: 14
+                            font.pixelSize: 13
                             font.weight: Font.Medium
                             text: modelData.name
                         }
@@ -832,7 +832,7 @@ Category {
                         anchors.margins: 10
                         anchors.rightMargin: 20
                         color: '#ffffff'
-                        font.pixelSize: 15
+                        font.pixelSize: 14
                         font.weight: Font.DemiBold
                         text: qsTr("Other USB devices detected without a mapping")
                     }
@@ -863,8 +863,8 @@ Category {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
-                color: root.dirty ? "#332200" : (root.activeDevices.length > 0 ? "#0d2b1a" : "#272727")
-                border.color: root.dirty ? "#f5b544" : (root.activeDevices.length > 0 ? "#22b868" : "#2b21f3")
+                color: root.dirty ? "#2e2616" : (root.activeDevices.length > 0 ? "#1d2a21" : "#272727")
+                border.color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#2b21f3")
                 border.width: 1
 
                 RowLayout {
@@ -874,8 +874,8 @@ Category {
                     Text {
                         text: root.dirty ? "●" : (root.activeDevices.length > 0 ? "✓" : "")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
-                        color: root.dirty ? "#f5b544" : (root.activeDevices.length > 0 ? "#2bd67b" : "#908aff")
+                        font.pixelSize: 12
+                        color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#908aff")
                     }
                     Text {
                         text: root.dirty 
@@ -884,8 +884,8 @@ Category {
                                  ? qsTr("Editing controller")
                                  : (root.activeDevices.length > 0 ? qsTr("Controller ready") : qsTr("USB MIDI")))
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: root.dirty ? "#f7d58f" : (root.activeDevices.length > 0 ? "#b9f6ca" : "#bebbfb")
+                        font.pixelSize: 11
+                        color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#bebbfb")
                     }
                 }
             }
@@ -895,8 +895,8 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff5d6c"
-                font.pixelSize: 12
+                color: "#ff6961"
+                font.pixelSize: 11
                 text: ""
             }
 
@@ -908,19 +908,19 @@ Category {
                 Layout.preferredWidth: 140
                 radius: 6
                 visible: !!root.selectedController?.mapping?.hasSettings
-                color: resetMouse.pressed ? "#5c2b2b" : (resetMouse.containsMouse ? "#4a2222" : "#2b2b2b")
-                border.color: "#772b2b"
+                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#2b2b2b")
+                border.color: "#ff6961"
                 border.width: 1
 
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff8f99"; font.pixelSize: 14 }
+                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13 }
                     Text {
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 12
-                        color: "#ffcdd2"
+                        font.pixelSize: 11
+                        color: "#ff6961"
                     }
                 }
 
@@ -950,7 +950,7 @@ Category {
                     anchors.centerIn: parent
                     text: root.selectedController ? qsTr("Back to list") : qsTr("Discard")
                     font.weight: Font.DemiBold
-                    font.pixelSize: 13
+                    font.pixelSize: 12
                     color: "#e0e0e0"
                 }
 
@@ -973,9 +973,9 @@ Category {
                 Layout.preferredWidth: 220
                 radius: 6
                 color: root.dirty
-                       ? (saveMouse.pressed ? "#009624" : (saveMouse.containsMouse ? "#2bd67b" : "#22b868"))
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
                        : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
-                border.color: root.dirty ? "#6fe3a4" : "#908aff"
+                border.color: root.dirty ? "#34c759" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {
@@ -984,14 +984,14 @@ Category {
 
                     Text {
                         text: root.dirty ? "" : "✓"
-                        font.pixelSize: 14
+                        font.pixelSize: 13
                         color: "#ffffff"
                     }
 
                     Text {
                         text: root.dirty ? qsTr("Save changes") : qsTr("Saved")
                         font.weight: Font.DemiBold
-                        font.pixelSize: 13
+                        font.pixelSize: 12
                         color: "#ffffff"
                     }
                 }
