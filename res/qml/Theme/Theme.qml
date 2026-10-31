@@ -33,7 +33,7 @@ QtObject {
     property color eqHighColor: white
     property color eqLowColor: white
     property color eqMidColor: white
-    property string fontFamily: "Inter"
+    property string fontFamily: "Roboto"
     property color gainKnobColor: blue
     property color green: "#2bd67b"
     property string imgBpmSliderBackground: "images/slider_bpm.svg"

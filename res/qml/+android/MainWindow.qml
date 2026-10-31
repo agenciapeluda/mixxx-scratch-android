@@ -8,6 +8,7 @@ import QtQuick.Shapes
 import Qt5Compat.GraphicalEffects
 import "Theme"
 import "stems.js" as StemsText
+import "Cutlab" as Cutlab
 
 Item {
     id: root
@@ -18,6 +19,14 @@ Item {
     property alias editDeck: editDeckButton.checked
     property var focusedDeck: null
     property int viewMode: 1
+    // The Cutlab performance screen (turntables, upright waveforms, pads and
+    // a full screen library) or the classic Mixxx layout below it
+    property bool cutlabLayout: Mixxx.Application.configValue("[Cutlab]", "layout", "dj") !== "classic"
+
+    function setCutlabLayout(on) {
+        Mixxx.Application.setConfigValue("[Cutlab]", "layout", on ? "dj" : "classic");
+        root.cutlabLayout = on;
+    }
     // Items of the top bar hidden in Settings → Interface
     readonly property var hiddenTopBarItems: Mixxx.MobileApp.hiddenTopBarItems
     function topBarItemShown(name) {
@@ -178,6 +187,7 @@ Item {
 
         anchors.fill: parent
         enabled: !quickLoadDrawer.opened && !settingsPopup.opened
+        visible: !root.cutlabLayout
 
         move: Transition {
             NumberAnimation {
@@ -280,6 +290,16 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     height: parent.height
                     spacing: 4
+
+                    // Back to the Cutlab performance screen
+                    Skin.Button {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 64
+                        activeColor: Theme.accentColor
+                        text: "Cutlab"
+                        font.pixelSize: 11
+                        onClicked: root.setCutlabLayout(true)
+                    }
 
                     Rectangle {
                         Layout.preferredHeight: 30
@@ -943,6 +963,21 @@ Item {
             }
         }
     }
+    Loader {
+        id: cutlabView
+
+        anchors.fill: parent
+        active: root.cutlabLayout
+        enabled: !quickLoadDrawer.opened && !settingsPopup.opened
+
+        sourceComponent: Cutlab.DJView {
+            onSettingsRequested: settingsPopup.open()
+            onAutoDJRequested: autoDJPanel.open()
+            onXyPadRequested: xyPadOverlay.visible = true
+            onClassicLayoutRequested: root.setCutlabLayout(false)
+        }
+    }
+
     Skin.Settings {
         id: settingsPopup
 
@@ -989,6 +1024,12 @@ Item {
     property bool mobileControlsCreated: false
 
     function toggleLibraryView() {
+        if (root.cutlabLayout) {
+            if (cutlabView.item) {
+                cutlabView.item.toggleLibrary();
+            }
+            return;
+        }
         if (root.viewMode === 2) {
             root.viewMode = root.viewModeBeforeLibrary === 2 ? 1 : root.viewModeBeforeLibrary;
         } else {
@@ -1066,6 +1107,10 @@ Item {
                 key: "LoadSelectedTrack"
                 onValueChanged: value => {
                     if (value <= 0) {
+                        return;
+                    }
+                    if (root.cutlabLayout && cutlabView.item && cutlabView.item.libraryOpen) {
+                        // The Cutlab library loads the track itself
                         return;
                     }
                     if (quickLoadDrawer.opened) {

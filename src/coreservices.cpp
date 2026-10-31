@@ -553,8 +553,8 @@ void CoreServices::initialize(QApplication* pApp) {
     FontUtils::initializeFonts(resourcePath); // takes a long time
 #if defined(Q_OS_ANDROID)
     {
-        // Cutlab: Inter is the UI font of the touch interface
-        QFont appFont(QStringLiteral("Inter"));
+        // Cutlab: Roboto is the UI font of the touch interface
+        QFont appFont(QStringLiteral("Roboto"));
         appFont.setStyleStrategy(QFont::PreferAntialias);
         QApplication::setFont(appFont);
     }

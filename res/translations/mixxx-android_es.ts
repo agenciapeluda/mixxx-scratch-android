@@ -4681,4 +4681,335 @@ Aborting the operation to avoid library inconsistencies</source>
         <translation>Abrir la cola de Auto DJ</translation>
     </message>
 </context>
+<context>
+    <name>DJView</name>
+    <message>
+        <source>Auto DJ…</source>
+        <translation>Auto DJ…</translation>
+    </message>
+    <message>
+        <source>Classic layout</source>
+        <translation>Diseño clásico</translation>
+    </message>
+    <message>
+        <source>Record the mix</source>
+        <translation>Grabar la mezcla</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>Ajustes</translation>
+    </message>
+    <message>
+        <source>Stop recording</source>
+        <translation>Detener la grabación</translation>
+    </message>
+    <message>
+        <source>XY effects pad</source>
+        <translation>Pad XY de efectos</translation>
+    </message>
+</context>
+<context>
+    <name>DeckHeader</name>
+    <message>
+        <source>Tap to load a track</source>
+        <translation>Tocá para cargar un tema</translation>
+    </message>
+</context>
+<context>
+    <name>EqTool</name>
+    <message>
+        <source>FILTER</source>
+        <translation>FILTRO</translation>
+    </message>
+    <message>
+        <source>GAIN</source>
+        <translation>GANANCIA</translation>
+    </message>
+    <message>
+        <source>HI</source>
+        <translation>AGUDOS</translation>
+    </message>
+    <message>
+        <source>KILL</source>
+        <translation>CORTE</translation>
+    </message>
+    <message>
+        <source>LOW</source>
+        <translation>GRAVES</translation>
+    </message>
+    <message>
+        <source>MID</source>
+        <translation>MEDIOS</translation>
+    </message>
+</context>
+<context>
+    <name>FxTool</name>
+    <message>
+        <source>HOLD</source>
+        <translation>HOLD</translation>
+    </message>
+    <message>
+        <source>Instant</source>
+        <translation>Instantáneo</translation>
+    </message>
+    <message>
+        <source>Manual</source>
+        <translation>Manual</translation>
+    </message>
+    <message>
+        <source>No effect</source>
+        <translation>Sin efecto</translation>
+    </message>
+    <message>
+        <source>ON</source>
+        <translation>ON</translation>
+    </message>
+</context>
+<context>
+    <name>HotcuePads</name>
+    <message>
+        <source>Cue %1</source>
+        <translation>Cue %1</translation>
+    </message>
+</context>
+<context>
+    <name>LibraryBrowser</name>
+    <message>
+        <source>Add to the end of the queue</source>
+        <translation>Agregar al final de la cola</translation>
+    </message>
+    <message>
+        <source>Analyze</source>
+        <translation>Analizar</translation>
+    </message>
+    <message>
+        <source>Auto DJ</source>
+        <translation>Auto DJ</translation>
+    </message>
+    <message>
+        <source>Auto DJ…</source>
+        <translation>Auto DJ…</translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation>Carpetas</translation>
+    </message>
+    <message>
+        <source>History</source>
+        <translation>Historial</translation>
+    </message>
+    <message>
+        <source>Library settings…</source>
+        <translation>Ajustes de la biblioteca…</translation>
+    </message>
+    <message>
+        <source>Load into deck 1</source>
+        <translation>Cargar en el deck 1</translation>
+    </message>
+    <message>
+        <source>Load into deck 2</source>
+        <translation>Cargar en el deck 2</translation>
+    </message>
+    <message>
+        <source>Local music</source>
+        <translation>Música local</translation>
+    </message>
+    <message>
+        <source>No tracks here</source>
+        <translation>No hay temas acá</translation>
+    </message>
+    <message>
+        <source>No tracks match the search</source>
+        <translation>Ningún tema coincide con la búsqueda</translation>
+    </message>
+    <message>
+        <source>Play next in the queue</source>
+        <translation>Reproducir a continuación en la cola</translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation>Listas</translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation>Cola</translation>
+    </message>
+    <message>
+        <source>Rescan the library</source>
+        <translation>Volver a escanear la biblioteca</translation>
+    </message>
+    <message>
+        <source>Search title, artist, album…</source>
+        <translation>Buscar título, artista, álbum…</translation>
+    </message>
+    <message>
+        <source>Separate stems…</source>
+        <translation>Separar stems…</translation>
+    </message>
+    <message>
+        <source>Streaming</source>
+        <translation>Streaming</translation>
+    </message>
+    <message>
+        <source>Tap a track to load it into a free deck, or use 1 and 2</source>
+        <translation>Tocá un tema para cargarlo en un deck libre, o usá 1 y 2</translation>
+    </message>
+    <message>
+        <source>Tap a track to load it into deck 1, or use 1 and 2</source>
+        <translation>Tocá un tema para cargarlo en el deck 1, o usá 1 y 2</translation>
+    </message>
+    <message>
+        <source>Tap a track to load it into deck 2, or use 1 and 2</source>
+        <translation>Tocá un tema para cargarlo en el deck 2, o usá 1 y 2</translation>
+    </message>
+    <message>
+        <source>Tap a track to load it into sample pad %1</source>
+        <translation>Tocá un tema para cargarlo en el pad de sample %1</translation>
+    </message>
+    <message>
+        <source>The queue is empty. Hold a track and add it to the queue.</source>
+        <translation>La cola está vacía. Mantené apretado un tema y agregalo a la cola.</translation>
+    </message>
+    <message>
+        <source>Tracks</source>
+        <translation>Canciones</translation>
+    </message>
+</context>
+<context>
+    <name>LoopTool</name>
+    <message>
+        <source>Auto</source>
+        <translation>Auto</translation>
+    </message>
+    <message>
+        <source>IN</source>
+        <translation>IN</translation>
+    </message>
+    <message>
+        <source>OUT</source>
+        <translation>OUT</translation>
+    </message>
+    <message>
+        <source>Roll</source>
+        <translation>Roll</translation>
+    </message>
+</context>
+<context>
+    <name>MixerPanel</name>
+    <message>
+        <source>CUE</source>
+        <translation>CUE</translation>
+    </message>
+    <message>
+        <source>EQ</source>
+        <translation>EQ</translation>
+    </message>
+    <message>
+        <source>FILTER</source>
+        <translation>FILTRO</translation>
+    </message>
+    <message>
+        <source>HI</source>
+        <translation>AGUDOS</translation>
+    </message>
+    <message>
+        <source>LOW</source>
+        <translation>GRAVES</translation>
+    </message>
+    <message>
+        <source>MID</source>
+        <translation>MEDIOS</translation>
+    </message>
+</context>
+<context>
+    <name>PadsTab</name>
+    <message>
+        <source>Hot cues</source>
+        <translation>Hot cues</translation>
+    </message>
+    <message>
+        <source>Loop rolls</source>
+        <translation>Loop rolls</translation>
+    </message>
+    <message>
+        <source>Samples</source>
+        <translation>Samples</translation>
+    </message>
+</context>
+<context>
+    <name>RollPads</name>
+    <message>
+        <source>Roll</source>
+        <translation>Roll</translation>
+    </message>
+</context>
+<context>
+    <name>SamplePads</name>
+    <message>
+        <source>Sample %1</source>
+        <translation>Sample %1</translation>
+    </message>
+</context>
+<context>
+    <name>StemsTool</name>
+    <message>
+        <source>Bass</source>
+        <translation>Bajo</translation>
+    </message>
+    <message>
+        <source>Drums</source>
+        <translation>Batería</translation>
+    </message>
+    <message>
+        <source>Load a track to use its stems</source>
+        <translation>Cargá un tema para usar sus stems</translation>
+    </message>
+    <message>
+        <source>Melody</source>
+        <translation>Melodía</translation>
+    </message>
+    <message>
+        <source>Separate it into vocals, drums, bass and melody to mix each part on its own.</source>
+        <translation>Separalo en voces, batería, bajo y melodía para mezclar cada parte por separado.</translation>
+    </message>
+    <message>
+        <source>Separate stems</source>
+        <translation>Separar stems</translation>
+    </message>
+    <message>
+        <source>Separating: %1% (%2 in the queue). Load the track again when it is done.</source>
+        <translation>Separando: %1% (%2 en la cola). Cuando termine, cargá el tema de nuevo.</translation>
+    </message>
+    <message>
+        <source>This track has no stems yet</source>
+        <translation>Este tema todavía no tiene stems</translation>
+    </message>
+    <message>
+        <source>Vocals</source>
+        <translation>Voces</translation>
+    </message>
+</context>
+<context>
+    <name>ToolPanel</name>
+    <message>
+        <source>Cues</source>
+        <translation>Cues</translation>
+    </message>
+    <message>
+        <source>EQ</source>
+        <translation>EQ</translation>
+    </message>
+    <message>
+        <source>FX</source>
+        <translation>FX</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>Loop</translation>
+    </message>
+    <message>
+        <source>Stems</source>
+        <translation>Stems</translation>
+    </message>
+</context>
 </TS>
