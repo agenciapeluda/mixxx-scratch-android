@@ -1,6 +1,8 @@
 #include "qml/qmlstemsproxy.h"
 
 #include <QFileInfo>
+#include <QPointer>
+#include <QThreadPool>
 #include <QUrl>
 
 #include "moc_qmlstemsproxy.cpp"
@@ -91,6 +93,24 @@ QmlStemsProxy::QmlStemsProxy(QObject* pParent)
                     emit downloadFailed(modelName(model), error);
                 }
             });
+
+    // Cutlab: the Spleeter model comes inside the app, so stems work without
+    // internet; it is copied to the app's storage once, in the background
+    if (!stems::StemModels::isInstalled(stems::Model::Spleeter)) {
+        QPointer<QmlStemsProxy> pThis(this);
+        QThreadPool::globalInstance()->start([pThis]() {
+            if (stems::StemModels::installBundled(stems::Model::Spleeter) && pThis) {
+                QMetaObject::invokeMethod(
+                        pThis.data(),
+                        [pThis]() {
+                            if (pThis) {
+                                emit pThis->modelsChanged();
+                            }
+                        },
+                        Qt::QueuedConnection);
+            }
+        });
+    }
 }
 
 // static

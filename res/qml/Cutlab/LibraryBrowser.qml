@@ -43,6 +43,8 @@ Rectangle {
     property var suggestions: []
     property var folderRows: []
     property var genreRows: []
+    // MicroSD cards and USB drives plugged in
+    property var volumes: []
     // The source picked on the left (its key) and under the knob there
     property string currentSource: "all"
     property int selectedSource: 0
@@ -76,6 +78,9 @@ Rectangle {
         rows.push({kind: "lists", key: "lists", name: qsTr("Listas y cajas")});
         rows.push({kind: "queue", key: "queue", name: qsTr("Cola")});
         rows.push({kind: "history", key: "history", name: qsTr("Recientes")});
+        for (const volume of root.volumes) {
+            rows.push({kind: "volume", key: "volume:" + volume.path, name: volume.name, path: volume.path});
+        }
         return rows;
     }
 
@@ -112,6 +117,7 @@ Rectangle {
         root.missing = Mixxx.Cutlab.missingAnalysis();
         root.folderRows = Mixxx.Cutlab.musicFolders();
         root.genreRows = Mixxx.Cutlab.genres();
+        root.volumes = Mixxx.Cutlab.storageVolumes();
         root.focusColumn = 1;
         if (root.pages.length === 0) {
             root.pickSource(root.sourceRows[0]);
@@ -181,6 +187,12 @@ Rectangle {
             root.section = 0;
             root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\""});
             break;
+        case "volume":
+            // Into the library the first time, then like a folder
+            Mixxx.Cutlab.addFolder(row.path);
+            root.section = 0;
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\""});
+            break;
         case "genre":
             root.section = 1;
             root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "genre:\"" + row.name + "\""});
@@ -208,6 +220,12 @@ Rectangle {
     // The chips of the upright layout
     function showSection(section) {
         const kinds = ["all", "genre", "lists", "queue", "history"];
+        if (section >= kinds.length) {
+            const volume = root.volumes[section - kinds.length];
+            root.pickSource(root.sourceRows.find(row => volume && row.key === "volume:" + volume.path));
+            root.section = section;
+            return;
+        }
         if (section === 1) {
             root.pages = [];
             root.section = 1;
@@ -539,7 +557,7 @@ Rectangle {
                 font.family: Style.font
                 font.weight: Font.DemiBold
                 font.pixelSize: 11
-                text: root.section === 0 ? qsTr("Tus carpetas") : root.section === 1 ? qsTr("Géneros") : root.section === 2 ? qsTr("Listas") : root.section === 3 ? qsTr("Cola") : qsTr("Recientes")
+                text: root.section === 0 ? qsTr("Tus carpetas") : root.section === 1 ? qsTr("Géneros") : root.section === 2 ? qsTr("Listas") : root.section === 3 ? qsTr("Cola") : root.section === 4 ? qsTr("Recientes") : qsTr("MicroSD o pendrive")
             }
             Text {
                 width: parent.width
@@ -657,7 +675,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: Math.round(16 * root.u)
                         height: width
-                        visible: sourceRow.modelData.kind === "folder" || sourceRow.modelData.kind === "all"
+                        visible: sourceRow.modelData.kind === "folder" || sourceRow.modelData.kind === "all" || sourceRow.modelData.kind === "volume"
                         source: sourceRow.modelData.kind === "all" ? "icons/note.svg" : "icons/folder.svg"
                         sourceSize.width: 32
                         sourceSize.height: 32
@@ -756,7 +774,7 @@ Rectangle {
                 spacing: 6
 
                 Repeater {
-                    model: [qsTr("Carpetas"), qsTr("Géneros"), qsTr("Listas"), qsTr("Cola"), qsTr("Recientes")]
+                    model: [qsTr("Carpetas"), qsTr("Géneros"), qsTr("Listas"), qsTr("Cola"), qsTr("Recientes")].concat(root.volumes.map(volume => volume.name))
 
                     Rectangle {
                         required property string modelData

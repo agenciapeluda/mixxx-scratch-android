@@ -28,6 +28,11 @@ class StemModels : public QObject {
     static qint64 downloadSize(Model model);
     /// Deletes the files of a model
     static void remove(Model model);
+    /// Copies the model files that come inside the app (Android assets) to
+    /// the app's storage, so the model works without internet. Returns true
+    /// when the model is installed afterwards. Slow the first time: call it
+    /// off the main thread.
+    static bool installBundled(Model model);
 
     void download(Model model);
     void cancelDownload();

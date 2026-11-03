@@ -89,6 +89,21 @@ jobs:
           gh release upload stems-models-v1 *.onnx --clobber -R "${{ github.repository }}"
           cd / && rm -rf /tmp/models
 
+      - name: Bundle the Spleeter model in the APK
+        # Stems work without internet: the 4 Spleeter files (~80 MB) go in the
+        # APK assets and the app copies them to its storage on the first start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          mkdir -p packaging/android/assets/stems/spleeter
+          cd packaging/android/assets/stems/spleeter
+          for s in drums bass other vocals; do
+            gh release download stems-models-v1 -R "${{ github.repository }}" -p "spleeter-$s.fp16.onnx" --clobber
+            mv "spleeter-$s.fp16.onnx" "$s.fp16.onnx"
+          done
+          ls -l
+
       - name: Set up signing key
         run: |
           if [ -z "${ANDROID_SIGNING_KEYSTORE_BASE64}" ]; then

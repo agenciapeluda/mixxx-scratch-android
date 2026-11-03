@@ -11,6 +11,8 @@ Rectangle {
 
     readonly property real u: Math.max(0.55, Math.min(width / 1284, height / 600))
     property bool recording: false
+    // The light screen: no scrolling waveforms, the platters take the room
+    property bool lite: false
 
     signal libraryRequested(string group)
     signal menuRequested(Item anchor)
@@ -131,7 +133,8 @@ Rectangle {
 
         anchors.top: topBar.bottom
         width: parent.width
-        height: root.px(8 + 96 + 6 + 96 + 8)
+        height: root.lite ? 0 : root.px(8 + 96 + 6 + 96 + 8)
+        visible: !root.lite
 
         Column {
             x: root.px(14)
@@ -180,11 +183,12 @@ Rectangle {
         id: deckRow
 
         anchors.top: waves.bottom
+        anchors.topMargin: root.lite ? root.px(50) : 0
         anchors.bottom: hints.top
         x: root.px(14)
         width: parent.width - root.px(28)
 
-        readonly property real dial: Math.min(root.px(210), height - root.px(14))
+        readonly property real dial: Math.min(root.px(root.lite ? 260 : 210), height - root.px(14))
         readonly property real mixer: root.px(300)
         readonly property real gap: root.px(14)
         readonly property real cues: (width - 2 * dial - mixer - 4 * gap) / 2
@@ -225,6 +229,14 @@ Rectangle {
             height: deckRow.dial
             group: "[Channel2]"
         }
+    }
+
+    // The phase, on the light screen without the waveforms
+    PhaseMeter {
+        visible: root.lite
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: topBar.height + root.px(10)
+        width: root.px(300)
     }
 
     // ---- What the controller does ----

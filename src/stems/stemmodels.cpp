@@ -102,6 +102,39 @@ void StemModels::remove(Model model) {
     QDir(modelDir(model)).removeRecursively();
 }
 
+// static
+bool StemModels::installBundled(Model model) {
+    if (isInstalled(model)) {
+        return true;
+    }
+#ifdef Q_OS_ANDROID
+    const QDir dir(modelDir(model));
+    QDir().mkpath(dir.path());
+    const QString assets = model == Model::Spleeter
+            ? QStringLiteral("assets:/stems/spleeter/")
+            : QStringLiteral("assets:/stems/htdemucs/");
+    for (const auto& file : modelFiles(model)) {
+        const QString target = dir.filePath(file.localName);
+        if (QFileInfo(target).size() == file.size) {
+            continue;
+        }
+        const QString source = assets + QString::fromLatin1(file.localName);
+        if (!QFile::exists(source)) {
+            return false;
+        }
+        QFile::remove(target);
+        const QString partial = target + QStringLiteral(".part");
+        QFile::remove(partial);
+        if (!QFile::copy(source, partial) || !QFile::rename(partial, target)) {
+            QFile::remove(partial);
+            return false;
+        }
+        QFile(target).setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    }
+#endif
+    return isInstalled(model);
+}
+
 void StemModels::download(Model model) {
     if (m_pReply) {
         return;

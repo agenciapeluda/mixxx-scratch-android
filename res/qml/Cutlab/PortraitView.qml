@@ -10,6 +10,8 @@ Rectangle {
     id: root
 
     property bool recording: false
+    // The light screen: platters instead of the scrolling waveforms
+    property bool lite: false
     readonly property real u: Math.max(0.85, Math.min(1.2, width / 390))
 
     signal libraryRequested(string group)
@@ -295,9 +297,27 @@ Rectangle {
         Row {
             anchors.fill: parent
             spacing: root.px(8)
+            visible: root.lite
 
             Repeater {
-                model: ["[Channel1]", "[Channel2]"]
+                model: root.lite ? ["[Channel1]", "[Channel2]"] : []
+
+                TurntableDial {
+                    required property string modelData
+
+                    width: (waves.width - root.px(8)) / 2
+                    height: waves.height
+                    group: modelData
+                }
+            }
+        }
+        Row {
+            anchors.fill: parent
+            spacing: root.px(8)
+            visible: !root.lite
+
+            Repeater {
+                model: root.lite ? [] : ["[Channel1]", "[Channel2]"]
 
                 Rectangle {
                     required property string modelData
@@ -322,13 +342,16 @@ Rectangle {
         }
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
+            visible: !root.lite
             width: parent.width
             height: 2
             color: Style.playhead
         }
         // The phase: EN FASE, or how far B is from A
         Rectangle {
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: root.lite ? undefined : parent.verticalCenter
+            anchors.bottom: root.lite ? parent.bottom : undefined
             visible: phase.active
             width: phaseText.implicitWidth + root.px(14)
             height: phaseText.implicitHeight + 4

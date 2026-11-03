@@ -55,6 +55,10 @@ class QmlCutlab : public QObject {
     Q_INVOKABLE bool useFolders(const QStringList& paths) const;
     /// The music folders of the library
     Q_INVOKABLE QStringList folders() const;
+    /// MicroSD cards and USB drives plugged in: {name, path}
+    Q_INVOKABLE QVariantList storageVolumes() const;
+    /// Adds one folder to the library (keeping the others) and scans it
+    Q_INVOKABLE bool addFolder(const QString& path) const;
     /// Hides the voice notes, recordings and very short files of the library
     Q_INVOKABLE int hideNonMusic() const;
     /// Queues every visible track without BPM or key for the analysis (BPM,

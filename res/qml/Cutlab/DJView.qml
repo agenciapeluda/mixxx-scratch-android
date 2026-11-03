@@ -75,6 +75,57 @@ Rectangle {
         onTriggered: Mixxx.Cutlab.analyzeMissing()
     }
 
+    // ---- Stems by themselves: every track loaded on a deck is separated in
+    // the background (on the phone, without internet) when it has no stems
+    property bool stemsAuto: Mixxx.Application.configValue("[Cutlab]", "stems_auto", "0") === "1"
+    function setStemsAuto(on) {
+        root.stemsAuto = on;
+        Mixxx.Application.setConfigValue("[Cutlab]", "stems_auto", on ? "1" : "0");
+    }
+    function stemModel() {
+        return Mixxx.Stems.defaultModel === "htdemucs" && Mixxx.Stems.htdemucsInstalled ? "htdemucs" : "spleeter";
+    }
+    function separateLoaded(group) {
+        const player = Mixxx.PlayerManager.getPlayer(group);
+        const track = player ? player.currentTrack : null;
+        if (!root.stemsAuto || !track || !Mixxx.Stems.spleeterInstalled && root.stemModel() === "spleeter") {
+            return;
+        }
+        const url = track.trackLocationUrl;
+        if (url.toString() !== "" && !Mixxx.Stems.hasStems(url)) {
+            Mixxx.Stems.separateTrack(url, root.stemModel(), false);
+        }
+    }
+    Repeater {
+        model: ["[Channel1]", "[Channel2]"]
+
+        Item {
+            id: autoStems
+
+            required property string modelData
+
+            Mixxx.ControlProxy {
+                group: autoStems.modelData
+                key: "track_loaded"
+                onValueChanged: {
+                    if (value > 0) {
+                        // Once the deck has its track
+                        Qt.callLater(root.separateLoaded, autoStems.modelData);
+                    }
+                }
+            }
+        }
+    }
+
+    // ---- The light screen, for phones that lag: no scrolling waveforms,
+    // bigger platters, fewer animations
+    property bool lite: Mixxx.Application.configValue("[Cutlab]", "lite", "0") === "1"
+    function setLite(on) {
+        root.lite = on;
+        Mixxx.Application.setConfigValue("[Cutlab]", "lite", on ? "1" : "0");
+        Mixxx.Application.setConfigValue("[Cutlab]", "fx_visuals_lite", on ? "1" : "0");
+    }
+
     // On the first start, pick the music folders
     Timer {
         id: firstRun
@@ -407,6 +458,7 @@ Rectangle {
         active: !root.portrait
         sourceComponent: MainLandscape {
             recording: recording.value > 0
+            lite: root.lite
             onLibraryRequested: group => root.openLibrary(group)
             onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
             onRecordRequested: {
@@ -495,6 +547,14 @@ Rectangle {
         CLMenuItem {
             text: qsTr("Stems, EQ y loops de B")
             onTriggered: root.openToolsSheet("[Channel2]", 0)
+        }
+        CLMenuItem {
+            text: root.stemsAuto ? qsTr("Separar stems solos: prendido") : qsTr("Separar stems solos: apagado")
+            onTriggered: root.setStemsAuto(!root.stemsAuto)
+        }
+        CLMenuItem {
+            text: root.lite ? qsTr("Pantalla liviana: prendida") : qsTr("Pantalla liviana: apagada")
+            onTriggered: root.setLite(!root.lite)
         }
         CLMenuItem {
             text: qsTr("Elegir mis carpetas de música…")
@@ -657,6 +717,7 @@ Rectangle {
         active: root.portrait
         sourceComponent: PortraitView {
             recording: recording.value > 0
+            lite: root.lite
             onLibraryRequested: group => root.openLibrary(group)
             onToolsRequested: group => {
                 toolsSheet.group = group;

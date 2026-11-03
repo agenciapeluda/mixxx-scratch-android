@@ -9,6 +9,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStorageInfo>
 #include <QtDebug>
 #include <algorithm>
 #include <cmath>
@@ -623,6 +624,19 @@ QVariantList QmlCutlab::candidateFolders() const {
         return a.toMap().value(QStringLiteral("count")).toInt() >
                 b.toMap().value(QStringLiteral("count")).toInt();
     });
+    // MicroSD cards and USB drives, each one as a whole, at the end
+    for (const auto& volume : storageVolumes()) {
+        const auto map = volume.toMap();
+        const QString path = map.value(QStringLiteral("path")).toString();
+        const int count = countAudio(path);
+        if (count > 0) {
+            result.append(QVariantMap{
+                    {QStringLiteral("name"), map.value(QStringLiteral("name"))},
+                    {QStringLiteral("path"), path},
+                    {QStringLiteral("count"), count},
+            });
+        }
+    }
     return result;
 }
 
@@ -639,6 +653,53 @@ QStringList QmlCutlab::folders() const {
         }
     }
     return result;
+}
+
+QVariantList QmlCutlab::storageVolumes() const {
+    QVariantList result;
+    // Android mounts each microSD card and USB drive as /storage/XXXX-XXXX
+    const QDir storage(QStringLiteral("/storage"));
+    const auto entries = storage.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+    for (const auto& entry : entries) {
+        const QString name = entry.fileName();
+        if (name == QStringLiteral("emulated") || name == QStringLiteral("self") ||
+                !entry.isReadable() || QDir(entry.absoluteFilePath()).isEmpty()) {
+            continue;
+        }
+        const QStorageInfo info(entry.absoluteFilePath());
+        QString label = info.displayName();
+        if (label.isEmpty() || label == entry.absoluteFilePath() || label == name) {
+            label = tr("MicroSD o pendrive");
+        }
+        result.append(QVariantMap{
+                {QStringLiteral("name"), label},
+                {QStringLiteral("path"), entry.absoluteFilePath()},
+                {QStringLiteral("id"), name},
+        });
+    }
+    return result;
+}
+
+bool QmlCutlab::addFolder(const QString& path) const {
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (!pLibrary || path.isEmpty() || !QDir(path).exists()) {
+        return false;
+    }
+    TrackCollectionManager* pManager = pLibrary->trackCollectionManager();
+    const QString clean = QDir::cleanPath(path);
+    for (const auto& folder : folders()) {
+        const QString existing = QDir::cleanPath(folder);
+        if (clean == existing || clean.startsWith(existing + QChar('/'))) {
+            // Already in the library: only look for new files
+            pManager->scanner()->scan();
+            return true;
+        }
+    }
+    QDir directory(clean);
+    Sandbox::createSecurityTokenForDir(directory);
+    pManager->addDirectory(mixxx::FileInfo(clean));
+    pManager->scanner()->scan();
+    return true;
 }
 
 bool QmlCutlab::useFolders(const QStringList& paths) const {
