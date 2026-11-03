@@ -295,7 +295,7 @@ ApplicationWindow {
             Image {
                 id: logo
                 anchors.horizontalCenter: parent.horizontalCenter
-                source: Qt.resolvedUrl("../images/cutlab_logo.svg")
+                source: Qt.resolvedUrl("images/cutlab_logo.svg")
                 sourceSize.width: 72
                 sourceSize.height: 72
                 fillMode: Image.PreserveAspectFit

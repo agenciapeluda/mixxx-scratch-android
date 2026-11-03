@@ -17,11 +17,11 @@ Item {
     property bool splitStemTracks: false
     // The colors of the bands, the beat grid and the marks; the Cutlab
     // screens set their own
-    property color lowColor: root.lowColor
-    property color midColor: root.midColor
-    property color highColor: root.highColor
+    property color lowColor: '#2a21d7'
+    property color midColor: '#97632D'
+    property color highColor: '#D5C2A2'
     property color simpleColor: '#D5C2A2'
-    property color axesColor: root.axesColor
+    property color axesColor: '#a1a1a1a1'
     property color beatColor: Qt.rgba(161 / 255, 161 / 255, 161 / 255, Mixxx.Config.waveformBeatGridAlpha / 100)
     property color playMarkerColor: '#d9d9d9'
     property color cueColor: 'red'
