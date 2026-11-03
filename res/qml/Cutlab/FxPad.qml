@@ -8,6 +8,8 @@ Item {
     id: root
 
     required property string group
+    // Scale of the design (1 = 1284 x 600)
+    property real u: 1
     readonly property int unitNumber: group === "[Channel2]" ? 2 : 1
     readonly property string unitGroup: `[EffectRack1_EffectUnit${unitNumber}]`
     readonly property string slotGroup: `[EffectRack1_EffectUnit${unitNumber}_Effect1]`
@@ -43,9 +45,12 @@ Item {
         {id: "reverb", name: qsTr("Reverb"), effectId: "org.mixxx.effects.reverb"},
         {id: "bitcrush", name: qsTr("Bitcrush"), effectId: "org.mixxx.effects.bitcrusher"}
     ]
-    readonly property var fractions: [0.0625, 0.125, 0.25, 0.5, 1, 2, 4]
+    readonly property var fractions: [0.125, 0.25, 0.5, 0.75, 1, 2, 4]
 
     function fractionText(beats) {
+        if (beats === 0.75) {
+            return "3/4";
+        }
         return beats >= 1 ? String(beats) : "1/" + Math.round(1 / beats);
     }
     function ambient(id) {
@@ -285,50 +290,68 @@ Item {
         root.stop();
     }
 
-    // ---- Effects: one row that scrolls sideways when narrow ----
-    ListView {
+    // ---- Effects: RITMO and AMBIENTE, as in the design ----
+    Flow {
         id: chips
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 8
-        height: 34
-        orientation: ListView.Horizontal
-        spacing: 6
-        clip: true
-        boundsBehavior: Flickable.StopAtBounds
-        model: [{header: qsTr("RITMO")}].concat(root.rhythmEffects).concat([{header: qsTr("AMBIENTE")}]).concat(root.ambientEffects)
+        spacing: Math.round(6 * root.u)
 
-        delegate: Item {
-            id: chip
+        Repeater {
+            model: [{header: qsTr("RITMO")}].concat(root.rhythmEffects).concat([{header: qsTr("AMBIENTE")}]).concat(root.ambientEffects)
 
-            required property var modelData
-            readonly property bool isHeader: modelData.header !== undefined
+            Item {
+                id: chip
 
-            width: isHeader ? headerText.implicitWidth + 6 : Math.max(58, modelData.name.length * 8 + 26)
-            height: 34
+                required property var modelData
+                required property int index
+                readonly property bool isHeader: modelData.header !== undefined
+                readonly property bool picked: !isHeader && root.effect === modelData.id
 
-            Text {
-                id: headerText
+                width: isHeader ? headerText.implicitWidth + (index > 0 ? Math.round(10 * root.u) : 0) + Math.round(6 * root.u) : chipText.implicitWidth + Math.round(26 * root.u)
+                height: Math.round(36 * root.u)
 
-                anchors.verticalCenter: parent.verticalCenter
-                visible: chip.isHeader
-                color: Style.textSecondary
-                font.family: Style.font
-                font.pixelSize: 10
-                font.weight: Font.DemiBold
-                font.letterSpacing: 0.8
-                text: chip.isHeader ? chip.modelData.header : ""
-            }
-            CLButton {
-                anchors.fill: parent
-                visible: !chip.isHeader
-                radius: 17
-                text: chip.isHeader ? "" : chip.modelData.name
-                fontSize: 13
-                highlighted: !chip.isHeader && root.effect === chip.modelData.id
-                onClicked: root.pick(chip.modelData.id)
+                Text {
+                    id: headerText
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: Math.round(4 * root.u)
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: chip.isHeader
+                    color: Style.textSecondary
+                    font.family: Style.font
+                    font.pixelSize: Math.max(8, Math.round(10 * root.u))
+                    font.weight: Font.DemiBold
+                    font.letterSpacing: 0.6
+                    text: chip.isHeader ? chip.modelData.header : ""
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    visible: !chip.isHeader
+                    radius: height / 2
+                    color: chip.picked ? Style.accent : (chipMouse.pressed ? Style.buttonPressed : "transparent")
+                    border.width: 1
+                    border.color: chip.picked ? Style.accent : Qt.rgba(1, 1, 1, 0.14)
+
+                    Text {
+                        id: chipText
+
+                        anchors.centerIn: parent
+                        color: chip.picked ? "#ffffff" : Style.text
+                        font.family: Style.font
+                        font.weight: Font.DemiBold
+                        font.pixelSize: Math.max(10, Math.round(13 * root.u))
+                        text: chip.isHeader ? "" : chip.modelData.name
+                    }
+                    MouseArea {
+                        id: chipMouse
+
+                        anchors.fill: parent
+                        onClicked: root.pick(chip.modelData.id)
+                    }
+                }
             }
         }
     }
@@ -340,9 +363,9 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 8
-        height: root.narrow ? 36 : 42
-        spacing: 4
+        anchors.topMargin: 0
+        height: Math.round(44 * root.u)
+        spacing: Math.round(6 * root.u)
 
         Repeater {
             model: root.fractions
@@ -350,21 +373,21 @@ Item {
             CLButton {
                 required property var modelData
 
-                width: (fractionRow.width - 4 * 7) / 8
+                width: (fractionRow.width - fractionRow.spacing * 7) / 8
                 height: fractionRow.height
-                radius: 8
+                radius: Math.round(10 * root.u)
                 text: root.fractionText(modelData)
-                fontSize: root.narrow ? 11 : 13
+                fontSize: Math.max(10, Math.round(13 * root.u))
                 highlighted: root.fraction === modelData
                 onClicked: root.fraction = modelData
             }
         }
         CLButton {
-            width: (fractionRow.width - 4 * 7) / 8
+            width: (fractionRow.width - fractionRow.spacing * 7) / 8
             height: fractionRow.height
-            radius: 8
+            radius: Math.round(10 * root.u)
             text: qsTr("HOLD")
-            fontSize: 12
+            fontSize: Math.max(10, Math.round(13 * root.u))
             highlighted: root.hold
             onClicked: {
                 root.hold = !root.hold;
@@ -375,18 +398,20 @@ Item {
         }
     }
 
-    readonly property bool narrow: width < 400
+    readonly property bool narrow: width < 360
 
     // ---- One shots: a column on the side, a row when narrow ----
     Grid {
         id: shotColumn
 
-        x: root.narrow ? 8 : root.width - width - 8
-        y: root.narrow ? fractionRow.y - height - 8 : chips.y + chips.height + 8
-        width: root.narrow ? root.width - 16 : Math.max(96, Math.min(124, root.width * 0.24))
-        height: root.narrow ? 44 : fractionRow.y - 8 - y
+        x: root.narrow ? 0 : root.width - width
+        y: root.narrow ? fractionRow.y - height - gap : chips.y + chips.height + gap + shotLabel.height + Math.round(8 * root.u)
+        width: root.narrow ? root.width : Math.round(118 * root.u)
+        height: root.narrow ? Math.round(44 * root.u) : fractionRow.y - gap - y
         columns: root.narrow ? 4 : 1
-        spacing: 6
+        spacing: Math.round(8 * root.u)
+
+        readonly property real gap: Math.round(12 * root.u)
 
         Repeater {
             model: [
@@ -402,12 +427,12 @@ Item {
                 required property var modelData
                 readonly property bool blocked: modelData.hand && root.dvs
 
-                width: root.narrow ? (shotColumn.width - 18) / 4 : shotColumn.width
-                height: root.narrow ? shotColumn.height : (shotColumn.height - 18) / 4
-                radius: 12
+                width: root.narrow ? (shotColumn.width - 3 * shotColumn.spacing) / 4 : shotColumn.width
+                height: root.narrow ? shotColumn.height : (shotColumn.height - 3 * shotColumn.spacing) / 4
+                radius: Math.round(12 * root.u)
                 color: shotMouse.pressed ? Style.buttonPressed : Style.raised
                 border.width: 1
-                border.color: shotMouse.pressed ? root.deckColor : Style.buttonBorder
+                border.color: shotMouse.pressed ? root.deckColor : Qt.rgba(1, 1, 1, 0.14)
                 opacity: blocked ? 0.35 : 1
                 scale: shotMouse.pressed ? 0.95 : 1
 
@@ -424,7 +449,7 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: Style.text
                         font.family: Style.font
-                        font.pixelSize: root.narrow ? 12 : 14
+                        font.pixelSize: Math.max(10, Math.round(14 * root.u))
                         font.weight: Font.Bold
                         text: shot.modelData.name
                     }
@@ -433,7 +458,7 @@ Item {
                         visible: !root.narrow
                         color: Style.textSecondary
                         font.family: Style.mono
-                        font.pixelSize: 10
+                        font.pixelSize: Math.max(8, Math.round(11 * root.u))
                         text: shot.blocked ? qsTr("con DVS, tu mano") : shot.modelData.detail
                     }
                 }
@@ -463,6 +488,22 @@ Item {
         }
     }
 
+    Text {
+        id: shotLabel
+
+        visible: !root.narrow
+        x: shotColumn.x
+        y: chips.y + chips.height + shotColumn.gap
+        width: shotColumn.width
+        horizontalAlignment: Text.AlignHCenter
+        color: Style.textSecondary
+        font.family: Style.font
+        font.weight: Font.DemiBold
+        font.pixelSize: Math.max(8, Math.round(10 * root.u))
+        font.letterSpacing: 0.6
+        text: qsTr("UN TOQUE")
+    }
+
     // ---- The surface ----
     Rectangle {
         id: surface
@@ -471,27 +512,27 @@ Item {
         anchors.bottom: root.narrow ? shotColumn.top : fractionRow.top
         anchors.left: parent.left
         anchors.right: root.narrow ? parent.right : shotColumn.left
-        anchors.margins: 8
-        radius: 14
+        anchors.topMargin: Math.round(12 * root.u)
+        anchors.bottomMargin: Math.round(12 * root.u)
+        anchors.rightMargin: root.narrow ? 0 : Math.round(12 * root.u)
+        radius: Math.round(16 * root.u)
         color: Style.raised
+        border.width: 1
+        border.color: Qt.rgba(root.deckColor.r, root.deckColor.g, root.deckColor.b, 0.35)
         clip: true
 
-        // The dot grid
-        Canvas {
-            anchors.fill: parent
-            onWidthChanged: requestPaint()
-            onHeightChanged: requestPaint()
-            onPaint: {
-                const ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = "#2a2940";
-                const step = 16;
-                for (let y = step / 2; y < height; y += step) {
-                    for (let x = step / 2; x < width; x += step) {
-                        ctx.fillRect(x, y, 2, 2);
-                    }
-                }
-            }
+        // The center lines
+        Rectangle {
+            y: parent.height / 2
+            width: parent.width
+            height: 1
+            color: Qt.rgba(1, 1, 1, 0.08)
+        }
+        Rectangle {
+            x: parent.width / 2
+            width: 1
+            height: parent.height
+            color: Qt.rgba(1, 1, 1, 0.08)
         }
 
         // The zones of the rhythm: where the finger is, that fraction plays
@@ -590,9 +631,9 @@ Item {
             visible: root.playing
             x: touch.mouseX - width / 2
             y: touch.mouseY - height / 2
-            width: 46
-            height: 46
-            radius: 23
+            width: Math.round(44 * root.u)
+            height: width
+            radius: width / 2
             color: Style.accent
             border.width: 3
             border.color: "#ffffff"
@@ -600,29 +641,40 @@ Item {
         Text {
             anchors.left: parent.left
             anchors.top: parent.top
-            anchors.margins: 12
-            color: root.deckColor
+            anchors.margins: Math.round(14 * root.u)
+            color: Style.deckLight(root.group)
             font.family: Style.mono
-            font.pixelSize: 12
+            font.pixelSize: Math.max(9, Math.round(12 * root.u))
             font.weight: Font.Bold
             text: root.engagedPlaying && !touch.pressed ? qsTr("PALANCA ON · %1").arg(root.fractionText(root.liveFraction))
                 : (root.effect === "roll" || root.effect === "trans" || root.effect === "gater" || root.effect === "glitch") && root.playing
                 ? qsTr("%1 %2 · arrastrá ← →").arg(root.effect.toUpperCase()).arg(root.fractionText(root.liveFraction))
+                : root.playing && root.effect === "echo" ? qsTr("MIX %1% · FB %2%").arg(Math.round(touch.mouseX / Math.max(1, surface.width) * 100)).arg(Math.round((1 - touch.mouseY / Math.max(1, surface.height)) * 100))
                 : root.playing ? qsTr("X %1% · Y %2%").arg(Math.round(touch.mouseX / Math.max(1, surface.width) * 100)).arg(Math.round((1 - touch.mouseY / Math.max(1, surface.height)) * 100))
                 : qsTr("Tocá y arrastrá")
         }
         Text {
             anchors.left: parent.left
             anchors.bottom: parent.bottom
-            anchors.margins: 12
+            anchors.margins: Math.round(14 * root.u)
             color: Style.textSecondary
             font.family: Style.font
-            font.pixelSize: 11
+            font.pixelSize: Math.max(9, Math.round(12 * root.u))
             text: root.effect === "filter" ? qsTr("← graves · agudos →")
                 : root.effect === "roll" ? qsTr("← 1/16 · 1 tiempo →  mantené y arrastrá")
                 : root.effect === "trans" || root.effect === "gater" ? qsTr("← más rápido · más lento →   ↑ más corte")
                 : root.effect === "glitch" ? qsTr("← más corto · más largo →")
-                : qsTr("← menos · más →   ↑ feedback / mezcla")
+                : qsTr("← menos efecto · X · más efecto →")
+        }
+        Text {
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: Math.round(14 * root.u)
+            visible: root.effect !== "roll" && root.effect !== "glitch" && root.effect !== "filter"
+            color: Style.textSecondary
+            font.family: Style.font
+            font.pixelSize: Math.max(9, Math.round(12 * root.u))
+            text: root.effect === "echo" ? qsTr("↑ Feedback · Y") : (root.effect === "trans" || root.effect === "gater" ? qsTr("↑ Corte · Y") : qsTr("↑ Mezcla · Y"))
         }
 
         MouseArea {

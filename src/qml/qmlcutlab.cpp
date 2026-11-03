@@ -766,6 +766,17 @@ QString QmlCutlab::deckKey(const QString& group) const {
     return KeyUtils::keyToString(key, KeyUtils::KeyNotation::Lancelot);
 }
 
+QString QmlCutlab::camelot(const QString& keyText) const {
+    if (keyText.trimmed().isEmpty()) {
+        return QString();
+    }
+    const auto key = KeyUtils::guessKeyFromText(keyText);
+    if (key == mixxx::track::io::key::INVALID) {
+        return QString();
+    }
+    return KeyUtils::keyToString(key, KeyUtils::KeyNotation::Lancelot);
+}
+
 int QmlCutlab::hideNonMusic() const {
 #ifdef Q_OS_ANDROID
     QSqlDatabase db = database();

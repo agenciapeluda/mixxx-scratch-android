@@ -44,6 +44,23 @@ QtObject {
     function deckColor(group) {
         return group === "[Channel2]" || group === "[Channel4]" ? deck2 : deck1;
     }
+    // The waveform of each deck: dark body, light peaks
+    readonly property color deck1Dark: "#5a52d6"
+    readonly property color deck1Light: "#b3aeff"
+    readonly property color deck2Dark: "#00879a"
+    readonly property color deck2Light: "#7fe6f2"
+    function deckDark(group) {
+        return group === "[Channel2]" || group === "[Channel4]" ? deck2Dark : deck1Dark;
+    }
+    function deckLight(group) {
+        return group === "[Channel2]" || group === "[Channel4]" ? deck2Light : deck1Light;
+    }
+    // The cover placeholder of each deck
+    function deckShade(group) {
+        return group === "[Channel2]" || group === "[Channel4]" ? "#0b3640" : "#2a2650";
+    }
+    // Keys are amber chips; a key that clashes with the other deck goes gray
+    readonly property color keyChip: "#ffb547"
     function deckLetter(group) {
         return group === "[Channel2]" ? "B" : group === "[Channel3]" ? "C" : group === "[Channel4]" ? "D" : "A";
     }
@@ -80,6 +97,58 @@ QtObject {
         return i >= 0 ? colors[String(i + 1)] : textSecondary;
     }
 
+    // How a track goes with a deck: the tempo gap and the key relation,
+    // like "−1% · misma tonalidad" or "+12% · choca"
+    function keyRelation(a, b) {
+        const pa = /^(\d{1,2})([AB])$/.exec(a || "");
+        const pb = /^(\d{1,2})([AB])$/.exec(b || "");
+        if (!pa || !pb) {
+            return "";
+        }
+        const na = parseInt(pa[1]);
+        const nb = parseInt(pb[1]);
+        const step = Math.min((na - nb + 12) % 12, (nb - na + 12) % 12);
+        if (pa[2] === pb[2]) {
+            return step === 0 ? "same" : (step === 1 ? "near" : "clash");
+        }
+        return step === 0 ? "relative" : "clash";
+    }
+    function matchWith(bpm, key, deckBpm, deckKey) {
+        const parts = [];
+        let clash = false;
+        if (bpm > 0 && deckBpm > 0) {
+            // Half and double time count as the same tempo
+            let ratio = bpm / deckBpm;
+            if (ratio > 1.6) {
+                ratio /= 2;
+            } else if (ratio < 0.625) {
+                ratio *= 2;
+            }
+            const percent = Math.round((ratio - 1) * 100);
+            parts.push(Math.abs(percent) <= 0 ? qsTr("BPM ok") : (percent > 0 ? "+" : "−") + Math.abs(percent) + "%");
+            clash = Math.abs(percent) > 8;
+        }
+        const relation = keyRelation(key, deckKey);
+        if (relation === "same") {
+            parts.push(qsTr("misma tonalidad"));
+        } else if (relation === "near") {
+            parts.push(qsTr("tonalidad vecina"));
+        } else if (relation === "relative") {
+            parts.push(qsTr("relativa"));
+        } else if (relation === "clash") {
+            parts.push(qsTr("choca"));
+            clash = true;
+        }
+        return {text: parts.join(" · "), clash: clash};
+    }
+
+    // Beats as a DJ says them: 1/4, 1/2, 1, 4…
+    function beatsText(beats) {
+        if (beats <= 0) {
+            return "—";
+        }
+        return beats >= 1 ? String(Math.round(beats * 100) / 100) : "1/" + Math.round(1 / beats);
+    }
     function formatTime(seconds) {
         if (!isFinite(seconds) || seconds < 0) {
             seconds = 0;

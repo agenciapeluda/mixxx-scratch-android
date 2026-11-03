@@ -1,18 +1,17 @@
 import ".." as Skin
 import QtQuick
 
-// The scrolling waveform with the Cutlab colors: the bass in the color of
-// the deck, the mids pink like the voices of the stems, the highs white, a
-// soft beat grid and a white playhead.
+// The scrolling waveform in the colors of its deck, like the design: the
+// body dark, the peaks light, a soft beat grid and a white playhead.
 Skin.WaveformDisplay {
     id: root
 
-    lowColor: Style.deckColor(root.group)
-    midColor: Style.stemVocals
-    highColor: "#f4f5fb"
+    lowColor: Style.deckDark(root.group)
+    midColor: Style.deckColor(root.group)
+    highColor: Style.deckLight(root.group)
     simpleColor: Style.deckColor(root.group)
-    axesColor: Qt.rgba(1, 1, 1, 0.08)
-    beatColor: Qt.rgba(1, 1, 1, 0.22)
+    axesColor: Qt.rgba(1, 1, 1, 0.06)
+    beatColor: Qt.rgba(1, 1, 1, 0.18)
     playMarkerColor: Style.playhead
     cueColor: Style.cue
     loopColor: Style.ok

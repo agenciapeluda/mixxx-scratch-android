@@ -164,7 +164,7 @@ Rectangle {
                             color: Style.textSecondary
                             font.family: Style.font
                             font.pixelSize: 12
-                            text: qsTr("%n temas", "", folderRow.modelData.count)
+                            text: folderRow.modelData.count >= 0 ? qsTr("%n temas", "", folderRow.modelData.count) : qsTr("elegida a mano")
                         }
                     }
                     Rectangle {
@@ -213,24 +213,90 @@ Rectangle {
                 wrapMode: Text.WordWrap
                 text: qsTr("No encontramos música. Revisá que Cutlab tenga permiso para leer tus archivos en los ajustes de Android.")
             }
+            // Another folder of the phone, picked by hand
             Rectangle {
                 width: column.width
-                height: excluded.implicitHeight + 24
+                height: 48
+                radius: 12
+                color: otherMouse.pressed ? Style.raised : "transparent"
+                border.width: 1
+                border.color: Qt.rgba(1, 1, 1, 0.22)
+
+                Text {
+                    anchors.centerIn: parent
+                    color: Style.text
+                    font.family: Style.font
+                    font.weight: Font.DemiBold
+                    font.pixelSize: 14
+                    text: qsTr("+ Elegir otra carpeta")
+                }
+                MouseArea {
+                    id: otherMouse
+
+                    anchors.fill: parent
+                    onClicked: picker.openAt("/storage/emulated/0")
+                }
+            }
+            Rectangle {
+                width: column.width
+                height: excludedColumn.implicitHeight + 24
                 radius: 14
                 color: Style.panel
 
-                Text {
-                    id: excluded
+                Column {
+                    id: excludedColumn
 
                     x: 12
                     y: 12
                     width: parent.width - 24
-                    color: Style.textSecondary
+                    spacing: 6
+
+                    Text {
+                        color: Style.textSecondary
+                        font.family: Style.font
+                        font.weight: Font.DemiBold
+                        font.pixelSize: 11
+                        font.letterSpacing: 0.7
+                        text: qsTr("QUEDAN AFUERA SOLOS")
+                    }
+                    Text {
+                        width: parent.width
+                        color: Style.text
+                        font.family: Style.font
+                        font.pixelSize: 13
+                        lineHeight: 1.3
+                        wrapMode: Text.WordWrap
+                        text: qsTr("Audios de WhatsApp, grabaciones de voz, videos y todo lo que dure menos de 45 segundos.")
+                    }
+                }
+            }
+            Rectangle {
+                width: column.width
+                height: usbText.implicitHeight + 24
+                radius: 14
+                color: Style.panel
+
+                Text {
+                    id: usbText
+
+                    x: 44
+                    y: 12
+                    width: parent.width - 56
+                    color: Style.text
                     font.family: Style.font
                     font.pixelSize: 13
                     lineHeight: 1.3
                     wrapMode: Text.WordWrap
-                    text: qsTr("Quedan afuera solos: audios de WhatsApp, grabaciones de voz, videos y todo lo que dure menos de 45 segundos. Un pendrive aparece solo cuando lo conectás.")
+                    text: qsTr("Un pendrive aparece solo en la biblioteca cuando lo conectás.")
+                }
+                Text {
+                    x: 14
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Style.deck2
+                    font.family: Style.mono
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
+                    text: "⏏"
                 }
             }
         }
@@ -264,5 +330,98 @@ Rectangle {
         bordered: false
         fillColor: "transparent"
         onClicked: root.visible = false
+    }
+
+    // A simple folder browser for "+ Elegir otra carpeta"
+    Rectangle {
+        id: picker
+
+        property string path: ""
+        property var dirs: []
+
+        function openAt(dir) {
+            picker.path = dir;
+            picker.dirs = Mixxx.MobileLibrary.getSubDirectories(dir);
+            picker.visible = true;
+        }
+
+        anchors.fill: parent
+        visible: false
+        color: Style.background
+        z: 5
+
+        MouseArea {
+            anchors.fill: parent
+        }
+        Row {
+            id: pickerTop
+
+            x: 12
+            y: 12
+            width: parent.width - 24
+            spacing: 8
+
+            CLButton {
+                width: 44
+                height: 44
+                radius: 10
+                icon: "back"
+                iconSize: 18
+                fillColor: "transparent"
+                onClicked: {
+                    const up = picker.path.substring(0, picker.path.lastIndexOf("/"));
+                    if (picker.path === "/storage/emulated/0" || up.length < 2) {
+                        picker.visible = false;
+                    } else {
+                        picker.openAt(up);
+                    }
+                }
+            }
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - 44 - 150 - 16
+                elide: Text.ElideLeft
+                color: Style.text
+                font.family: Style.font
+                font.weight: Font.Bold
+                font.pixelSize: 16
+                text: picker.path.replace("/storage/emulated/0", qsTr("Teléfono"))
+            }
+            CLButton {
+                width: 150
+                height: 44
+                radius: 10
+                text: qsTr("Usar esta")
+                highlighted: true
+                onClicked: {
+                    const found = root.candidates.some(folder => folder.path === picker.path);
+                    if (!found) {
+                        root.candidates = root.candidates.concat([{name: picker.path.split("/").pop(), path: picker.path, count: -1}]);
+                    }
+                    const chosen = Object.assign({}, root.chosen);
+                    chosen[picker.path] = true;
+                    root.chosen = chosen;
+                    picker.visible = false;
+                }
+            }
+        }
+        ListView {
+            anchors.top: pickerTop.bottom
+            anchors.topMargin: 10
+            anchors.bottom: parent.bottom
+            x: 12
+            width: parent.width - 24
+            clip: true
+            model: picker.dirs
+
+            delegate: NodeRow {
+                required property string modelData
+
+                width: ListView.view.width
+                text: modelData.split("/").pop()
+                icon: "folder"
+                onClicked: picker.openAt(modelData.startsWith("/") ? modelData : picker.path + "/" + modelData)
+            }
+        }
     }
 }

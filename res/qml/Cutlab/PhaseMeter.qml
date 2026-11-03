@@ -110,9 +110,42 @@ Item {
             }
         }
     }
+    // ATRÁS and ADELANTE at the ends of the bar, as in the design
     Text {
+        visible: !root.vertical
+        anchors.left: bar.left
+        anchors.leftMargin: 10
+        anchors.verticalCenter: bar.verticalCenter
+        color: Style.textSecondary
+        font.family: Style.mono
+        font.weight: Font.Bold
+        font.pixelSize: 9
+        text: qsTr("ATRÁS")
+    }
+    Text {
+        visible: !root.vertical
+        anchors.right: bar.right
+        anchors.rightMargin: 10
+        anchors.verticalCenter: bar.verticalCenter
+        color: Style.textSecondary
+        font.family: Style.mono
+        font.weight: Font.Bold
+        font.pixelSize: 9
+        text: qsTr("ADELANTE")
+    }
+    Rectangle {
+        anchors.centerIn: phaseLabel
+        visible: phaseLabel.visible
+        width: phaseLabel.implicitWidth + 16
+        height: phaseLabel.implicitHeight + 2
+        radius: height / 2
+        color: Style.background
+    }
+    Text {
+        id: phaseLabel
+
         anchors.top: bar.bottom
-        anchors.topMargin: 2
+        anchors.topMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
         visible: !root.vertical
         color: root.active && root.inPhase && root.sameTempo ? Style.ok : Style.textSecondary
@@ -121,7 +154,7 @@ Item {
         font.pixelSize: 10
         text: {
             if (!root.active) {
-                return qsTr("FASE · los dos decks sonando");
+                return qsTr("FASE · con los dos decks sonando");
             }
             const ms = Math.round(root.offsetMs);
             const gap = root.sameTempo ? qsTr("TEMPO IGUAL")

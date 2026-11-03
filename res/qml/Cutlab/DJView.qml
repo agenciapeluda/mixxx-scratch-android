@@ -365,10 +365,17 @@ Rectangle {
             root.openLibrary("");
         }
     }
+    function openToolsSheet(group, tool) {
+        toolsSheet.group = group;
+        toolsSheet.tool = tool;
+        toolsSheet.open();
+    }
     function openTool(group, tool) {
-        // The FX pad opens over half the screen in every view
-        if (root.view !== 0 && tool !== 3) {
-            root.view = 0;
+        // Only the FX pad opens over the screen; stems, cues, loops and EQ
+        // come up from below
+        if (tool !== 3) {
+            root.openToolsSheet(group, tool);
+            return;
         }
         if (group === "[Channel1]") {
             root.tool1 = tool;
@@ -392,72 +399,64 @@ Rectangle {
         key: "toggle_recording"
     }
 
-    // ===== Top: the two tracks =====
-    Rectangle {
-        id: topBar
+    // ===== The main screen held sideways, as in the design =====
+    Loader {
+        id: mainLandscape
 
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: Math.round(Math.max(54, Math.min(78, root.height * 0.15)))
-        color: Style.topBar
-        visible: !root.portrait
-        z: 2
-
-        DeckHeader {
-            anchors.left: parent.left
-            anchors.right: libraryButton.left
-            anchors.rightMargin: 14
-            height: parent.height
-            group: "[Channel1]"
-            onBrowseRequested: root.openLibrary("[Channel1]")
-        }
-
-        // The Cutlab mark opens the library, red while recording
-        Item {
-            id: libraryButton
-
-            anchors.centerIn: parent
-            width: parent.height * 0.84
-            height: width
-            scale: libraryMouse.pressed ? 0.92 : 1
-
-            Image {
-                anchors.fill: parent
-                source: recording.value > 0 ? "icons/cutlab_mark_rec.svg" : "icons/cutlab_mark.svg"
-                sourceSize.width: 192
-                sourceSize.height: 192
+        anchors.fill: parent
+        active: !root.portrait
+        sourceComponent: MainLandscape {
+            recording: recording.value > 0
+            onLibraryRequested: group => root.openLibrary(group)
+            onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
+            onRecordRequested: {
+                toggleRecording.value = 1;
+                toggleRecording.value = 0;
             }
-            MouseArea {
-                id: libraryMouse
-
-                anchors.fill: parent
-                onClicked: root.toggleLibrary()
-            }
-        }
-
-        DeckHeader {
-            anchors.left: libraryButton.right
-            anchors.leftMargin: 14
-            anchors.right: parent.right
-            height: parent.height
-            group: "[Channel2]"
-            coverOnRight: true
-            onBrowseRequested: root.openLibrary("[Channel2]")
+            onFxRequested: group => root.showFxPad(group)
         }
     }
 
-    // ===== Bottom: transport and crossfader =====
-    TransportBar {
-        id: transport
+    // Pads, hot cues, rolls and the Scratch Bank over the whole screen
+    Rectangle {
+        id: padsOverlay
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: Math.round(Math.max(58, Math.min(84, root.height * 0.17)))
-        visible: !root.portrait
-        onStemsRequested: group => root.openTool(group, 0)
-        onMenuRequested: moreMenu.popup(transport, transport.width / 2 - 100, -moreMenu.implicitHeight)
+        anchors.fill: parent
+        visible: false
+        z: 6
+        color: Style.background
+
+        Loader {
+            anchors.fill: parent
+            anchors.topMargin: 48
+            active: padsOverlay.visible
+            sourceComponent: PadsTab {
+                mode: root.padsMode
+                onModeChanged: root.padsMode = mode
+                onLoadSampleRequested: group => root.openLibrary(group)
+            }
+        }
+        Text {
+            x: 16
+            y: 14
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 18
+            font.weight: Font.Bold
+            text: qsTr("Pads")
+        }
+        CLButton {
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            y: 2
+            width: 44
+            height: 44
+            icon: "close"
+            iconSize: 18
+            bordered: false
+            fillColor: "transparent"
+            onClicked: padsOverlay.visible = false
+        }
     }
 
     // Auto DJ, recording, effects pad, settings and layouts
@@ -476,15 +475,26 @@ Rectangle {
             }
         }
         CLMenuItem {
-            text: root.deckStyle === "dial" ? qsTr("Show turntables") : qsTr("Show tempo dials")
-            onTriggered: root.setDeckStyle(root.deckStyle === "dial" ? "vinyl" : "dial")
-        }
-        CLMenuItem {
             text: qsTr("Scratch Bank")
             onTriggered: {
                 root.padsMode = 3;
-                root.view = 2;
+                padsOverlay.visible = true;
             }
+        }
+        CLMenuItem {
+            text: qsTr("Pads, samples y rolls")
+            onTriggered: {
+                root.padsMode = 0;
+                padsOverlay.visible = true;
+            }
+        }
+        CLMenuItem {
+            text: qsTr("Stems, EQ y loops de A")
+            onTriggered: root.openToolsSheet("[Channel1]", 0)
+        }
+        CLMenuItem {
+            text: qsTr("Stems, EQ y loops de B")
+            onTriggered: root.openToolsSheet("[Channel2]", 0)
         }
         CLMenuItem {
             text: qsTr("Elegir mis carpetas de música…")
@@ -503,317 +513,140 @@ Rectangle {
         }
     }
 
-    // ===== Middle =====
+    // The FX pad of a deck, as in the design: it takes most of the screen on
+    // the side of its deck and the other deck keeps running, reduced, on the
+    // other side; with both pads open each one takes half
+    readonly property bool fxOpen1: root.tools1 && root.tool1 === 3 && !root.portrait
+    readonly property bool fxOpen2: root.tools2 && root.tool2 === 3 && !root.portrait
+    readonly property real fxU: Math.max(0.55, Math.min(root.width / 1284, root.height / 600))
     Item {
-        id: middle
+        id: fxScreen
 
-        visible: !root.portrait
-        anchors.top: topBar.bottom
-        anchors.bottom: transport.top
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.fill: parent
+        visible: root.fxOpen1 || root.fxOpen2
+        z: 5
 
-        SideColumn {
-            id: side1
+        readonly property real padWidth: root.fxOpen1 && root.fxOpen2 ? width / 2 : Math.round(width * 820 / 1284)
 
-            anchors.left: parent.left
-            width: root.sideWidth
-            height: parent.height
-            group: "[Channel1]"
-            toolsOpen: root.tools1 && root.view === 0
-            onToolsRequested: {
-                if (root.view === 0 && root.tools1 && root.tool1 === 4) {
-                    root.tools1 = false;
-                } else {
-                    root.openTool("[Channel1]", 4);
-                }
-            }
+        MouseArea {
+            anchors.fill: parent
         }
-        SideColumn {
-            id: side2
+        Repeater {
+            model: ["[Channel1]", "[Channel2]"]
 
-            anchors.right: parent.right
-            width: root.sideWidth
-            height: parent.height
-            group: "[Channel2]"
-            mirrored: true
-            toolsOpen: root.tools2 && root.view === 0
-            onToolsRequested: {
-                if (root.view === 0 && root.tools2 && root.tool2 === 4) {
-                    root.tools2 = false;
-                } else {
-                    root.openTool("[Channel2]", 4);
-                }
-            }
-        }
+            Loader {
+                id: fxHalf
 
-        Item {
-            id: center
+                required property string modelData
+                required property int index
+                readonly property bool open: index === 0 ? root.fxOpen1 : root.fxOpen2
+                readonly property bool otherOpen: index === 0 ? root.fxOpen2 : root.fxOpen1
 
-            anchors.left: side1.right
-            anchors.right: side2.left
-            anchors.leftMargin: 1
-            anchors.rightMargin: 1
-            height: parent.height
+                x: index === 0 ? 0 : fxScreen.width - width
+                width: open ? fxScreen.padWidth : fxScreen.width - fxScreen.padWidth
+                height: fxScreen.height
+                active: open || otherOpen
+                sourceComponent: open ? padComponent : sideComponent
 
-            readonly property real mixerWidth: Math.round(Math.max(150, Math.min(260, width * 0.3)))
-            readonly property real deckWidth: (width - mixerWidth - 2) / 2
+                Component {
+                    id: sideComponent
 
-            // Loops of each deck around the view switch
-            Rectangle {
-                id: header
-
-                width: parent.width
-                height: Math.round(Math.max(40, Math.min(54, middle.height * 0.15)))
-                color: Style.panel
-                visible: !(root.view === 0 && root.tools1 && root.tools2)
-
-                LoopControl {
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: (viewSwitch.x - width) / 2
-                    width: Math.min(180, viewSwitch.x - 12)
-                    height: parent.height - 4
-                    group: "[Channel1]"
-                }
-                Row {
-                    id: viewSwitch
-
-                    anchors.centerIn: parent
-                    height: parent.height - 6
-                    spacing: 4
-
-                    Repeater {
-                        model: ["mixer", "wave", "pads"]
-
-                        CLButton {
-                            required property int index
-                            required property string modelData
-
-                            width: Math.round(header.height * 1.45)
-                            height: viewSwitch.height
-                            radius: 6
-                            icon: modelData
-                            iconSize: height * 0.62
-                            bordered: false
-                            fillColor: "transparent"
-                            highlighted: root.view === index
-                            onClicked: root.view = index
-                        }
+                    DeckSide {
+                        group: fxHalf.modelData
+                        u: root.fxU
                     }
                 }
-                LoopControl {
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: viewSwitch.x + viewSwitch.width + (header.width - viewSwitch.x - viewSwitch.width - width) / 2
-                    width: Math.min(180, header.width - viewSwitch.x - viewSwitch.width - 12)
-                    height: parent.height - 4
-                    group: "[Channel2]"
-                }
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    width: parent.width
-                    height: 1
-                    color: Style.divider
-                }
-            }
-
-            Item {
-                id: body
-
-                anchors.top: header.visible ? header.bottom : parent.top
-                anchors.bottom: parent.bottom
-                width: parent.width
-
-                // ----- Turntables and mixer -----
-                Item {
-                    anchors.fill: parent
-                    visible: root.view === 0
-
-                    Item {
-                        id: deck1Area
-
-                        width: center.deckWidth
-                        height: parent.height
-
-                        Loader {
-                            anchors.fill: parent
-                            visible: !root.tools1 || root.tool1 === 3
-                            sourceComponent: root.deckStyle === "vinyl" ? vinyl1 : dial1
-
-                            Component {
-                                id: dial1
-
-                                DeckDial {
-                                    group: "[Channel1]"
-                                }
-                            }
-                            Component {
-                                id: vinyl1
-
-                                Platter {
-                                    group: "[Channel1]"
-                                }
-                            }
-                        }
-                        Loader {
-                            anchors.fill: parent
-                            active: root.tools1 && root.tool1 !== 3
-                            sourceComponent: ToolPanel {
-                                group: "[Channel1]"
-                                tool: root.tool1
-                                onToolChanged: root.tool1 = tool
-                                onCloseRequested: root.tools1 = false
-                            }
-                        }
-                    }
-                    MixerPanel {
-                        x: deck1Area.width + 1
-                        width: center.mixerWidth
-                        height: parent.height
-                    }
-                    Item {
-                        anchors.right: parent.right
-                        width: center.deckWidth
-                        height: parent.height
-
-                        Loader {
-                            anchors.fill: parent
-                            visible: !root.tools2 || root.tool2 === 3
-                            sourceComponent: root.deckStyle === "vinyl" ? vinyl2 : dial2
-
-                            Component {
-                                id: dial2
-
-                                DeckDial {
-                                    group: "[Channel2]"
-                                    mirrored: true
-                                }
-                            }
-                            Component {
-                                id: vinyl2
-
-                                Platter {
-                                    group: "[Channel2]"
-                                    mirrored: true
-                                }
-                            }
-                        }
-                        Loader {
-                            anchors.fill: parent
-                            active: root.tools2 && root.tool2 !== 3
-                            sourceComponent: ToolPanel {
-                                group: "[Channel2]"
-                                tool: root.tool2
-                                onToolChanged: root.tool2 = tool
-                                onCloseRequested: root.tools2 = false
-                            }
-                        }
-                    }
-                }
-
-                // ----- Both waveforms and the phase meter -----
-                Loader {
-                    anchors.fill: parent
-                    active: root.view === 1
-                    sourceComponent: HorizontalWaves {}
-                }
-
-                // ----- Pads -----
-                Loader {
-                    anchors.fill: parent
-                    active: root.view === 2
-                    sourceComponent: PadsTab {
-                        mode: root.padsMode
-                        onModeChanged: root.padsMode = mode
-                        onLoadSampleRequested: group => root.openLibrary(group)
-                    }
-                }
-            }
-        }
-    }
-
-    // The FX pad of a deck over its half of the screen, big enough to play
-    // with the hand; the other deck keeps running on the other half
-    Repeater {
-        model: ["[Channel1]", "[Channel2]"]
-
-        Loader {
-            id: fxHalf
-
-            required property string modelData
-            required property int index
-            readonly property bool open: (index === 0 ? root.tools1 && root.tool1 === 3 : root.tools2 && root.tool2 === 3)
-                && !root.portrait
-
-            x: index === 0 ? 0 : root.width / 2
-            y: topBar.height
-            width: root.width / 2
-            height: root.height - topBar.height
-            z: 5
-            active: open
-            sourceComponent: Rectangle {
-                color: Style.panel
-                border.width: 1
-                border.color: Style.divider
-
-                Rectangle {
-                    id: fxHeader
-
-                    width: parent.width
-                    height: 34
-                    color: Style.panelDark
+                Component {
+                    id: padComponent
 
                     Rectangle {
-                        x: 10
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 18
-                        radius: 4
-                        color: Style.deckColor(fxHalf.modelData)
+                        color: Style.panel
 
-                        Text {
-                            anchors.centerIn: parent
-                            color: Style.background
-                            font.family: Style.mono
-                            font.weight: Font.Bold
-                            font.pixelSize: 11
-                            text: Style.deckLetter(fxHalf.modelData)
+                        Rectangle {
+                            anchors.right: fxHalf.index === 0 ? parent.right : undefined
+                            width: 1
+                            height: parent.height
+                            color: Qt.rgba(1, 1, 1, 0.07)
                         }
-                    }
-                    Text {
-                        x: 40
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: Style.text
-                        font.family: Style.font
-                        font.pixelSize: 14
-                        font.weight: Font.Bold
-                        text: qsTr("FX %1").arg(fxHalf.index + 1)
-                    }
-                    CLButton {
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 44
-                        height: 34
-                        icon: "close"
-                        iconSize: 16
-                        bordered: false
-                        fillColor: "transparent"
-                        onClicked: {
-                            if (fxHalf.index === 0) {
-                                root.tools1 = false;
-                                root.fxAuto1 = false;
-                            } else {
-                                root.tools2 = false;
-                                root.fxAuto2 = false;
+                        Item {
+                            id: fxHeader
+
+                            x: Math.round(16 * root.fxU)
+                            y: Math.round(12 * root.fxU)
+                            width: parent.width - 2 * x
+                            height: Math.round(44 * root.fxU)
+
+                            Row {
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: Math.round(10 * root.fxU)
+
+                                Rectangle {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: fxLetter.implicitWidth + 14
+                                    height: fxLetter.implicitHeight + 4
+                                    radius: 4
+                                    color: Style.deckColor(fxHalf.modelData)
+
+                                    Text {
+                                        id: fxLetter
+
+                                        anchors.centerIn: parent
+                                        color: Style.background
+                                        font.family: Style.mono
+                                        font.weight: Font.Bold
+                                        font.pixelSize: Math.max(9, Math.round(11 * root.fxU))
+                                        text: Style.deckLetter(fxHalf.modelData)
+                                    }
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    color: Style.text
+                                    font.family: Style.font
+                                    font.weight: Font.Bold
+                                    font.pixelSize: Math.max(12, Math.round(20 * root.fxU))
+                                    text: qsTr("FX %1").arg(fxHalf.index + 1)
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    color: Style.textSecondary
+                                    font.family: Style.font
+                                    font.pixelSize: Math.max(9, Math.round(13 * root.fxU))
+                                    text: (fxHalf.index === 0 ? root.fxAuto1 : root.fxAuto2)
+                                        ? qsTr("Lo abriste con FX ON · se cierra al apagarlo") : qsTr("Tocá y arrastrá en el pad")
+                                }
+                            }
+                            CLButton {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: Math.round(44 * root.fxU)
+                                height: width
+                                radius: Math.round(10 * root.fxU)
+                                icon: "close"
+                                iconSize: width * 0.4
+                                fillColor: "transparent"
+                                onClicked: {
+                                    if (fxHalf.index === 0) {
+                                        root.tools1 = false;
+                                        root.fxAuto1 = false;
+                                    } else {
+                                        root.tools2 = false;
+                                        root.fxAuto2 = false;
+                                    }
+                                }
                             }
                         }
+                        FxPad {
+                            anchors.top: fxHeader.bottom
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: Math.round(8 * root.fxU)
+                            anchors.rightMargin: Math.round(8 * root.fxU)
+                            anchors.bottomMargin: Math.round(8 * root.fxU)
+                            group: fxHalf.modelData
+                            u: root.fxU
+                        }
                     }
-                }
-                FxPad {
-                    anchors.top: fxHeader.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    group: fxHalf.modelData
                 }
             }
         }
@@ -849,9 +682,12 @@ Rectangle {
             color: Style.panel
             radius: 16
         }
+        property int tool: 3
+
         contentItem: ToolPanel {
             group: toolsSheet.group
-            tool: 3
+            tool: toolsSheet.tool
+            onToolChanged: toolsSheet.tool = tool
             onCloseRequested: toolsSheet.close()
         }
     }

@@ -65,6 +65,9 @@ class QmlCutlab : public QObject {
     /// The key of the track loaded on `group` as text ("8A"), for the
     /// "compatible key" filter of the library
     Q_INVOKABLE QString deckKey(const QString& group) const;
+    /// A key written in any notation ("Am", "8A", "1m") as Camelot ("8A"),
+    /// empty when it isn't a key
+    Q_INVOKABLE QString camelot(const QString& keyText) const;
 
   signals:
     /// A library scan is over: the folders and the tracks may have changed
