@@ -1,5 +1,6 @@
 import ".." as Skin
 import Mixxx 1.0 as Mixxx
+import Mixxx.Controls 1.0 as MixxxControls
 import QtQuick
 
 // The top of a deck: cover, artist and title, key, remaining time and the
@@ -40,6 +41,17 @@ Item {
 
         group: root.group
         key: "rate_ratio"
+    }
+    TrackSections {
+        id: trackSections
+
+        group: root.group
+    }
+    Mixxx.ControlProxy {
+        id: beatActive
+
+        group: root.group
+        key: "beat_active"
     }
     Mixxx.ControlProxy {
         id: endOfTrack
@@ -114,7 +126,7 @@ Item {
 
             anchors.left: parent.left
             anchors.right: timeText.left
-            anchors.rightMargin: 8
+            anchors.rightMargin: 90
             anchors.top: artist.bottom
             color: Style.text
             elide: Text.ElideRight
@@ -142,13 +154,20 @@ Item {
                 key: "key"
             }
         }
+        DropCountdown {
+            anchors.right: timeText.left
+            anchors.rightMargin: 8
+            anchors.verticalCenter: timeText.verticalCenter
+            bars: trackSections.barsToDrop
+            beat: beatActive.value > 0
+        }
         Text {
             id: timeText
 
             anchors.right: parent.right
             anchors.baseline: title.baseline
             color: endOfTrack.value > 0 ? Style.danger : Style.text
-            font.family: Style.font
+            font.family: Style.mono
             font.pixelSize: title.font.pixelSize
             text: root.loaded ? "-" + Style.formatTime(info.remaining) : ""
         }
@@ -163,10 +182,35 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
 
-            Skin.WaveformOverview {
+            // The whole track in the colors of the stems: the low band
+            // (kick, bass) like the beat, the mids like the music, the highs
+            // like the voice. Drops and breaks show at a glance.
+            Rectangle {
                 anchors.fill: parent
-                group: root.group
+                radius: 4
+                color: Style.panelDark
                 visible: root.loaded
+
+                MixxxControls.WaveformOverview {
+                    anchors.fill: parent
+                    group: root.group
+                    channels: Mixxx.WaveformOverview.Channels.BothChannels
+                    renderer: Mixxx.WaveformOverview.Renderer.Filtered
+                    normalized: true
+                    stereo: false
+                    minuteMarkers: false
+                    colorLow: Style.stemDrums
+                    colorMid: Style.stemMusic
+                    colorHigh: Style.stemVocals
+                }
+            }
+            SectionMarks {
+                anchors.fill: parent
+                visible: root.loaded
+                sections: trackSections.sections
+                barsToDrop: trackSections.barsToDrop
+                nextDropStart: trackSections.nextDropStart
+                beat: beatActive.value > 0
             }
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter

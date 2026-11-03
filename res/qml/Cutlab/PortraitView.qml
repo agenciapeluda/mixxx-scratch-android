@@ -135,11 +135,20 @@ Rectangle {
         }
     }
 
+    PhaseMeter {
+        id: phaseMeter
+
+        anchors.top: waves.bottom
+        anchors.topMargin: 4
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: Math.min(parent.width - 24, 320)
+    }
+
     // Dials and their controls
     Row {
         id: decks
 
-        anchors.top: waves.bottom
+        anchors.top: phaseMeter.bottom
         anchors.topMargin: 6
         width: parent.width
 

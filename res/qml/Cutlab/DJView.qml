@@ -1,3 +1,4 @@
+import "../Library" as LibraryComponent
 import Mixxx 1.0 as Mixxx
 import QtQuick
 import QtQuick.Controls
@@ -42,7 +43,194 @@ Rectangle {
         fxRoute2.value = 1;
         fxMix1.value = 1;
         fxMix2.value = 1;
+        Shots.deck1 = shots1;
+        Shots.deck2 = shots2;
+        if (Mixxx.Application.configValue("[Cutlab]", "folders_done", "0") !== "1") {
+            firstRun.start();
+        }
     }
+
+    // The one shot effects of each deck, fired from the FX pad or from the
+    // pads of a controller
+    OneShots {
+        id: shots1
+
+        group: "[Channel1]"
+    }
+    OneShots {
+        id: shots2
+
+        group: "[Channel2]"
+    }
+
+    // On the first start, pick the music folders
+    Timer {
+        id: firstRun
+
+        interval: 1500
+        onTriggered: folderSetup.open()
+    }
+
+    // Turning the browse knob of a controller opens the library; LOAD
+    // loads and closes it
+    LibraryComponent.Control {
+        enabled: !library.visible && !folderSetup.visible
+
+        onMoveVertical: offset => library.open("")
+        onLoadSelectedTrack: (group, play) => {}
+        onLoadSelectedTrackIntoNextAvailableDeck: play => {}
+    }
+
+    // An effect turned on from a controller opens the FX pad of its deck,
+    // and it closes again a moment after all its effects are off
+    // Effects switched on while the app starts don't open the pad
+    property bool fxArmed: false
+    Timer {
+        interval: 4000
+        running: true
+        onTriggered: root.fxArmed = true
+    }
+    property bool fxAuto1: false
+    property bool fxAuto2: false
+    function fxStateChanged(deck) {
+        if (!root.fxArmed) {
+            return;
+        }
+        const on = deck === 1
+            ? [fxSlot11, fxSlot12, fxSlot13].some(c => c.value > 0)
+            : [fxSlot21, fxSlot22, fxSlot23].some(c => c.value > 0);
+        const group = deck === 1 ? "[Channel1]" : "[Channel2]";
+        const open = deck === 1 ? (root.tools1 && root.tool1 === 3) : (root.tools2 && root.tool2 === 3);
+        if (on) {
+            (deck === 1 ? fxClose1 : fxClose2).stop();
+            if (!open && !root.portrait) {
+                root.openTool(group, 3);
+                if (deck === 1) {
+                    root.fxAuto1 = true;
+                } else {
+                    root.fxAuto2 = true;
+                }
+            } else if (root.portrait && !toolsSheet.visible) {
+                toolsSheet.group = group;
+                toolsSheet.open();
+            }
+        } else if (deck === 1 ? root.fxAuto1 : root.fxAuto2) {
+            (deck === 1 ? fxClose1 : fxClose2).restart();
+        }
+    }
+    Timer {
+        id: fxClose1
+
+        interval: 2500
+        onTriggered: {
+            if (root.fxAuto1) {
+                root.tools1 = false;
+                root.fxAuto1 = false;
+            }
+        }
+    }
+    Timer {
+        id: fxClose2
+
+        interval: 2500
+        onTriggered: {
+            if (root.fxAuto2) {
+                root.tools2 = false;
+                root.fxAuto2 = false;
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot11
+
+        group: "[EffectRack1_EffectUnit1_Effect1]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(1)
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot12
+
+        group: "[EffectRack1_EffectUnit1_Effect2]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(1)
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot13
+
+        group: "[EffectRack1_EffectUnit1_Effect3]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(1)
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot21
+
+        group: "[EffectRack1_EffectUnit2_Effect1]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(2)
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot22
+
+        group: "[EffectRack1_EffectUnit2_Effect2]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(2)
+    }
+    Mixxx.ControlProxy {
+        id: fxSlot23
+
+        group: "[EffectRack1_EffectUnit2_Effect3]"
+        key: "enabled"
+        onValueChanged: root.fxStateChanged(2)
+    }
+    // The FX button of the Mixtour turns the quick effect of its channel on
+    function quickFxChanged(deck, on) {
+        if (!root.fxArmed) {
+            return;
+        }
+        const group = deck === 1 ? "[Channel1]" : "[Channel2]";
+        if (on) {
+            if (!root.portrait) {
+                root.openTool(group, 3);
+                if (deck === 1) {
+                    root.fxAuto1 = true;
+                } else {
+                    root.fxAuto2 = true;
+                }
+            }
+        } else {
+            root.fxStateChanged(deck);
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[QuickEffectRack1_[Channel1]]"
+        key: "enabled"
+        onValueChanged: root.quickFxChanged(1, value > 0)
+    }
+    Mixxx.ControlProxy {
+        group: "[QuickEffectRack1_[Channel2]]"
+        key: "enabled"
+        onValueChanged: root.quickFxChanged(2, value > 0)
+    }
+    // A mapping can also ask for the pad directly
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "fx_open1"
+        onValueChanged: {
+            if (value > 0) {
+                root.openTool("[Channel1]", 3);
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "fx_open2"
+        onValueChanged: {
+            if (value > 0) {
+                root.openTool("[Channel2]", 3);
+            }
+        }
+    }
+    property bool showDiagnostics: Mixxx.Application.configValue("[Cutlab]", "diagnostics", "0") === "1"
     Mixxx.ControlProxy {
         id: fxRoute1
 
@@ -196,6 +384,17 @@ Rectangle {
             onTriggered: root.setDeckStyle(root.deckStyle === "dial" ? "vinyl" : "dial")
         }
         CLMenuItem {
+            text: qsTr("Elegir mis carpetas de música…")
+            onTriggered: folderSetup.open()
+        }
+        CLMenuItem {
+            text: root.showDiagnostics ? qsTr("Ocultar el diagnóstico") : qsTr("Mostrar el diagnóstico")
+            onTriggered: {
+                root.showDiagnostics = !root.showDiagnostics;
+                Mixxx.Application.setConfigValue("[Cutlab]", "diagnostics", root.showDiagnostics ? "1" : "0");
+            }
+        }
+        CLMenuItem {
             text: qsTr("Settings")
             onTriggered: root.settingsRequested()
         }
@@ -334,7 +533,7 @@ Rectangle {
 
                         Loader {
                             anchors.fill: parent
-                            visible: !root.tools1
+                            visible: !root.tools1 || root.tool1 === 3
                             sourceComponent: root.deckStyle === "vinyl" ? vinyl1 : dial1
 
                             Component {
@@ -354,7 +553,7 @@ Rectangle {
                         }
                         Loader {
                             anchors.fill: parent
-                            active: root.tools1
+                            active: root.tools1 && root.tool1 !== 3
                             sourceComponent: ToolPanel {
                                 group: "[Channel1]"
                                 tool: root.tool1
@@ -375,7 +574,7 @@ Rectangle {
 
                         Loader {
                             anchors.fill: parent
-                            visible: !root.tools2
+                            visible: !root.tools2 || root.tool2 === 3
                             sourceComponent: root.deckStyle === "vinyl" ? vinyl2 : dial2
 
                             Component {
@@ -397,7 +596,7 @@ Rectangle {
                         }
                         Loader {
                             anchors.fill: parent
-                            active: root.tools2
+                            active: root.tools2 && root.tool2 !== 3
                             sourceComponent: ToolPanel {
                                 group: "[Channel2]"
                                 tool: root.tool2
@@ -408,27 +607,11 @@ Rectangle {
                     }
                 }
 
-                // ----- Upright waveforms -----
+                // ----- Both waveforms and the phase meter -----
                 Loader {
                     anchors.fill: parent
                     active: root.view === 1
-                    sourceComponent: Row {
-                        spacing: 2
-
-                        VerticalWave {
-                            width: (body.width - 2) / 2
-                            height: body.height
-                            group: "[Channel1]"
-                            deckNumber: 1
-                        }
-                        VerticalWave {
-                            width: (body.width - 2) / 2
-                            height: body.height
-                            group: "[Channel2]"
-                            deckNumber: 2
-                            mirrored: true
-                        }
-                    }
+                    sourceComponent: HorizontalWaves {}
                 }
 
                 // ----- Pads -----
@@ -438,6 +621,94 @@ Rectangle {
                     sourceComponent: PadsTab {
                         onLoadSampleRequested: group => root.openLibrary(group)
                     }
+                }
+            }
+        }
+    }
+
+    // The FX pad of a deck over its half of the screen, big enough to play
+    // with the hand; the other deck keeps running on the other half
+    Repeater {
+        model: ["[Channel1]", "[Channel2]"]
+
+        Loader {
+            id: fxHalf
+
+            required property string modelData
+            required property int index
+            readonly property bool open: (index === 0 ? root.tools1 && root.tool1 === 3 : root.tools2 && root.tool2 === 3)
+                && !root.portrait
+
+            x: index === 0 ? 0 : root.width / 2
+            y: topBar.height
+            width: root.width / 2
+            height: root.height - topBar.height
+            z: 5
+            active: open
+            sourceComponent: Rectangle {
+                color: Style.panel
+                border.width: 1
+                border.color: Style.divider
+
+                Rectangle {
+                    id: fxHeader
+
+                    width: parent.width
+                    height: 34
+                    color: Style.panelDark
+
+                    Rectangle {
+                        x: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 22
+                        height: 18
+                        radius: 4
+                        color: Style.deckColor(fxHalf.modelData)
+
+                        Text {
+                            anchors.centerIn: parent
+                            color: Style.background
+                            font.family: Style.mono
+                            font.weight: Font.Bold
+                            font.pixelSize: 11
+                            text: Style.deckLetter(fxHalf.modelData)
+                        }
+                    }
+                    Text {
+                        x: 40
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Style.text
+                        font.family: Style.font
+                        font.pixelSize: 14
+                        font.weight: Font.Bold
+                        text: qsTr("FX %1").arg(fxHalf.index + 1)
+                    }
+                    CLButton {
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 44
+                        height: 34
+                        icon: "close"
+                        iconSize: 16
+                        bordered: false
+                        fillColor: "transparent"
+                        onClicked: {
+                            if (fxHalf.index === 0) {
+                                root.tools1 = false;
+                                root.fxAuto1 = false;
+                            } else {
+                                root.tools2 = false;
+                                root.fxAuto2 = false;
+                            }
+                        }
+                    }
+                }
+                FxPad {
+                    anchors.top: fxHeader.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    group: fxHalf.modelData
                 }
             }
         }
@@ -487,10 +758,28 @@ Rectangle {
         visible: false
         z: 10
         onCloseRequested: visible = false
+        onFoldersRequested: folderSetup.open()
         onSettingsRequested: {
             visible = false;
             root.settingsRequested();
         }
         onAutoDJRequested: root.autoDJRequested()
+    }
+
+    FolderSetup {
+        id: folderSetup
+
+        anchors.fill: parent
+        visible: false
+        z: 20
+        onDone: library.showSection(0)
+    }
+
+    Diagnostics {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 8
+        visible: root.showDiagnostics
+        z: 30
     }
 }

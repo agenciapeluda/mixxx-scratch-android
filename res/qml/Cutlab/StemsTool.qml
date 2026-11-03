@@ -3,9 +3,11 @@ import Mixxx 1.0 as Mixxx
 import QtQuick
 import QtQuick.Controls
 
-// The stems of the loaded track: tap a stem to mute it, hold it to hear it
-// alone, its fader sets its volume. Tracks without stems offer to separate
-// them.
+// The stems of the loaded track in three parts, the ones a DJ plays with:
+// voice (the acapella), beat (drums) and music (bass and instruments). Tap
+// a part to mute it, hold it to hear it alone, its fader sets its volume.
+// With "separar el bajo" on in the settings, bass and melody come apart.
+// Tracks without stems offer to separate them.
 Item {
     id: root
 
@@ -13,6 +15,37 @@ Item {
     readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
     readonly property var currentTrack: deckPlayer ? deckPlayer.currentTrack : null
     readonly property bool hasStems: stemRepeater.count > 0
+    readonly property bool splitBass: Mixxx.Application.configValue("[Cutlab]", "stems_split_bass", "0") === "1"
+    readonly property var parts: root.splitBass ? [
+        {name: qsTr("Voz"), labels: ["Vocals"], color: Style.stemVocals},
+        {name: qsTr("Beat"), labels: ["Drums"], color: Style.stemDrums},
+        {name: qsTr("Bajo"), labels: ["Bass"], color: "#2f63d6"},
+        {name: qsTr("Melodía"), labels: ["Other"], color: Style.stemMusic}
+    ] : [
+        {name: qsTr("Voz"), labels: ["Vocals"], color: Style.stemVocals},
+        {name: qsTr("Beat"), labels: ["Drums"], color: Style.stemDrums},
+        {name: qsTr("Música"), labels: ["Bass", "Other"], color: Style.stemMusic}
+    ]
+
+    // The stems of the track behind a part
+    function stemsOf(labels) {
+        const result = [];
+        for (let i = 0; i < stemRepeater.count; ++i) {
+            const stem = stemRepeater.itemAt(i);
+            if (stem && labels.indexOf(stem.label) >= 0) {
+                result.push(stem);
+            }
+        }
+        // Tracks with other stem names: spread them over the parts
+        if (result.length === 0 && stemRepeater.count > 0) {
+            const position = root.parts.findIndex(part => part.labels === labels);
+            const stem = stemRepeater.itemAt(Math.min(stemRepeater.count - 1, Math.max(0, position)));
+            if (stem) {
+                result.push(stem);
+            }
+        }
+        return result;
+    }
     readonly property string groupPrefix: group.substr(0, group.length - 1)
 
     Mixxx.ControlProxy {
@@ -37,18 +70,55 @@ Item {
         }
     }
 
-    function soloStem(index) {
+    function soloPart(partIndex) {
+        const target = root.stemsOf(root.parts[partIndex].labels);
         let othersMuted = true;
         for (let i = 0; i < stemRepeater.count; ++i) {
             const stem = stemRepeater.itemAt(i);
-            if (i !== index && stem && !stem.muted) {
+            if (stem && target.indexOf(stem) < 0 && !stem.muted) {
                 othersMuted = false;
             }
         }
         for (let i = 0; i < stemRepeater.count; ++i) {
             const stem = stemRepeater.itemAt(i);
             if (stem) {
-                stem.setMuted(othersMuted ? false : i !== index);
+                stem.setMuted(othersMuted ? false : target.indexOf(stem) < 0);
+            }
+        }
+    }
+
+    // The stems themselves, hidden: the parts below drive them
+    Repeater {
+        id: stemRepeater
+
+        model: trackLoaded.value > 0 && root.currentTrack ? root.currentTrack.stemsModel : 0
+
+        Item {
+            id: stem
+
+            required property int index
+            required property string label
+            readonly property string stemGroup: `${root.groupPrefix}_Stem${index + 1}]`
+            readonly property bool muted: mute.value > 0
+            property alias volume: volumeControl.value
+
+            function setMuted(value) {
+                mute.value = value ? 1 : 0;
+            }
+
+            visible: false
+
+            Mixxx.ControlProxy {
+                id: mute
+
+                group: stem.stemGroup
+                key: "mute"
+            }
+            Mixxx.ControlProxy {
+                id: volumeControl
+
+                group: stem.stemGroup
+                key: "volume"
             }
         }
     }
@@ -60,57 +130,64 @@ Item {
         visible: root.hasStems
 
         Repeater {
-            id: stemRepeater
+            id: partRepeater
 
-            model: trackLoaded.value > 0 && root.currentTrack ? root.currentTrack.stemsModel : 0
+            model: root.parts
 
             Item {
-                id: stem
+                id: part
 
                 required property int index
-                required property color color
-                required property string label
-                readonly property string stemGroup: `${root.groupPrefix}_Stem${index + 1}]`
-                readonly property bool muted: mute.value > 0
+                required property var modelData
+                readonly property var stems: stemRepeater.count >= 0 ? root.stemsOf(modelData.labels) : []
+                readonly property bool muted: stems.length > 0 && stems.every(stem => stem.muted)
+                readonly property string faderGroup: stems.length > 0 ? stems[0].stemGroup : ""
 
-                function setMuted(value) {
-                    mute.value = value ? 1 : 0;
-                }
-
-                width: (parent.width - (stemRepeater.count - 1)) / Math.max(1, stemRepeater.count)
+                width: (parent.width - (root.parts.length - 1)) / root.parts.length
                 height: parent.height
 
-                Mixxx.ControlProxy {
-                    id: mute
-
-                    group: stem.stemGroup
-                    key: "mute"
-                }
-
                 Pad {
-                    id: stemPad
+                    id: partPad
 
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
                     height: parent.height * 0.55
-                    text: root.stemName(stem.label)
-                    padColor: stem.color
-                    active: !stem.muted
-                    dimmed: stem.muted
-                    onClicked: stem.setMuted(!stem.muted)
-                    onPressAndHold: root.soloStem(stem.index)
+                    text: part.modelData.name
+                    padColor: part.modelData.color
+                    active: !part.muted
+                    dimmed: part.muted
+                    onClicked: {
+                        const mute = !part.muted;
+                        for (const stem of part.stems) {
+                            stem.setMuted(mute);
+                        }
+                    }
+                    onPressAndHold: root.soloPart(part.index)
                 }
                 CLFader {
-                    anchors.top: stemPad.bottom
+                    id: partFader
+
+                    anchors.top: partPad.bottom
                     anchors.topMargin: 6
                     anchors.bottom: parent.bottom
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: Math.min(54, parent.width - 8)
-                    group: stem.stemGroup
+                    group: part.faderGroup
                     key: "volume"
                     ticks: 3
-                    handleColor: stem.muted ? "#77777c" : "#d7d7db"
+                    handleColor: part.muted ? "#77777c" : part.modelData.color
+                    visible: part.faderGroup !== ""
+                }
+                // The other stems of the part follow its fader
+                Mixxx.ControlProxy {
+                    group: part.faderGroup
+                    key: "volume"
+                    onValueChanged: {
+                        for (let i = 1; i < part.stems.length; ++i) {
+                            part.stems[i].volume = value;
+                        }
+                    }
                 }
             }
         }
@@ -140,7 +217,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: Mixxx.Stems.pendingCount > 0
                 ? qsTr("Separating: %1% (%2 in the queue). Load the track again when it is done.").arg(Math.round(Mixxx.Stems.progress * 100)).arg(Mixxx.Stems.pendingCount)
-                : qsTr("Separate it into vocals, drums, bass and melody to mix each part on its own.")
+                : qsTr("Separalo en voz, beat y música para mezclar cada parte por su lado.")
             wrapMode: Text.WordWrap
         }
         CLButton {

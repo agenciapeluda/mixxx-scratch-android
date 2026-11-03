@@ -840,3 +840,15 @@ PioneerDDJREV1.masterCuePressed = function(_channel, _control, value) {
     const mix = engine.getValue("[Master]", "headMix");
     engine.setValue("[Master]", "headMix", mix > -0.5 ? -1 : 0);
 };
+
+// Cutlab: the pads in SAMPLER mode fire the effects of the Cutlab FX pad on
+// their deck (SHIFT + pad plays the samples). The FX pad of the screen
+// shows them. Codes, see OneShots.qml: 1 backspin, 2 brake, 3 censor,
+// 4 echo out, 5 trans 1/8, 6 trans 1/16, 7 gater, 8 glitch.
+PioneerDDJREV1.cutlabFxCodes = [6, 5, 7, 8, 1, 2, 3, 4];
+
+PioneerDDJREV1.cutlabFxPad = function(_channel, control, value, _status, group) {
+    const deck = group === "[Channel2]" ? 2 : 1;
+    const code = PioneerDDJREV1.cutlabFxCodes[control & 0x07];
+    engine.setValue("[Cutlab]", `fx_deck${deck}`, value > 0 ? code : 0);
+};

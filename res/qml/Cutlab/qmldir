@@ -32,3 +32,14 @@ TransportBar 1.0 TransportBar.qml
 VerticalWave 1.0 VerticalWave.qml
 VuBar 1.0 VuBar.qml
 XYSurface 1.0 XYSurface.qml
+TrackSections 1.0 TrackSections.qml
+SectionMarks 1.0 SectionMarks.qml
+DropCountdown 1.0 DropCountdown.qml
+PhaseMeter 1.0 PhaseMeter.qml
+HorizontalWaves 1.0 HorizontalWaves.qml
+FolderSetup 1.0 FolderSetup.qml
+OneShots 1.0 OneShots.qml
+FxVisuals 1.0 FxVisuals.qml
+FxPad 1.0 FxPad.qml
+Diagnostics 1.0 Diagnostics.qml
+singleton Shots 1.0 Shots.qml

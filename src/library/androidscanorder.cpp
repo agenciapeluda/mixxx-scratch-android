@@ -91,6 +91,40 @@ void orderTracksByFileDate(QSqlDatabase database, const QDateTime& scanStart) {
 namespace mixxx {
 namespace android {
 
+int hideNonMusic(QSqlDatabase database) {
+    QSqlQuery query(database);
+    // Hidden tracks (mixxx_deleted) stay in the database with their cues and
+    // can be shown again from the hidden tracks view
+    if (!query.exec(QStringLiteral(
+                "UPDATE library SET mixxx_deleted = 1 "
+                "WHERE mixxx_deleted = 0 AND ("
+                "(duration > 0 AND duration < 45) OR location IN ("
+                "SELECT id FROM track_locations WHERE "
+                "lower(location) LIKE '%/whatsapp/%' OR "
+                "lower(location) LIKE '%/telegram/%' OR "
+                "lower(location) LIKE '%/recordings/%' OR "
+                "lower(location) LIKE '%/voice recorder/%' OR "
+                "lower(location) LIKE '%/call/%' OR "
+                "lower(location) LIKE '%/samsung/%' OR "
+                "lower(location) LIKE '%/dcim/%' OR "
+                "lower(location) LIKE '%/movies/%' OR "
+                "lower(location) LIKE '%/videoeditor%' OR "
+                "lower(filename) LIKE 'videoeditor%' OR "
+                "lower(filename) LIKE '%.mp4' OR "
+                "lower(filename) LIKE '%.3gp' OR "
+                "lower(filename) LIKE 'ptt-%' OR "
+                "lower(filename) LIKE 'aud-%')"
+                ")"))) {
+        qWarning() << "Hiding non music files:" << query.lastError();
+        return 0;
+    }
+    const int hidden = query.numRowsAffected();
+    if (hidden > 0) {
+        qInfo() << "Hid" << hidden << "voice notes, recordings and short files from the library";
+    }
+    return hidden;
+}
+
 void connectScanOrder(
         LibraryScanner* pScanner,
         const mixxx::DbConnectionPoolPtr& pDbConnectionPool) {
@@ -114,6 +148,7 @@ void connectScanOrder(
                 if (pScanStart->isValid()) {
                     orderTracksByFileDate(
                             mixxx::DbConnectionPooled(pDbConnectionPool), *pScanStart);
+                    hideNonMusic(mixxx::DbConnectionPooled(pDbConnectionPool));
                     *pScanStart = QDateTime();
                 }
             },

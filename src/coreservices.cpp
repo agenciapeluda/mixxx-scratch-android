@@ -78,6 +78,7 @@
 #include "util/androidcrashreport.h"
 #include "util/androidpermissions.h"
 #include "soundio/sounddeviceandroidusb.h"
+#include "qml/qmlcutlab.h"
 #endif
 
 #if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -532,6 +533,8 @@ void CoreServices::initialize(QApplication* pApp) {
     mixxx::android::requestAudioInputPermission();
     // The input levels of the USB sound card, shown in the DVS settings
     SoundDeviceAndroidUsb::createInputMeters();
+    // The one shot effects the controller mappings fire
+    mixxx::qml::QmlCutlab::createControls();
 #endif
 
 #if defined(Q_OS_LINUX) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -556,8 +559,8 @@ void CoreServices::initialize(QApplication* pApp) {
     FontUtils::initializeFonts(resourcePath); // takes a long time
 #if defined(Q_OS_ANDROID)
     {
-        // Cutlab: Roboto is the UI font of the touch interface
-        QFont appFont(QStringLiteral("Roboto"));
+        // Cutlab: Inter Tight is the UI font of the touch interface
+        QFont appFont(QStringLiteral("Inter Tight"));
         appFont.setStyleStrategy(QFont::PreferAntialias);
         QApplication::setFont(appFont);
     }

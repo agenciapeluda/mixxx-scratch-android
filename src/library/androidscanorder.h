@@ -2,6 +2,8 @@
 
 #include "util/db/dbconnectionpool.h"
 
+#include <QSqlDatabase>
+
 class LibraryScanner;
 
 namespace mixxx {
@@ -20,6 +22,11 @@ namespace android {
 /// Must be called before anything else is connected to the scanner's
 /// scanFinished() signal, so the dates are changed before the track lists
 /// are refreshed.
+/// Hides the voice notes, call and voice recordings, video sound tracks and
+/// files shorter than 45 seconds that a scan of a phone folder brings in.
+/// Returns how many tracks were hidden.
+int hideNonMusic(QSqlDatabase database);
+
 void connectScanOrder(
         LibraryScanner* pScanner,
         const mixxx::DbConnectionPoolPtr& pDbConnectionPool);

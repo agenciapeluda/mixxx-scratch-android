@@ -6,9 +6,10 @@ import QtQuick
 import QtQuick.Controls
 
 // The library over the whole screen: the source at the top, sections at the
-// bottom (playlists, all tracks, folders, Auto DJ queue, history) and a
-// list you go into and back out of. Tapping a track loads it into the deck
-// the library was opened for and closes it.
+// bottom (your folders, genres, playlists, Auto DJ queue, history), the
+// tracks that suit the playing deck and a list you go into and back out of.
+// The browse knob of a controller moves through it and LOAD loads the track
+// and closes it; tapping a track does the same.
 Rectangle {
     id: root
 
@@ -16,7 +17,7 @@ Rectangle {
     property string targetGroup: ""
     // 0 local music, 1 streaming
     property int source: 0
-    // 0 playlists, 1 tracks, 2 folders, 3 Auto DJ queue, 4 history
+    // 0 your folders, 1 genres, 2 playlists, 3 Auto DJ queue, 4 history
     property int section: 0
     property var pages: []
     readonly property var page: pages.length > 0 ? pages[pages.length - 1] : null
@@ -25,16 +26,57 @@ Rectangle {
     property bool searching: false
     // The track picked with the controller's browse knob
     property int selectedRow: -1
+    // The browse knob moves through the suggestions instead of the tracks
+    property bool focusSuggestions: false
+    property int selectedSuggestion: 0
+    // The deck the suggestions are for: the one playing, else deck 1
+    readonly property string playingGroup: play2.value > 0 && play1.value <= 0 ? "[Channel2]" : "[Channel1]"
+    property var suggestions: []
+    property var folderRows: []
+    property var genreRows: []
+    // Playlists and crates holding the picked track
+    readonly property var pickedLists: root.selectedRow >= 0 ? Mixxx.Cutlab.listsContaining(root.urlAt(root.selectedRow)) : []
+
+    function refreshSuggestions() {
+        root.suggestions = Mixxx.Cutlab.suggestions(root.playingGroup, 12);
+        root.selectedSuggestion = 0;
+    }
+    function loadUrl(url, group) {
+        if (!url || url.toString() === "") {
+            return;
+        }
+        if (group && group !== "") {
+            Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocationUrl(url, false);
+        } else {
+            Mixxx.PlayerManager.loadLocationUrlIntoNextAvailableDeck(url, false);
+        }
+        root.close();
+    }
+
+    Mixxx.ControlProxy {
+        id: play1
+
+        group: "[Channel1]"
+        key: "play_latched"
+    }
+    Mixxx.ControlProxy {
+        id: play2
+
+        group: "[Channel2]"
+        key: "play_latched"
+    }
 
     signal closeRequested
     signal settingsRequested
     signal autoDJRequested
+    signal foldersRequested
 
-    color: "#141415"
+    color: Style.background
 
     function open(group) {
         root.targetGroup = group || "";
         root.visible = true;
+        root.refreshSuggestions();
         if (root.pages.length === 0) {
             root.showSection(root.section);
         } else {
@@ -69,6 +111,9 @@ Rectangle {
     function activatePage(page) {
         if (page && page.node && page.node.valid) {
             root.sidebar.activate(page.node);
+            if (root.tracklist) {
+                root.tracklist.search(page.filter || "");
+            }
         }
     }
     function push(page) {
@@ -91,20 +136,20 @@ Rectangle {
         let page;
         switch (section) {
         case 0: {
-            const parents = ["playlist", "crates", "rekordbox", "enginedj", "recordings"]
-                .map(name => root.featureIndex(name))
-                .filter(index => index !== null);
-            page = {title: qsTr("Playlists"), parents: parents, node: null, showTracks: false};
+            root.folderRows = Mixxx.Cutlab.musicFolders();
+            page = {title: qsTr("Tus carpetas"), parents: [], node: null, showTracks: false, rows: "folders"};
             break;
         }
         case 1: {
-            const tracks = root.featureIndex("tracks");
-            page = {title: qsTr("Tracks"), parents: [], node: tracks, showTracks: true};
+            root.genreRows = Mixxx.Cutlab.genres();
+            page = {title: qsTr("Géneros"), parents: [], node: null, showTracks: false, rows: "genres"};
             break;
         }
         case 2: {
-            const folders = root.featureIndex("computer");
-            page = {title: qsTr("Folders"), parents: folders ? [folders] : [], node: null, showTracks: false, folders: true};
+            const parents = ["playlist", "crates", "rekordbox", "enginedj", "recordings"]
+                .map(name => root.featureIndex(name))
+                .filter(index => index !== null);
+            page = {title: qsTr("Listas"), parents: parents, node: null, showTracks: false};
             break;
         }
         case 3: {
@@ -120,6 +165,16 @@ Rectangle {
         }
         root.pages = [];
         root.push(page);
+    }
+    // A music folder or a genre was tapped: all tracks, filtered
+    function openFiltered(title, filter) {
+        root.push({
+            title: title,
+            parents: [],
+            node: root.featureIndex("tracks"),
+            showTracks: true,
+            filter: filter
+        });
     }
     // A playlist, crate, folder or history session was tapped
     function openNode(index) {
@@ -154,12 +209,12 @@ Rectangle {
         }
         if (!root.page || !root.page.showTracks) {
             // Search all tracks from the sections without tracks
-            root.section = 1;
-            const tracks = root.featureIndex("tracks");
+            root.section = 0;
             root.pages = [];
-            root.push({title: qsTr("Tracks"), parents: [], node: tracks, showTracks: true});
+            root.push({title: qsTr("Todas las canciones"), parents: [], node: root.featureIndex("tracks"), showTracks: true});
         }
-        root.tracklist.search(searchField.text);
+        const base = root.page.filter || "";
+        root.tracklist.search((base + " " + searchField.text).trim());
     }
 
     LibraryComponent.SourceTree {
@@ -171,17 +226,51 @@ Rectangle {
         enabled: root.visible && root.source === 0
 
         onMoveVertical: offset => {
+            if (root.focusSuggestions && root.suggestions.length > 0) {
+                root.selectedSuggestion = Math.max(0, Math.min(root.suggestions.length - 1, root.selectedSuggestion + offset));
+                suggestionView.positionViewAtIndex(root.selectedSuggestion, ListView.Contain);
+                return;
+            }
+            if (!root.page || !root.page.showTracks) {
+                // In a list of folders, genres or playlists: open the first
+                // one so the knob always lands on tracks
+                return;
+            }
             root.selectedRow = Math.max(0, Math.min(trackView.count - 1, root.selectedRow + offset));
             trackView.positionViewAtIndex(root.selectedRow, ListView.Contain);
         }
         onLoadSelectedTrack: (group, play) => {
-            if (root.selectedRow >= 0) {
+            if (root.focusSuggestions && root.suggestions.length > 0) {
+                root.loadUrl(root.suggestions[root.selectedSuggestion].url, group);
+            } else if (root.selectedRow >= 0) {
                 root.load(root.selectedRow, group);
             }
         }
         onLoadSelectedTrackIntoNextAvailableDeck: play => {
-            if (root.selectedRow >= 0) {
+            if (root.focusSuggestions && root.suggestions.length > 0) {
+                root.loadUrl(root.suggestions[root.selectedSuggestion].url, "");
+            } else if (root.selectedRow >= 0) {
                 root.load(root.selectedRow, "");
+            }
+        }
+    }
+    // SHIFT + browse on the controllers (or tapping the strip) switches the
+    // knob between the suggestions and the tracks
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "browse_suggestions"
+        onValueChanged: {
+            if (value > 0 && root.visible) {
+                root.focusSuggestions = !root.focusSuggestions;
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[Library]"
+        key: "MoveFocusForward"
+        onValueChanged: {
+            if (value > 0 && root.visible) {
+                root.focusSuggestions = !root.focusSuggestions;
             }
         }
     }
@@ -218,7 +307,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: sourceLabel.implicitWidth + 44
             height: 38
-            fillColor: "#232325"
+            fillColor: Style.raised
             bordered: false
             radius: 10
             onClicked: sourceMenu.open()
@@ -292,7 +381,7 @@ Rectangle {
             inputMethodHints: Qt.ImhNoPredictiveText
             background: Rectangle {
                 radius: 10
-                color: "#232325"
+                color: Style.raised
             }
             onTextChanged: searchTimer.restart()
 
@@ -372,24 +461,24 @@ Rectangle {
         anchors.right: parent.right
         height: root.source === 0 ? 34 : 0
         visible: height > 0
-        color: "#1c1c1e"
+        color: Style.panelDark
 
         Text {
             anchors.left: parent.left
             anchors.leftMargin: 16
             anchors.verticalCenter: parent.verticalCenter
-            color: Style.textSecondary
+            color: root.pickedLists.length > 0 ? Style.accentText : Style.textSecondary
             font.family: Style.font
             font.pixelSize: 13
+            width: parent.width - 32
+            elide: Text.ElideRight
             text: {
+                if (root.pickedLists.length > 0)
+                    return qsTr("También en: %1").arg(root.pickedLists.join(" · "));
                 const g = root.targetGroup;
-                if (g === "[Channel1]")
-                    return qsTr("Tap a track to load it into deck 1, or use 1 and 2");
-                if (g === "[Channel2]")
-                    return qsTr("Tap a track to load it into deck 2, or use 1 and 2");
                 if (g.startsWith("[Sampler"))
-                    return qsTr("Tap a track to load it into sample pad %1").arg(g.replace(/\D/g, ""));
-                return qsTr("Tap a track to load it into a free deck, or use 1 and 2");
+                    return qsTr("Tocá un tema para cargarlo en el pad %1").arg(g.replace(/\D/g, ""));
+                return qsTr("Girá BROWSE para moverte · LOAD A / B carga y cierra · SHIFT + BROWSE pasa a los sugeridos");
             }
         }
     }
@@ -404,10 +493,128 @@ Rectangle {
         anchors.bottom: tabBar.top
         visible: root.source === 0
 
+        // The tracks that suit the one playing, Tidal style
+        Rectangle {
+            id: suggestionStrip
+
+            anchors.top: parent.top
+            width: parent.width
+            height: root.suggestions.length > 0 ? 104 : 0
+            visible: height > 0
+            color: Style.panel
+
+            Text {
+                id: suggestionTitle
+
+                x: 16
+                y: 8
+                color: root.focusSuggestions ? Style.accentText : Style.text
+                font.family: Style.font
+                font.pixelSize: 13
+                font.weight: Font.DemiBold
+                text: qsTr("Sugeridos para lo que suena en %1").arg(Style.deckLetter(root.playingGroup))
+
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -10
+                    onClicked: root.focusSuggestions = !root.focusSuggestions
+                }
+            }
+            ListView {
+                id: suggestionView
+
+                anchors.top: suggestionTitle.bottom
+                anchors.topMargin: 6
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: 12
+                height: 62
+                orientation: ListView.Horizontal
+                spacing: 8
+                clip: true
+                model: root.suggestions
+
+                delegate: Rectangle {
+                    id: suggestion
+
+                    required property var modelData
+                    required property int index
+                    readonly property bool picked: root.focusSuggestions && root.selectedSuggestion === index
+
+                    width: 236
+                    height: 62
+                    radius: 10
+                    color: picked ? Style.track : Style.panelDark
+                    border.width: picked ? 2 : 1
+                    border.color: picked ? Style.accent : Qt.rgba(0.55, 0.52, 1, 0.25)
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.right: bpmText.left
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 6
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 2
+
+                        Text {
+                            width: parent.width
+                            color: Style.text
+                            elide: Text.ElideRight
+                            font.family: Style.font
+                            font.pixelSize: 13
+                            font.weight: Font.DemiBold
+                            text: suggestion.modelData.title
+                        }
+                        Text {
+                            width: parent.width
+                            color: Style.textSecondary
+                            elide: Text.ElideRight
+                            font.family: Style.font
+                            font.pixelSize: 11
+                            text: suggestion.modelData.why || suggestion.modelData.artist
+                        }
+                    }
+                    Column {
+                        id: bpmText
+
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 2
+
+                        Text {
+                            anchors.right: parent.right
+                            color: Style.text
+                            font.family: Style.mono
+                            font.weight: Font.Bold
+                            font.pixelSize: 13
+                            text: suggestion.modelData.bpm > 0 ? suggestion.modelData.bpm.toFixed(1) : ""
+                        }
+                        Text {
+                            anchors.right: parent.right
+                            color: Style.keyColor(suggestion.modelData.key)
+                            font.family: Style.mono
+                            font.weight: Font.Bold
+                            font.pixelSize: 11
+                            text: suggestion.modelData.key
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: root.loadUrl(suggestion.modelData.url,
+                            root.targetGroup !== "" ? root.targetGroup : (root.playingGroup === "[Channel1]" ? "[Channel2]" : "[Channel1]"))
+                    }
+                }
+            }
+        }
+
         ListView {
             id: trackView
 
-            anchors.fill: parent
+            anchors.top: suggestionStrip.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
             clip: true
             boundsBehavior: Flickable.StopAtBounds
             model: root.page && root.page.showTracks ? root.tracklist : null
@@ -418,6 +625,47 @@ Rectangle {
             // The playlists, crates or folders of the page come first
             header: Column {
                 width: trackView.width
+
+                // Your music folders: each one works like a crate that
+                // follows the folder, plus all the tracks
+                Repeater {
+                    model: root.page && root.page.rows === "folders"
+                        ? [{name: qsTr("Todas las canciones"), path: "", count: -1}].concat(root.folderRows) : []
+
+                    NodeRow {
+                        required property var modelData
+
+                        width: trackView.width
+                        text: modelData.count >= 0 ? modelData.name + "  ·  " + modelData.count : modelData.name
+                        icon: modelData.path === "" ? "note" : "folder"
+                        onClicked: root.openFiltered(modelData.name,
+                            modelData.path === "" ? "" : "location:\"" + modelData.path + "/\"")
+                    }
+                }
+                Repeater {
+                    model: root.page && root.page.rows === "genres" ? root.genreRows : []
+
+                    NodeRow {
+                        required property var modelData
+
+                        width: trackView.width
+                        text: modelData.name + "  ·  " + modelData.count
+                        icon: "list"
+                        onClicked: root.openFiltered(modelData.name, "genre:\"" + modelData.name + "\"")
+                    }
+                }
+                // Choose the folders again
+                CLButton {
+                    x: 16
+                    width: Math.min(trackView.width - 32, 320)
+                    height: root.page && root.page.rows === "folders" ? 44 : 0
+                    visible: height > 0
+                    icon: "folder"
+                    iconSize: 18
+                    fontSize: 14
+                    text: qsTr("Elegir mis carpetas de música…")
+                    onClicked: root.foldersRequested()
+                }
 
                 Repeater {
                     model: root.page ? root.page.parents : []
@@ -557,11 +805,11 @@ Rectangle {
 
             Repeater {
                 model: [
-                    {icon: "list", label: qsTr("Playlists")},
-                    {icon: "note", label: qsTr("Tracks")},
-                    {icon: "folder", label: qsTr("Folders")},
-                    {icon: "queue", label: qsTr("Queue")},
-                    {icon: "history", label: qsTr("History")}
+                    {icon: "folder", label: qsTr("Carpetas")},
+                    {icon: "note", label: qsTr("Géneros")},
+                    {icon: "list", label: qsTr("Listas")},
+                    {icon: "queue", label: qsTr("Cola")},
+                    {icon: "history", label: qsTr("Recientes")}
                 ]
 
                 Item {

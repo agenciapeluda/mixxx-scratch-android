@@ -2903,9 +2903,9 @@
             <!-- SAMPLER Mode Pads start -->
                 <!-- Deck 1 pads -->
             <control>
-                <description>PAD 1 (DECK1) SAMPLER MODE - press - Play sample 1</description>
-                <group>[Sampler1]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 1 (DECK1) SAMPLER MODE - Cutlab FX: Trans 1/16</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x30</midino>
                 <options>
@@ -2913,9 +2913,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 1 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 1</description>
+                <description>PAD 1 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 1</description>
                 <group>[Sampler1]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x30</midino>
                 <options>
@@ -2923,9 +2923,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 2 (DECK1) SAMPLER MODE - press - Play sample 2</description>
-                <group>[Sampler2]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 2 (DECK1) SAMPLER MODE - Cutlab FX: Trans 1/8</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x31</midino>
                 <options>
@@ -2933,9 +2933,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 2 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 2</description>
+                <description>PAD 2 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 2</description>
                 <group>[Sampler2]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x31</midino>
                 <options>
@@ -2943,9 +2943,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 3 (DECK1) SAMPLER MODE - press - Play sample 3</description>
-                <group>[Sampler3]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 3 (DECK1) SAMPLER MODE - Cutlab FX: Gater</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x32</midino>
                 <options>
@@ -2953,9 +2953,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 3 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 3</description>
+                <description>PAD 3 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 3</description>
                 <group>[Sampler3]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x32</midino>
                 <options>
@@ -2963,9 +2963,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 4 (DECK1) SAMPLER MODE - press - Play sample 4</description>
-                <group>[Sampler4]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 4 (DECK1) SAMPLER MODE - Cutlab FX: Glitch</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x33</midino>
                 <options>
@@ -2973,9 +2973,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 4 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 4</description>
+                <description>PAD 4 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 4</description>
                 <group>[Sampler4]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x33</midino>
                 <options>
@@ -2983,9 +2983,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 5 (DECK1) SAMPLER MODE - press - Play sample 5</description>
-                <group>[Sampler5]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 5 (DECK1) SAMPLER MODE - Cutlab FX: Backspin</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x34</midino>
                 <options>
@@ -2993,9 +2993,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 5 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 5</description>
+                <description>PAD 5 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 5</description>
                 <group>[Sampler5]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x34</midino>
                 <options>
@@ -3003,9 +3003,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 6 (DECK1) SAMPLER MODE - press - Play sample 6</description>
-                <group>[Sampler6]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 6 (DECK1) SAMPLER MODE - Cutlab FX: Brake</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x35</midino>
                 <options>
@@ -3013,9 +3013,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 6 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 6</description>
+                <description>PAD 6 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 6</description>
                 <group>[Sampler6]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x35</midino>
                 <options>
@@ -3023,9 +3023,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 7 (DECK1) SAMPLER MODE - press - Play sample 7</description>
-                <group>[Sampler7]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 7 (DECK1) SAMPLER MODE - Cutlab FX: Censor</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x36</midino>
                 <options>
@@ -3033,9 +3033,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 7 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 7</description>
+                <description>PAD 7 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 7</description>
                 <group>[Sampler7]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x36</midino>
                 <options>
@@ -3043,9 +3043,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 8 (DECK1) SAMPLER MODE - press - Play sample 8</description>
-                <group>[Sampler8]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 8 (DECK1) SAMPLER MODE - Cutlab FX: Echo out</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x97</status>
                 <midino>0x37</midino>
                 <options>
@@ -3053,9 +3053,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 8 + SHIFT (DECK1) SAMPLER MODE - press - Stop/Load sample 8</description>
+                <description>PAD 8 + SHIFT (DECK1) SAMPLER MODE - press - Play sample 8</description>
                 <group>[Sampler8]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x98</status>
                 <midino>0x37</midino>
                 <options>
@@ -3064,9 +3064,9 @@
             </control>
                 <!-- Deck 2 pads -->
             <control>
-                <description>PAD 1 (DECK2) SAMPLER MODE - press - Play sample 9</description>
-                <group>[Sampler9]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 1 (DECK2) SAMPLER MODE - Cutlab FX: Trans 1/16</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x30</midino>
                 <options>
@@ -3074,9 +3074,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 1 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 9</description>
+                <description>PAD 1 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 9</description>
                 <group>[Sampler9]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x30</midino>
                 <options>
@@ -3084,9 +3084,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 2 (DECK2) SAMPLER MODE - press - Play sample 10</description>
-                <group>[Sampler10]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 2 (DECK2) SAMPLER MODE - Cutlab FX: Trans 1/8</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x31</midino>
                 <options>
@@ -3094,9 +3094,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 2 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 10</description>
+                <description>PAD 2 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 10</description>
                 <group>[Sampler10]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x31</midino>
                 <options>
@@ -3104,9 +3104,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 3 (DECK2) SAMPLER MODE - press - Play sample 11</description>
-                <group>[Sampler11]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 3 (DECK2) SAMPLER MODE - Cutlab FX: Gater</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x32</midino>
                 <options>
@@ -3114,9 +3114,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 3 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 11</description>
+                <description>PAD 3 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 11</description>
                 <group>[Sampler11]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x32</midino>
                 <options>
@@ -3124,9 +3124,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 4 (DECK2) SAMPLER MODE - press - Play sample 12</description>
-                <group>[Sampler12]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 4 (DECK2) SAMPLER MODE - Cutlab FX: Glitch</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x33</midino>
                 <options>
@@ -3134,9 +3134,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 24 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 12</description>
+                <description>PAD 24 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 12</description>
                 <group>[Sampler12]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x33</midino>
                 <options>
@@ -3144,9 +3144,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 5 (DECK2) SAMPLER MODE - press - Play sample 13</description>
-                <group>[Sampler13]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 5 (DECK2) SAMPLER MODE - Cutlab FX: Backspin</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x34</midino>
                 <options>
@@ -3154,9 +3154,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 5 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 13</description>
+                <description>PAD 5 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 13</description>
                 <group>[Sampler13]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x34</midino>
                 <options>
@@ -3164,9 +3164,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 6 (DECK2) SAMPLER MODE - press - Play sample 14</description>
-                <group>[Sampler14]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 6 (DECK2) SAMPLER MODE - Cutlab FX: Brake</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x35</midino>
                 <options>
@@ -3174,9 +3174,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 6 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 14</description>
+                <description>PAD 6 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 14</description>
                 <group>[Sampler14]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x35</midino>
                 <options>
@@ -3184,9 +3184,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 7 (DECK2) SAMPLER MODE - press - Play sample 15</description>
-                <group>[Sampler15]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 7 (DECK2) SAMPLER MODE - Cutlab FX: Censor</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x36</midino>
                 <options>
@@ -3194,9 +3194,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 7 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 15</description>
+                <description>PAD 7 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 15</description>
                 <group>[Sampler15]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x36</midino>
                 <options>
@@ -3204,9 +3204,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 8 (DECK2) SAMPLER MODE - press - Play sample 16</description>
-                <group>[Sampler16]</group>
-                <key>PioneerDDJREV1.samplerPadPress</key>
+                <description>PAD 8 (DECK2) SAMPLER MODE - Cutlab FX: Echo out</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabFxPad</key>
                 <status>0x99</status>
                 <midino>0x37</midino>
                 <options>
@@ -3214,9 +3214,9 @@
                 </options>
             </control>
             <control>
-                <description>PAD 8 + SHIFT (DECK2) SAMPLER MODE - press - Stop/Load sample 16</description>
+                <description>PAD 8 + SHIFT (DECK2) SAMPLER MODE - press - Play sample 16</description>
                 <group>[Sampler16]</group>
-                <key>PioneerDDJREV1.samplerPadShiftPress</key>
+                <key>PioneerDDJREV1.samplerPadPress</key>
                 <status>0x9A</status>
                 <midino>0x37</midino>
                 <options>

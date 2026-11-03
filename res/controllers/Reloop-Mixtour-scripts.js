@@ -30,6 +30,11 @@ ReloopMixtour.HotcueButton = class extends ReloopMixtour.controlledConnections(c
 ReloopMixtour.Pot = class extends ReloopMixtour.controlledConnections(components.Pot) {};
 ReloopMixtour.Component = class extends ReloopMixtour.controlledConnections(components.Component) {};
 
+// Cutlab
+ReloopMixtour.rollSizes = [0.0625, 0.125, 0.25, 0.5];
+// backspin, brake, trans 1/8, echo out
+ReloopMixtour.shiftFxCodes = [1, 2, 5, 4];
+
 ReloopMixtour.init = function() {
     // initialize Mixxx with current values on control surface
     const ControllerStatusSysex = [0xF0, 0x26, 0x2D, 0x65, 0x22, 0xF7];
@@ -210,6 +215,41 @@ ReloopMixtour.Deck = class extends components.Deck {
                 number: i,
                 on: 0x2B,
             });
+            // Cutlab: LOOP held + hot cue = beat roll (1/16, 1/8, 1/4, 1/2),
+            // SHIFT + hot cue = the effects of the Cutlab FX pad (backspin,
+            // brake, trans 1/8, echo out), see OneShots.qml
+            this[`hotcue${i}`].input = function(channel, control, value, status, group) {
+                const deckNumber = parseInt(theDeck.currentDeck.replace(/\D/g, ""));
+                if (theDeck.loopHeld) {
+                    theDeck.loopUsed = true;
+                    engine.setValue(theDeck.currentDeck,
+                        `beatlooproll_${ReloopMixtour.rollSizes[i - 1]}_activate`, value > 0 ? 1 : 0);
+                    return;
+                }
+                if (control >= 0x40) {
+                    engine.setValue("[Cutlab]", `fx_deck${deckNumber}`,
+                        value > 0 ? ReloopMixtour.shiftFxCodes[i - 1] : 0);
+                    return;
+                }
+                components.HotcueButton.prototype.input.call(this, channel, control, value, status, group);
+            };
+        };
+        // LOOP sets a loop when released without a hot cue pressed meanwhile
+        this.loop.input = function(channel, control, value, status, group) {
+            if (control >= 0x40) {
+                components.Button.prototype.input.call(this, channel, control, value, status, group);
+                return;
+            }
+            if (value > 0) {
+                theDeck.loopHeld = true;
+                theDeck.loopUsed = false;
+                return;
+            }
+            theDeck.loopHeld = false;
+            if (!theDeck.loopUsed) {
+                components.Button.prototype.input.call(this, channel, control, 0x7F, status, group);
+                components.Button.prototype.input.call(this, channel, control, 0x00, status, group);
+            }
         };
 
         this.forEachComponent(function(component) {

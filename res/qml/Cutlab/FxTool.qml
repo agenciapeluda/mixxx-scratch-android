@@ -3,8 +3,8 @@ import QtQml
 import QtQuick
 
 // Effects of a deck, on the effect unit of the same number.
-//  - Pad: touch and drag; across sets the effect amount, up and down the
-//    filter (high pass up, low pass down). Lifting the finger ends it.
+//  - Pad: rhythm and ambience effects played with the finger, one shots
+//    (backspin, brake, censor, echo out) and the beat fraction, see FxPad
 //  - Instant: a pad per effect chain preset, on while held (or latched
 //    with HOLD)
 //  - Manual: the three effects of the unit, each with ON and its knob
@@ -246,78 +246,14 @@ Item {
         }
     }
 
-    // Pad: the effect chain on top, the touch surface below
-    Item {
+    // Pad: effects, the touch surface with its visuals, one shots
+    FxPad {
         anchors.top: tabs.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         visible: root.mode === 0
-
-        Rectangle {
-            id: presetBar
-
-            width: parent.width
-            height: 40
-            color: "#3c3c3f"
-
-            CLButton {
-                anchors.left: parent.left
-                height: parent.height
-                width: 48
-                icon: "prev"
-                iconSize: 16
-                bordered: false
-                fillColor: "transparent"
-                onClicked: root.stepPreset(-1)
-            }
-            Text {
-                anchors.centerIn: parent
-                width: parent.width - 110
-                color: Style.text
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
-                font.family: Style.font
-                font.pixelSize: 15
-                font.weight: Font.Medium
-                text: root.unit && root.unit.presetName !== "" && root.unit.presetName !== "---" ? root.unit.presetName : qsTr("Pick an effect")
-            }
-            CLButton {
-                anchors.right: parent.right
-                height: parent.height
-                width: 48
-                icon: "next"
-                iconSize: 16
-                bordered: false
-                fillColor: "transparent"
-                onClicked: root.stepPreset(1)
-            }
-        }
-
-        XYSurface {
-            anchors.top: presetBar.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            topLabel: qsTr("HP")
-            bottomLabel: qsTr("LP")
-            onTouched: (x, y) => {
-                if (root.presetPosition() < 0) {
-                    root.stepPreset(0);
-                }
-                unitEnabled.value = 1;
-                routing.value = 1;
-                unitMix.value = 1;
-                root.setSlotsEnabled(true);
-                unitSuper.parameter = x;
-                quickFilter.parameter = y;
-            }
-            onReleased: {
-                root.setSlotsEnabled(false);
-                unitSuper.parameter = 0;
-                quickFilter.reset();
-            }
-        }
+        group: root.group
     }
 
     // Manual: the three effects of the unit

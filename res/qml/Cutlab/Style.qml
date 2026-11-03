@@ -4,33 +4,63 @@ import QtQuick
 // Colors of the Cutlab layout: neutral grays, the Cutlab indigo as accent,
 // green for what is playing and a red playhead.
 QtObject {
-    readonly property string font: "Roboto"
+    // Inter Tight for the interface, JetBrains Mono for numbers that change
+    // while playing (BPM, time, pitch): the digits keep their width
+    readonly property string font: "Inter Tight"
+    readonly property string mono: "JetBrains Mono"
 
     readonly property color black: "#000000"
-    readonly property color topBar: "#0b0b0c"
-    readonly property color background: "#2b2b2d"
-    readonly property color panel: "#363638"
-    readonly property color panelDark: "#29292b"
-    readonly property color divider: "#161617"
-    readonly property color button: "#262628"
-    readonly property color buttonPressed: "#47474a"
-    readonly property color buttonBorder: "#4a4a4d"
-    readonly property color track: "#1e1e20"
-    readonly property color tick: "#505054"
+    readonly property color topBar: "#0e0d1a"
+    readonly property color background: "#07060f"
+    readonly property color panel: "#0e0d1a"
+    readonly property color panelDark: "#0b0a16"
+    readonly property color raised: "#17162a"
+    readonly property color divider: "#1d1b33"
+    readonly property color button: "#17162a"
+    readonly property color buttonPressed: "#2a2650"
+    readonly property color buttonBorder: "#2a2940"
+    readonly property color track: "#1d1b33"
+    readonly property color tick: "#3a3858"
 
-    readonly property color text: "#ffffff"
-    readonly property color textSecondary: "#9d9da3"
-    readonly property color textDim: "#6c6c72"
+    readonly property color text: "#f4f5fb"
+    readonly property color textSecondary: "#9ca1b8"
+    readonly property color textDim: "#6e7390"
 
+    // The Cutlab indigo marks the brand and everything that is on
     readonly property color accent: "#635bff"
-    // The accent for text and icons on dark grays, easier to read
+    // The accent for text and icons on dark grounds, easier to read
     readonly property color accentText: "#8b85ff"
     readonly property color accentDark: "#2b2766"
-    readonly property color play: "#34c759"
-    readonly property color cue: "#ff9f0a"
-    readonly property color playhead: "#ff2d2d"
-    readonly property color loop: "#30d158"
-    readonly property color danger: "#ff453a"
+    readonly property color play: "#2bd67b"
+    readonly property color ok: "#2bd67b"
+    readonly property color cue: "#ffb547"
+    readonly property color playhead: "#ffffff"
+    readonly property color loop: "#2bd67b"
+    readonly property color danger: "#ff4d5e"
+
+    // Each deck keeps its color everywhere: waveform, dial, pads, load
+    readonly property color deck1: "#8b85ff"
+    readonly property color deck2: "#00c2d8"
+    function deckColor(group) {
+        return group === "[Channel2]" || group === "[Channel4]" ? deck2 : deck1;
+    }
+    function deckLetter(group) {
+        return group === "[Channel2]" ? "B" : group === "[Channel3]" ? "C" : group === "[Channel4]" ? "D" : "A";
+    }
+
+    // Stems: voice, beat and music (bass and instruments)
+    readonly property color stemVocals: "#ff6fb5"
+    readonly property color stemDrums: "#ffe066"
+    readonly property color stemMusic: "#4d8bff"
+
+    // Sections of a track on the overview
+    readonly property color sectionBreak: "#ffb547"
+    readonly property color sectionPause: "#9ca1b8"
+    readonly property color sectionDrop: "#ff4d5e"
+    readonly property color sectionIntro: "#2bd67b"
+
+    // Panels and the library slide in with this curve
+    readonly property int motion: 180
 
     // Key colors of the Camelot wheel, as shown next to the key of a track
     function keyColor(key) {
