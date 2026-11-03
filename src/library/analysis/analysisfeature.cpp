@@ -25,7 +25,14 @@ const int kNumberOfAnalyzerThreads = math_max(1, QThread::idealThreadCount());
 
 inline
 int numberOfAnalyzerThreads() {
+#ifdef __ANDROID__
+    // Cutlab: on a phone all the cores decoding at once take the memory and
+    // the CPU the audio needs, and Android closes the app. One thread is
+    // enough in the background.
+    return 1;
+#else
     return kNumberOfAnalyzerThreads;
+#endif
 }
 
 inline
@@ -37,7 +44,15 @@ AnalyzerModeFlags getAnalyzerModeFlags(
     // of the existing code. We should rethink the configuration of analyzers when
     // refactoring/redesigning the analyzer framework.
     int modeFlags = AnalyzerModeFlags::WithBeats | AnalyzerModeFlags::LowPriority;
-    if (pConfig->getValue<bool>(ConfigKey("[Library]", "EnableWaveformGenerationWithAnalysis"), true)) {
+#ifdef __ANDROID__
+    // The waveform is made when the track is loaded; in the batch it only
+    // costs memory and storage on a phone
+    constexpr bool kWaveformByDefault = false;
+#else
+    constexpr bool kWaveformByDefault = true;
+#endif
+    if (pConfig->getValue<bool>(ConfigKey("[Library]", "EnableWaveformGenerationWithAnalysis"),
+                kWaveformByDefault)) {
         modeFlags |= AnalyzerModeFlags::WithWaveform;
     }
     return static_cast<AnalyzerModeFlags>(modeFlags);

@@ -69,10 +69,29 @@ Rectangle {
 
     // BPM, key and waveform of the tracks never played, in the background a
     // while after the start, so the library shows them without playing them
+    // Never while a deck plays: it waits until both are stopped
     Timer {
-        interval: 20000
+        interval: 60000
+        repeat: true
         running: Mixxx.Application.configValue("[Cutlab]", "auto_analyze", "1") === "1"
-        onTriggered: Mixxx.Cutlab.analyzeMissing()
+        onTriggered: {
+            if (playing1.value <= 0 && playing2.value <= 0) {
+                Mixxx.Cutlab.analyzeMissing();
+                stop();
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        id: playing1
+
+        group: "[Channel1]"
+        key: "play_latched"
+    }
+    Mixxx.ControlProxy {
+        id: playing2
+
+        group: "[Channel2]"
+        key: "play_latched"
     }
 
     // ---- Stems by themselves: every track loaded on a deck is separated in

@@ -273,10 +273,8 @@ bool QmlLibraryTrackListModel::sortById(int sortColumnId, bool ascending) {
     if (column < 0) {
         return false;
     }
-    emit layoutAboutToBeChanged(QList<QPersistentModelIndex>(),
-            QAbstractItemModel::VerticalSortHint);
+    // The source model resets itself with the new order; the proxy follows
     sourceModel()->sort(column, ascending ? Qt::AscendingOrder : Qt::DescendingOrder);
-    emit layoutChanged(QList<QPersistentModelIndex>(), QAbstractItemModel::VerticalSortHint);
     return true;
 }
 

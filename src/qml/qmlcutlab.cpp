@@ -804,8 +804,16 @@ int QmlCutlab::analyzeMissing() const {
         qWarning() << "Cutlab analysis:" << query.lastError();
         return 0;
     }
+    // Each track is queued once per session: a scan or the timer again
+    // don't pile the same tracks up
+    static QSet<int> s_queued;
     QList<AnalyzerScheduledTrack> tracks;
     while (query.next()) {
+        const int id = query.value(0).toInt();
+        if (s_queued.contains(id)) {
+            continue;
+        }
+        s_queued.insert(id);
         tracks.append(AnalyzerScheduledTrack(TrackId(query.value(0))));
     }
     if (!tracks.isEmpty()) {
