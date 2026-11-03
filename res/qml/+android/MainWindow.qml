@@ -60,6 +60,11 @@ Item {
     property bool showSamplers: false
 
     function openQuickLoad(group) {
+        if (root.cutlabLayout && cutlabView.item) {
+            // The Cutlab library, or the music folders on the first start
+            cutlabView.item.openLibrary(group || "");
+            return;
+        }
         quickLoadDrawer.targetDeck = (group && group.length > 0) ? group : "[Channel1]";
         quickLoadDrawer.open();
     }

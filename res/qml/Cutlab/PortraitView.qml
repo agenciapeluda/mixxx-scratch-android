@@ -119,7 +119,7 @@ Rectangle {
                     anchors.fill: parent
                     color: "#161617"
                 }
-                Skin.WaveformDisplay {
+                CutlabWave {
                     anchors.fill: parent
                     group: parent.modelData
                     isTouchMode: true

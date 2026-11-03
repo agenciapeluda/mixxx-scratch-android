@@ -1656,34 +1656,34 @@
             </control>
 
             <control>
-                <description>EFFECT ON (FX1) - press - EffectChain enable</description>
-                <group>[EffectRack1_EffectUnit1]</group>
-                <key>enabled</key>
+                <description>EFFECT ON lever (FX1) - Cutlab: plays the effect of the FX pad of deck A</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxLever</key>
                 <status>0x94</status>
                 <midino>0x50</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
-                <description>EFFECT ON (FX2) - press - EffectChain enable</description>
-                <group>[EffectRack1_EffectUnit2]</group>
-                <key>enabled</key>
+                <description>EFFECT ON lever (FX2) - Cutlab: plays the effect of the FX pad of deck B</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxLever</key>
                 <status>0x95</status>
                 <midino>0x50</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
 
             <control>
-                <description>FX SLOT 1 (FX1) - press - Effect Slot 1 enable</description>
-                <group>[EffectRack1_EffectUnit1_Effect1]</group>
-                <key>enabled</key>
+                <description>FX SLOT 1 (FX1) - Cutlab: picks the effect of bank 1 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x94</status>
                 <midino>0x70</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1697,13 +1697,13 @@
                 </options>
             </control>
             <control>
-                <description>FX SLOT 2 (FX1) - press - Effect Slot 2 enable</description>
-                <group>[EffectRack1_EffectUnit1_Effect2]</group>
-                <key>enabled</key>
+                <description>FX SLOT 2 (FX1) - Cutlab: picks the effect of bank 2 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x94</status>
                 <midino>0x71</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1717,13 +1717,13 @@
                 </options>
             </control>
             <control>
-                <description>FX SLOT 3 (FX1) - press - Effect Slot 3 enable</description>
-                <group>[EffectRack1_EffectUnit1_Effect3]</group>
-                <key>enabled</key>
+                <description>FX SLOT 3 (FX1) - Cutlab: picks the effect of bank 3 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x94</status>
                 <midino>0x72</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1737,13 +1737,13 @@
                 </options>
             </control>
             <control>
-                <description>FX SLOT 1 (FX2) - press - Effect Slot 1 enable</description>
-                <group>[EffectRack1_EffectUnit2_Effect1]</group>
-                <key>enabled</key>
+                <description>FX SLOT 1 (FX2) - Cutlab: picks the effect of bank 1 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x95</status>
                 <midino>0x70</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1757,13 +1757,13 @@
                 </options>
             </control>
             <control>
-                <description>FX SLOT 2 (FX2) - press - Effect Slot 2 enable</description>
-                <group>[EffectRack1_EffectUnit2_Effect2]</group>
-                <key>enabled</key>
+                <description>FX SLOT 2 (FX2) - Cutlab: picks the effect of bank 2 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x95</status>
                 <midino>0x71</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>
@@ -1777,13 +1777,13 @@
                 </options>
             </control>
             <control>
-                <description>FX SLOT 3 (FX2) - press - Effect Slot 3 enable</description>
-                <group>[EffectRack1_EffectUnit2_Effect3]</group>
-                <key>enabled</key>
+                <description>FX SLOT 3 (FX2) - Cutlab: picks the effect of bank 3 of the FX pad</description>
+                <group>[Cutlab]</group>
+                <key>PioneerDDJREV1.cutlabFxSelect</key>
                 <status>0x95</status>
                 <midino>0x72</midino>
                 <options>
-                    <Normal/>
+                    <Script-Binding/>
                 </options>
             </control>
             <control>

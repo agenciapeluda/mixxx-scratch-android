@@ -5,6 +5,7 @@ import QtQuick
 Rectangle {
     id: root
 
+    // 0 samples, 1 hot cues, 2 loop rolls, 3 Scratch Bank
     property int mode: 0
 
     signal loadSampleRequested(string group)
@@ -25,10 +26,16 @@ Rectangle {
             onLoadRequested: group => root.loadSampleRequested(group)
         }
 
+        Loader {
+            anchors.fill: parent
+            active: root.mode === 3
+            sourceComponent: ScratchBank {}
+        }
+
         Row {
             anchors.fill: parent
             spacing: 6
-            visible: root.mode !== 0
+            visible: root.mode === 1 || root.mode === 2
 
             Repeater {
                 model: ["[Channel1]", "[Channel2]"]
@@ -77,7 +84,7 @@ Rectangle {
             spacing: 28
 
             Repeater {
-                model: [qsTr("Samples"), qsTr("Hot cues"), qsTr("Loop rolls")]
+                model: [qsTr("Samples"), qsTr("Hot cues"), qsTr("Loop rolls"), qsTr("Scratch Bank")]
 
                 Text {
                     required property int index

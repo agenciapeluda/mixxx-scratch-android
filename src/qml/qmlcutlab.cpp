@@ -23,6 +23,7 @@
 #include "mixer/playerinfo.h"
 #include "moc_qmlcutlab.cpp"
 #include "qml/qmllibraryproxy.h"
+#include "analyzer/analyzerscheduledtrack.h"
 #include "track/beats.h"
 #include "track/keyutils.h"
 #include "track/track.h"
@@ -136,8 +137,32 @@ const QStringList kNonMusicFolders = {
 
 } // namespace
 
+namespace {
+// The folders chosen in this session: applied again once their scan is over,
+// when their tracks are in the library
+QStringList s_chosenFolders;
+} // namespace
+
 QmlCutlab::QmlCutlab(QObject* pParent)
         : QObject(pParent) {
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (pLibrary && pLibrary->trackCollectionManager()) {
+        // Emitted from the scanner thread: queued to this one
+        connect(pLibrary->trackCollectionManager(),
+                &TrackCollectionManager::libraryScanFinished,
+                this,
+                [this]() {
+                    if (!s_chosenFolders.isEmpty()) {
+                        applyFolderVisibility(s_chosenFolders);
+                        s_chosenFolders.clear();
+                    }
+                    // BPM, key and waveform of the new tracks, without
+                    // playing them first
+                    analyzeMissing();
+                    emit libraryScanned();
+                },
+                Qt::QueuedConnection);
+    }
 }
 
 QmlCutlab* QmlCutlab::create(QQmlEngine* pQmlEngine, QJSEngine*) {
@@ -152,6 +177,17 @@ void QmlCutlab::createControls() {
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_open%1").arg(deck)));
         }
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("browse_suggestions")));
+        // Counts up on each press of a controller's browse knob
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("browse_press")));
+        // Counts up on each press: next / previous effect of the FX pad of
+        // the deck, and the FX lever of the DDJ-REV1 (1 on, 0 off)
+        for (int deck = 1; deck <= 2; ++deck) {
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_next%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_prev%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_select%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_on%1").arg(deck)));
+        }
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_bank")));
         return true;
     }();
     Q_UNUSED(created);
@@ -624,35 +660,110 @@ bool QmlCutlab::useFolders(const QStringList& paths) const {
             pManager->addDirectory(mixxx::FileInfo(path));
         }
     }
-    QSqlDatabase db = database();
-    if (db.isOpen()) {
-        QStringList inside;
-        for (int i = 0; i < paths.size(); ++i) {
-            inside.append(QStringLiteral("track_locations.location LIKE :p%1").arg(i));
-        }
-        const QString insideClause = inside.join(QStringLiteral(" OR "));
-        for (const bool show : {false, true}) {
-            QSqlQuery query(db);
-            query.prepare(QStringLiteral(
-                    "UPDATE library SET mixxx_deleted = %1 WHERE location IN ("
-                    "SELECT track_locations.id FROM track_locations WHERE %2(%3))")
-                                  .arg(show ? QStringLiteral("0") : QStringLiteral("1"),
-                                          show ? QString() : QStringLiteral("NOT "),
-                                          insideClause));
-            for (int i = 0; i < paths.size(); ++i) {
-                query.bindValue(QStringLiteral(":p%1").arg(i),
-                        QDir::cleanPath(paths[i]) + QStringLiteral("/%"));
-            }
-            if (!query.exec()) {
-                qWarning() << "Cutlab folders:" << query.lastError();
-            }
-        }
-#ifdef Q_OS_ANDROID
-        mixxx::android::hideNonMusic(db);
-#endif
-    }
+    applyFolderVisibility(paths);
+    s_chosenFolders = paths;
     pManager->scanner()->scan();
     return true;
+}
+
+void QmlCutlab::applyFolderVisibility(const QStringList& paths) const {
+    QSqlDatabase db = database();
+    if (!db.isOpen() || paths.isEmpty()) {
+        return;
+    }
+    QStringList inside;
+    for (int i = 0; i < paths.size(); ++i) {
+        inside.append(QStringLiteral("track_locations.location LIKE :p%1").arg(i));
+    }
+    const QString insideClause = inside.join(QStringLiteral(" OR "));
+    auto bindPaths = [&paths](QSqlQuery& query) {
+        for (int i = 0; i < paths.size(); ++i) {
+            query.bindValue(QStringLiteral(":p%1").arg(i),
+                    QDir::cleanPath(paths[i]) + QStringLiteral("/%"));
+        }
+    };
+    // Nothing of the chosen folders in the library yet (not scanned, or
+    // stored under another path): hide nothing, so the library never ends
+    // up empty
+    {
+        QSqlQuery count(db);
+        count.prepare(QStringLiteral(
+                "SELECT COUNT(*) FROM track_locations WHERE %1")
+                              .arg(insideClause));
+        bindPaths(count);
+        if (!count.exec() || !count.next() || count.value(0).toInt() == 0) {
+            return;
+        }
+    }
+    for (const bool show : {false, true}) {
+        QSqlQuery query(db);
+        query.prepare(QStringLiteral(
+                "UPDATE library SET mixxx_deleted = %1 WHERE location IN ("
+                "SELECT track_locations.id FROM track_locations WHERE %2(%3))")
+                              .arg(show ? QStringLiteral("0") : QStringLiteral("1"),
+                                      show ? QString() : QStringLiteral("NOT "),
+                                      insideClause));
+        bindPaths(query);
+        if (!query.exec()) {
+            qWarning() << "Cutlab folders:" << query.lastError();
+        }
+    }
+#ifdef Q_OS_ANDROID
+    mixxx::android::hideNonMusic(db);
+#endif
+}
+
+namespace {
+const QString kMissingAnalysis = QStringLiteral(
+        "FROM library INNER JOIN track_locations ON library.location = track_locations.id "
+        "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0 AND "
+        "(library.bpm IS NULL OR library.bpm <= 0 OR library.key IS NULL OR library.key = '')");
+} // namespace
+
+int QmlCutlab::missingAnalysis() const {
+    QSqlDatabase db = database();
+    QSqlQuery query(db);
+    if (!db.isOpen() || !query.exec(QStringLiteral("SELECT COUNT(*) ") + kMissingAnalysis) ||
+            !query.next()) {
+        return 0;
+    }
+    return query.value(0).toInt();
+}
+
+int QmlCutlab::analyzeMissing() const {
+    Library* pLibrary = QmlLibraryProxy::get();
+    QSqlDatabase db = database();
+    if (!pLibrary || !db.isOpen()) {
+        return 0;
+    }
+    QSqlQuery query(db);
+    // Newest first: the tracks just added are the ones looked for
+    if (!query.exec(QStringLiteral("SELECT library.id ") + kMissingAnalysis +
+                QStringLiteral(" ORDER BY library.datetime_added DESC"))) {
+        qWarning() << "Cutlab analysis:" << query.lastError();
+        return 0;
+    }
+    QList<AnalyzerScheduledTrack> tracks;
+    while (query.next()) {
+        tracks.append(AnalyzerScheduledTrack(TrackId(query.value(0))));
+    }
+    if (!tracks.isEmpty()) {
+        qInfo() << "Cutlab: analyzing" << tracks.size() << "tracks without BPM or key";
+        emit pLibrary->analyzeTracks(tracks);
+    }
+    return static_cast<int>(tracks.size());
+}
+
+QString QmlCutlab::deckKey(const QString& group) const {
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    if (!pTrack) {
+        return QString();
+    }
+    const auto key = pTrack->getKey();
+    if (key == mixxx::track::io::key::INVALID) {
+        return QString();
+    }
+    return KeyUtils::keyToString(key, KeyUtils::KeyNotation::Lancelot);
 }
 
 int QmlCutlab::hideNonMusic() const {

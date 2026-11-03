@@ -34,6 +34,21 @@ Rectangle {
     property var suggestions: []
     property var folderRows: []
     property var genreRows: []
+    // The folder or genre picked with the browse knob
+    property int selectedNode: 0
+    readonly property var nodeRows: !root.page ? [] : (root.page.rows === "folders"
+        ? [{name: qsTr("Todas las canciones"), path: "", count: -1}].concat(root.folderRows)
+        : (root.page.rows === "genres" ? root.genreRows : []))
+    // How the tracks are sorted: a TrackModel::SortColumnId
+    // (1 artist, 2 title, 13 duration, 15 BPM, 17 added, 20 key, 31 played)
+    property int sortId: parseInt(Mixxx.Application.configValue("[Cutlab]", "library_sort", "17"))
+    property bool sortAscending: Mixxx.Application.configValue("[Cutlab]", "library_sort_asc", "0") === "1"
+    readonly property var sortNames: ({1: qsTr("Artista"), 2: qsTr("Título"), 13: qsTr("Duración"), 15: qsTr("BPM"), 17: qsTr("Agregados"), 20: qsTr("Tonalidad"), 31: qsTr("Tocados")})
+    // Only the tracks near the tempo or in a key that mixes with the deck
+    // that is playing
+    property bool filterBpm: false
+    property bool filterKey: false
+    property int missing: 0
     // Playlists and crates holding the picked track
     readonly property var pickedLists: root.selectedRow >= 0 ? Mixxx.Cutlab.listsContaining(root.urlAt(root.selectedRow)) : []
 
@@ -77,6 +92,7 @@ Rectangle {
         root.targetGroup = group || "";
         root.visible = true;
         root.refreshSuggestions();
+        root.missing = Mixxx.Cutlab.missingAnalysis();
         if (root.pages.length === 0) {
             root.showSection(root.section);
         } else {
@@ -111,9 +127,7 @@ Rectangle {
     function activatePage(page) {
         if (page && page.node && page.node.valid) {
             root.sidebar.activate(page.node);
-            if (root.tracklist) {
-                root.tracklist.search(page.filter || "");
-            }
+            root.refreshQuery();
         }
     }
     function push(page) {
@@ -131,6 +145,7 @@ Rectangle {
     }
     function showSection(section) {
         root.section = section;
+        root.selectedNode = 0;
         root.searching = false;
         searchField.text = "";
         let page;
@@ -203,6 +218,48 @@ Rectangle {
         }
         root.close();
     }
+    // The search of the page, the filters and the typed text together, then
+    // the sorting
+    function queryText() {
+        const parts = [];
+        if (root.page && root.page.filter) {
+            parts.push(root.page.filter);
+        }
+        if (root.filterBpm) {
+            const bpm = root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value;
+            if (bpm > 0) {
+                parts.push("~bpm:" + bpm.toFixed(1));
+            }
+        }
+        if (root.filterKey) {
+            const key = Mixxx.Cutlab.deckKey(root.playingGroup);
+            if (key !== "") {
+                parts.push("~key:" + key);
+            }
+        }
+        if (root.searching && searchField.text.trim() !== "") {
+            parts.push(searchField.text.trim());
+        }
+        return parts.join(" ");
+    }
+    function refreshQuery() {
+        if (!root.tracklist) {
+            return;
+        }
+        root.tracklist.search(root.queryText());
+        root.tracklist.sortById(root.sortId, root.sortAscending);
+        root.selectedRow = -1;
+    }
+    function setSort(id, ascending) {
+        root.sortId = id;
+        root.sortAscending = ascending;
+        Mixxx.Application.setConfigValue("[Cutlab]", "library_sort", id.toString());
+        Mixxx.Application.setConfigValue("[Cutlab]", "library_sort_asc", ascending ? "1" : "0");
+        if (root.tracklist) {
+            root.tracklist.sortById(id, ascending);
+        }
+        trackView.positionViewAtBeginning();
+    }
     function applySearch() {
         if (!root.tracklist) {
             return;
@@ -212,9 +269,74 @@ Rectangle {
             root.section = 0;
             root.pages = [];
             root.push({title: qsTr("Todas las canciones"), parents: [], node: root.featureIndex("tracks"), showTracks: true});
+            return;
         }
-        const base = root.page.filter || "";
-        root.tracklist.search((base + " " + searchField.text).trim());
+        root.refreshQuery();
+    }
+    function openSelectedNode() {
+        const rows = root.nodeRows;
+        if (root.selectedNode < 0 || root.selectedNode >= rows.length) {
+            return;
+        }
+        const row = rows[root.selectedNode];
+        if (root.page.rows === "folders") {
+            root.openFiltered(row.name, row.path === "" ? "" : "location:\"" + row.path + "/\"");
+        } else {
+            root.openFiltered(row.name, "genre:\"" + row.name + "\"");
+        }
+    }
+    // The browse knob of a controller was pressed: into the folder or
+    // genre, or listen to the picked track on the preview deck
+    function browsePress() {
+        if (root.page && !root.page.showTracks && root.nodeRows.length > 0) {
+            root.openSelectedNode();
+            return;
+        }
+        if (previewPlay.value > 0) {
+            previewStop.value = 1;
+            return;
+        }
+        const url = root.focusSuggestions && root.suggestions.length > 0
+            ? root.suggestions[root.selectedSuggestion].url
+            : (root.selectedRow >= 0 ? root.urlAt(root.selectedRow) : "");
+        if (url && url.toString() !== "") {
+            Mixxx.PlayerManager.getPlayer("[PreviewDeck1]").loadTrackFromLocationUrl(url, true);
+        }
+    }
+
+    Mixxx.ControlProxy {
+        id: bpm1
+
+        group: "[Channel1]"
+        key: "bpm"
+    }
+    Mixxx.ControlProxy {
+        id: bpm2
+
+        group: "[Channel2]"
+        key: "bpm"
+    }
+    Mixxx.ControlProxy {
+        id: previewPlay
+
+        group: "[PreviewDeck1]"
+        key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: previewStop
+
+        group: "[PreviewDeck1]"
+        key: "stop"
+    }
+    // A scan is over: new folders and tracks
+    Connections {
+        target: Mixxx.Cutlab
+
+        function onLibraryScanned() {
+            root.missing = Mixxx.Cutlab.missingAnalysis();
+            root.folderRows = Mixxx.Cutlab.musicFolders();
+            root.genreRows = Mixxx.Cutlab.genres();
+        }
     }
 
     LibraryComponent.SourceTree {
@@ -232,22 +354,31 @@ Rectangle {
                 return;
             }
             if (!root.page || !root.page.showTracks) {
-                // In a list of folders, genres or playlists: open the first
-                // one so the knob always lands on tracks
+                // In the folders or genres the knob picks one, LOAD or a
+                // press of the knob goes into it
+                if (root.nodeRows.length > 0) {
+                    root.selectedNode = Math.max(0, Math.min(root.nodeRows.length - 1, root.selectedNode + offset));
+                    trackView.positionViewAtBeginning();
+                    trackView.contentY = Math.max(0, root.selectedNode * 56 - trackView.height / 2);
+                }
                 return;
             }
             root.selectedRow = Math.max(0, Math.min(trackView.count - 1, root.selectedRow + offset));
             trackView.positionViewAtIndex(root.selectedRow, ListView.Contain);
         }
         onLoadSelectedTrack: (group, play) => {
-            if (root.focusSuggestions && root.suggestions.length > 0) {
+            if (root.page && !root.page.showTracks && root.nodeRows.length > 0) {
+                root.openSelectedNode();
+            } else if (root.focusSuggestions && root.suggestions.length > 0) {
                 root.loadUrl(root.suggestions[root.selectedSuggestion].url, group);
             } else if (root.selectedRow >= 0) {
                 root.load(root.selectedRow, group);
             }
         }
         onLoadSelectedTrackIntoNextAvailableDeck: play => {
-            if (root.focusSuggestions && root.suggestions.length > 0) {
+            if (root.page && !root.page.showTracks && root.nodeRows.length > 0) {
+                root.openSelectedNode();
+            } else if (root.focusSuggestions && root.suggestions.length > 0) {
                 root.loadUrl(root.suggestions[root.selectedSuggestion].url, "");
             } else if (root.selectedRow >= 0) {
                 root.load(root.selectedRow, "");
@@ -436,6 +567,19 @@ Rectangle {
                     x: moreButton.width - width
 
                     CLMenuItem {
+                        text: root.missing > 0 ? qsTr("Analizar BPM y tono (%1 pendientes)").arg(root.missing) : qsTr("Todo analizado")
+                        enabled: root.missing > 0
+                        onTriggered: {
+                            Mixxx.Cutlab.analyzeMissing();
+                            root.missing = 0;
+                        }
+                    }
+                    CLMenuItem {
+                        text: qsTr("Separar stems de esta lista…")
+                        enabled: root.page && root.page.showTracks && trackView.count > 0
+                        onTriggered: stemsPopup.openFor("")
+                    }
+                    CLMenuItem {
                         text: qsTr("Rescan the library")
                         onTriggered: Mixxx.Library.rescanLibrary()
                     }
@@ -459,7 +603,9 @@ Rectangle {
         anchors.top: topBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: root.source === 0 ? 34 : 0
+        // On a short screen the tracks get the room, except to show the
+        // lists the picked track is in
+        height: root.source === 0 && (root.height >= 480 || !(root.page && root.page.showTracks) || root.pickedLists.length > 0) ? 34 : 0
         visible: height > 0
         color: Style.panelDark
 
@@ -478,7 +624,9 @@ Rectangle {
                 const g = root.targetGroup;
                 if (g.startsWith("[Sampler"))
                     return qsTr("Tocá un tema para cargarlo en el pad %1").arg(g.replace(/\D/g, ""));
-                return qsTr("Girá BROWSE para moverte · LOAD A / B carga y cierra · SHIFT + BROWSE pasa a los sugeridos");
+                if (root.page && !root.page.showTracks)
+                    return qsTr("Girá BROWSE para elegir · apretá BROWSE o LOAD para entrar");
+                return qsTr("Girá BROWSE para moverte · apretá para escuchar · LOAD A / B carga · SHIFT + BROWSE a los sugeridos");
             }
         }
     }
@@ -608,10 +756,128 @@ Rectangle {
             }
         }
 
+        // Sorting and filters of the tracks, like djay
+        Rectangle {
+            id: sortBar
+
+            anchors.top: suggestionStrip.bottom
+            width: parent.width
+            height: root.page && root.page.showTracks ? 48 : 0
+            visible: height > 0
+            color: Style.panelDark
+
+            Flickable {
+                anchors.fill: parent
+                anchors.leftMargin: 12
+                anchors.rightMargin: 12
+                contentWidth: sortRow.width
+                flickableDirection: Flickable.HorizontalFlick
+                clip: true
+
+                Row {
+                    id: sortRow
+
+                    height: parent.height
+                    spacing: 8
+
+                    Repeater {
+                        model: [17, 2, 1, 15, 20, 13, 31]
+
+                        Rectangle {
+                            id: sortChip
+
+                            required property int modelData
+                            readonly property bool active: root.sortId === modelData
+
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 32
+                            width: sortText.implicitWidth + 24
+                            radius: 16
+                            color: active ? Style.accent : Style.raised
+
+                            Text {
+                                id: sortText
+
+                                anchors.centerIn: parent
+                                color: Style.text
+                                font.family: Style.font
+                                font.pixelSize: 13
+                                font.weight: sortChip.active ? Font.DemiBold : Font.Normal
+                                text: root.sortNames[sortChip.modelData] + (sortChip.active ? (root.sortAscending ? "  ↑" : "  ↓") : "")
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                // Tapped again: the other way round
+                                onClicked: root.setSort(sortChip.modelData,
+                                    sortChip.active ? !root.sortAscending : [1, 2, 15, 20].includes(sortChip.modelData))
+                            }
+                        }
+                    }
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 1
+                        height: 24
+                        color: Style.divider
+                    }
+                    Repeater {
+                        model: [
+                            {id: "bpm", label: qsTr("BPM ≈ %1").arg(Style.deckLetter(root.playingGroup))},
+                            {id: "key", label: qsTr("Tono ≈ %1").arg(Style.deckLetter(root.playingGroup))}
+                        ]
+
+                        Rectangle {
+                            id: filterChip
+
+                            required property var modelData
+                            readonly property bool active: modelData.id === "bpm" ? root.filterBpm : root.filterKey
+
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 32
+                            width: filterText.implicitWidth + 24
+                            radius: 16
+                            color: active ? Style.deckColor(root.playingGroup) : "transparent"
+                            border.width: 1
+                            border.color: active ? "transparent" : Style.buttonBorder
+
+                            Text {
+                                id: filterText
+
+                                anchors.centerIn: parent
+                                color: filterChip.active ? Style.background : Style.text
+                                font.family: Style.font
+                                font.pixelSize: 13
+                                font.weight: Font.Medium
+                                text: filterChip.modelData.label
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    if (filterChip.modelData.id === "bpm") {
+                                        root.filterBpm = !root.filterBpm;
+                                    } else {
+                                        root.filterKey = !root.filterKey;
+                                    }
+                                    root.refreshQuery();
+                                }
+                            }
+                        }
+                    }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        leftPadding: 8
+                        color: Style.textSecondary
+                        font.family: Style.mono
+                        font.pixelSize: 12
+                        text: qsTr("%1 temas").arg(trackView.count)
+                    }
+                }
+            }
+        }
+
         ListView {
             id: trackView
 
-            anchors.top: suggestionStrip.bottom
+            anchors.top: sortBar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -629,12 +895,13 @@ Rectangle {
                 // Your music folders: each one works like a crate that
                 // follows the folder, plus all the tracks
                 Repeater {
-                    model: root.page && root.page.rows === "folders"
-                        ? [{name: qsTr("Todas las canciones"), path: "", count: -1}].concat(root.folderRows) : []
+                    model: root.page && root.page.rows === "folders" ? root.nodeRows : []
 
                     NodeRow {
                         required property var modelData
+                        required property int index
 
+                        selected: root.selectedNode === index
                         width: trackView.width
                         text: modelData.count >= 0 ? modelData.name + "  ·  " + modelData.count : modelData.name
                         icon: modelData.path === "" ? "note" : "folder"
@@ -647,7 +914,9 @@ Rectangle {
 
                     NodeRow {
                         required property var modelData
+                        required property int index
 
+                        selected: root.selectedNode === index
                         width: trackView.width
                         text: modelData.name + "  ·  " + modelData.count
                         icon: "list"

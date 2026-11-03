@@ -15,6 +15,18 @@ Item {
 
     required property string group
     property bool splitStemTracks: false
+    // The colors of the bands, the beat grid and the marks; the Cutlab
+    // screens set their own
+    property color lowColor: root.lowColor
+    property color midColor: root.midColor
+    property color highColor: root.highColor
+    property color simpleColor: '#D5C2A2'
+    property color axesColor: root.axesColor
+    property color beatColor: Qt.rgba(161 / 255, 161 / 255, 161 / 255, Mixxx.Config.waveformBeatGridAlpha / 100)
+    property color playMarkerColor: '#d9d9d9'
+    property color cueColor: 'red'
+    property color loopColor: '#00b400'
+    property color loopRangeColor: '#312c9a'
     readonly property int activeWaveformType: Mixxx.Config.waveformType === Mixxx.WaveformDisplay.Type.Simple || Mixxx.Config.waveformType === Mixxx.WaveformDisplay.Type.Filtered || Mixxx.Config.waveformType === Mixxx.WaveformDisplay.Type.HSV || Mixxx.Config.waveformType === Mixxx.WaveformDisplay.Type.RGB || Mixxx.Config.waveformType === Mixxx.WaveformDisplay.Type.Stacked ? Mixxx.Config.waveformType : Mixxx.WaveformDisplay.Type.RGB
     // Renderer factories are created once by QmlWaveformDisplay. Keep track
     // of the type that was used for the scene-graph stack so a change from
@@ -72,7 +84,7 @@ Item {
         Mixxx.WaveformRendererMarkRange {
             // Loop
             Mixxx.WaveformMarkRange {
-                color: '#00b400'
+                color: root.loopColor
                 disabledColor: '#ffffff'
                 disabledOpacity: 0.6
                 enabledControl: "loop_enabled"
@@ -82,7 +94,7 @@ Item {
             }
             // Intro
             Mixxx.WaveformMarkRange {
-                color: '#312c9a'
+                color: root.loopRangeColor
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'after'
                 endControl: "intro_end_position"
@@ -91,7 +103,7 @@ Item {
             }
             // Outro
             Mixxx.WaveformMarkRange {
-                color: '#312c9a'
+                color: root.loopRangeColor
                 durationTextColor: '#ffffff'
                 durationTextLocation: 'before'
                 endControl: "outro_end_position"
@@ -100,37 +112,37 @@ Item {
             }
         }
         Mixxx.WaveformRendererFiltered {
-            axesColor: '#a1a1a1a1'
+            axesColor: root.axesColor
             enabled: root.activeWaveformType === Mixxx.WaveformDisplay.Type.Filtered
             gainAll: Mixxx.Config.waveformVisualGainAll
             gainHigh: Mixxx.Config.waveformVisualGainHigh
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
-            highColor: '#D5C2A2'
-            lowColor: '#2a21d7'
-            midColor: '#97632D'
+            highColor: root.highColor
+            lowColor: root.lowColor
+            midColor: root.midColor
         }
         Mixxx.WaveformRendererFiltered {
-            axesColor: '#a1a1a1a1'
+            axesColor: root.axesColor
             enabled: root.activeWaveformType === Mixxx.WaveformDisplay.Type.Stacked
             gainAll: Mixxx.Config.waveformVisualGainAll
             gainHigh: Mixxx.Config.waveformVisualGainHigh
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
-            highColor: '#D5C2A2'
-            lowColor: '#2a21d7'
-            midColor: '#97632D'
+            highColor: root.highColor
+            lowColor: root.lowColor
+            midColor: root.midColor
             stacked: true
         }
         Mixxx.WaveformRendererSimple {
-            axesColor: '#a1a1a1a1'
-            color: '#D5C2A2'
+            axesColor: root.axesColor
+            color: root.simpleColor
             enabled: root.activeWaveformType === Mixxx.WaveformDisplay.Type.Simple
             gain: Mixxx.Config.waveformVisualGainAll
         }
         Mixxx.WaveformRendererHSV {
-            axesColor: '#a1a1a1a1'
-            color: '#D5C2A2'
+            axesColor: root.axesColor
+            color: root.simpleColor
             enabled: root.activeWaveformType === Mixxx.WaveformDisplay.Type.HSV
             gainAll: Mixxx.Config.waveformVisualGainAll
             gainHigh: Mixxx.Config.waveformVisualGainHigh
@@ -138,15 +150,15 @@ Item {
             gainMid: Mixxx.Config.waveformVisualGainMedium
         }
         Mixxx.WaveformRendererRGB {
-            axesColor: '#a1a1a1a1'
+            axesColor: root.axesColor
             enabled: root.activeWaveformType === Mixxx.WaveformDisplay.Type.RGB
             gainAll: Mixxx.Config.waveformVisualGainAll
             gainHigh: Mixxx.Config.waveformVisualGainHigh
             gainLow: Mixxx.Config.waveformVisualGainLow
             gainMid: Mixxx.Config.waveformVisualGainMedium
-            highColor: '#D5C2A2'
-            lowColor: '#2a21d7'
-            midColor: '#97632D'
+            highColor: root.highColor
+            lowColor: root.lowColor
+            midColor: root.midColor
         }
         Mixxx.WaveformRendererStem {
             gainAll: root.splitStemTracks ? 2.0 : 1.0
@@ -156,11 +168,11 @@ Item {
             splitStemTracks: root.splitStemTracks || Mixxx.Config.waveformStemSplitTracks
         }
         Mixxx.WaveformRendererBeat {
-            color: Qt.rgba(161 / 255, 161 / 255, 161 / 255, Mixxx.Config.waveformBeatGridAlpha / 100)
+            color: root.beatColor
         }
         Mixxx.WaveformRendererMark {
-            playMarkerBackground: '#d9d9d9'
-            playMarkerColor: '#d9d9d9'
+            playMarkerBackground: root.playMarkerColor
+            playMarkerColor: root.playMarkerColor
             playMarkerPosition: Mixxx.Config.waveformPlayMarkerPosition
             untilMark.align: Mixxx.Config.waveformUntilMarkAlign === 0 ? Qt.AlignTop : Mixxx.Config.waveformUntilMarkAlign === 2 ? Qt.AlignBottom : Qt.AlignVCenter
             untilMark.showBeats: Mixxx.Config.waveformUntilMarkShowBeats
@@ -178,7 +190,7 @@ Item {
 
             Mixxx.WaveformMark {
                 align: 'top|right'
-                color: 'red'
+                color: root.cueColor
                 control: "cue_point"
                 text: 'CUE'
                 textColor: '#1a1a1a'

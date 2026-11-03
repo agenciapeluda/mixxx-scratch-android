@@ -15,7 +15,14 @@ Item {
     readonly property bool dvs: vinylEnabled.value > 0
     readonly property color deckColor: Style.deckColor(group)
 
-    property string effect: "echo"
+    // Shared with the FX SLOT buttons of the controllers
+    property string effect: Shots.effectFor(group)
+    // Played from the BEAT FX lever: the presets below, no finger
+    readonly property bool engaged: root.group === "[Channel2]" ? Shots.engaged2 : Shots.engaged1
+    property bool engagedPlaying: false
+    // The beats the finger picks across the surface for roll, trans, gater
+    // and glitch; the fraction buttons are where a press starts
+    property real liveFraction: fraction
     // Beats
     property real fraction: 0.5
     property bool hold: false
@@ -53,10 +60,28 @@ Item {
         return `beatlooproll_${beats}_activate`;
     }
 
-    function start(x, y) {
+    // Left to right: 1/16 to 1 beat (the finger modulates the rhythm)
+    readonly property var liveFractions: [0.0625, 0.125, 0.25, 0.5, 1]
+    function fractionAt(x) {
+        const list = root.liveFractions;
+        return list[Math.max(0, Math.min(list.length - 1, Math.floor(x * list.length)))];
+    }
+
+    // x and y from 0 to 1; preset: played from the lever, with the
+    // fraction buttons and no finger
+    function start(x, y, preset) {
         const effect = root.effect;
+        const rhythm = effect === "roll" || effect === "trans" || effect === "gater" || effect === "glitch";
+        if (rhythm) {
+            const beats = preset ? Math.min(1, root.fraction) : root.fractionAt(x);
+            if (root.playing && beats !== root.liveFraction && effect !== "roll" && root.shots) {
+                // A new rate while it plays
+                root.shots.rhythm(effect, true, Math.min(16, Math.max(1, 1 / beats)));
+            }
+            root.liveFraction = beats;
+        }
         if (effect === "roll") {
-            const key = root.rollKeyFor(Math.min(1, root.fraction));
+            const key = root.rollKeyFor(root.liveFraction);
             if (key !== root.rollKey) {
                 if (root.rollKey !== "") {
                     rollControl.value = 0;
@@ -67,7 +92,7 @@ Item {
             }
         } else if (effect === "trans" || effect === "gater" || effect === "glitch") {
             if (!root.playing && root.shots) {
-                root.shots.rhythm(effect, true, Math.min(8, Math.max(0.25, 1 / root.fraction)));
+                root.shots.rhythm(effect, true, Math.min(16, Math.max(1, 1 / root.liveFraction)));
             }
             // Depth for trans and gater
             if (effect !== "glitch") {
@@ -123,8 +148,53 @@ Item {
         root.playing = false;
     }
     function pick(effect) {
+        if (effect === root.effect) {
+            return;
+        }
+        const wasEngaged = root.engagedPlaying;
         root.stop();
+        root.engagedPlaying = false;
         root.effect = effect;
+        Shots.setEffect(root.group, effect);
+        if (wasEngaged && root.engaged) {
+            root.engage();
+        }
+    }
+    function engage() {
+        if (root.playing) {
+            return;
+        }
+        root.engagedPlaying = true;
+        root.start(0.6, 0.5, true);
+    }
+    onEngagedChanged: {
+        if (root.engaged) {
+            root.engage();
+        } else if (root.engagedPlaying) {
+            root.engagedPlaying = false;
+            root.stop();
+        }
+    }
+    // The effect changed from a controller
+    Connections {
+        target: Shots
+
+        function onEffect1Changed() {
+            if (root.group !== "[Channel2]") {
+                root.pick(Shots.effect1);
+            }
+        }
+        function onEffect2Changed() {
+            if (root.group === "[Channel2]") {
+                root.pick(Shots.effect2);
+            }
+        }
+    }
+    // Opened by the lever: play at once
+    Component.onCompleted: {
+        if (root.engaged) {
+            Qt.callLater(root.engage);
+        }
     }
 
     Mixxx.ControlProxy {
@@ -201,6 +271,19 @@ Item {
     }
 
     Component.onDestruction: root.stop()
+
+    // The finger left the surface: the lever keeps the effect on with the
+    // presets, HOLD keeps it where it was
+    function fingerUp() {
+        if (root.hold) {
+            return;
+        }
+        if (root.engaged) {
+            root.start(0.6, 0.5, true);
+            return;
+        }
+        root.stop();
+    }
 
     // ---- Effects: one row that scrolls sideways when narrow ----
     ListView {
@@ -411,6 +494,53 @@ Item {
             }
         }
 
+        // The zones of the rhythm: where the finger is, that fraction plays
+        Row {
+            anchors.fill: parent
+            visible: root.effect === "roll" || root.effect === "trans" || root.effect === "gater" || root.effect === "glitch"
+
+            Repeater {
+                model: root.liveFractions
+
+                Item {
+                    required property var modelData
+                    required property int index
+                    readonly property bool live: root.playing && root.liveFraction === modelData
+
+                    width: surface.width / root.liveFractions.length
+                    height: surface.height
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: root.deckColor
+                        opacity: parent.live ? 0.16 : 0
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 90
+                            }
+                        }
+                    }
+                    Rectangle {
+                        anchors.right: parent.right
+                        width: 1
+                        height: parent.height
+                        color: Style.divider
+                        visible: parent.index < root.liveFractions.length - 1
+                    }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 30
+                        color: parent.live ? Style.text : Style.textSecondary
+                        font.family: Style.mono
+                        font.pixelSize: 13
+                        font.weight: Font.Bold
+                        text: root.fractionText(parent.modelData)
+                    }
+                }
+            }
+        }
+
         FxVisuals {
             id: visuals
 
@@ -475,7 +605,9 @@ Item {
             font.family: Style.mono
             font.pixelSize: 12
             font.weight: Font.Bold
-            text: root.effect === "roll" ? qsTr("ROLL %1").arg(root.fractionText(Math.min(1, root.fraction)))
+            text: root.engagedPlaying && !touch.pressed ? qsTr("PALANCA ON · %1").arg(root.fractionText(root.liveFraction))
+                : (root.effect === "roll" || root.effect === "trans" || root.effect === "gater" || root.effect === "glitch") && root.playing
+                ? qsTr("%1 %2 · arrastrá ← →").arg(root.effect.toUpperCase()).arg(root.fractionText(root.liveFraction))
                 : root.playing ? qsTr("X %1% · Y %2%").arg(Math.round(touch.mouseX / Math.max(1, surface.width) * 100)).arg(Math.round((1 - touch.mouseY / Math.max(1, surface.height)) * 100))
                 : qsTr("Tocá y arrastrá")
         }
@@ -487,8 +619,9 @@ Item {
             font.family: Style.font
             font.pixelSize: 11
             text: root.effect === "filter" ? qsTr("← graves · agudos →")
-                : root.effect === "roll" ? qsTr("mantené para repetir · la fracción va abajo")
-                : root.effect === "trans" || root.effect === "gater" ? qsTr("arriba: más corte · la velocidad va abajo")
+                : root.effect === "roll" ? qsTr("← 1/16 · 1 tiempo →  mantené y arrastrá")
+                : root.effect === "trans" || root.effect === "gater" ? qsTr("← más rápido · más lento →   ↑ más corte")
+                : root.effect === "glitch" ? qsTr("← más corto · más largo →")
                 : qsTr("← menos · más →   ↑ feedback / mezcla")
         }
 
@@ -515,16 +648,8 @@ Item {
                     report();
                 }
             }
-            onReleased: {
-                if (!root.hold) {
-                    root.stop();
-                }
-            }
-            onCanceled: {
-                if (!root.hold) {
-                    root.stop();
-                }
-            }
+            onReleased: root.fingerUp()
+            onCanceled: root.fingerUp()
         }
     }
 }

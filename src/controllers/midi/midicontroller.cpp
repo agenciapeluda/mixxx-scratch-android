@@ -168,6 +168,15 @@ void MidiController::createOutputHandlers() {
             qCWarning(m_logBase) << errorLog;
 
             int deckNum = 0;
+#ifdef __ANDROID__
+            // Cutlab: a LED without its control only stays dark. Decks,
+            // samplers and the Cutlab controls appear while the app starts,
+            // after the mapping, so no dialog over the screen for this
+            if (!m_logBase().isDebugEnabled()) {
+                delete moh;
+                continue;
+            }
+#endif
             if (m_logBase().isDebugEnabled()) {
                 failures.append(errorLog);
             } else if (PlayerManager::isDeckGroup(group, &deckNum)) {

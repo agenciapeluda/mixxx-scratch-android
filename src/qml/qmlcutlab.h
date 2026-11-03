@@ -57,6 +57,22 @@ class QmlCutlab : public QObject {
     Q_INVOKABLE QStringList folders() const;
     /// Hides the voice notes, recordings and very short files of the library
     Q_INVOKABLE int hideNonMusic() const;
+    /// Queues every visible track without BPM or key for the analysis (BPM,
+    /// key, waveform), returns how many
+    Q_INVOKABLE int analyzeMissing() const;
+    /// How many visible tracks still have no BPM or key
+    Q_INVOKABLE int missingAnalysis() const;
+    /// The key of the track loaded on `group` as text ("8A"), for the
+    /// "compatible key" filter of the library
+    Q_INVOKABLE QString deckKey(const QString& group) const;
+
+  signals:
+    /// A library scan is over: the folders and the tracks may have changed
+    void libraryScanned();
+
+  private:
+    /// Shows the tracks of the chosen folders and hides the rest
+    void applyFolderVisibility(const QStringList& paths) const;
 };
 
 } // namespace qml

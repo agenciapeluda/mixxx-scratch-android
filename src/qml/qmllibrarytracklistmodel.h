@@ -76,6 +76,9 @@ class QmlLibraryTrackListModel : public QIdentityProxyModel {
             Qt::Orientation orientation,
             int role = Qt::DisplayRole) const override;
     Q_INVOKABLE void sort(int column, Qt::SortOrder order) override;
+    /// Cutlab: sorts by a TrackModel::SortColumnId (1 artist, 2 title,
+    /// 13 duration, 15 bpm, 17 added, 20 key, 31 last played)
+    Q_INVOKABLE bool sortById(int sortColumnId, bool ascending);
 
   private:
     /// Maps a ColumnCache column to the column of the source model

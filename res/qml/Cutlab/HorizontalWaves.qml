@@ -27,7 +27,7 @@ Item {
                 color: Style.panel
                 clip: true
 
-                Skin.WaveformDisplay {
+                CutlabWave {
                     anchors.fill: parent
                     group: lane.modelData
                     isTouchMode: true

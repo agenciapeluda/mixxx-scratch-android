@@ -20,7 +20,7 @@ Item {
 
     // The horizontal waveform, turned a quarter to the right so the future
     // of the track comes from below
-    Skin.WaveformDisplay {
+    CutlabWave {
         id: wave
 
         anchors.centerIn: parent

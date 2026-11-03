@@ -43,12 +43,19 @@ Rectangle {
             const current = Mixxx.Cutlab.folders();
             const found = Mixxx.Cutlab.candidateFolders();
             const chosen = {};
+            const norm = path => path.replace(/^\/sdcard(?=\/|$)/, "/storage/emulated/0")
+                .replace(/^\/storage\/self\/primary(?=\/|$)/, "/storage/emulated/0").replace(/\/+$/, "");
+            const library = current.map(norm);
+            let any = false;
             for (const folder of found) {
-                // Keep what is already in the library, else pick the folders
-                // with the most music
-                chosen[folder.path] = current.length > 0
-                    ? current.some(path => folder.path === path || folder.path.startsWith(path + "/"))
-                    : folder.count >= 20;
+                // Keep what is already in the library
+                const path = norm(folder.path);
+                chosen[folder.path] = library.some(dir => path === dir || path.startsWith(dir + "/") || dir.startsWith(path + "/"));
+                any = any || chosen[folder.path];
+            }
+            if (!any) {
+                // Else the folders with the most music, at least the first
+                found.forEach((folder, i) => chosen[folder.path] = i === 0 || folder.count >= 20);
             }
             root.chosen = chosen;
             root.candidates = found;

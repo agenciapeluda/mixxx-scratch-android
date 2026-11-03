@@ -263,5 +263,22 @@ void QmlLibraryTrackListModel::sort(int column, Qt::SortOrder order) {
     emit layoutChanged(QList<QPersistentModelIndex>(), QAbstractItemModel::VerticalSortHint);
 }
 
+bool QmlLibraryTrackListModel::sortById(int sortColumnId, bool ascending) {
+    auto* const pTrackModel = dynamic_cast<TrackModel*>(sourceModel());
+    if (!pTrackModel) {
+        return false;
+    }
+    const int column = pTrackModel->columnIndexFromSortColumnId(
+            static_cast<TrackModel::SortColumnId>(sortColumnId));
+    if (column < 0) {
+        return false;
+    }
+    emit layoutAboutToBeChanged(QList<QPersistentModelIndex>(),
+            QAbstractItemModel::VerticalSortHint);
+    sourceModel()->sort(column, ascending ? Qt::AscendingOrder : Qt::DescendingOrder);
+    emit layoutChanged(QList<QPersistentModelIndex>(), QAbstractItemModel::VerticalSortHint);
+    return true;
+}
+
 } // namespace qml
 } // namespace mixxx

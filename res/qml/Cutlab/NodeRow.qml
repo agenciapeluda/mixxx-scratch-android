@@ -6,11 +6,21 @@ Rectangle {
 
     property string text: ""
     property string icon: "list"
+    // Picked with the browse knob of a controller
+    property bool selected: false
 
     signal clicked
 
     height: 56
-    color: mouse.pressed ? "#2a2a2c" : "transparent"
+    color: mouse.pressed ? Style.raised : (selected ? Style.track : "transparent")
+
+    Rectangle {
+        anchors.left: parent.left
+        width: 3
+        height: parent.height
+        color: Style.accent
+        visible: root.selected
+    }
 
     Rectangle {
         id: iconBox
@@ -21,7 +31,7 @@ Rectangle {
         width: 40
         height: 40
         radius: 6
-        color: "#2c2c2e"
+        color: Style.raised
 
         Image {
             anchors.centerIn: parent

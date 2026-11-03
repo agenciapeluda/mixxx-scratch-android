@@ -48,6 +48,67 @@ Item {
     }
     readonly property string groupPrefix: group.substr(0, group.length - 1)
 
+    // The stems of the loaded track are ready: put them on the deck where it
+    // was. Stopped, at once; playing, with the button (a reload stops it)
+    readonly property bool stemsReady: !root.hasStems && trackLoaded.value > 0 && root.currentTrack
+        && Mixxx.Stems.jobs !== undefined && Mixxx.Stems.hasStems(root.currentTrack.trackLocationUrl)
+    function useStems() {
+        if (!root.currentTrack) {
+            return;
+        }
+        const position = playposition.value;
+        const wasPlaying = playing.value > 0;
+        restore.position = position;
+        restore.play = wasPlaying;
+        restore.tries = 0;
+        root.deckPlayer.loadTrackFromLocationUrl(root.currentTrack.trackLocationUrl, false);
+        restore.start();
+    }
+    onStemsReadyChanged: {
+        if (root.stemsReady && playing.value <= 0) {
+            Qt.callLater(root.useStems);
+        }
+    }
+    Timer {
+        id: restore
+
+        property real position: 0
+        property bool play: false
+        property int tries: 0
+
+        interval: 150
+        repeat: true
+        onTriggered: {
+            if (root.hasStems && trackSamples.value > 0) {
+                playposition.value = position;
+                if (play) {
+                    playing.value = 1;
+                }
+                stop();
+            } else if (++tries > 80) {
+                stop();
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        id: playposition
+
+        group: root.group
+        key: "playposition"
+    }
+    Mixxx.ControlProxy {
+        id: playing
+
+        group: root.group
+        key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: trackSamples
+
+        group: root.group
+        key: "track_samples"
+    }
+
     Mixxx.ControlProxy {
         id: trackLoaded
 
@@ -216,9 +277,18 @@ Item {
             font.pixelSize: 13
             horizontalAlignment: Text.AlignHCenter
             text: Mixxx.Stems.pendingCount > 0
-                ? qsTr("Separating: %1% (%2 in the queue). Load the track again when it is done.").arg(Math.round(Mixxx.Stems.progress * 100)).arg(Mixxx.Stems.pendingCount)
+                ? qsTr("Separando: %1% (%2 en la cola). Cuando termine pasa solo a los stems.").arg(Math.round(Mixxx.Stems.progress * 100)).arg(Mixxx.Stems.pendingCount)
                 : qsTr("Separalo en voz, beat y música para mezclar cada parte por su lado.")
             wrapMode: Text.WordWrap
+        }
+        CLButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 220
+            height: 46
+            text: qsTr("Pasar a los stems")
+            highlighted: true
+            visible: root.stemsReady
+            onClicked: root.useStems()
         }
         CLButton {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -226,7 +296,7 @@ Item {
             height: 46
             text: qsTr("Separate stems")
             highlighted: true
-            visible: trackLoaded.value > 0 && root.currentTrack
+            visible: trackLoaded.value > 0 && root.currentTrack && !root.stemsReady
             onClicked: stemsPopup.openFor(root.currentTrack.trackLocationUrl)
         }
     }

@@ -576,9 +576,9 @@ PioneerDDJREV1.browsePressed = function(_channel, _control, value) {
         return;
     }
 
-    const isPlaying = engine.getValue("[PreviewDeck1]", "play");
-    PioneerDDJREV1.previewSeekEnabled = !isPlaying;
-    script.triggerControl("[PreviewDeck1]", isPlaying ? "stop" : "LoadSelectedTrackAndPlay");
+    // Cutlab: the app opens its library, goes into the picked folder or
+    // plays the picked track on the preview deck
+    engine.setValue("[Cutlab]", "browse_press", engine.getValue("[Cutlab]", "browse_press") + 1);
 };
 
 /**
@@ -851,4 +851,30 @@ PioneerDDJREV1.cutlabFxPad = function(_channel, control, value, _status, group) 
     const deck = group === "[Channel2]" ? 2 : 1;
     const code = PioneerDDJREV1.cutlabFxCodes[control & 0x07];
     engine.setValue("[Cutlab]", `fx_deck${deck}`, value > 0 ? code : 0);
+};
+
+/**
+ * Cutlab: the BEAT FX lever plays the effect picked on the FX pad of its
+ * deck (FX1 left = deck A, FX2 right = deck B), locked up or held down
+ */
+PioneerDDJREV1.cutlabFxLever = function(_channel, _control, value, status) {
+    const deck = status === 0x95 ? 2 : 1;
+    engine.setValue("[Cutlab]", `fx_on${deck}`, value ? 1 : 0);
+};
+
+/**
+ * Cutlab: FX SLOT 1, 2 and 3 pick the effect of the FX pad of the deck,
+ * each one a bank that cycles when pressed again:
+ * 1 echo / reverb / flanger, 2 roll / trans / gater / glitch,
+ * 3 filter / bitcrush. The app counts the presses: bank * 1000 + count
+ */
+PioneerDDJREV1.cutlabFxPresses = 0;
+PioneerDDJREV1.cutlabFxSelect = function(_channel, control, value, status) {
+    if (!value) {
+        return;
+    }
+    const deck = status === 0x95 ? 2 : 1;
+    const bank = control - 0x70 + 1;
+    PioneerDDJREV1.cutlabFxPresses = (PioneerDDJREV1.cutlabFxPresses + 1) % 1000;
+    engine.setValue("[Cutlab]", `fx_select${deck}`, bank * 1000 + PioneerDDJREV1.cutlabFxPresses);
 };

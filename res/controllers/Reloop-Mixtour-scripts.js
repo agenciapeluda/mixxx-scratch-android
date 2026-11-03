@@ -134,9 +134,15 @@ ReloopMixtour.init = function() {
             }
             components.Button.prototype.input.call(this, channel, control, 0x7F, status, group);
         },
-        inputPress: function(channel, control, value, status, group) {
-            this.inKey = "MoveFocusForward";
-            components.Button.prototype.input.call(this, channel, control, value, status, group);
+        inputPress: function(_channel, control, value, _status, _group) {
+            if (!value) {
+                return;
+            }
+            // Cutlab: a press opens the library, goes into the picked folder
+            // or plays the picked track on the preview deck; with SHIFT the
+            // knob moves to the suggested tracks
+            const key = control < 0x40 ? "browse_press" : "browse_suggestions";
+            engine.setValue("[Cutlab]", key, engine.getValue("[Cutlab]", key) + 1);
         },
     });
 };

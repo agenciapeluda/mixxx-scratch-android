@@ -11,8 +11,12 @@ Rectangle {
     id: root
 
     // 0 turntables and mixer, 1 waveforms, 2 pads
-    property int view: 0
+    // The waveforms by default, like djay; the last one picked is kept
+    property int view: parseInt(Mixxx.Application.configValue("[Cutlab]", "view", "1"))
+    onViewChanged: Mixxx.Application.setConfigValue("[Cutlab]", "view", root.view.toString())
     property bool tools1: false
+    // The mode of the pads view: 0 samples, 1 hot cues, 2 rolls, 3 Scratch Bank
+    property int padsMode: 0
     property bool tools2: false
     property int tool1: 1
     property int tool2: 1
@@ -63,6 +67,14 @@ Rectangle {
         group: "[Channel2]"
     }
 
+    // BPM, key and waveform of the tracks never played, in the background a
+    // while after the start, so the library shows them without playing them
+    Timer {
+        interval: 20000
+        running: Mixxx.Application.configValue("[Cutlab]", "auto_analyze", "1") === "1"
+        onTriggered: Mixxx.Cutlab.analyzeMissing()
+    }
+
     // On the first start, pick the music folders
     Timer {
         id: firstRun
@@ -76,7 +88,7 @@ Rectangle {
     LibraryComponent.Control {
         enabled: !library.visible && !folderSetup.visible
 
-        onMoveVertical: offset => library.open("")
+        onMoveVertical: offset => root.openLibrary("")
         onLoadSelectedTrack: (group, play) => {}
         onLoadSelectedTrackIntoNextAvailableDeck: play => {}
     }
@@ -257,7 +269,90 @@ Rectangle {
     }
 
     function openLibrary(group) {
+        if (folderSetup.visible) {
+            return;
+        }
+        if (Mixxx.Application.configValue("[Cutlab]", "folders_done", "0") !== "1") {
+            folderSetup.open();
+            return;
+        }
+        if (library.visible) {
+            library.targetGroup = group || "";
+            return;
+        }
         library.open(group);
+    }
+    // FX SLOT 1, 2, 3 of a controller pick the effect of the FX pad and the
+    // BEAT FX lever plays it; both open the pad of the deck
+    Repeater {
+        model: 2
+
+        Item {
+            id: fxControls
+
+            required property int index
+            readonly property string group: index === 0 ? "[Channel1]" : "[Channel2]"
+
+            Mixxx.ControlProxy {
+                group: "[Cutlab]"
+                key: `fx_select${fxControls.index + 1}`
+                onValueChanged: {
+                    if (value <= 0) {
+                        return;
+                    }
+                    Shots.selectBank(fxControls.group, Math.floor(value / 1000) - 1);
+                    root.showFxPad(fxControls.group);
+                }
+            }
+            Mixxx.ControlProxy {
+                group: "[Cutlab]"
+                key: `fx_on${fxControls.index + 1}`
+                onValueChanged: {
+                    const on = value > 0;
+                    if (fxControls.index === 0) {
+                        Shots.engaged1 = on;
+                    } else {
+                        Shots.engaged2 = on;
+                    }
+                    if (on) {
+                        root.showFxPad(fxControls.group);
+                    }
+                }
+            }
+        }
+    }
+    function showFxPad(group) {
+        const deck = group === "[Channel2]" ? 2 : 1;
+        (deck === 1 ? fxClose1 : fxClose2).stop();
+        if (root.portrait) {
+            if (!toolsSheet.visible) {
+                toolsSheet.group = group;
+                toolsSheet.open();
+            }
+            return;
+        }
+        const open = deck === 1 ? (root.tools1 && root.tool1 === 3) : (root.tools2 && root.tool2 === 3);
+        if (!open) {
+            root.openTool(group, 3);
+            if (deck === 1) {
+                root.fxAuto1 = true;
+            } else {
+                root.fxAuto2 = true;
+            }
+        }
+    }
+
+    // The browse knob of a controller was pressed
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "browse_press"
+        onValueChanged: {
+            if (library.visible) {
+                library.browsePress();
+            } else {
+                root.openLibrary("");
+            }
+        }
     }
     function openQueue() {
         library.open("");
@@ -267,11 +362,12 @@ Rectangle {
         if (library.visible) {
             library.close();
         } else {
-            library.open("");
+            root.openLibrary("");
         }
     }
     function openTool(group, tool) {
-        if (root.view !== 0) {
+        // The FX pad opens over half the screen in every view
+        if (root.view !== 0 && tool !== 3) {
             root.view = 0;
         }
         if (group === "[Channel1]") {
@@ -382,6 +478,13 @@ Rectangle {
         CLMenuItem {
             text: root.deckStyle === "dial" ? qsTr("Show turntables") : qsTr("Show tempo dials")
             onTriggered: root.setDeckStyle(root.deckStyle === "dial" ? "vinyl" : "dial")
+        }
+        CLMenuItem {
+            text: qsTr("Scratch Bank")
+            onTriggered: {
+                root.padsMode = 3;
+                root.view = 2;
+            }
         }
         CLMenuItem {
             text: qsTr("Elegir mis carpetas de música…")
@@ -619,6 +722,8 @@ Rectangle {
                     anchors.fill: parent
                     active: root.view === 2
                     sourceComponent: PadsTab {
+                        mode: root.padsMode
+                        onModeChanged: root.padsMode = mode
                         onLoadSampleRequested: group => root.openLibrary(group)
                     }
                 }
