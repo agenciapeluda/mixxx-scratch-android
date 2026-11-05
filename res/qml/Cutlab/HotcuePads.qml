@@ -27,7 +27,7 @@ Grid {
             height: (root.height - (root.rows - 1) * root.spacing) / root.rows
             text: isSet ? qsTr("Cue %1").arg(number) : ""
             tag: isSet ? "" : String(number)
-            padColor: isSet ? (colorControl.value < 0 ? Style.cue : "#" + Math.round(colorControl.value).toString(16).padStart(6, "0")) : "transparent"
+            padColor: isSet ? Style.cueColor(pad.number, colorControl.value) : "transparent"
             active: isSet && pressed
 
             onPressedDown: activate.value = 1

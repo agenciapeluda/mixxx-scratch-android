@@ -571,14 +571,27 @@ PioneerDDJREV1.browseRotate = function(_channel, _control, value) {
  * @param {number} _control The midi control/note number
  * @param {number} value The midi control value
  */
-PioneerDDJREV1.browsePressed = function(_channel, _control, value) {
-    if (value === PioneerDDJREV1.zero) { // ignore release
+PioneerDDJREV1.browsePressedAt = 0;
+PioneerDDJREV1.browsePressed = function(_channel, control, value) {
+    // Cutlab: SHIFT + BROWSE puts the picked track at the end of the queue
+    if (control === 0x42) {
+        if (value !== PioneerDDJREV1.zero) {
+            engine.setValue("[Cutlab]", "queue_add", engine.getValue("[Cutlab]", "queue_add") + 1);
+        }
         return;
     }
-
-    // Cutlab: the app opens its library, goes into the picked folder or
-    // plays the picked track on the preview deck
-    engine.setValue("[Cutlab]", "browse_press", engine.getValue("[Cutlab]", "browse_press") + 1);
+    // Cutlab: a press opens the library, goes into the picked folder or
+    // picks in a menu; held half a second it opens the menu of the picked
+    // track (queue, playlists, crates). It acts on release, to tell them
+    // apart.
+    if (value !== PioneerDDJREV1.zero) {
+        PioneerDDJREV1.browsePressedAt = Date.now();
+        return;
+    }
+    const held = PioneerDDJREV1.browsePressedAt > 0 && Date.now() - PioneerDDJREV1.browsePressedAt >= 500;
+    PioneerDDJREV1.browsePressedAt = 0;
+    const key = held ? "track_menu" : "browse_press";
+    engine.setValue("[Cutlab]", key, engine.getValue("[Cutlab]", key) + 1);
 };
 
 /**

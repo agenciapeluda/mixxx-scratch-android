@@ -19,7 +19,12 @@
 #include <vector>
 
 #include "control/controlobject.h"
+#include "library/dao/playlistdao.h"
+#include "library/dao/trackdao.h"
 #include "library/library.h"
+#include "library/trackcollection.h"
+#include "library/trackset/crate/crate.h"
+#include "library/trackset/setlogfeature.h"
 #include "library/scanner/libraryscanner.h"
 #include "library/trackcollectionmanager.h"
 #include "util/fileinfo.h"
@@ -102,6 +107,30 @@ int keyMatch(int keyA, int keyB) {
         return 2;
     }
     return 0;
+}
+
+TrackCollection* internalCollection() {
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (!pLibrary || !pLibrary->trackCollectionManager()) {
+        return nullptr;
+    }
+    return pLibrary->trackCollectionManager()->internalCollection();
+}
+
+TrackId trackIdOf(TrackCollection* pCollection, const QUrl& url) {
+    if (!pCollection || !url.isLocalFile()) {
+        return TrackId();
+    }
+    return pCollection->getTrackDAO().getTrackIdByLocation(url.toLocalFile());
+}
+
+/// How far two tempos are, also at half and double speed (0.02 = 2%)
+double tempoGap(double bpmA, double bpmB) {
+    double best = 1.0;
+    for (const double factor : {1.0, 0.5, 2.0}) {
+        best = std::min(best, std::abs(bpmB * factor / bpmA - 1.0));
+    }
+    return best;
 }
 
 QString parentFolder(const QString& path) {
@@ -195,6 +224,11 @@ void QmlCutlab::createControls() {
         // 1 while the settings or a dialog cover the screen: the browse knob
         // moves in them instead of opening the library
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("modal_open")));
+        // Count up on each press: the picked track of the library to the end
+        // of the Auto DJ queue, and the menu of the picked track (queue,
+        // playlists and crates)
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("queue_add")));
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("track_menu")));
         return true;
     }();
     Q_UNUSED(created);
@@ -879,6 +913,303 @@ int QmlCutlab::hideNonMusic() const {
 #else
     return 0;
 #endif
+}
+
+double QmlCutlab::firstBeat(const QString& group) const {
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    if (!pTrack) {
+        return -1;
+    }
+    const mixxx::BeatsPointer pBeats = pTrack->getBeats();
+    const auto sampleRate = pTrack->getSampleRate();
+    if (!pBeats || !sampleRate.isValid()) {
+        return -1;
+    }
+    const auto first = pBeats->firstBeat();
+    if (!first.isValid()) {
+        return -1;
+    }
+    return first.value() / sampleRate.value();
+}
+
+int QmlCutlab::queueCount() const {
+    TrackCollection* pCollection = internalCollection();
+    if (!pCollection) {
+        return 0;
+    }
+    return static_cast<int>(pCollection->getPlaylistDAO().getAutoDJTrackIds().size());
+}
+
+bool QmlCutlab::addToQueue(const QUrl& url, bool top) const {
+    TrackCollection* pCollection = internalCollection();
+    const TrackId trackId = trackIdOf(pCollection, url);
+    if (!trackId.isValid()) {
+        return false;
+    }
+    pCollection->getPlaylistDAO().addTracksToAutoDJQueue(QList<TrackId>{trackId},
+            top ? PlaylistDAO::AutoDJSendLoc::TOP : PlaylistDAO::AutoDJSendLoc::BOTTOM);
+    return true;
+}
+
+int QmlCutlab::fillQueue(const QString& group, int count) const {
+    TrackCollection* pCollection = internalCollection();
+    QSqlDatabase db = database();
+    if (!pCollection || !db.isOpen() || count <= 0) {
+        return 0;
+    }
+    struct Row {
+        int id;
+        QString artist;
+        double bpm;
+        int key;
+        QString genre;
+        QString location;
+        QDateTime lastPlayed;
+    };
+    std::vector<Row> rows;
+    QHash<int, int> rowOfId;
+    {
+        QSqlQuery query(db);
+        if (!query.exec(QStringLiteral(
+                    "SELECT library.id, library.artist, library.bpm, library.key_id, "
+                    "library.genre, track_locations.location, library.last_played_at "
+                    "FROM library INNER JOIN track_locations "
+                    "ON library.location = track_locations.id "
+                    "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0"))) {
+            qWarning() << "Cutlab fill queue:" << query.lastError();
+            return 0;
+        }
+        while (query.next()) {
+            rowOfId.insert(query.value(0).toInt(), static_cast<int>(rows.size()));
+            rows.push_back(Row{query.value(0).toInt(),
+                    query.value(1).toString().trimmed(),
+                    query.value(2).toDouble(),
+                    query.value(3).toInt(),
+                    query.value(4).toString().trimmed().toLower(),
+                    query.value(5).toString(),
+                    query.value(6).toDateTime()});
+        }
+    }
+
+    // What is loaded, queued or already picked never comes twice, and
+    // neither does its artist
+    QSet<int> usedIds;
+    QSet<QString> usedArtists;
+    QSet<QString> loaded;
+    const auto loadedTracks = PlayerInfo::instance().getLoadedTracks();
+    for (const auto& pLoaded : loadedTracks) {
+        if (!pLoaded) {
+            continue;
+        }
+        loaded.insert(pLoaded->getLocation());
+        if (pLoaded->getId().isValid()) {
+            usedIds.insert(pLoaded->getId().toVariant().toInt());
+        }
+        const QString artist = pLoaded->getArtist().trimmed().toLower();
+        if (!artist.isEmpty()) {
+            usedArtists.insert(artist);
+        }
+    }
+    PlaylistDAO& playlists = pCollection->getPlaylistDAO();
+    const QList<TrackId> queued = playlists.getAutoDJTrackIds();
+    for (const TrackId& trackId : queued) {
+        const int id = trackId.toVariant().toInt();
+        usedIds.insert(id);
+        const auto it = rowOfId.constFind(id);
+        if (it != rowOfId.constEnd() && !rows[it.value()].artist.isEmpty()) {
+            usedArtists.insert(rows[it.value()].artist.toLower());
+        }
+    }
+
+    // Chain from the last track of the queue, else from the deck
+    double bpm = 0;
+    int key = 0;
+    QString genre;
+    bool haveReference = false;
+    if (!queued.isEmpty()) {
+        const auto it = rowOfId.constFind(queued.last().toVariant().toInt());
+        if (it != rowOfId.constEnd()) {
+            const Row& last = rows[it.value()];
+            bpm = last.bpm;
+            key = last.key;
+            genre = last.genre;
+            haveReference = true;
+        }
+    }
+    if (!haveReference) {
+        const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+        if (!pTrack) {
+            return 0;
+        }
+        bpm = pTrack->getBpm();
+        key = static_cast<int>(pTrack->getKey());
+        genre = pTrack->getGenre().trimmed().toLower();
+    }
+    // The whole queue stays close to where it starts
+    const double startBpm = bpm;
+    const QDateTime recent = QDateTime::currentDateTimeUtc().addSecs(-6 * 3600);
+
+    QList<TrackId> picked;
+    for (int step = 0; step < count; ++step) {
+        int best = -1;
+        double bestScore = -1e9;
+        for (int i = 0; i < static_cast<int>(rows.size()); ++i) {
+            const Row& row = rows[i];
+            if (usedIds.contains(row.id) || loaded.contains(row.location)) {
+                continue;
+            }
+            if (row.lastPlayed.isValid() && row.lastPlayed.toUTC() > recent) {
+                continue;
+            }
+            if (!row.artist.isEmpty() && usedArtists.contains(row.artist.toLower())) {
+                continue;
+            }
+            double score = 0;
+            if (bpm > 0) {
+                if (row.bpm <= 0) {
+                    // Not analyzed yet: its tempo is unknown
+                    continue;
+                }
+                const double gap = tempoGap(bpm, row.bpm);
+                if (gap > 0.08 || (startBpm > 0 && tempoGap(startBpm, row.bpm) > 0.08)) {
+                    continue;
+                }
+                score += 40 * (1.0 - gap / 0.08);
+            }
+            const int match = keyMatch(key, row.key);
+            if (match == 0) {
+                continue;
+            }
+            score += match == 3 ? 30 : (match == 2 ? 22 : 0);
+            if (!genre.isEmpty() && row.genre == genre) {
+                score += 15;
+            }
+            if (score > bestScore) {
+                bestScore = score;
+                best = i;
+            }
+        }
+        if (best < 0) {
+            break;
+        }
+        const Row& row = rows[best];
+        picked.append(TrackId(QVariant(row.id)));
+        usedIds.insert(row.id);
+        if (!row.artist.isEmpty()) {
+            usedArtists.insert(row.artist.toLower());
+        }
+        bpm = row.bpm;
+        key = row.key;
+        if (!row.genre.isEmpty()) {
+            genre = row.genre;
+        }
+    }
+    if (!picked.isEmpty()) {
+        playlists.addTracksToAutoDJQueue(picked, PlaylistDAO::AutoDJSendLoc::BOTTOM);
+    }
+    return static_cast<int>(picked.size());
+}
+
+QVariantList QmlCutlab::lists() const {
+    QVariantList result;
+    QSqlDatabase db = database();
+    if (!db.isOpen()) {
+        return result;
+    }
+    QSqlQuery query(db);
+    if (query.exec(QStringLiteral(
+                "SELECT id, name FROM Playlists WHERE hidden = 0 "
+                "ORDER BY date_modified DESC, id DESC"))) {
+        while (query.next()) {
+            result.append(QVariantMap{
+                    {QStringLiteral("kind"), QStringLiteral("playlist")},
+                    {QStringLiteral("id"), query.value(0).toInt()},
+                    {QStringLiteral("name"), query.value(1).toString()},
+            });
+        }
+    } else {
+        qWarning() << "Cutlab playlists:" << query.lastError();
+    }
+    if (query.exec(QStringLiteral("SELECT id, name FROM crates ORDER BY name COLLATE NOCASE"))) {
+        while (query.next()) {
+            result.append(QVariantMap{
+                    {QStringLiteral("kind"), QStringLiteral("crate")},
+                    {QStringLiteral("id"), query.value(0).toInt()},
+                    {QStringLiteral("name"), query.value(1).toString()},
+            });
+        }
+    } else {
+        qWarning() << "Cutlab crates:" << query.lastError();
+    }
+    return result;
+}
+
+int QmlCutlab::createList(const QString& kind, const QString& name) const {
+    TrackCollection* pCollection = internalCollection();
+    if (!pCollection) {
+        return -1;
+    }
+    QString base = name.trimmed();
+    if (kind == QStringLiteral("crate")) {
+        if (base.isEmpty()) {
+            base = tr("Caja nueva");
+        }
+        QSqlDatabase db = database();
+        QString unique = base;
+        for (int number = 2; db.isOpen() && number < 1000; ++number) {
+            QSqlQuery query(db);
+            query.prepare(QStringLiteral("SELECT 1 FROM crates WHERE name = :name"));
+            query.bindValue(QStringLiteral(":name"), unique);
+            if (!query.exec() || !query.next()) {
+                break;
+            }
+            unique = base + QChar(' ') + QString::number(number);
+        }
+        Crate crate;
+        crate.setName(unique);
+        CrateId crateId;
+        if (!pCollection->insertCrate(crate, &crateId) || !crateId.isValid()) {
+            return -1;
+        }
+        return crateId.toVariant().toInt();
+    }
+    if (base.isEmpty()) {
+        base = tr("Lista nueva");
+    }
+    QString unique = base;
+    return pCollection->getPlaylistDAO().createUniquePlaylist(&unique);
+}
+
+bool QmlCutlab::addToList(const QString& kind, int id, const QUrl& url) const {
+    TrackCollection* pCollection = internalCollection();
+    const TrackId trackId = trackIdOf(pCollection, url);
+    if (!trackId.isValid() || id < 0) {
+        return false;
+    }
+    if (kind == QStringLiteral("crate")) {
+        return pCollection->addCrateTracks(CrateId(QVariant(id)), QList<TrackId>{trackId});
+    }
+    PlaylistDAO& playlists = pCollection->getPlaylistDAO();
+    if (playlists.isTrackInPlaylist(trackId, id)) {
+        return true;
+    }
+    return playlists.appendTrackToPlaylist(trackId, id);
+}
+
+bool QmlCutlab::markPlayed(const QString& group) const {
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (!pTrack || !pLibrary) {
+        return false;
+    }
+    SetlogFeature* pHistory = pLibrary->historyFeature();
+    if (pHistory) {
+        // Also counts the play
+        pHistory->addPlayedTrack(pTrack);
+    } else {
+        pTrack->updatePlayCounter();
+    }
+    return true;
 }
 
 } // namespace qml

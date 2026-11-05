@@ -96,14 +96,55 @@ Item {
         }
     }
 
+    // Rebuilds the renderers, after a change of their colors
+    function rebuild() {
+        waveformDisplay.refreshRenderers();
+    }
+
+    // Cutlab: while the deck is scratched (by touch, with the jog or with the
+    // control record) the waveform draws less, so it keeps up with the hand:
+    // no high detail and at most 60 frames a second. It goes back a moment
+    // after the hand leaves, not on every stroke.
+    readonly property bool scratchNow: scratchPositionEnableControl.value > 0 || scratch2EnableControl.value > 0 || vinylScratchingControl.value > 0
+    property bool lowDetail: false
+    readonly property int effectiveFrameRate: lowDetail ? Math.min(60, Mixxx.Config.waveformFrameRate) : Mixxx.Config.waveformFrameRate
+    readonly property int effectiveOptions: lowDetail ? (Mixxx.Config.waveformOptions & ~Mixxx.WaveformDisplay.Option.HighDetail) : Mixxx.Config.waveformOptions
+
+    onScratchNowChanged: {
+        if (scratchNow) {
+            lowDetailRelease.stop();
+            lowDetail = true;
+        } else {
+            lowDetailRelease.restart();
+        }
+    }
+    Timer {
+        id: lowDetailRelease
+
+        interval: 1500
+        onTriggered: root.lowDetail = false
+    }
+    Mixxx.ControlProxy {
+        id: scratch2EnableControl
+
+        group: root.group
+        key: "scratch2_enable"
+    }
+    Mixxx.ControlProxy {
+        id: vinylScratchingControl
+
+        group: root.group
+        key: "vinylcontrol_scratching"
+    }
+
     MixxxControls.WaveformDisplay {
         id: waveformDisplay
 
         anchors.fill: parent
         backgroundColor: "transparent"
-        frameRate: Mixxx.Config.waveformFrameRate
+        frameRate: root.effectiveFrameRate
         group: root.group
-        options: Mixxx.Config.waveformOptions
+        options: root.effectiveOptions
         visible: Mixxx.Config.waveformEnabled
         zoom: zoomControl.value
 

@@ -1,8 +1,8 @@
 import QtQuick
 
 // Breaks and pauses as shaded bands over the overview of the track, drops
-// as a red line with a mark on top that blinks on the beat in the last
-// bars before it.
+// as a red line with a mark on top. Nothing here moves with the beat: the
+// countdown to the drop pulses in the platter.
 Item {
     id: root
 
@@ -44,27 +44,24 @@ Item {
                 color: Style.sectionIntro
                 opacity: 0.8
             }
+            // The drop: only the mark, still (the platter pulses for it)
             Item {
                 visible: mark.drop
                 width: 1
                 height: parent.height
-
-                readonly property bool close: root.barsToDrop > 0 && root.barsToDrop <= 4
-                    && Math.abs(mark.modelData.start - root.nextDropStart) < 0.0001
 
                 Rectangle {
                     x: -1.5
                     width: 3
                     height: parent.height
                     color: Style.sectionDrop
-                    opacity: parent.close && root.beat ? 1 : 0.85
                 }
                 Rectangle {
                     x: -5
                     width: 10
                     height: parent.height
                     color: Style.sectionDrop
-                    opacity: parent.close && root.beat ? 0.45 : 0.18
+                    opacity: 0.18
                 }
                 // The mark on top
                 Canvas {
@@ -82,12 +79,6 @@ Item {
                         ctx.lineTo(7, 10);
                         ctx.closePath();
                         ctx.fill();
-                    }
-                    scale: parent.close && root.beat ? 1.35 : 1
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 90
-                        }
                     }
                 }
             }

@@ -91,6 +91,13 @@ Rectangle {
 
     color: Style.background
 
+    onVisibleChanged: {
+        if (!visible) {
+            searchField.focus = false;
+            Qt.inputMethod.hide();
+        }
+    }
+
     function fs(px) {
         return Math.max(9, Math.round(px * root.u));
     }
@@ -118,6 +125,7 @@ Rectangle {
         root.folderRows = Mixxx.Cutlab.musicFolders();
         root.genreRows = Mixxx.Cutlab.genres();
         root.volumes = Mixxx.Cutlab.storageVolumes();
+        queueCount.count = Mixxx.Cutlab.queueCount();
         root.focusColumn = 1;
         if (root.pages.length === 0) {
             root.pickSource(root.sourceRows[0]);
@@ -324,6 +332,10 @@ Rectangle {
     // A press of the browse knob: into the source on the left, back out of
     // the tracks
     function browsePress() {
+        if (root.menuOpen) {
+            Mixxx.Cutlab.sendKey(Qt.Key_Return);
+            return;
+        }
         if (root.focusColumn === 0) {
             root.pickSource(root.sourceRows[root.selectedSource]);
             root.focusColumn = 1;
@@ -378,6 +390,146 @@ Rectangle {
         group: "[Channel2]"
         key: "key"
     }
+
+    // ---- The queue, playlists and crates ----
+    // Playlists and crates for "Agregar a…"
+    property var allLists: []
+    // The menus were opened from the controller: the knob moves in them and
+    // new lists get a name by themselves (no keyboard)
+    property bool knobMenu: false
+    readonly property bool menuOpen: trackMenu.opened || addMenu.opened || sortMenu.opened || moreMenu.opened
+
+    function toast(text) {
+        toastText.text = text;
+        toastBox.visible = true;
+        toastTimer.restart();
+    }
+    // The track the menu or the controller is about: a suggestion or a row
+    function pickedUrl() {
+        if (root.focusColumn === 2 && root.suggestions.length > 0) {
+            return root.suggestions[root.selectedSuggestion].url;
+        }
+        return root.selectedRow >= 0 ? root.urlAt(root.selectedRow) : "";
+    }
+    function refreshQueue() {
+        queueCount.count = Mixxx.Cutlab.queueCount();
+        if (root.page && root.page.queue) {
+            root.refreshQuery();
+        }
+    }
+    function addToQueue(url, top) {
+        if (!url || url.toString() === "") {
+            root.toast(qsTr("Elegí un tema primero: girá BROWSE o tocalo."));
+            return;
+        }
+        if (Mixxx.Cutlab.addToQueue(url, top)) {
+            root.refreshQueue();
+            root.toast(top ? qsTr("Va primero en la cola") : qsTr("Agregado a la cola · %1 temas").arg(queueCount.count));
+        } else {
+            root.toast(qsTr("Ese tema no está en tu biblioteca: no puede ir a la cola."));
+        }
+    }
+    function fillQueue() {
+        const group = root.playingGroup;
+        const before = Mixxx.Cutlab.queueCount();
+        const loadedTrack = Mixxx.PlayerManager.getPlayer(group) ? Mixxx.PlayerManager.getPlayer(group).currentTrack : null;
+        if (before === 0 && !loadedTrack) {
+            root.toast(qsTr("Cargá un tema en un deck: la cola se arma a partir de él."));
+            return;
+        }
+        const added = Mixxx.Cutlab.fillQueue(group, 10);
+        root.refreshQueue();
+        if (added > 0) {
+            root.toast(qsTr("Sumé %1 temas que pegan (BPM, tono, sin repetir artista)").arg(added));
+        } else {
+            root.toast(qsTr("No encontré más temas que peguen: falta analizar BPM y tono, o ya están todos en la cola."));
+        }
+    }
+    function openTrackMenu(row, fromKnob) {
+        if (row < 0) {
+            root.toast(qsTr("Elegí un tema primero: girá BROWSE o tocalo."));
+            return;
+        }
+        root.knobMenu = fromKnob;
+        if (fromKnob) {
+            trackMenu.track = null;
+        }
+        trackMenu.row = row;
+        trackMenu.url = root.urlAt(row);
+        if (fromKnob) {
+            trackMenu.popup(root, (root.width - trackMenu.width) / 2, Math.round(root.height * 0.18));
+        } else {
+            trackMenu.popup();
+        }
+    }
+    function openAddMenu() {
+        root.allLists = Mixxx.Cutlab.lists();
+        addMenu.url = trackMenu.url;
+        addMenu.popup(root, (root.width - addMenu.width) / 2, Math.round(root.height * 0.12));
+    }
+    function addToList(list, url) {
+        if (Mixxx.Cutlab.addToList(list.kind, list.id, url)) {
+            root.toast(qsTr("Agregado a «%1»").arg(list.name));
+        } else {
+            root.toast(qsTr("No se pudo agregar a «%1»").arg(list.name));
+        }
+    }
+    // A new playlist or crate; with a track, it goes in. From the controller
+    // it is named by the date, on the screen it asks for a name
+    function newList(kind, url) {
+        if (root.knobMenu) {
+            const name = (kind === "crate" ? qsTr("Caja %1") : qsTr("Lista %1")).arg(Qt.formatDateTime(new Date(), "dd/MM HH:mm"));
+            root.createList(kind, name, url);
+            return;
+        }
+        nameDialog.kind = kind;
+        nameDialog.url = url || "";
+        nameField.text = "";
+        nameDialog.open();
+    }
+    function createList(kind, name, url) {
+        const id = Mixxx.Cutlab.createList(kind, name);
+        if (id < 0) {
+            root.toast(qsTr("No se pudo crear"));
+            return;
+        }
+        const lists = Mixxx.Cutlab.lists();
+        const made = lists.find(l => l.kind === kind && l.id === id);
+        const shown = made ? made.name : name;
+        if (url && url.toString() !== "") {
+            Mixxx.Cutlab.addToList(kind, id, url);
+            root.toast(qsTr("Creé «%1» con el tema").arg(shown));
+        } else {
+            root.toast(kind === "crate" ? qsTr("Creé la caja «%1»").arg(shown) : qsTr("Creé la lista «%1»").arg(shown));
+        }
+    }
+
+    // The quick keys of the controllers: the picked track to the queue, and
+    // its menu (queue, playlists, crates)
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "queue_add"
+        onValueChanged: {
+            if (value > 0 && root.visible && !root.menuOpen) {
+                root.addToQueue(root.pickedUrl(), false);
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "track_menu"
+        onValueChanged: {
+            if (value <= 0 || !root.visible || root.menuOpen) {
+                return;
+            }
+            if (root.focusColumn === 2 && root.suggestions.length > 0) {
+                root.toast(qsTr("Las sugerencias van a la cola con SHIFT + BROWSE"));
+                return;
+            }
+            root.openTrackMenu(root.selectedRow, true);
+        }
+    }
+
     // A scan is over: new folders, genres and tracks
     Connections {
         target: Mixxx.Cutlab
@@ -401,6 +553,12 @@ Rectangle {
         enabled: root.visible && root.source === 0
 
         onMoveVertical: offset => {
+            if (root.menuOpen) {
+                for (let i = 0; i < Math.min(8, Math.abs(offset)); ++i) {
+                    Mixxx.Cutlab.sendKey(offset > 0 ? Qt.Key_Down : Qt.Key_Up);
+                }
+                return;
+            }
             if (root.focusColumn === 2 && root.suggestions.length > 0) {
                 root.selectedSuggestion = Math.max(0, Math.min(root.suggestions.length - 1, root.selectedSuggestion + offset));
                 suggestionView.positionViewAtIndex(root.selectedSuggestion, ListView.Contain);
@@ -418,6 +576,10 @@ Rectangle {
             trackView.positionViewAtIndex(root.selectedRow, ListView.Contain);
         }
         onLoadSelectedTrack: (group, play) => {
+            if (root.menuOpen) {
+                Mixxx.Cutlab.sendKey(Qt.Key_Return);
+                return;
+            }
             if (root.focusColumn === 0) {
                 root.browsePress();
             } else if (root.focusColumn === 2 && root.suggestions.length > 0) {
@@ -427,6 +589,10 @@ Rectangle {
             }
         }
         onLoadSelectedTrackIntoNextAvailableDeck: play => {
+            if (root.menuOpen) {
+                Mixxx.Cutlab.sendKey(Qt.Key_Return);
+                return;
+            }
             if (root.focusColumn === 2 && root.suggestions.length > 0) {
                 root.loadUrl(root.suggestions[root.selectedSuggestion].url, "");
             } else if (root.selectedRow >= 0) {
@@ -841,6 +1007,18 @@ Rectangle {
                 TextField {
                     id: searchField
 
+                    // Only with the library on screen and only by a tap:
+                    // hidden, it must never take the focus (that opened
+                    // the keyboard over the decks)
+                    enabled: root.visible
+                    focusPolicy: Qt.ClickFocus
+                    onActiveFocusChanged: {
+                        if (activeFocus && !root.visible) {
+                            focus = false;
+                            Qt.inputMethod.hide();
+                        }
+                    }
+
                     anchors.left: searchIcon.right
                     anchors.leftMargin: Math.round(8 * root.u)
                     anchors.right: parent.right
@@ -1177,6 +1355,41 @@ Rectangle {
             header: Column {
                 width: trackView.width
 
+                // Above the playlists and crates: make new ones
+                Row {
+                    x: 8
+                    height: root.page && root.section === 2 && !root.page.showTracks ? 52 : 0
+                    visible: height > 0
+                    spacing: 8
+
+                    CLButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 150
+                        height: 40
+                        icon: "plus"
+                        text: qsTr("Nueva lista")
+                        iconSize: 16
+                        fontSize: 14
+                        onClicked: {
+                            root.knobMenu = false;
+                            root.newList("playlist", "");
+                        }
+                    }
+                    CLButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 150
+                        height: 40
+                        icon: "plus"
+                        text: qsTr("Nueva caja")
+                        iconSize: 16
+                        fontSize: 14
+                        onClicked: {
+                            root.knobMenu = false;
+                            root.newList("crate", "");
+                        }
+                    }
+                }
+
                 Repeater {
                     model: root.page && root.page.genres ? root.genreRows : []
 
@@ -1233,16 +1446,41 @@ Rectangle {
                     }
                 }
                 // Above the Auto DJ queue
-                CLButton {
+                Row {
                     x: 8
-                    width: 170
-                    height: root.page && root.page.queue ? 40 : 0
+                    height: root.page && root.page.queue ? 48 : 0
                     visible: height > 0
-                    icon: "autodj"
-                    text: qsTr("Auto DJ")
-                    iconSize: 18
-                    fontSize: 14
-                    onClicked: root.autoDJRequested()
+                    spacing: 8
+
+                    CLButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 150
+                        height: 40
+                        icon: "autodj"
+                        text: qsTr("Auto DJ")
+                        iconSize: 18
+                        fontSize: 14
+                        onClicked: root.autoDJRequested()
+                    }
+                    CLButton {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 190
+                        height: 40
+                        icon: "queue"
+                        text: qsTr("Llenar la cola")
+                        iconSize: 18
+                        fontSize: 14
+                        highlighted: true
+                        textColor: "#ffffff"
+                        onClicked: root.fillQueue()
+                    }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Style.textSecondary
+                        font.family: Style.font
+                        font.pixelSize: 12
+                        text: qsTr("con temas que pegan con %1").arg(Style.deckLetter(root.playingGroup))
+                    }
                 }
             }
 
@@ -1271,9 +1509,9 @@ Rectangle {
                 onLoadRequested: group => root.load(index, group !== "" ? group : root.defaultGroup())
                 onMenuRequested: {
                     root.selectedRow = index;
-                    trackMenu.row = index;
+                    root.focusColumn = 1;
                     trackMenu.track = track;
-                    trackMenu.popup();
+                    root.openTrackMenu(index, false);
                 }
             }
 
@@ -1287,7 +1525,7 @@ Rectangle {
                 wrapMode: Text.WordWrap
                 visible: root.page && root.page.showTracks && trackView.count === 0
                 text: searchField.text !== "" || root.compatible ? qsTr("Nada coincide. Probá sin «Compatibles» o con otra búsqueda.")
-                    : (root.page && root.page.queue ? qsTr("La cola está vacía. Mantené un tema para sumarlo.") : qsTr("No hay temas acá"))
+                    : (root.page && root.page.queue ? qsTr("La cola está vacía. Apretá «Llenar la cola», mantené un tema → Agregar a la cola, o con la controladora SHIFT + BROWSE.") : qsTr("No hay temas acá"))
             }
         }
     }
@@ -1315,7 +1553,7 @@ Rectangle {
         hints: [
             [qsTr("Girá BROWSE"), qsTr("para moverte")],
             [qsTr("Apretá BROWSE"), qsTr("entra o sale de la carpeta")],
-            [qsTr("SHIFT + BROWSE"), qsTr("cambia de columna")],
+            [qsTr("Mantené BROWSE"), qsTr("cola y listas del tema")],
             [qsTr("LOAD %1").arg(Style.deckLetter(root.defaultGroup())), qsTr("carga y cierra")]
         ]
     }
@@ -1382,7 +1620,7 @@ Rectangle {
     }
 
     // Queue size for "Cola · n"
-    Item {
+    QtObject {
         id: queueCount
 
         property int count: 0
@@ -1427,15 +1665,19 @@ Rectangle {
             onTriggered: root.foldersRequested()
         }
         CLMenuItem {
-            text: qsTr("Rescan the library")
+            text: qsTr("Volver a escanear la biblioteca")
             onTriggered: Mixxx.Library.rescanLibrary()
+        }
+        CLMenuItem {
+            text: qsTr("Llenar la cola con temas que pegan")
+            onTriggered: root.fillQueue()
         }
         CLMenuItem {
             text: qsTr("Auto DJ…")
             onTriggered: root.autoDJRequested()
         }
         CLMenuItem {
-            text: qsTr("Library settings…")
+            text: qsTr("Ajustes de la biblioteca…")
             onTriggered: root.settingsRequested()
         }
     }
@@ -1444,7 +1686,22 @@ Rectangle {
 
         property int row: -1
         property var track: null
+        property var url: ""
 
+        onClosed: Qt.inputMethod.hide()
+
+        CLMenuItem {
+            text: qsTr("Agregar a la cola")
+            onTriggered: root.addToQueue(trackMenu.url, false)
+        }
+        CLMenuItem {
+            text: qsTr("Tocar después (primero en la cola)")
+            onTriggered: root.addToQueue(trackMenu.url, true)
+        }
+        CLMenuItem {
+            text: qsTr("Agregar a…")
+            onTriggered: Qt.callLater(root.openAddMenu)
+        }
         CLMenuItem {
             text: qsTr("Cargar en A")
             onTriggered: root.load(trackMenu.row, "[Channel1]")
@@ -1455,23 +1712,166 @@ Rectangle {
         }
         CLMenuItem {
             text: qsTr("Escuchar en el preview")
-            onTriggered: Mixxx.PlayerManager.getPlayer("[PreviewDeck1]").loadTrackFromLocationUrl(root.urlAt(trackMenu.row), true)
+            onTriggered: Mixxx.PlayerManager.getPlayer("[PreviewDeck1]").loadTrackFromLocationUrl(trackMenu.url, true)
         }
         CLMenuItem {
-            text: qsTr("Play next in the queue")
-            onTriggered: Mixxx.Library.addToAutoDJ(trackMenu.track, true)
+            text: qsTr("Separar stems…")
+            onTriggered: stemsPopup.openFor(trackMenu.url)
         }
         CLMenuItem {
-            text: qsTr("Add to the end of the queue")
-            onTriggered: Mixxx.Library.addToAutoDJ(trackMenu.track, false)
-        }
-        CLMenuItem {
-            text: qsTr("Separate stems…")
-            onTriggered: stemsPopup.openFor(root.urlAt(trackMenu.row))
-        }
-        CLMenuItem {
-            text: qsTr("Analyze")
+            text: qsTr("Analizar BPM y tono")
+            enabled: trackMenu.track !== null
             onTriggered: Mixxx.Library.analyze(trackMenu.track)
+        }
+    }
+    // "Agregar a…": a new list or crate with the track, or one of yours
+    CLMenu {
+        id: addMenu
+
+        property var url: ""
+
+        implicitWidth: 300
+        onClosed: Qt.inputMethod.hide()
+
+        CLMenuItem {
+            text: qsTr("+ Nueva lista con este tema")
+            onTriggered: root.newList("playlist", addMenu.url)
+        }
+        CLMenuItem {
+            text: qsTr("+ Nueva caja con este tema")
+            onTriggered: root.newList("crate", addMenu.url)
+        }
+        Repeater {
+            model: root.allLists
+
+            CLMenuItem {
+                required property var modelData
+
+                text: (modelData.kind === "crate" ? qsTr("Caja · %1") : qsTr("Lista · %1")).arg(modelData.name)
+                onTriggered: root.addToList(modelData, addMenu.url)
+            }
+        }
+    }
+
+    // The name of a new list or crate, typed on the screen
+    Popup {
+        id: nameDialog
+
+        property string kind: "playlist"
+        property var url: ""
+
+        anchors.centerIn: parent
+        width: Math.min(root.width - 40, 420)
+        modal: true
+        focus: true
+        padding: 20
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        onOpened: nameField.forceActiveFocus()
+        onClosed: Qt.inputMethod.hide()
+        background: Rectangle {
+            color: Style.panel
+            radius: 16
+            border.width: 1
+            border.color: Style.buttonBorder
+        }
+
+        contentItem: Column {
+            spacing: 14
+
+            Text {
+                color: Style.text
+                font.family: Style.font
+                font.pixelSize: 18
+                font.weight: Font.Bold
+                text: nameDialog.kind === "crate" ? qsTr("Nueva caja") : qsTr("Nueva lista")
+            }
+            Rectangle {
+                width: parent.width
+                height: 44
+                radius: 10
+                color: Style.raised
+
+                TextField {
+                    id: nameField
+
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    anchors.rightMargin: 12
+                    color: Style.text
+                    font.family: Style.font
+                    font.pixelSize: 15
+                    placeholderText: nameDialog.kind === "crate" ? qsTr("Nombre de la caja") : qsTr("Nombre de la lista")
+                    placeholderTextColor: Style.textSecondary
+                    background: Item {
+                    }
+                    onAccepted: createButton.clicked()
+                }
+            }
+            Row {
+                anchors.right: parent.right
+                spacing: 8
+
+                CLButton {
+                    width: 110
+                    height: 44
+                    text: qsTr("Cancelar")
+                    fontSize: 14
+                    fillColor: "transparent"
+                    onClicked: nameDialog.close()
+                }
+                CLButton {
+                    id: createButton
+
+                    width: 110
+                    height: 44
+                    text: qsTr("Crear")
+                    fontSize: 14
+                    highlighted: true
+                    textColor: "#ffffff"
+                    onClicked: {
+                        const name = nameField.text.trim() !== "" ? nameField.text.trim()
+                            : (nameDialog.kind === "crate" ? qsTr("Caja %1") : qsTr("Lista %1")).arg(Qt.formatDateTime(new Date(), "dd/MM HH:mm"));
+                        nameDialog.close();
+                        root.createList(nameDialog.kind, name, nameDialog.url);
+                    }
+                }
+            }
+        }
+    }
+
+    // A short message over the list, then it goes
+    Rectangle {
+        id: toastBox
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: (root.wide ? hints.height : loadBar.height) + 16
+        width: Math.min(root.width - 32, toastText.implicitWidth + 32)
+        height: toastText.implicitHeight + 20
+        radius: height / 2
+        color: Style.raised
+        border.width: 1
+        border.color: Style.accent
+        visible: false
+        z: 50
+
+        Text {
+            id: toastText
+
+            anchors.centerIn: parent
+            width: Math.min(implicitWidth, root.width - 64)
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 14
+            font.weight: Font.Medium
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignHCenter
+        }
+        Timer {
+            id: toastTimer
+
+            interval: 2800
+            onTriggered: toastBox.visible = false
         }
     }
 

@@ -21,6 +21,11 @@ class SetlogFeature : public BasePlaylistFeature {
     void bindLibraryWidget(WLibrary* libraryWidget,
             KeyboardEventFilter* keyboard) override;
     void activatePlaylist(int playlistId) override;
+    /// Cutlab: logs a track that played long enough (the QML interface has
+    /// no library widget, so the playing track signal is never connected)
+    void addPlayedTrack(TrackPointer pTrack) {
+        slotPlayingTrackChanged(pTrack);
+    }
 
   public slots:
     void onRightClick(const QPoint& globalPos) override;

@@ -1,22 +1,19 @@
-import ".." as Skin
 import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// The scrolling waveform of a deck turned upright, like djay: what is
-// coming next is below the red line and the track runs upwards. Drag it to scratch, pinch or use + and − to zoom.
-Item {
+// The scrolling waveform of a deck turned upright, like djay: the track
+// runs upwards and what is coming is below the white line. Drag it to
+// scratch, pinch or use + and − to zoom.
+Rectangle {
     id: root
 
     required property string group
     property bool mirrored: false
-    property int deckNumber: 1
+    property real u: 1
 
+    radius: Math.round(10 * u)
+    color: Style.panel
     clip: true
-
-    Rectangle {
-        anchors.fill: parent
-        color: "#1a1a1c"
-    }
 
     // The horizontal waveform, turned a quarter to the right so the future
     // of the track comes from below
@@ -32,53 +29,59 @@ Item {
         showHud: false
     }
 
-    // Center line at the playhead, the waveform draws its own marker too
+    // The playhead
     Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: 2
         color: Style.playhead
-        opacity: 0.9
     }
 
-    Text {
-        anchors.top: parent.top
-        anchors.topMargin: 10
-        x: root.mirrored ? parent.width - width - 36 : 16
-        color: Style.textSecondary
-        font.family: Style.font
-        font.pixelSize: 26
-        text: String(root.deckNumber)
-    }
+    // The deck letter
+    Rectangle {
+        x: root.mirrored ? parent.width - width - Math.round(8 * root.u) : Math.round(8 * root.u)
+        y: Math.round(8 * root.u)
+        width: letter.implicitWidth + Math.round(12 * root.u)
+        height: letter.implicitHeight + 2
+        radius: 4
+        color: Style.deckColor(root.group)
 
-    Column {
-        anchors.verticalCenter: parent.verticalCenter
-        x: root.mirrored ? parent.width - width - 10 : 10
-        spacing: 36
+        Text {
+            id: letter
 
-        CLControlButton {
-            width: 40
-            height: 40
-            group: root.group
-            key: "waveform_zoom_down"
-            mode: "trigger"
-            icon: "plus"
-            iconSize: 20
-            bordered: false
-            fillColor: "transparent"
-            lit: false
+            anchors.centerIn: parent
+            color: Style.background
+            font.family: Style.mono
+            font.weight: Font.Bold
+            font.pixelSize: Math.max(9, Math.round(11 * root.u))
+            text: Style.deckLetter(root.group)
         }
-        CLControlButton {
-            width: 40
-            height: 40
-            group: root.group
-            key: "waveform_zoom_up"
-            mode: "trigger"
-            icon: "minus"
-            iconSize: 20
-            bordered: false
-            fillColor: "transparent"
-            lit: false
+    }
+
+    // Zoom, at the bottom corner away from the middle
+    Column {
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: Math.round(4 * root.u)
+        x: root.mirrored ? parent.width - width - Math.round(2 * root.u) : Math.round(2 * root.u)
+        spacing: 0
+
+        Repeater {
+            model: [{icon: "plus", key: "waveform_zoom_down"}, {icon: "minus", key: "waveform_zoom_up"}]
+
+            CLControlButton {
+                required property var modelData
+
+                width: Math.round(40 * root.u)
+                height: width
+                group: root.group
+                key: modelData.key
+                mode: "trigger"
+                icon: modelData.icon
+                iconSize: width * 0.42
+                bordered: false
+                fillColor: "transparent"
+                lit: false
+            }
         }
     }
 }

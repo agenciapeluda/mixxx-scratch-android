@@ -6,6 +6,7 @@ import Mixxx 1.0 as Mixxx
 import ".." as Skin
 import "." as Setting
 import "../Theme"
+import "../Cutlab" as Cutlab
 
 Category {
     id: root
@@ -46,6 +47,7 @@ Category {
         waveformTypeInput.currentIndex = root.waveformTypes.indexOf(Mixxx.Config.waveformType);
         if (waveformTypeInput.currentIndex < 0)
             waveformTypeInput.currentIndex = 3;
+        waveColorsInput.selected = Cutlab.Style.cutlabWaveColors ? "Cutlab" : qsTr("de la configuración");
         zoomSynchronizationInput.selected = Mixxx.Config.waveformZoomSynchronization ? "on" : "off";
         var options = Mixxx.Config.waveformOptions;
         splitStereoSignalInput.selected = (options & Mixxx.WaveformDisplay.Option.SplitStereoSignal) ? "on" : "off";
@@ -80,6 +82,7 @@ Category {
         overviewMinuteMarkersInput.selected = "on";
         overviewScalingInput.selected = "global gain";
         waveformTypeInput.currentIndex = 3;
+        waveColorsInput.selected = "Cutlab";
         zoomSynchronizationInput.selected = "on";
         waveformEnabledInput.selected = "on";
         frameRateInput.value = 60;
@@ -111,6 +114,7 @@ Category {
         Mixxx.Config.waveformOverviewMinuteMarkers = overviewMinuteMarkersInput.selected === "on";
         Mixxx.Config.waveformOverviewNormalized = overviewScalingInput.selected === "normalize";
         Mixxx.Config.waveformType = root.waveformTypes[waveformTypeInput.currentIndex];
+        Cutlab.Style.setCutlabWaveColors(waveColorsInput.selected === "Cutlab");
         Mixxx.Config.waveformEnabled = waveformEnabledInput.selected === "on";
         Mixxx.Config.waveformZoomSynchronization = zoomSynchronizationInput.selected === "on";
         Mixxx.Config.waveformFrameRate = frameRateInput.value;
@@ -263,6 +267,27 @@ Category {
                 Layout.fillWidth: true
                 color: Theme.midGray
                 text: qsTr("Simple, Filtered, HSV, RGB and Stacked are supported by the QML renderer.")
+                wrapMode: Text.WordWrap
+            }
+            RowLayout {
+                Layout.fillWidth: true
+
+                WaveformSettingParameter {
+                    label: qsTr("Colores")
+                }
+                RatioChoice {
+                    id: waveColorsInput
+
+                    options: ["Cutlab", qsTr("de la configuración")]
+
+                    onSelectedChanged: root.markDirty()
+                }
+            }
+            Text {
+                Layout.minimumWidth: 0
+                Layout.fillWidth: true
+                color: Theme.midGray
+                text: qsTr("Cutlab: cada deck con su color. De la configuración: los colores propios del tipo elegido (RGB en rojo, verde y azul). El tipo de onda siempre es el que elegís arriba.")
                 wrapMode: Text.WordWrap
             }
             RowLayout {

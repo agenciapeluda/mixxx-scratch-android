@@ -135,13 +135,24 @@ ReloopMixtour.init = function() {
             components.Button.prototype.input.call(this, channel, control, 0x7F, status, group);
         },
         inputPress: function(_channel, control, value, _status, _group) {
-            if (!value) {
+            // Cutlab: with SHIFT the knob moves to the suggested tracks
+            if (control >= 0x40) {
+                if (value) {
+                    engine.setValue("[Cutlab]", "browse_suggestions", engine.getValue("[Cutlab]", "browse_suggestions") + 1);
+                }
                 return;
             }
             // Cutlab: a press opens the library, goes into the picked folder
-            // or plays the picked track on the preview deck; with SHIFT the
-            // knob moves to the suggested tracks
-            const key = control < 0x40 ? "browse_press" : "browse_suggestions";
+            // or picks in a menu; held half a second it opens the menu of
+            // the picked track (queue, playlists, crates). It acts on
+            // release, to tell them apart.
+            if (value) {
+                ReloopMixtour.browsePressedAt = Date.now();
+                return;
+            }
+            const held = ReloopMixtour.browsePressedAt > 0 && Date.now() - ReloopMixtour.browsePressedAt >= 500;
+            ReloopMixtour.browsePressedAt = 0;
+            const key = held ? "track_menu" : "browse_press";
             engine.setValue("[Cutlab]", key, engine.getValue("[Cutlab]", key) + 1);
         },
     });

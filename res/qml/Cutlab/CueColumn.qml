@@ -2,8 +2,9 @@ import Mixxx 1.0 as Mixxx
 import QtQuick
 
 // Next to the platter, as in the design: HOT CUES of the deck (tap an empty
-// one to set it, a set one to jump, hold to clear), SYNC, KEY (key lock)
-// and the loop length. Deck B is mirrored.
+// one to set it, a set one to jump, hold to clear) in one color per number,
+// the toggles of the deck (SYNC, KEY, Q quantize, SLIP) and the loop
+// length. Deck B is mirrored.
 Column {
     id: root
 
@@ -12,6 +13,10 @@ Column {
     // Only the four pads (the upright screen)
     property bool compact: false
     property real u: 1
+    // 4 or 8 hot cues, in rows of 4
+    property int count: 4
+    // The toggles under the pads
+    property var toggles: [{label: "SYNC", key: "sync_enabled"}, {label: "KEY", key: "keylock"}]
 
     function fs(px) {
         return Math.max(9, Math.round(px * root.u));
@@ -30,12 +35,13 @@ Column {
         font.letterSpacing: 0.5
         text: qsTr("HOT CUES · %1").arg(Style.deckLetter(root.group))
     }
-    Row {
+    Grid {
         width: parent.width
+        columns: 4
         spacing: Math.round((root.compact ? 4 : 6) * root.u)
 
         Repeater {
-            model: 4
+            model: root.count
 
             Rectangle {
                 id: cue
@@ -43,12 +49,10 @@ Column {
                 required property int index
                 readonly property int number: index + 1
                 readonly property bool isSet: status.value !== 0
-                readonly property color setColor: colorControl.value < 0 || colorControl.value === undefined
-                    ? (cue.index === 0 ? Style.danger : Style.cue)
-                    : "#" + Math.round(colorControl.value).toString(16).padStart(6, "0")
+                readonly property color setColor: Style.cueColor(cue.number, colorControl.value)
 
                 width: (root.width - 3 * parent.spacing) / 4
-                height: Math.round(44 * root.u)
+                height: Math.round((root.count > 4 ? 40 : 44) * root.u)
                 radius: Math.round(8 * root.u)
                 color: isSet ? setColor : Style.raised
                 border.width: isSet ? 0 : 1
@@ -115,7 +119,7 @@ Column {
             spacing: Math.round(6 * root.u)
 
             Repeater {
-                model: [{label: "SYNC", key: "sync_enabled"}, {label: "KEY", key: "keylock"}]
+                model: root.toggles
 
                 Rectangle {
                     id: toggle
@@ -123,7 +127,7 @@ Column {
                     required property var modelData
                     readonly property bool on: control.value > 0
 
-                    width: label.implicitWidth + Math.round(24 * root.u)
+                    width: Math.max(Math.round(44 * root.u), label.implicitWidth + Math.round(20 * root.u))
                     height: parent.height
                     radius: Math.round(8 * root.u)
                     color: on ? Style.accent : "transparent"

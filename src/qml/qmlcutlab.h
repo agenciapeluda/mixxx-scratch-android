@@ -76,6 +76,34 @@ class QmlCutlab : public QObject {
     /// empty when it isn't a key
     Q_INVOKABLE QString camelot(const QString& keyText) const;
 
+    /// Where the first beat of the grid of the track on `group` is, in
+    /// seconds, -1 without a grid: the beat lights count the bar from it
+    Q_INVOKABLE double firstBeat(const QString& group) const;
+
+    /// The Auto DJ queue
+    /// How many tracks are waiting in the queue
+    Q_INVOKABLE int queueCount() const;
+    /// Adds the track at `url` to the end of the queue, or next with `top`
+    Q_INVOKABLE bool addToQueue(const QUrl& url, bool top) const;
+    /// Adds up to `count` tracks that chain from the end of the queue (or
+    /// from the track on `group`): tempo within 8%, a key that mixes, no
+    /// artist twice, nothing played in the last hours. Returns how many
+    Q_INVOKABLE int fillQueue(const QString& group, int count) const;
+
+    /// Playlists and crates
+    /// All of them, the newest playlists first: {kind: "playlist"|"crate",
+    /// id, name}
+    Q_INVOKABLE QVariantList lists() const;
+    /// A new playlist or crate (`kind`), named `name` or a number after it
+    /// when the name is taken. Returns its id, -1 on failure
+    Q_INVOKABLE int createList(const QString& kind, const QString& name) const;
+    /// Adds the track at `url` to a playlist or crate
+    Q_INVOKABLE bool addToList(const QString& kind, int id, const QUrl& url) const;
+
+    /// The track on `group` played long enough (30 s): it goes to the
+    /// history ("Recientes") and its play count goes up
+    Q_INVOKABLE bool markPlayed(const QString& group) const;
+
   signals:
     /// A library scan is over: the folders and the tracks may have changed
     void libraryScanned();

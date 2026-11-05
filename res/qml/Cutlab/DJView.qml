@@ -39,6 +39,19 @@ Rectangle {
 
     color: Style.background
 
+    // Where the focus goes back when a menu, a sheet or the library closes.
+    // Without it Qt gives it back to the last field that had it, the hidden
+    // search of the library, and Android opens the keyboard.
+    Item {
+        id: focusSink
+
+        focus: true
+    }
+    function releaseFocus() {
+        focusSink.forceActiveFocus();
+        Qt.inputMethod.hide();
+    }
+
     // Effect unit 1 plays on deck 1 and unit 2 on deck 2, like the FX of
     // djay: an effect is heard as soon as it is on, from the screen or from
     // a controller
@@ -526,7 +539,80 @@ Rectangle {
         key: "toggle_recording"
     }
 
-    // ===== The main screen held sideways, as in the design =====
+    // ---- The structure of the track on each deck (drops, breaks), read
+    // once per track and shared by the top bar, the platters and the beat
+    // lights
+    TrackSections {
+        id: sectionsA
+
+        group: "[Channel1]"
+    }
+    TrackSections {
+        id: sectionsB
+
+        group: "[Channel2]"
+    }
+
+    // ---- Hot cues in the Cutlab colors, one per number
+    HotcueColors {
+        group: "[Channel1]"
+    }
+    HotcueColors {
+        group: "[Channel2]"
+    }
+
+    // ---- Recientes: a track that sounds for 30 seconds goes to the history
+    // (and its play count goes up), once per load
+    Repeater {
+        model: ["[Channel1]", "[Channel2]"]
+
+        Item {
+            id: playedLog
+
+            required property string modelData
+            property int seconds: 0
+            property bool logged: false
+
+            Mixxx.ControlProxy {
+                id: logLoaded
+
+                group: playedLog.modelData
+                key: "track_loaded"
+                onValueChanged: {
+                    playedLog.seconds = 0;
+                    playedLog.logged = false;
+                }
+            }
+            Mixxx.ControlProxy {
+                id: logPlay
+
+                group: playedLog.modelData
+                key: "play"
+            }
+            Mixxx.ControlProxy {
+                id: logVolume
+
+                group: playedLog.modelData
+                key: "volume"
+            }
+            Timer {
+                interval: 1000
+                repeat: true
+                running: !playedLog.logged && logLoaded.value > 0 && logPlay.value > 0 && logVolume.value > 0.05
+                onTriggered: {
+                    playedLog.seconds += 1;
+                    if (playedLog.seconds >= 30) {
+                        playedLog.logged = Mixxx.Cutlab.markPlayed(playedLog.modelData);
+                        if (!playedLog.logged) {
+                            playedLog.seconds = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ===== The main screen held sideways =====
     Loader {
         id: mainLandscape
 
@@ -535,6 +621,8 @@ Rectangle {
         sourceComponent: MainLandscape {
             recording: recording.value > 0
             lite: root.lite
+            sections1: sectionsA
+            sections2: sectionsB
             onLibraryRequested: group => root.openLibrary(group)
             onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
             onRecordRequested: {
@@ -553,6 +641,7 @@ Rectangle {
         visible: false
         z: 6
         color: Style.background
+        onVisibleChanged: root.releaseFocus()
 
         Loader {
             anchors.fill: parent
@@ -591,12 +680,14 @@ Rectangle {
     CLMenu {
         id: moreMenu
 
+        onClosed: root.releaseFocus()
+
         CLMenuItem {
             text: qsTr("Auto DJ…")
             onTriggered: root.autoDJRequested()
         }
         CLMenuItem {
-            text: recording.value > 0 ? qsTr("Stop recording") : qsTr("Record the mix")
+            text: recording.value > 0 ? qsTr("Parar la grabación") : qsTr("Grabar la mezcla")
             onTriggered: {
                 toggleRecording.value = 1;
                 toggleRecording.value = 0;
@@ -644,7 +735,7 @@ Rectangle {
             }
         }
         CLMenuItem {
-            text: qsTr("Settings")
+            text: qsTr("Ajustes")
             onTriggered: root.settingsRequested()
         }
     }
@@ -821,6 +912,8 @@ Rectangle {
         }
         property int tool: 3
 
+        onClosed: root.releaseFocus()
+
         contentItem: ToolPanel {
             group: toolsSheet.group
             tool: toolsSheet.tool
@@ -835,7 +928,10 @@ Rectangle {
         anchors.fill: parent
         visible: false
         z: 10
-        onCloseRequested: visible = false
+        onCloseRequested: {
+            visible = false;
+            root.releaseFocus();
+        }
         onFoldersRequested: folderSetup.open()
         onSettingsRequested: {
             visible = false;

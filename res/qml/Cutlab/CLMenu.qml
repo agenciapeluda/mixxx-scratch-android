@@ -10,9 +10,9 @@ Menu {
 
     background: Rectangle {
         implicitWidth: 260
-        color: "#2c2c2e"
+        color: Style.raised
         radius: 12
-        border.color: "#3e3e41"
+        border.color: Style.buttonBorder
         border.width: 1
     }
 }

@@ -53,3 +53,9 @@ MainLandscape 1.0 MainLandscape.qml
 HintsBar 1.0 HintsBar.qml
 DeckSide 1.0 DeckSide.qml
 LibTrackRow 1.0 LibTrackRow.qml
+BeatLights 1.0 BeatLights.qml
+DeckButtons 1.0 DeckButtons.qml
+PitchColumn 1.0 PitchColumn.qml
+FxChip 1.0 FxChip.qml
+MixerStrip 1.0 MixerStrip.qml
+HotcueColors 1.0 HotcueColors.qml

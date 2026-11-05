@@ -19,6 +19,6 @@ MenuItem {
     }
     background: Rectangle {
         radius: 8
-        color: root.highlighted || root.down ? "#3a3a3d" : "transparent"
+        color: root.highlighted || root.down ? Style.buttonPressed : "transparent"
     }
 }

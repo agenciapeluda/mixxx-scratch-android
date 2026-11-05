@@ -1,4 +1,5 @@
 pragma Singleton
+import Mixxx 1.0 as Mixxx
 import QtQuick
 
 // Colors of the Cutlab layout: neutral grays, the Cutlab indigo as accent,
@@ -75,6 +76,42 @@ QtObject {
     readonly property color sectionPause: "#9ca1b8"
     readonly property color sectionDrop: "#ff4d5e"
     readonly property color sectionIntro: "#2bd67b"
+
+    // Hot cues: one color per number, the same on both decks, in the Cutlab
+    // palette. A cue keeps its own color when it has one (picked by hand or
+    // imported from Serato or Rekordbox); the automatic colors of the old
+    // palette are replaced by these.
+    readonly property var hotcueColors: ["#ff4d5e", "#ffb547", "#2bd67b", "#00c2d8", "#8b85ff", "#ff6fb5", "#ffe066", "#4d8bff"]
+    // The automatic hot cue colors of the original palette
+    readonly property var autoCueColors: [0xc50a08, 0x32be44, 0x42d4f4, 0xf8d200, 0x0044ff, 0xaf00cc, 0xfca6d7, 0xf2f2ff]
+    function hotcueColor(number) {
+        return hotcueColors[(Math.max(1, number) - 1) % hotcueColors.length];
+    }
+    // Whether the color stored in a cue is only the automatic one
+    function isAutoCueColor(value) {
+        const rgb = Math.round(value);
+        return !(rgb >= 0) || autoCueColors.indexOf(rgb) >= 0;
+    }
+    // The color to show for hot cue `number` holding `value` (its
+    // hotcue_N_color control)
+    function cueColor(number, value) {
+        if (isAutoCueColor(value)) {
+            return hotcueColor(number);
+        }
+        return "#" + Math.round(value).toString(16).padStart(6, "0");
+    }
+    function hexToRgb(color) {
+        return parseInt(String(color).replace("#", "").slice(-6), 16);
+    }
+
+    // The scrolling waveforms: in the colors of each deck (Cutlab) or in the
+    // colors of the type picked in the settings. The type always comes from
+    // the settings.
+    property bool cutlabWaveColors: Mixxx.Application.configValue("[Cutlab]", "wave_colors", "cutlab") !== "config"
+    function setCutlabWaveColors(on) {
+        cutlabWaveColors = on;
+        Mixxx.Application.setConfigValue("[Cutlab]", "wave_colors", on ? "cutlab" : "config");
+    }
 
     // Panels and the library slide in with this curve
     readonly property int motion: 180

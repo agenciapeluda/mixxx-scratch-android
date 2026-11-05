@@ -16,6 +16,11 @@ Rectangle {
     property var slots: []
     // A phrase waiting for its track to load: {group, slot}
     property var pending: null
+    // The slot last sent to the deck, -1 none yet
+    property int lastFired: -1
+    readonly property bool hasPhrase: root.slots.some(slot => !!slot)
+    // The step the screen points to: 0 capture, 1 tap a slot, 2 scratch
+    readonly property int step: !root.hasPhrase ? 0 : (root.lastFired < 0 ? 1 : 2)
 
     color: Style.panelDark
 
@@ -90,6 +95,7 @@ Rectangle {
         if (!player) {
             return;
         }
+        root.lastFired = index;
         root.pending = {group: root.target, slot: slot};
         const current = player.currentTrack;
         if (current && current.trackLocationUrl.toString() === slot.url) {
@@ -338,57 +344,120 @@ Rectangle {
         }
     }
 
-    // ---- Where they go ----
+    // ---- The three steps, explained on the screen ----
     Row {
         id: targetRow
 
         x: 10
         anchors.top: captureRow.bottom
-        anchors.topMargin: 8
-        height: 30
+        anchors.topMargin: 10
+        width: parent.width - 20
+        height: 74
         spacing: 8
 
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            color: Style.textSecondary
-            font.family: Style.font
-            font.pixelSize: 13
-            text: qsTr("Tocá un slot y va al deck")
-        }
         Repeater {
-            model: ["[Channel1]", "[Channel2]"]
+            model: [
+                {title: qsTr("Capturá"), text: qsTr("Mientras suena la frase, tocá «Capturar de A/B» o un casillero vacío. Elegí antes cuántos tiempos.")},
+                {title: qsTr("Tocá un casillero"), text: ""},
+                {title: qsTr("Scratcheá"), text: qsTr("Con el vinilo o el jog de ese deck. Mantené un casillero para borrarlo.")}
+            ]
 
             Rectangle {
-                required property string modelData
+                id: stepCard
 
-                anchors.verticalCenter: parent.verticalCenter
-                width: 34
-                height: 26
-                radius: 6
-                color: root.target === modelData ? Style.deckColor(modelData) : Style.raised
+                required property var modelData
+                required property int index
+                readonly property bool current: root.step === index
+                readonly property bool done: root.step > index
 
-                Text {
-                    anchors.centerIn: parent
-                    color: root.target === parent.modelData ? Style.background : Style.text
-                    font.family: Style.mono
-                    font.weight: Font.Bold
-                    font.pixelSize: 13
-                    text: Style.deckLetter(parent.modelData)
+                width: (targetRow.width - 2 * targetRow.spacing) / 3
+                height: targetRow.height
+                radius: 12
+                color: current ? Style.accentDark : Style.panel
+                border.width: current ? 2 : 1
+                border.color: current ? Style.accent : Style.divider
+
+                Rectangle {
+                    id: stepNumber
+
+                    x: 10
+                    y: 10
+                    width: 24
+                    height: 24
+                    radius: 12
+                    color: stepCard.done ? Style.ok : (stepCard.current ? Style.accent : Style.raised)
+
+                    Text {
+                        anchors.centerIn: parent
+                        color: stepCard.done || stepCard.current ? "#ffffff" : Style.textSecondary
+                        font.family: Style.mono
+                        font.weight: Font.Bold
+                        font.pixelSize: 12
+                        text: stepCard.done ? "✓" : String(stepCard.index + 1)
+                    }
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: root.target = parent.modelData
+                Text {
+                    id: stepTitle
+
+                    anchors.left: stepNumber.right
+                    anchors.leftMargin: 8
+                    anchors.verticalCenter: stepNumber.verticalCenter
+                    color: stepCard.current ? Style.text : Style.textSecondary
+                    font.family: Style.font
+                    font.weight: Font.Bold
+                    font.pixelSize: 14
+                    text: stepCard.modelData.title
+                }
+                // Where the phrases go, in the second step
+                Row {
+                    visible: stepCard.index === 1
+                    anchors.right: parent.right
+                    anchors.rightMargin: 8
+                    anchors.verticalCenter: stepNumber.verticalCenter
+                    spacing: 4
+
+                    Repeater {
+                        model: ["[Channel1]", "[Channel2]"]
+
+                        Rectangle {
+                            required property string modelData
+
+                            width: 34
+                            height: 26
+                            radius: 6
+                            color: root.target === modelData ? Style.deckColor(modelData) : Style.raised
+
+                            Text {
+                                anchors.centerIn: parent
+                                color: root.target === parent.modelData ? Style.background : Style.text
+                                font.family: Style.mono
+                                font.weight: Font.Bold
+                                font.pixelSize: 13
+                                text: Style.deckLetter(parent.modelData)
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                anchors.margins: -6
+                                onClicked: root.target = parent.modelData
+                            }
+                        }
+                    }
+                }
+                Text {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: stepNumber.bottom
+                    anchors.margins: 10
+                    anchors.topMargin: 6
+                    color: Style.textSecondary
+                    font.family: Style.font
+                    font.pixelSize: 12
+                    wrapMode: Text.WordWrap
+                    maximumLineCount: 2
+                    elide: Text.ElideRight
+                    text: stepCard.index === 1 ? qsTr("La frase va al deck %1 en loop (solo la voz si tiene stems).").arg(Style.deckLetter(root.target)) : stepCard.modelData.text
                 }
             }
-        }
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            color: Style.textSecondary
-            font.family: Style.font
-            font.pixelSize: 12
-            text: qsTr("· con loop, para scratchear con el vinilo · mantené un slot para borrarlo")
-            elide: Text.ElideRight
-            width: Math.max(0, root.width - 260)
         }
     }
 

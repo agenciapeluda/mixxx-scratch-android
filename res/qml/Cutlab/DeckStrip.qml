@@ -3,8 +3,9 @@ import Mixxx.Controls 1.0 as MixxxControls
 import QtQuick
 
 // A deck in the top bar, as in the design: cover, letter, title and artist;
-// BPM, pitch, key, the drop countdown, the time left and the DVS mode; the
-// whole track below with its breaks, pauses and drops. Deck B is mirrored.
+// the key, the time left and the DVS mode (the tempo is over the pitch
+// fader, the countdown to the drop pulses in the platter); the whole track
+// below with its breaks, pauses and drops. Deck B is mirrored.
 Item {
     id: root
 
@@ -12,6 +13,10 @@ Item {
     property bool mirrored: false
     // Scale of the design (1 = 1284 x 600)
     property real u: 1
+    // The sections of the track, shared by the performance screen
+    required property var trackSections
+    // BPM and pitch here too (off when the pitch column shows them)
+    property bool showTempo: true
 
     readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
     readonly property var currentTrack: deckPlayer ? deckPlayer.currentTrack : null
@@ -62,12 +67,6 @@ Item {
         key: "key"
     }
     Mixxx.ControlProxy {
-        id: beatActive
-
-        group: root.group
-        key: "beat_active"
-    }
-    Mixxx.ControlProxy {
         id: endOfTrack
 
         group: root.group
@@ -90,11 +89,6 @@ Item {
 
         group: root.group
         key: "vinylcontrol_status"
-    }
-    TrackSections {
-        id: trackSections
-
-        group: root.group
     }
 
     // ---- Cover ----
@@ -214,6 +208,7 @@ Item {
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
+                    visible: root.showTempo
                     color: Style.text
                     font.family: Style.mono
                     font.weight: Font.Bold
@@ -222,6 +217,7 @@ Item {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
+                    visible: root.showTempo
                     color: Style.textSecondary
                     font.family: Style.mono
                     font.pixelSize: root.fs(12)
@@ -253,33 +249,10 @@ Item {
                 layoutDirection: root.mirrored ? Qt.RightToLeft : Qt.LeftToRight
                 spacing: Math.round(10 * root.u)
 
-                // DROP EN n: red, glowing and blinking on the beat close to it
-                Rectangle {
-                    readonly property int bars: trackSections.barsToDrop
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: root.loaded && bars > 0 && bars <= 16
-                    width: dropText.implicitWidth + Math.round(18 * root.u)
-                    height: dropText.implicitHeight + 4
-                    radius: height / 2
-                    color: Style.danger
-                    opacity: bars <= 4 && beatActive.value > 0 ? 0.45 : 1
-
-                    Text {
-                        id: dropText
-
-                        anchors.centerIn: parent
-                        color: "#ffffff"
-                        font.family: Style.mono
-                        font.weight: Font.Bold
-                        font.pixelSize: root.fs(11)
-                        text: qsTr("DROP EN %1").arg(parent.bars)
-                    }
-                }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    // The last seconds blink on the beat, like Rekordbox
-                    color: endOfTrack.value > 0 ? Style.danger : Style.text
-                    opacity: endOfTrack.value > 0 && beatActive.value > 0 ? 0.35 : 1
+                    // The last seconds in yellow, still (the platter pulses)
+                    color: endOfTrack.value > 0 ? Style.cue : Style.text
                     font.family: Style.mono
                     font.weight: Font.Medium
                     font.pixelSize: root.fs(18)
@@ -350,10 +323,7 @@ Item {
             SectionMarks {
                 anchors.fill: parent
                 visible: root.loaded
-                sections: trackSections.sections
-                barsToDrop: trackSections.barsToDrop
-                nextDropStart: trackSections.nextDropStart
-                beat: beatActive.value > 0
+                sections: root.trackSections ? root.trackSections.sections : []
             }
             Rectangle {
                 x: parent.width * playPosition.value - 1

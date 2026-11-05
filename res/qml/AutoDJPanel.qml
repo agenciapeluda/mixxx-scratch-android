@@ -13,10 +13,10 @@ Popup {
 
     readonly property var modes: [
         qsTr("Intro → Outro"),
-        qsTr("Fade at outro start"),
-        qsTr("Full track"),
-        qsTr("Skip silence"),
-        qsTr("Skip silence, start at full volume")
+        qsTr("Al empezar el outro"),
+        qsTr("Tema completo"),
+        qsTr("Saltear silencios"),
+        qsTr("Saltear silencios, entrar a pleno")
     ]
 
     // The queue is shown by whoever opened the panel
@@ -36,6 +36,76 @@ Popup {
         radius: 16
     }
 
+    // How many tracks wait in the queue, read when the panel opens and
+    // after each change made here
+    property int queued: 0
+    onOpened: root.queued = Mixxx.Cutlab.queueCount()
+
+    // Why Auto DJ would not start, in the words of the booth; "" when it can
+    function startProblem() {
+        root.queued = Mixxx.Cutlab.queueCount();
+        if (Math.round(orientation1.value) !== 0 || Math.round(orientation2.value) !== 2) {
+            return qsTr("Auto DJ pasa del deck A (izquierda) al B (derecha): dejá A a la izquierda y B a la derecha del crossfader.");
+        }
+        if (play1.value > 0 && play2.value > 0) {
+            return qsTr("Los dos decks están sonando: pausá uno y Auto DJ sigue desde el otro.");
+        }
+        if (play3.value > 0 || play4.value > 0) {
+            return qsTr("Hay otro deck sonando (C o D): paralo y probá de nuevo.");
+        }
+        if (root.queued === 0) {
+            return qsTr("La cola está vacía: tocá «Llenar la cola» o agregá temas desde la biblioteca.");
+        }
+        return qsTr("Auto DJ no arrancó: revisá que el tema siguiente de la cola no sea el que está sonando.");
+    }
+    function fill() {
+        const group = play2.value > 0 && play1.value <= 0 ? "[Channel2]" : "[Channel1]";
+        const added = Mixxx.Cutlab.fillQueue(group, 10);
+        root.queued = Mixxx.Cutlab.queueCount();
+        autoDJHint.text = added > 0 ? qsTr("Sumé %1 temas que pegan: BPM cercano, tono compatible, sin repetir artista.").arg(added)
+            : (root.queued === 0 && !(Mixxx.PlayerManager.getPlayer(group) && Mixxx.PlayerManager.getPlayer(group).currentTrack)
+                ? qsTr("Cargá un tema en un deck: la cola se arma a partir de él.")
+                : qsTr("No encontré más temas que peguen: falta analizar BPM y tono, o ya están todos en la cola."));
+        autoDJHint.color = added > 0 ? Cutlab.Style.ok : Cutlab.Style.cue;
+        autoDJHint.visible = true;
+    }
+
+    Mixxx.ControlProxy {
+        id: orientation1
+
+        group: "[Channel1]"
+        key: "orientation"
+    }
+    Mixxx.ControlProxy {
+        id: orientation2
+
+        group: "[Channel2]"
+        key: "orientation"
+    }
+    Mixxx.ControlProxy {
+        id: play1
+
+        group: "[Channel1]"
+        key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: play2
+
+        group: "[Channel2]"
+        key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: play3
+
+        group: "[Channel3]"
+        key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: play4
+
+        group: "[Channel4]"
+        key: "play"
+    }
     Mixxx.ControlProxy {
         id: enabledControl
 
@@ -153,7 +223,13 @@ Popup {
                     id: refusedCheck
 
                     interval: 400
-                    onTriggered: autoDJHint.visible = enabledControl.value <= 0
+                    onTriggered: {
+                        if (enabledControl.value <= 0) {
+                            autoDJHint.text = root.startProblem();
+                            autoDJHint.color = Cutlab.Style.cue;
+                            autoDJHint.visible = true;
+                        }
+                    }
                 }
             }
         }
@@ -165,7 +241,6 @@ Popup {
             color: Cutlab.Style.cue
             font.family: Cutlab.Style.font
             font.pixelSize: 13
-            text: qsTr("Auto DJ didn't start: add tracks to the queue (hold a track in the library) and stop at least one deck, then try again.")
             wrapMode: Text.WordWrap
         }
         Text {
@@ -173,8 +248,18 @@ Popup {
             color: Cutlab.Style.textSecondary
             font.family: Cutlab.Style.font
             font.pixelSize: 13
-            text: qsTr("Plays the queue and mixes between deck 1 and deck 2. Add tracks by holding a track in the library → Add to the end of the queue.")
+            text: (root.queued > 0 ? qsTr("Cola: %1 temas. ").arg(root.queued) : qsTr("La cola está vacía. ")) + qsTr("Auto DJ pasa la cola mezclando entre el deck A y el B. Sumá temas con «Llenar la cola», manteniendo un tema en la biblioteca o con la controladora (mantené BROWSE).")
             wrapMode: Text.WordWrap
+        }
+        Cutlab.CLButton {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 48
+            icon: "queue"
+            text: qsTr("Llenar la cola con temas que pegan")
+            fontSize: 15
+            highlighted: true
+            textColor: "#ffffff"
+            onClicked: root.fill()
         }
         GridLayout {
             Layout.fillWidth: true
@@ -185,7 +270,7 @@ Popup {
             Cutlab.CLButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 44
-                text: qsTr("Fade now")
+                text: qsTr("Mezclar ya")
                 fontSize: 14
                 onClicked: {
                     fadeNowControl.value = 1;
@@ -195,7 +280,7 @@ Popup {
             Cutlab.CLButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 44
-                text: qsTr("Skip next")
+                text: qsTr("Saltear el próximo")
                 fontSize: 14
                 onClicked: {
                     skipNextControl.value = 1;
@@ -205,7 +290,7 @@ Popup {
             Cutlab.CLButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 44
-                text: qsTr("Shuffle queue")
+                text: qsTr("Cola al azar")
                 fontSize: 14
                 onClicked: {
                     shuffleControl.value = 1;
@@ -215,7 +300,7 @@ Popup {
             Cutlab.CLButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 44
-                text: qsTr("Add random track")
+                text: qsTr("Sumar uno al azar")
                 fontSize: 14
                 onClicked: {
                     addRandomControl.value = 1;
@@ -228,7 +313,7 @@ Popup {
             color: Cutlab.Style.textSecondary
             font.family: Cutlab.Style.font
             font.pixelSize: 13
-            text: qsTr("Transition")
+            text: qsTr("Transición")
         }
         Flow {
             Layout.fillWidth: true
@@ -259,7 +344,7 @@ Popup {
                 color: Cutlab.Style.textSecondary
                 font.family: Cutlab.Style.font
                 font.pixelSize: 13
-                text: qsTr("Fade time")
+                text: qsTr("Duración de la mezcla")
             }
             Slider {
                 id: fadeSlider
@@ -310,7 +395,7 @@ Popup {
             Layout.preferredHeight: 46
             icon: "queue"
             iconSize: 20
-            text: qsTr("Open the queue")
+            text: qsTr("Ver la cola")
             fontSize: 14
             highlighted: true
             onClicked: {
