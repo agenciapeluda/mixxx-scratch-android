@@ -1164,8 +1164,9 @@ Item {
                     if (value <= 0) {
                         return;
                     }
-                    if (root.cutlabLayout && cutlabView.item && cutlabView.item.libraryOpen) {
-                        // The Cutlab library loads the track itself
+                    if (root.cutlabLayout && cutlabView.item && (cutlabView.item.libraryOpen || !cutlabView.item.knobMayOpenLibrary())) {
+                        // The Cutlab library loads the track itself and
+                        // closes; this same press must not open it again
                         return;
                     }
                     if (quickLoadDrawer.opened) {

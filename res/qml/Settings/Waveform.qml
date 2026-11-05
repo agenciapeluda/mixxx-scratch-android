@@ -145,6 +145,14 @@ Category {
     }
 
     ScrollView {
+
+        // As wide as the screen: the content wraps instead of
+
+        // running off the right edge on a narrow phone
+
+        contentWidth: availableWidth
+
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         anchors.bottom: buttonActions.top
         anchors.bottomMargin: 18
         anchors.left: parent.left

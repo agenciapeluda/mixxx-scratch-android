@@ -197,6 +197,14 @@ Rectangle {
                     sections2: root.sections2
                 }
             }
+
+            LetsktchChip {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: parent.top
+                anchors.topMargin: 6
+                group: root.host.letsktchGroup
+                onStopRequested: root.host.toggleLetsktch(group)
+            }
         }
 
         // ----- The crossfader: under the waveforms, or its own row
@@ -325,6 +333,8 @@ Rectangle {
                     tool: toolsArea.index === 0 ? root.host.tool1 : root.host.tool2
                     onToolChanged: root.host.setTool(toolsArea.modelData, tool)
                     onCloseRequested: root.host.closeTools(toolsArea.modelData)
+                    letsktchOn: root.host.letsktchGroup === toolsArea.modelData
+                    onLetsktchRequested: root.host.toggleLetsktch(toolsArea.modelData)
                 }
             }
         }

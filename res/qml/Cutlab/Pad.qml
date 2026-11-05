@@ -1,7 +1,7 @@
 import QtQuick
 
 // A performance pad: a big rounded square with a name, an optional detail
-// in the corner and a colored stripe when it holds something.
+// in the corner and a colored stripe when it holds something. Multitouch.
 Rectangle {
     id: root
 
@@ -11,7 +11,7 @@ Rectangle {
     property color padColor: "transparent"
     property bool active: false
     property bool dimmed: false
-    readonly property alias pressed: mouse.pressed
+    readonly property alias pressed: touch.pressed
 
     signal pressedDown
     signal released
@@ -19,7 +19,7 @@ Rectangle {
     signal pressAndHold
 
     radius: 4
-    color: active ? Qt.darker(padColor.a > 0 ? padColor : Style.accent, 1.6) : (mouse.pressed ? Style.buttonPressed : "#454548")
+    color: active ? Qt.darker(padColor.a > 0 ? padColor : Style.accent, 1.6) : (touch.pressed ? Style.buttonPressed : "#454548")
     border.color: active ? (padColor.a > 0 ? padColor : Style.accent) : "#2c2c2e"
     border.width: active ? 2 : 1
 
@@ -70,14 +70,15 @@ Rectangle {
         visible: text !== ""
     }
 
-    MouseArea {
-        id: mouse
+    // A pointer handler, not a MouseArea: every pad takes its own finger,
+    // so several pads can be held at once, and it fires on touch down
+    TapHandler {
+        id: touch
 
-        anchors.fill: parent
-        onPressed: root.pressedDown()
-        onReleased: root.released()
-        onCanceled: root.released()
-        onClicked: root.clicked()
-        onPressAndHold: root.pressAndHold()
+        gesturePolicy: TapHandler.ReleaseWithinBounds
+        longPressThreshold: 0.6
+        onPressedChanged: pressed ? root.pressedDown() : root.released()
+        onTapped: root.clicked()
+        onLongPressed: root.pressAndHold()
     }
 }

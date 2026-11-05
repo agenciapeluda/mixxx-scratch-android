@@ -62,3 +62,6 @@ DeckRow 1.0 DeckRow.qml
 DeckPadArea 1.0 DeckPadArea.qml
 PitchStrip 1.0 PitchStrip.qml
 MixerTool 1.0 MixerTool.qml
+MainPortrait 1.0 MainPortrait.qml
+Letsktch 1.0 Letsktch.qml
+LetsktchChip 1.0 LetsktchChip.qml

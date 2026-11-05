@@ -19,7 +19,11 @@ Rectangle {
         {icon: "scratch", name: qsTr("Scratch Bank")}
     ]
 
+    // letsktch! is on for this deck
+    property bool letsktchOn: false
+
     signal closeRequested
+    signal letsktchRequested
 
     color: Style.panel
 
@@ -42,6 +46,8 @@ Rectangle {
 
         StemsTool {
             group: root.group
+            letsktchOn: root.letsktchOn
+            onLetsktchRequested: root.letsktchRequested()
         }
     }
     Component {

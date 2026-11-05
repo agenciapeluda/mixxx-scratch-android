@@ -31,6 +31,8 @@ const QRegularExpression kReleaseTag(QStringLiteral("^v(\\d+\\.\\d+\\.\\d+)-andr
 const QRegularExpression kApkVersion(QStringLiteral("v(\\d+\\.\\d+\\.\\d+)\\.apk$"));
 const char* const kJavaClass = "org/mixxx/AppUpdater";
 
+// Cutlab: the automatic check is off until the app is public
+constexpr bool kAutoCheckDisabled = true;
 const ConfigKey kAutoCheckKey(QStringLiteral("[Updates]"), QStringLiteral("AutoCheck"));
 const ConfigKey kLastCheckKey(QStringLiteral("[Updates]"), QStringLiteral("LastCheck"));
 const ConfigKey kSkippedVersionKey(QStringLiteral("[Updates]"), QStringLiteral("SkippedVersion"));
@@ -132,6 +134,10 @@ void QmlAppUpdateProxy::check() {
 }
 
 void QmlAppUpdateProxy::slotAutoCheck() {
+    // Off while the app is being tested: nothing is checked on its own
+    if (kAutoCheckDisabled) {
+        return;
+    }
     const UserSettingsPointer pConfig = QmlConfigProxy::get();
     if (!pConfig || !autoCheck()) {
         return;

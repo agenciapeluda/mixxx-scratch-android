@@ -16,12 +16,12 @@
         <translation>Créditos</translation>
     </message>
     <message>
-        <source>Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.</source>
-        <translation>Cutlab está hecho por xhellvirax. Es un fork del port de Mixxx para Android de JaviLabarumDJ y Angelos Exarchos, que a su vez se basa en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografías: Inter Tight y JetBrains Mono, licencia SIL Open Font 1.1.</translation>
+        <source>Cutlab is made by Lui Agüero. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.</source>
+        <translation>Cutlab está hecho por Lui Agüero. Es un proyecto basado en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografías: Inter Tight y JetBrains Mono, licencia SIL Open Font 1.1.</translation>
     </message>
     <message>
-        <source>by xhellvirax</source>
-        <translation>por xhellvirax</translation>
+        <source>by Lui Agüero</source>
+        <translation>por Lui Agüero</translation>
     </message>
     <message>
         <source>About</source>

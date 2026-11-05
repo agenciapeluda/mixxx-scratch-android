@@ -13,6 +13,14 @@ Category {
     selectedIndex: 0
 
     Flickable {
+
+        // As wide as the screen: the content wraps instead of
+
+        // running off the right edge on a narrow phone
+
+        contentWidth: width
+
+        flickableDirection: Flickable.VerticalFlick
         anchors.fill: parent
         contentHeight: aboutColumn.implicitHeight + 30
         clip: true
@@ -64,7 +72,7 @@ Category {
                             Text {
                                 elide: Text.ElideRight
                                 Layout.minimumWidth: 0
-                                text: qsTr("by xhellvirax")
+                                text: qsTr("by Lui Agüero")
                                 font.pixelSize: 11
                                 color: "#c9cce0"
                             }
@@ -90,7 +98,9 @@ Category {
             }
 
             // ================= UPDATES =================
+            // Hidden while the app is tested: no update checks yet
             Rectangle {
+                visible: false
                 Layout.fillWidth: true
                 radius: 8
                 color: "#0e0d1a"
@@ -271,7 +281,7 @@ Category {
                     Text {
                         Layout.minimumWidth: 0
                         Layout.fillWidth: true
-                        text: qsTr("Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.")
+                        text: qsTr("Cutlab is made by Lui Agüero. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.")
                         font.pixelSize: 11
                         color: "#9ca1b8"
                         wrapMode: Text.WordWrap

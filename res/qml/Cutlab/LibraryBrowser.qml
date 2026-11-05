@@ -757,11 +757,11 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin: root.wide ? 8 : 12
             anchors.verticalCenter: parent.verticalCenter
-            width: root.wide ? Math.round(40 * root.u) : 44
+            width: Math.max(52, Math.round(52 * root.u))
             height: width
-            radius: 10
+            radius: 12
             icon: root.wide ? "close" : "more"
-            iconSize: width * 0.42
+            iconSize: width * 0.46
             bordered: !root.wide
             fillColor: "transparent"
             onClicked: root.wide ? root.close() : moreMenu.popup(closeButton, 0, closeButton.height)

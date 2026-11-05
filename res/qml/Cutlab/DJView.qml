@@ -248,7 +248,7 @@ Rectangle {
                 mainMenu.move(offset > 0 ? 1 : -1);
             } else if (folderSetup.visible) {
                 folderSetup.knobMove(offset);
-            } else {
+            } else if (root.knobMayOpenLibrary()) {
                 root.openLibrary("");
             }
         }
@@ -436,6 +436,13 @@ Rectangle {
         key: "mix"
     }
 
+    // When the library last closed. A controller sends more after LOAD (the
+    // release, a nudge of the knob): for a moment the knob and BROWSE don't
+    // open the library again
+    property real libraryClosedAt: 0
+    function knobMayOpenLibrary() {
+        return Date.now() - root.libraryClosedAt > 800;
+    }
     function openLibrary(group) {
         if (folderSetup.visible) {
             return;
@@ -517,7 +524,7 @@ Rectangle {
                 folderSetup.knobPress();
             } else if (library.visible) {
                 library.browsePress();
-            } else {
+            } else if (root.knobMayOpenLibrary()) {
                 root.openLibrary("");
             }
         }
@@ -532,6 +539,11 @@ Rectangle {
         } else {
             root.openLibrary("");
         }
+    }
+    // letsktch!: the deck it is on ("" off)
+    readonly property string letsktchGroup: letsktch.group
+    function toggleLetsktch(group) {
+        letsktch.toggle(group);
     }
     function openTool(group, tool) {
         // Upright, the tools come up from below
@@ -632,14 +644,30 @@ Rectangle {
         }
     }
 
-    // ===== The main screen, sideways or upright =====
+    // ===== The main screen: sideways or upright =====
     Loader {
         id: mainLandscape
 
         anchors.fill: parent
-        sourceComponent: MainLandscape {
+        sourceComponent: root.portrait ? portraitScreen : landscapeScreen
+    }
+    Component {
+        id: landscapeScreen
+
+        MainLandscape {
             host: root
-            portrait: root.portrait
+            recording: recording.value > 0
+            sections1: sectionsA
+            sections2: sectionsB
+            onLibraryRequested: group => root.openLibrary(group)
+            onMenuRequested: mainMenu.open()
+        }
+    }
+    Component {
+        id: portraitScreen
+
+        MainPortrait {
+            host: root
             recording: recording.value > 0
             sections1: sectionsA
             sections2: sectionsB
@@ -684,6 +712,59 @@ Rectangle {
 
         group: "[Channel2]"
         key: "quantize"
+    }
+
+    // letsktch!: the voice on the deck, its beat looping on a hidden deck
+    Letsktch {
+        id: letsktch
+
+        onFailed: text => {
+            letsktchToast.text = text;
+            letsktchToast.opacity = 1;
+            letsktchToastTimer.restart();
+        }
+    }
+    Rectangle {
+        id: letsktchToast
+
+        property alias text: letsktchToastText.text
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 72
+        width: Math.min(parent.width - 32, 440)
+        height: letsktchToastText.implicitHeight + 24
+        radius: 12
+        z: 50
+        color: Style.panel
+        border.width: 1
+        border.color: Style.stemVocals
+        opacity: 0
+        visible: opacity > 0
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 200
+            }
+        }
+
+        Text {
+            id: letsktchToastText
+
+            anchors.centerIn: parent
+            width: parent.width - 32
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 14
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+        }
+        Timer {
+            id: letsktchToastTimer
+
+            interval: 4000
+            onTriggered: letsktchToast.opacity = 0
+        }
     }
 
     // The menu of the mark: quick toggles, the look of the screen, the rest
@@ -742,6 +823,7 @@ Rectangle {
         z: 10
         onCloseRequested: {
             visible = false;
+            root.libraryClosedAt = Date.now();
             root.releaseFocus();
         }
         onFoldersRequested: folderSetup.open()

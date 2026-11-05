@@ -181,6 +181,14 @@ Category {
             visible: root.selectedIndex === 0
 
             ScrollView {
+
+                // As wide as the screen: the content wraps instead of
+
+                // running off the right edge on a narrow phone
+
+                contentWidth: availableWidth
+
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                 id: themeScrollView
                 anchors.fill: parent
                 clip: true
@@ -660,6 +668,14 @@ Category {
             visible: root.selectedIndex === 1
 
             ScrollView {
+
+                // As wide as the screen: the content wraps instead of
+
+                // running off the right edge on a narrow phone
+
+                contentWidth: availableWidth
+
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                 id: decksScrollView
                 anchors.fill: parent
                 clip: true

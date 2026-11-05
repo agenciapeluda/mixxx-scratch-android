@@ -26,6 +26,14 @@ Category {
     }
 
     Flickable {
+
+        // As wide as the screen: the content wraps instead of
+
+        // running off the right edge on a narrow phone
+
+        contentWidth: width
+
+        flickableDirection: Flickable.VerticalFlick
         anchors.fill: parent
         contentHeight: column.implicitHeight + 30
         clip: true
