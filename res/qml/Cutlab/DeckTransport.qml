@@ -11,6 +11,21 @@ Row {
     // The round button after cue: stems on the wide screen, all the deck
     // tools (FX, stems, loops, cues, EQ) on the upright one
     property string toolsIcon: "stems"
+    // The tools are in the deck on the wide screen: no button here
+    property bool showTools: true
+
+    // CUE blinks with the tempo: on every beat while playing, at half beats
+    // while stopped away from the cue, steady on the cue
+    readonly property bool loaded: trackLoaded.value > 0
+    readonly property bool cueLit: {
+        if (!transport.loaded) {
+            return false;
+        }
+        if (play.value > 0) {
+            return beatActive.value > 0;
+        }
+        return cueIndicator.value > 0 || blink.on;
+    }
 
     signal stemsRequested
 
@@ -22,6 +37,41 @@ Row {
 
         group: transport.group
         key: "play"
+    }
+    Mixxx.ControlProxy {
+        id: trackLoaded
+
+        group: transport.group
+        key: "track_loaded"
+    }
+    Mixxx.ControlProxy {
+        id: cueIndicator
+
+        group: transport.group
+        key: "cue_indicator"
+    }
+    Mixxx.ControlProxy {
+        id: beatActive
+
+        group: transport.group
+        key: "beat_active"
+    }
+    Mixxx.ControlProxy {
+        id: bpm
+
+        group: transport.group
+        key: "bpm"
+    }
+    Timer {
+        id: blink
+
+        property bool on: false
+
+        interval: Math.round(30000 / Math.max(60, bpm.value > 0 ? bpm.value : 120))
+        repeat: true
+        running: transport.loaded && play.value <= 0 && cueIndicator.value <= 0
+        onRunningChanged: on = false
+        onTriggered: on = !on
     }
 
     // Play / pause, ringed in green while playing
@@ -62,11 +112,12 @@ Row {
             mode: "push"
             icon: "cue"
             iconSize: transport.unit * 0.42
-            litKey: "cue_indicator"
+            lit: transport.cueLit
             litColor: Style.cue
         }
     }
     CLButton {
+        visible: transport.showTools
         anchors.verticalCenter: parent.verticalCenter
         width: transport.unit * 0.8
         height: width

@@ -5,7 +5,8 @@ import QtQuick
 Rectangle {
     id: root
 
-    // 0 samples, 1 hot cues, 2 loop rolls, 3 Scratch Bank
+    // 0 samples, 1 hot cues, 2 loop rolls (the Scratch Bank is in the bar
+    // of each deck)
     property int mode: 0
 
     signal loadSampleRequested(string group)
@@ -24,12 +25,6 @@ Rectangle {
             anchors.fill: parent
             visible: root.mode === 0
             onLoadRequested: group => root.loadSampleRequested(group)
-        }
-
-        Loader {
-            anchors.fill: parent
-            active: root.mode === 3
-            sourceComponent: ScratchBank {}
         }
 
         Row {
@@ -74,7 +69,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: Math.max(44, Math.min(56, root.height * 0.18))
+        height: Math.max(52, Math.min(64, root.height * 0.18))
         color: Style.panel
         border.color: Style.divider
         border.width: 1
@@ -84,7 +79,7 @@ Rectangle {
             spacing: 28
 
             Repeater {
-                model: [qsTr("Samples"), qsTr("Hot cues"), qsTr("Loop rolls"), qsTr("Scratch Bank")]
+                model: [qsTr("Samples"), qsTr("Hot cues"), qsTr("Loop rolls")]
 
                 Text {
                     required property int index
@@ -92,7 +87,7 @@ Rectangle {
 
                     color: root.mode === index ? Style.accentText : Style.textSecondary
                     font.family: Style.font
-                    font.pixelSize: 15
+                    font.pixelSize: 17
                     text: modelData
 
                     MouseArea {

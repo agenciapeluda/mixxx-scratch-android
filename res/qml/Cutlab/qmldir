@@ -45,7 +45,6 @@ Diagnostics 1.0 Diagnostics.qml
 singleton Shots 1.0 Shots.qml
 CutlabWave 1.0 CutlabWave.qml
 ScratchBank 1.0 ScratchBank.qml
-DeckStrip 1.0 DeckStrip.qml
 TurntableDial 1.0 TurntableDial.qml
 CueColumn 1.0 CueColumn.qml
 MixerCard 1.0 MixerCard.qml
@@ -54,8 +53,8 @@ HintsBar 1.0 HintsBar.qml
 DeckSide 1.0 DeckSide.qml
 LibTrackRow 1.0 LibTrackRow.qml
 BeatLights 1.0 BeatLights.qml
-DeckButtons 1.0 DeckButtons.qml
-PitchColumn 1.0 PitchColumn.qml
-FxChip 1.0 FxChip.qml
-MixerStrip 1.0 MixerStrip.qml
 HotcueColors 1.0 HotcueColors.qml
+DropRadar 1.0 DropRadar.qml
+UprightWaves 1.0 UprightWaves.qml
+DeckToolbar 1.0 DeckToolbar.qml
+MainMenu 1.0 MainMenu.qml

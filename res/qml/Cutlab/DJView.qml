@@ -23,14 +23,6 @@ Rectangle {
     readonly property bool libraryOpen: library.visible
     // Held upright, the screen switches to the one hand layout
     readonly property bool portrait: height > width * 1.05
-    // The decks as dials with the time and tempo, or as turntables
-    property string deckStyle: Mixxx.Application.configValue("[Cutlab]", "deck_style", "dial")
-
-    function setDeckStyle(style) {
-        root.deckStyle = style;
-        Mixxx.Application.setConfigValue("[Cutlab]", "deck_style", style);
-    }
-    readonly property real sideWidth: Math.round(Math.max(84, Math.min(130, width * 0.115)))
 
     signal settingsRequested
     signal autoDJRequested
@@ -56,6 +48,12 @@ Rectangle {
     // djay: an effect is heard as soon as it is on, from the screen or from
     // a controller
     Component.onCompleted: {
+        // RGB waveforms once, as the new default (after that, what you pick
+        // in the settings stays)
+        if (Mixxx.Application.configValue("[Cutlab]", "rgb_default", "0") !== "1") {
+            Mixxx.Config.waveformType = Mixxx.WaveformDisplay.Type.RGB;
+            Mixxx.Application.setConfigValue("[Cutlab]", "rgb_default", "1");
+        }
         fxRoute1.value = 1;
         fxRoute2.value = 1;
         fxMix1.value = 1;
@@ -172,11 +170,44 @@ Rectangle {
 
     // ---- The light screen, for phones that lag: no scrolling waveforms,
     // bigger platters, fewer animations
-    property bool lite: Mixxx.Application.configValue("[Cutlab]", "lite", "0") === "1"
-    function setLite(on) {
-        root.lite = on;
-        Mixxx.Application.setConfigValue("[Cutlab]", "lite", on ? "1" : "0");
-        Mixxx.Application.setConfigValue("[Cutlab]", "fx_visuals_lite", on ? "1" : "0");
+    // The look of the main screen: "onda" like djay (the waveforms upright
+    // in the middle) or "dial" like Serato (big dials, the waveforms one
+    // above the other). Only the one on screen is loaded. Upright, Dial is
+    // the light screen (platters, no scrolling waveforms).
+    property string mainView: Mixxx.Application.configValue("[Cutlab]", "main_view", "onda") === "dial" ? "dial" : "onda"
+    readonly property bool lite: root.mainView === "dial"
+    function setMainView(look) {
+        root.mainView = look;
+        Mixxx.Application.setConfigValue("[Cutlab]", "main_view", look);
+    }
+    function setView(index) {
+        root.view = index;
+    }
+
+    // The tools of a deck open in its half (FX too): the waveforms stay
+    function toggleTools(group) {
+        const open = group === "[Channel2]" ? root.tools2 : root.tools1;
+        if (open) {
+            root.closeTools(group);
+        } else {
+            root.openTool(group, group === "[Channel2]" ? root.tool2 : root.tool1);
+        }
+    }
+    function setTool(group, tool) {
+        if (group === "[Channel2]") {
+            root.tool2 = tool;
+        } else {
+            root.tool1 = tool;
+        }
+    }
+    function closeTools(group) {
+        if (group === "[Channel2]") {
+            root.tools2 = false;
+            root.fxAuto2 = false;
+        } else {
+            root.tools1 = false;
+            root.fxAuto1 = false;
+        }
     }
 
     // On the first start, pick the music folders
@@ -202,10 +233,8 @@ Rectangle {
         enabled: !library.visible && modalOpen.value <= 0
 
         onMoveVertical: offset => {
-            if (moreMenu.opened) {
-                for (let i = 0; i < Math.min(8, Math.abs(offset)); ++i) {
-                    Mixxx.Cutlab.sendKey(offset > 0 ? Qt.Key_Down : Qt.Key_Up);
-                }
+            if (mainMenu.opened) {
+                mainMenu.move(offset > 0 ? 1 : -1);
             } else if (folderSetup.visible) {
                 folderSetup.knobMove(offset);
             } else {
@@ -213,8 +242,8 @@ Rectangle {
             }
         }
         onLoadSelectedTrack: (group, play) => {
-            if (moreMenu.opened) {
-                moreMenu.close();
+            if (mainMenu.opened) {
+                mainMenu.close();
             } else if (folderSetup.visible) {
                 folderSetup.apply();
             }
@@ -483,8 +512,8 @@ Rectangle {
             if (modalOpen.value > 0) {
                 return;
             }
-            if (moreMenu.opened) {
-                Mixxx.Cutlab.sendKey(Qt.Key_Return);
+            if (mainMenu.opened) {
+                mainMenu.activate();
             } else if (folderSetup.visible) {
                 folderSetup.knobPress();
             } else if (library.visible) {
@@ -511,11 +540,13 @@ Rectangle {
         toolsSheet.open();
     }
     function openTool(group, tool) {
-        // Only the FX pad opens over the screen; stems, cues, loops and EQ
-        // come up from below
-        if (tool !== 3) {
+        // Upright, the tools come up from below
+        if (root.portrait) {
             root.openToolsSheet(group, tool);
             return;
+        }
+        if (root.view === 2) {
+            root.view = 1;
         }
         if (group === "[Channel1]") {
             root.tool1 = tool;
@@ -619,17 +650,12 @@ Rectangle {
         anchors.fill: parent
         active: !root.portrait
         sourceComponent: MainLandscape {
+            host: root
             recording: recording.value > 0
-            lite: root.lite
             sections1: sectionsA
             sections2: sectionsB
             onLibraryRequested: group => root.openLibrary(group)
-            onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
-            onRecordRequested: {
-                toggleRecording.value = 1;
-                toggleRecording.value = 0;
-            }
-            onFxRequested: group => root.showFxPad(group)
+            onMenuRequested: mainMenu.open()
         }
     }
 
@@ -676,205 +702,41 @@ Rectangle {
         }
     }
 
-    // Auto DJ, recording, effects pad, settings and layouts
-    CLMenu {
-        id: moreMenu
+    // The menu of the mark: the look of the screen and big tiles
+    MainMenu {
+        id: mainMenu
 
+        recording: recording.value > 0
+        mainView: root.mainView
+        stemsAuto: root.stemsAuto
+        diagnostics: root.showDiagnostics
         onClosed: root.releaseFocus()
-
-        CLMenuItem {
-            text: qsTr("Auto DJ…")
-            onTriggered: root.autoDJRequested()
-        }
-        CLMenuItem {
-            text: recording.value > 0 ? qsTr("Parar la grabación") : qsTr("Grabar la mezcla")
-            onTriggered: {
+        onPicked: key => {
+            if (key === "view_onda" || key === "view_dial") {
+                root.setMainView(key === "view_dial" ? "dial" : "onda");
+            } else if (key === "autodj") {
+                root.autoDJRequested();
+            } else if (key === "record") {
                 toggleRecording.value = 1;
                 toggleRecording.value = 0;
-            }
-        }
-        CLMenuItem {
-            text: qsTr("Scratch Bank")
-            onTriggered: {
-                root.padsMode = 3;
-                padsOverlay.visible = true;
-            }
-        }
-        CLMenuItem {
-            text: qsTr("Pads, samples y rolls")
-            onTriggered: {
-                root.padsMode = 0;
-                padsOverlay.visible = true;
-            }
-        }
-        CLMenuItem {
-            text: qsTr("Stems, EQ y loops de A")
-            onTriggered: root.openToolsSheet("[Channel1]", 0)
-        }
-        CLMenuItem {
-            text: qsTr("Stems, EQ y loops de B")
-            onTriggered: root.openToolsSheet("[Channel2]", 0)
-        }
-        CLMenuItem {
-            text: root.stemsAuto ? qsTr("Separar stems solos: prendido") : qsTr("Separar stems solos: apagado")
-            onTriggered: root.setStemsAuto(!root.stemsAuto)
-        }
-        CLMenuItem {
-            text: root.lite ? qsTr("Pantalla liviana: prendida") : qsTr("Pantalla liviana: apagada")
-            onTriggered: root.setLite(!root.lite)
-        }
-        CLMenuItem {
-            text: qsTr("Elegir mis carpetas de música…")
-            onTriggered: folderSetup.open()
-        }
-        CLMenuItem {
-            text: root.showDiagnostics ? qsTr("Ocultar el diagnóstico") : qsTr("Mostrar el diagnóstico")
-            onTriggered: {
+            } else if (key === "pads") {
+                if (root.portrait) {
+                    root.padsMode = 0;
+                    padsOverlay.visible = true;
+                } else {
+                    root.setView(2);
+                }
+            } else if (key === "library") {
+                root.openLibrary("");
+            } else if (key === "stems") {
+                root.setStemsAuto(!root.stemsAuto);
+            } else if (key === "folders") {
+                folderSetup.open();
+            } else if (key === "diagnostics") {
                 root.showDiagnostics = !root.showDiagnostics;
                 Mixxx.Application.setConfigValue("[Cutlab]", "diagnostics", root.showDiagnostics ? "1" : "0");
-            }
-        }
-        CLMenuItem {
-            text: qsTr("Ajustes")
-            onTriggered: root.settingsRequested()
-        }
-    }
-
-    // The FX pad of a deck, as in the design: it takes most of the screen on
-    // the side of its deck and the other deck keeps running, reduced, on the
-    // other side; with both pads open each one takes half
-    readonly property bool fxOpen1: root.tools1 && root.tool1 === 3 && !root.portrait
-    readonly property bool fxOpen2: root.tools2 && root.tool2 === 3 && !root.portrait
-    readonly property real fxU: Math.max(0.55, Math.min(root.width / 1284, root.height / 600))
-    Item {
-        id: fxScreen
-
-        anchors.fill: parent
-        visible: root.fxOpen1 || root.fxOpen2
-        z: 5
-
-        readonly property real padWidth: root.fxOpen1 && root.fxOpen2 ? width / 2 : Math.round(width * 820 / 1284)
-
-        MouseArea {
-            anchors.fill: parent
-        }
-        Repeater {
-            model: ["[Channel1]", "[Channel2]"]
-
-            Loader {
-                id: fxHalf
-
-                required property string modelData
-                required property int index
-                readonly property bool open: index === 0 ? root.fxOpen1 : root.fxOpen2
-                readonly property bool otherOpen: index === 0 ? root.fxOpen2 : root.fxOpen1
-
-                x: index === 0 ? 0 : fxScreen.width - width
-                width: open ? fxScreen.padWidth : fxScreen.width - fxScreen.padWidth
-                height: fxScreen.height
-                active: open || otherOpen
-                sourceComponent: open ? padComponent : sideComponent
-
-                Component {
-                    id: sideComponent
-
-                    DeckSide {
-                        group: fxHalf.modelData
-                        u: root.fxU
-                    }
-                }
-                Component {
-                    id: padComponent
-
-                    Rectangle {
-                        color: Style.panel
-
-                        Rectangle {
-                            anchors.right: fxHalf.index === 0 ? parent.right : undefined
-                            width: 1
-                            height: parent.height
-                            color: Qt.rgba(1, 1, 1, 0.07)
-                        }
-                        Item {
-                            id: fxHeader
-
-                            x: Math.round(16 * root.fxU)
-                            y: Math.round(12 * root.fxU)
-                            width: parent.width - 2 * x
-                            height: Math.round(44 * root.fxU)
-
-                            Row {
-                                anchors.verticalCenter: parent.verticalCenter
-                                spacing: Math.round(10 * root.fxU)
-
-                                Rectangle {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: fxLetter.implicitWidth + 14
-                                    height: fxLetter.implicitHeight + 4
-                                    radius: 4
-                                    color: Style.deckColor(fxHalf.modelData)
-
-                                    Text {
-                                        id: fxLetter
-
-                                        anchors.centerIn: parent
-                                        color: Style.background
-                                        font.family: Style.mono
-                                        font.weight: Font.Bold
-                                        font.pixelSize: Math.max(9, Math.round(11 * root.fxU))
-                                        text: Style.deckLetter(fxHalf.modelData)
-                                    }
-                                }
-                                Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    color: Style.text
-                                    font.family: Style.font
-                                    font.weight: Font.Bold
-                                    font.pixelSize: Math.max(12, Math.round(20 * root.fxU))
-                                    text: qsTr("FX %1").arg(fxHalf.index + 1)
-                                }
-                                Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    color: Style.textSecondary
-                                    font.family: Style.font
-                                    font.pixelSize: Math.max(9, Math.round(13 * root.fxU))
-                                    text: (fxHalf.index === 0 ? root.fxAuto1 : root.fxAuto2)
-                                        ? qsTr("Lo abriste con FX ON · se cierra al apagarlo") : qsTr("Tocá y arrastrá en el pad")
-                                }
-                            }
-                            CLButton {
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: Math.round(44 * root.fxU)
-                                height: width
-                                radius: Math.round(10 * root.fxU)
-                                icon: "close"
-                                iconSize: width * 0.4
-                                fillColor: "transparent"
-                                onClicked: {
-                                    if (fxHalf.index === 0) {
-                                        root.tools1 = false;
-                                        root.fxAuto1 = false;
-                                    } else {
-                                        root.tools2 = false;
-                                        root.fxAuto2 = false;
-                                    }
-                                }
-                            }
-                        }
-                        FxPad {
-                            anchors.top: fxHeader.bottom
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            anchors.leftMargin: Math.round(8 * root.fxU)
-                            anchors.rightMargin: Math.round(8 * root.fxU)
-                            anchors.bottomMargin: Math.round(8 * root.fxU)
-                            group: fxHalf.modelData
-                            u: root.fxU
-                        }
-                    }
-                }
+            } else if (key === "settings") {
+                root.settingsRequested();
             }
         }
     }
@@ -890,7 +752,7 @@ Rectangle {
                 toolsSheet.group = group;
                 toolsSheet.open();
             }
-            onMenuRequested: anchor => moreMenu.popup(anchor, 0, anchor.height)
+            onMenuRequested: anchor => mainMenu.open()
         }
     }
 

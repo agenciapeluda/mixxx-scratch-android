@@ -1,19 +1,21 @@
 import QtQuick
 
-// The tools of a deck, shown instead of its turntable: stems, hot cues,
-// loops, effects and EQ, picked in the bar at the bottom.
+// The tools of a deck, shown in its half instead of its turntable (the
+// waveforms stay on screen): stems, hot cues, loops, effects, EQ and the
+// Scratch Bank, picked in the bar at the bottom.
 Rectangle {
     id: root
 
     required property string group
-    // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 EQ
+    // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 EQ, 5 Scratch Bank
     property int tool: 1
     readonly property var tools: [
         {icon: "stems", name: qsTr("Stems")},
         {icon: "hotcue", name: qsTr("Cues")},
         {icon: "loop", name: qsTr("Loop")},
         {icon: "fx", name: qsTr("FX")},
-        {icon: "eq", name: qsTr("EQ")}
+        {icon: "eq", name: qsTr("EQ")},
+        {icon: "scratch", name: qsTr("Scratch Bank")}
     ]
 
     signal closeRequested
@@ -30,7 +32,7 @@ Rectangle {
 
         Loader {
             anchors.fill: parent
-            sourceComponent: [stemsTool, cuesTool, loopTool, fxTool, eqTool][root.tool]
+            sourceComponent: [stemsTool, cuesTool, loopTool, fxTool, eqTool, scratchTool][root.tool]
         }
     }
 
@@ -63,6 +65,13 @@ Rectangle {
         }
     }
     Component {
+        id: scratchTool
+
+        ScratchBank {
+            Component.onCompleted: target = root.group
+        }
+    }
+    Component {
         id: eqTool
 
         EqTool {
@@ -76,7 +85,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: Math.max(48, Math.min(64, root.height * 0.2))
+        height: Math.max(56, Math.min(72, root.height * 0.18))
         color: Style.panel
         border.color: Style.divider
         border.width: 1
@@ -94,7 +103,7 @@ Rectangle {
                     required property int index
                     required property var modelData
 
-                    width: Math.min(52, (toolbar.width - 80) / 5)
+                    width: Math.min(64, (toolbar.width - toolbar.height - 40) / root.tools.length - 4)
                     height: toolbar.height - 8
                     icon: modelData.icon
                     iconSize: Math.min(30, height * 0.55)

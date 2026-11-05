@@ -73,7 +73,7 @@ Rectangle {
             rows.push({kind: "folder", key: "folder:" + folder.path, name: folder.name, count: folder.count, path: folder.path});
         }
         for (const genre of root.genreRows) {
-            rows.push({kind: "genre", key: "genre:" + genre.name, name: genre.name, count: genre.count});
+            rows.push({kind: "genre", key: "genre:" + genre.name, name: genre.name === "" ? qsTr("Sin género") : genre.name, genre: genre.name, count: genre.count});
         }
         rows.push({kind: "lists", key: "lists", name: qsTr("Listas y cajas")});
         rows.push({kind: "queue", key: "queue", name: qsTr("Cola")});
@@ -158,11 +158,27 @@ Rectangle {
         const label = index && root.sidebar ? root.sidebar.data(index, Qt.DisplayRole) : "";
         return label ? label.toString() : "";
     }
+    // The tracks of a page: its node, then its search. The search goes
+    // again once the new track list is in place, so a genre or a folder
+    // always filters (it could stay on the whole library)
     function activatePage(page) {
-        if (page && page.node && page.node.valid) {
-            root.sidebar.activate(page.node);
-            root.refreshQuery();
+        if (!page) {
+            return;
         }
+        if (page.node && page.node.valid) {
+            root.sidebar.activate(page.node);
+        }
+        if (page.showTracks) {
+            root.refreshQuery();
+            Qt.callLater(root.refreshQuery);
+            searchSettle.restart();
+        }
+    }
+    Timer {
+        id: searchSettle
+
+        interval: 250
+        onTriggered: root.refreshQuery()
     }
     function push(page) {
         root.activatePage(page);
@@ -203,7 +219,7 @@ Rectangle {
             break;
         case "genre":
             root.section = 1;
-            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "genre:\"" + row.name + "\""});
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "genre:\"" + (row.genre !== undefined ? row.genre : row.name) + "\""});
             break;
         case "lists": {
             root.section = 2;
@@ -1021,7 +1037,7 @@ Rectangle {
 
                     anchors.left: searchIcon.right
                     anchors.leftMargin: Math.round(8 * root.u)
-                    anchors.right: parent.right
+                    anchors.right: clearSearch.visible ? clearSearch.left : parent.right
                     anchors.rightMargin: Math.round(8 * root.u)
                     anchors.verticalCenter: parent.verticalCenter
                     color: Style.text
@@ -1039,6 +1055,24 @@ Rectangle {
 
                         interval: 300
                         onTriggered: root.applySearch()
+                    }
+                }
+                // Clears what was typed
+                CLButton {
+                    id: clearSearch
+
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.height
+                    height: parent.height
+                    visible: searchField.text !== ""
+                    icon: "close"
+                    iconSize: Math.round(14 * root.u)
+                    bordered: false
+                    fillColor: "transparent"
+                    onClicked: {
+                        searchField.text = "";
+                        root.applySearch();
                     }
                 }
             }
@@ -1397,9 +1431,9 @@ Rectangle {
                         required property var modelData
 
                         width: trackView.width
-                        text: modelData.name + "  ·  " + modelData.count
+                        text: (modelData.name === "" ? qsTr("Sin género") : modelData.name) + "  ·  " + modelData.count
                         icon: "list"
-                        onClicked: root.pickSource({kind: "genre", key: "genre:" + modelData.name, name: modelData.name, count: modelData.count})
+                        onClicked: root.pickSource({kind: "genre", key: "genre:" + modelData.name, name: modelData.name === "" ? qsTr("Sin género") : modelData.name, genre: modelData.name, count: modelData.count})
                     }
                 }
                 Repeater {

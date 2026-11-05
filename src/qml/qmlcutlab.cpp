@@ -121,7 +121,16 @@ TrackId trackIdOf(TrackCollection* pCollection, const QUrl& url) {
     if (!pCollection || !url.isLocalFile()) {
         return TrackId();
     }
-    return pCollection->getTrackDAO().getTrackIdByLocation(url.toLocalFile());
+    QSqlQuery query(pCollection->database());
+    query.prepare(QStringLiteral(
+            "SELECT library.id FROM library INNER JOIN track_locations "
+            "ON library.location = track_locations.id "
+            "WHERE track_locations.location = :location"));
+    query.bindValue(QStringLiteral(":location"), url.toLocalFile());
+    if (!query.exec() || !query.next()) {
+        return TrackId();
+    }
+    return TrackId(query.value(0));
 }
 
 /// How far two tempos are, also at half and double speed (0.02 = 2%)
@@ -419,7 +428,7 @@ QVariantList QmlCutlab::genres() const {
     if (!query.exec(QStringLiteral(
                 "SELECT genre, COUNT(*) AS n FROM library "
                 "WHERE mixxx_deleted = 0 AND genre IS NOT NULL AND genre != '' "
-                "GROUP BY genre ORDER BY n DESC LIMIT 40"))) {
+                "GROUP BY genre ORDER BY n DESC LIMIT 200"))) {
         qWarning() << "Cutlab genres:" << query.lastError();
         return result;
     }
@@ -427,6 +436,17 @@ QVariantList QmlCutlab::genres() const {
         result.append(QVariantMap{
                 {QStringLiteral("name"), query.value(0).toString()},
                 {QStringLiteral("count"), query.value(1).toInt()},
+        });
+    }
+    // The tracks without a genre, last, with an empty name: none of the
+    // genres above counts them
+    if (query.exec(QStringLiteral(
+                "SELECT COUNT(*) FROM library "
+                "WHERE mixxx_deleted = 0 AND (genre IS NULL OR genre = '')")) &&
+            query.next() && query.value(0).toInt() > 0) {
+        result.append(QVariantMap{
+                {QStringLiteral("name"), QString()},
+                {QStringLiteral("count"), query.value(0).toInt()},
         });
     }
     return result;

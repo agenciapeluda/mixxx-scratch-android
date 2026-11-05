@@ -104,14 +104,23 @@ QtObject {
         return parseInt(String(color).replace("#", "").slice(-6), 16);
     }
 
-    // The scrolling waveforms: in the colors of each deck (Cutlab) or in the
-    // colors of the type picked in the settings. The type always comes from
-    // the settings.
-    property bool cutlabWaveColors: Mixxx.Application.configValue("[Cutlab]", "wave_colors", "cutlab") !== "config"
-    function setCutlabWaveColors(on) {
-        cutlabWaveColors = on;
-        Mixxx.Application.setConfigValue("[Cutlab]", "wave_colors", on ? "cutlab" : "config");
+    // The colors of the scrolling waveforms:
+    //  - "rgb": bass, mids and highs in their own vivid colors, so kicks,
+    //    voices and hats read apart (the default)
+    //  - "deck": in the color of each deck
+    //  - "config": the colors of the type picked in the settings
+    // The type of waveform always comes from the settings.
+    property string waveColors: {
+        const stored = Mixxx.Application.configValue("[Cutlab]", "wave_colors", "rgb");
+        return stored === "cutlab" ? "deck" : (["rgb", "deck", "config"].indexOf(stored) >= 0 ? stored : "rgb");
     }
+    function setWaveColors(colors) {
+        waveColors = colors;
+        Mixxx.Application.setConfigValue("[Cutlab]", "wave_colors", colors);
+    }
+    readonly property color waveLow: "#ff3366"
+    readonly property color waveMid: "#2ee88f"
+    readonly property color waveHigh: "#45b8ff"
 
     // Panels and the library slide in with this curve
     readonly property int motion: 180

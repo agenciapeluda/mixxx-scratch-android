@@ -11,6 +11,8 @@ Item {
 
     required property string group
     property bool mirrored: false
+    // The sections of the track (TrackSections), for the drop radar
+    property var trackSections: null
     readonly property real diameter: Math.max(80, Math.min(width - 16, height - 8))
     readonly property real elapsed: duration.value * playPosition.value
     readonly property real remaining: Math.max(0, duration.value - elapsed)
@@ -275,5 +277,12 @@ Item {
         anchors.bottomMargin: 4
         x: root.mirrored ? 8 : parent.width - width - 8
         group: root.group
+    }
+    DropRadar {
+        anchors.centerIn: parent
+        width: root.diameter
+        height: root.diameter
+        group: root.group
+        trackSections: root.trackSections
     }
 }

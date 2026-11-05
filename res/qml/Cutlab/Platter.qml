@@ -10,6 +10,8 @@ Item {
 
     required property string group
     property bool mirrored: false
+    // The sections of the track (TrackSections), for the drop radar
+    property var trackSections: null
     readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
     readonly property var currentTrack: deckPlayer ? deckPlayer.currentTrack : null
     readonly property real diameter: Math.min(width - 24, height - 8)
@@ -218,5 +220,13 @@ Item {
             fillColor: "transparent"
             lit: false
         }
+    }
+    DropRadar {
+        x: deck.x
+        y: deck.y
+        width: deck.width
+        height: deck.height
+        group: root.group
+        trackSections: root.trackSections
     }
 }

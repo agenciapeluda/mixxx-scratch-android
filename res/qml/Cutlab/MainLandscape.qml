@@ -1,339 +1,328 @@
 import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// The main screen held sideways, like djay: both decks on top with the
-// whole track; a long pitch fader on each side with SYNC and the BPM on
-// top; in the middle both waveforms upright side by side with the beat
-// lights of each deck between them; next to them the small platter, the FX,
-// the hot cues and the toggles of each deck; at the bottom PLAY, CUE and
-// SET of each deck around the volume faders and the crossfader; what the
-// controller buttons do below. The layout is a 1284 x 600 design scaled to
-// the screen.
+// The main screen held sideways, as it was in 1.17 and big enough to play
+// with the fingers: both tracks on top; on each side SYNC, the BPM, the long
+// pitch fader and DVS; in the middle the loops of each deck around the view
+// switch (mixer, waveforms, pads); play, SET, CUE and the crossfader at the
+// bottom.
+// Two looks, picked in the menu of the mark:
+//  - Onda (djay): turntables around the mixer, the waveforms upright over
+//    the whole middle
+//  - Dial (Serato): big dials with the tempo and the time, the waveforms
+//    one above the other between them
+// The tools of a deck (stems, cues, loops, FX, EQ, Scratch Bank) open in its
+// own half and the waveforms stay on screen. What is not on screen is not
+// loaded.
 Rectangle {
     id: root
 
-    readonly property real u: Math.max(0.55, Math.min(width / 1284, height / 600))
-    property bool recording: false
-    // The light screen: no scrolling waveforms, big platters in the middle
-    property bool lite: false
-    // The sections of the track on each deck (TrackSections), shared
+    // The performance screen: tools, view and look
+    required property var host
     required property var sections1
     required property var sections2
+    property bool recording: false
+
+    readonly property bool dial: root.host.mainView === "dial"
+    readonly property int view: root.host.view
+    readonly property real sideWidth: Math.round(Math.max(96, Math.min(150, width * 0.12)))
 
     signal libraryRequested(string group)
-    signal menuRequested(Item anchor)
-    signal recordRequested
-    signal fxRequested(string group)
+    signal menuRequested
 
-    function px(value) {
-        return Math.round(value * root.u);
-    }
     function sectionsOf(group) {
         return group === "[Channel2]" ? root.sections2 : root.sections1;
     }
 
     color: Style.background
 
-    // ---- Top bar: deck A · Cutlab · deck B ----
+    // ===== Top: the two tracks and the mark =====
     Rectangle {
         id: topBar
 
         width: parent.width
-        height: root.px(92)
-        color: Style.panel
+        height: Math.round(Math.max(58, Math.min(84, root.height * 0.15)))
+        color: Style.topBar
+        z: 2
 
-        DeckStrip {
-            x: root.px(14)
-            y: root.px(8)
-            width: (parent.width - center.width - root.px(28) - root.px(24)) / 2
-            height: parent.height - root.px(14)
+        DeckHeader {
+            anchors.left: parent.left
+            anchors.right: mark.left
+            anchors.rightMargin: 14
+            height: parent.height
             group: "[Channel1]"
-            u: root.u
-            trackSections: root.sections1
-            showTempo: false
             onBrowseRequested: root.libraryRequested("[Channel1]")
         }
-        Column {
-            id: center
+        // The Cutlab mark opens the menu, red while recording
+        Item {
+            id: mark
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            width: root.px(150)
-            spacing: root.px(6)
+            anchors.centerIn: parent
+            width: parent.height * 0.84
+            height: width
+            scale: markMouse.pressed ? 0.92 : 1
 
             Image {
-                id: mark
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: root.px(38)
-                height: width
+                anchors.fill: parent
                 source: root.recording ? "icons/cutlab_mark_rec.svg" : "icons/cutlab_mark.svg"
-                sourceSize.width: 128
-                sourceSize.height: 128
-
-                MouseArea {
-                    anchors.fill: parent
-                    anchors.margins: -8
-                    onClicked: root.menuRequested(mark)
-                }
+                sourceSize.width: 192
+                sourceSize.height: 192
             }
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: root.px(6)
+            MouseArea {
+                id: markMouse
 
-                Repeater {
-                    model: [qsTr("REC"), qsTr("Biblioteca")]
-
-                    Rectangle {
-                        id: pill
-
-                        required property string modelData
-                        required property int index
-                        readonly property bool lit: index === 0 && root.recording
-
-                        width: pillText.implicitWidth + root.px(20)
-                        height: root.px(26)
-                        radius: height / 2
-                        color: lit ? Style.danger : (pillMouse.pressed ? Style.buttonPressed : "transparent")
-                        border.width: 1
-                        border.color: lit ? Style.danger : Qt.rgba(1, 1, 1, 0.12)
-
-                        Text {
-                            id: pillText
-
-                            anchors.centerIn: parent
-                            color: Style.text
-                            font.family: Style.font
-                            font.weight: Font.DemiBold
-                            font.pixelSize: Math.max(9, root.px(11))
-                            text: pill.modelData
-                        }
-                        MouseArea {
-                            id: pillMouse
-
-                            anchors.fill: parent
-                            anchors.margins: -4
-                            onClicked: pill.index === 0 ? root.recordRequested() : root.libraryRequested("")
-                        }
-                    }
-                }
+                anchors.fill: parent
+                onClicked: root.menuRequested()
             }
         }
-        DeckStrip {
+        DeckHeader {
+            anchors.left: mark.right
+            anchors.leftMargin: 14
             anchors.right: parent.right
-            anchors.rightMargin: root.px(14)
-            y: root.px(8)
-            width: (parent.width - center.width - root.px(28) - root.px(24)) / 2
-            height: parent.height - root.px(14)
+            height: parent.height
             group: "[Channel2]"
-            mirrored: true
-            u: root.u
-            trackSections: root.sections2
-            showTempo: false
+            coverOnRight: true
             onBrowseRequested: root.libraryRequested("[Channel2]")
         }
-        Rectangle {
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: 1
-            color: Qt.rgba(1, 1, 1, 0.07)
-        }
     }
 
-    // ---- The long pitch faders, on the outside ----
-    readonly property real pitchWidth: root.px(88)
-    readonly property real margin: root.px(14)
-    readonly property real gap: root.px(12)
+    // ===== Bottom: play, SET, CUE and the crossfader =====
+    TransportBar {
+        id: transport
 
-    Repeater {
-        model: ["[Channel1]", "[Channel2]"]
-
-        PitchColumn {
-            required property string modelData
-            required property int index
-
-            x: index === 0 ? root.margin : root.width - root.margin - width
-            y: topBar.height + root.px(8)
-            width: root.pitchWidth
-            height: hints.y - y - root.px(8)
-            group: modelData
-            mirrored: index === 1
-            u: root.u
-        }
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: Math.round(Math.max(66, Math.min(96, root.height * 0.18)))
     }
 
-    // ---- Between the pitch faders ----
+    // ===== Middle =====
     Item {
-        id: inner
+        id: middle
 
-        x: root.margin + root.pitchWidth + root.gap
-        y: topBar.height + root.px(8)
-        width: root.width - 2 * x
-        height: hints.y - y - root.px(8)
+        anchors.top: topBar.bottom
+        anchors.bottom: transport.top
+        anchors.left: parent.left
+        anchors.right: parent.right
 
-        readonly property real deckWidth: Math.round(width * 0.28)
-        readonly property real centerWidth: width - 2 * deckWidth - 2 * root.gap
-        readonly property real bottomHeight: root.px(84)
-        readonly property real bodyHeight: height - bottomHeight - root.px(8)
+        SideColumn {
+            id: side1
 
-        // Each deck: platter and FX, hot cues, toggles
-        Repeater {
-            model: ["[Channel1]", "[Channel2]"]
+            anchors.left: parent.left
+            width: root.sideWidth
+            height: parent.height
+            group: "[Channel1]"
+            toolsOpen: root.host.tools1
+            onToolsRequested: root.host.toggleTools("[Channel1]")
+        }
+        SideColumn {
+            id: side2
 
-            Item {
-                id: deckPanel
+            anchors.right: parent.right
+            width: root.sideWidth
+            height: parent.height
+            group: "[Channel2]"
+            mirrored: true
+            toolsOpen: root.host.tools2
+            onToolsRequested: root.host.toggleTools("[Channel2]")
+        }
 
-                required property string modelData
-                required property int index
-                readonly property bool mirrored: index === 1
+        Item {
+            id: center
 
-                x: mirrored ? inner.width - width : 0
-                width: inner.deckWidth
-                height: inner.bodyHeight
+            anchors.left: side1.right
+            anchors.right: side2.left
+            anchors.leftMargin: 1
+            anchors.rightMargin: 1
+            height: parent.height
 
-                Item {
-                    id: platterRow
+            // Loops of each deck around the view switch
+            Rectangle {
+                id: header
 
-                    width: parent.width
-                    height: Math.min(root.px(170), parent.height - cues.implicitHeight - root.px(10))
+                width: parent.width
+                height: Math.round(Math.max(48, Math.min(64, middle.height * 0.15)))
+                color: Style.panel
 
-                    TurntableDial {
-                        id: platter
+                LoopControl {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: (viewSwitch.x - width) / 2
+                    width: Math.min(200, viewSwitch.x - 12)
+                    height: parent.height - 4
+                    group: "[Channel1]"
+                }
+                Row {
+                    id: viewSwitch
 
-                        visible: !root.lite
-                        x: deckPanel.mirrored ? parent.width - width : 0
-                        width: root.lite ? 0 : parent.height
-                        height: parent.height
-                        group: deckPanel.modelData
-                        trackSections: root.sectionsOf(deckPanel.modelData)
-                        showBpm: false
-                    }
-                    FxChip {
-                        x: deckPanel.mirrored ? 0 : platter.width + root.gap
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width - platter.width - root.gap
-                        group: deckPanel.modelData
-                        u: root.u
-                        onRequested: root.fxRequested(deckPanel.modelData)
+                    anchors.centerIn: parent
+                    height: parent.height - 8
+                    spacing: 4
+
+                    Repeater {
+                        model: ["mixer", "wave", "pads"]
+
+                        CLButton {
+                            required property int index
+                            required property string modelData
+
+                            width: Math.round(header.height * 1.5)
+                            height: viewSwitch.height
+                            radius: 8
+                            icon: modelData
+                            iconSize: height * 0.6
+                            bordered: false
+                            fillColor: "transparent"
+                            highlighted: root.view === index
+                            onClicked: root.host.setView(index)
+                        }
                     }
                 }
-                CueColumn {
-                    id: cues
-
+                LoopControl {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: viewSwitch.x + viewSwitch.width + (header.width - viewSwitch.x - viewSwitch.width - width) / 2
+                    width: Math.min(200, header.width - viewSwitch.x - viewSwitch.width - 12)
+                    height: parent.height - 4
+                    group: "[Channel2]"
+                }
+                Rectangle {
                     anchors.bottom: parent.bottom
                     width: parent.width
-                    group: deckPanel.modelData
-                    mirrored: deckPanel.mirrored
-                    count: 8
-                    toggles: [{label: "KEY", key: "keylock"}, {label: "Q", key: "quantize"}, {label: "SLIP", key: "slip_enabled"}]
-                    u: root.u
+                    height: 1
+                    color: Style.divider
                 }
             }
-        }
 
-        // The middle: both waveforms upright with the beat lights between
-        // them, or both platters big on the light screen
-        Item {
-            id: middle
+            Item {
+                id: body
 
-            x: inner.deckWidth + root.gap
-            width: inner.centerWidth
-            height: inner.bodyHeight
+                anchors.top: header.bottom
+                anchors.bottom: parent.bottom
+                width: parent.width
 
-            readonly property real lightsWidth: root.px(48)
-            readonly property real laneWidth: (width - lightsWidth) / 2
+                readonly property real mixerWidth: Math.round(Math.max(170, Math.min(280, width * 0.3)))
+                // Room for each deck: around the mixer, around the waveforms
+                // in the Dial look, and only with its tools open over the
+                // upright waveforms of the Onda look
+                readonly property bool decksAlways: root.view === 0 || root.dial
+                readonly property real deckWidth: root.view === 0 ? (width - mixerWidth - 2) / 2
+                    : (root.dial ? Math.round(width * 0.3) : Math.round(width * 0.42))
+                readonly property bool show1: root.view !== 2 && (decksAlways || root.host.tools1)
+                readonly property bool show2: root.view !== 2 && (decksAlways || root.host.tools2)
+                readonly property real middleLeft: show1 ? deckWidth + 1 : 0
+                readonly property real middleRight: show2 ? deckWidth + 1 : 0
 
-            Repeater {
-                model: root.lite ? [] : ["[Channel1]", "[Channel2]"]
-
-                VerticalWave {
-                    required property string modelData
-                    required property int index
-
-                    x: index === 0 ? 0 : middle.width - width
-                    width: middle.laneWidth
-                    height: middle.height
-                    group: modelData
-                    mirrored: index === 1
-                    u: root.u
-                }
-            }
-            Repeater {
-                model: root.lite ? ["[Channel1]", "[Channel2]"] : []
-
-                TurntableDial {
-                    required property string modelData
-                    required property int index
-
-                    x: index === 0 ? 0 : middle.width - width
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: middle.laneWidth
-                    height: Math.min(middle.height, middle.laneWidth)
-                    group: modelData
-                    trackSections: root.sectionsOf(modelData)
-                }
-            }
-            Row {
-                anchors.centerIn: parent
-                spacing: root.px(4)
-
+                // ----- Each deck: its dial or turntable with its bar, or its
+                // tools
                 Repeater {
                     model: ["[Channel1]", "[Channel2]"]
 
-                    BeatLights {
-                        required property string modelData
+                    Loader {
+                        id: deckArea
 
-                        group: modelData
-                        trackSections: root.sectionsOf(modelData)
-                        lightWidth: root.px(18)
-                        lightHeight: root.px(22)
+                        required property string modelData
+                        required property int index
+                        readonly property bool toolsOpen: index === 0 ? root.host.tools1 : root.host.tools2
+
+                        x: index === 0 ? 0 : body.width - width
+                        width: body.deckWidth
+                        height: body.height
+                        active: index === 0 ? body.show1 : body.show2
+                        sourceComponent: toolsOpen ? toolsComponent : deckComponent
+
+                        Component {
+                            id: toolsComponent
+
+                            ToolPanel {
+                                group: deckArea.modelData
+                                tool: deckArea.index === 0 ? root.host.tool1 : root.host.tool2
+                                onToolChanged: root.host.setTool(deckArea.modelData, tool)
+                                onCloseRequested: root.host.closeTools(deckArea.modelData)
+                            }
+                        }
+                        Component {
+                            id: deckComponent
+
+                            Item {
+                                Loader {
+                                    anchors.top: parent.top
+                                    anchors.bottom: toolbar.top
+                                    width: parent.width
+                                    sourceComponent: root.dial ? dialComponent : platterComponent
+                                }
+                                Component {
+                                    id: dialComponent
+
+                                    DeckDial {
+                                        group: deckArea.modelData
+                                        mirrored: deckArea.index === 1
+                                        trackSections: root.sectionsOf(deckArea.modelData)
+                                    }
+                                }
+                                Component {
+                                    id: platterComponent
+
+                                    Platter {
+                                        group: deckArea.modelData
+                                        mirrored: deckArea.index === 1
+                                        trackSections: root.sectionsOf(deckArea.modelData)
+                                    }
+                                }
+                                DeckToolbar {
+                                    id: toolbar
+
+                                    anchors.bottom: parent.bottom
+                                    width: parent.width
+                                    height: Math.round(Math.max(56, Math.min(68, parent.height * 0.18)))
+                                    group: deckArea.modelData
+                                    mirrored: deckArea.index === 1
+                                    onToolRequested: tool => root.host.openTool(deckArea.modelData, tool)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // ----- Between the decks -----
+                Item {
+                    x: body.middleLeft
+                    width: body.width - body.middleLeft - body.middleRight
+                    height: body.height
+                    visible: root.view !== 2
+
+                    Loader {
+                        anchors.fill: parent
+                        active: root.view === 0
+                        sourceComponent: MixerPanel {}
+                    }
+                    Loader {
+                        anchors.fill: parent
+                        active: root.view === 1 && root.dial
+                        sourceComponent: HorizontalWaves {
+                            sections1: root.sections1
+                            sections2: root.sections2
+                        }
+                    }
+                    Loader {
+                        anchors.fill: parent
+                        active: root.view === 1 && !root.dial
+                        sourceComponent: UprightWaves {
+                            sections1: root.sections1
+                            sections2: root.sections2
+                        }
+                    }
+                }
+
+                // ----- Pads over the whole middle -----
+                Loader {
+                    anchors.fill: parent
+                    active: root.view === 2
+                    sourceComponent: PadsTab {
+                        mode: root.host.padsMode
+                        onModeChanged: root.host.padsMode = mode
+                        onLoadSampleRequested: group => root.libraryRequested(group)
                     }
                 }
             }
         }
-
-        // ---- Bottom: PLAY CUE SET · volume · crossfader · volume · SET CUE PLAY ----
-        Item {
-            id: bottomBar
-
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: inner.bottomHeight
-
-            DeckButtons {
-                anchors.verticalCenter: parent.verticalCenter
-                group: "[Channel1]"
-                unit: Math.min(root.px(58), parent.height)
-            }
-            MixerStrip {
-                x: middle.x - root.px(20)
-                width: middle.width + root.px(40)
-                height: parent.height
-                u: root.u
-            }
-            DeckButtons {
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                group: "[Channel2]"
-                mirrored: true
-                unit: Math.min(root.px(58), parent.height)
-            }
-        }
-    }
-
-    // ---- What the controller does ----
-    HintsBar {
-        id: hints
-
-        anchors.bottom: parent.bottom
-        width: parent.width
-        height: root.px(26)
-        u: root.u
-        hints: [
-            [qsTr("BROWSE"), qsTr("buscar")],
-            [qsTr("LOAD A / B"), qsTr("cargar")],
-            [qsTr("FX ON"), qsTr("abre el pad táctil")],
-            [qsTr("SHIFT + SYNC"), qsTr("tempo original")]
-        ]
     }
 }

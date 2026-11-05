@@ -27,6 +27,12 @@ Rectangle {
         key: "rate"
     }
     Mixxx.ControlProxy {
+        id: rateRatio
+
+        group: root.group
+        key: "rate_ratio"
+    }
+    Mixxx.ControlProxy {
         id: keylock
 
         group: root.group
@@ -39,8 +45,8 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 8
-        width: Math.min(parent.width - 16, 96)
-        height: Math.max(34, Math.min(46, root.height * 0.13))
+        width: Math.min(parent.width - 16, 110)
+        height: Math.max(44, Math.min(58, root.height * 0.14))
         group: root.group
         key: "sync_enabled"
         mode: "toggle"
@@ -80,9 +86,17 @@ Rectangle {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Style.text
-            font.family: Style.font
-            font.pixelSize: Math.max(14, Math.min(20, Math.round(root.height * 0.06)))
+            font.family: Style.mono
+            font.weight: Font.Bold
+            font.pixelSize: Math.max(16, Math.min(28, Math.round(root.height * 0.075)))
             text: bpm.value > 0 ? bpm.value.toFixed(1) : "--.-"
+        }
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Math.abs(rate.value) < 0.0001 ? Style.textDim : Style.textSecondary
+            font.family: Style.mono
+            font.pixelSize: Math.max(11, Math.min(14, Math.round(root.height * 0.04)))
+            text: (rateRatio.value >= 1 ? "+" : "−") + Math.abs((rateRatio.value - 1) * 100).toFixed(1) + "%"
         }
     }
 
@@ -101,7 +115,7 @@ Rectangle {
 
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height
-            width: Math.min(56, parent.width * 0.5)
+            width: Math.min(68, parent.width * 0.55)
             group: root.group
             key: "rate"
             sensitivity: 0.5
@@ -113,8 +127,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: root.mirrored ? undefined : pitchFader.left
             anchors.left: root.mirrored ? pitchFader.right : undefined
-            width: 30
-            height: 40
+            width: 36
+            height: 48
             onClicked: keylock.value = keylock.value > 0 ? 0 : 1
 
             Image {
@@ -142,8 +156,8 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: root.mirrored ? undefined : pitchFader.right
             anchors.right: root.mirrored ? pitchFader.left : undefined
-            width: 30
-            height: 40
+            width: 36
+            height: 48
             onClicked: rate.value = 0
 
             Rectangle {
@@ -163,14 +177,14 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: toolsButton.top
         anchors.bottomMargin: 8
-        width: Math.min(parent.width - 20, 80)
-        height: 30
-        radius: 15
+        width: Math.min(parent.width - 16, 100)
+        height: 44
+        radius: 22
         group: root.group
         key: "vinylcontrol_enabled"
         mode: "toggle"
         text: "DVS"
-        fontSize: 12
+        fontSize: 14
         litColor: Style.play
         visible: Mixxx.Application.vinylControlAvailable === true
     }
@@ -181,7 +195,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
-        width: Math.max(40, Math.min(52, root.height * 0.15))
+        width: Math.max(48, Math.min(60, root.height * 0.16))
         height: width
         round: true
         icon: "mixer"

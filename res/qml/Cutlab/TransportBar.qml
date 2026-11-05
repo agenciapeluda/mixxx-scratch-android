@@ -1,11 +1,11 @@
 import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// The bottom bar: play, cue and stems of each deck around the crossfader.
+// The bottom bar: play, SET and CUE of each deck around the crossfader
+// (stems and the other tools are in the bar of each deck).
 Rectangle {
     id: root
 
-    signal stemsRequested(string group)
     signal menuRequested
 
     color: Style.panelDark
@@ -25,7 +25,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         group: "[Channel1]"
         unit: root.height - 16
-        onStemsRequested: root.stemsRequested(group)
+        showTools: false
     }
     DeckTransport {
         id: right
@@ -36,7 +36,7 @@ Rectangle {
         group: "[Channel2]"
         mirrored: true
         unit: root.height - 16
-        onStemsRequested: root.stemsRequested(group)
+        showTools: false
     }
 
     Item {
@@ -51,27 +51,14 @@ Rectangle {
             id: crossfader
 
             anchors.verticalCenter: parent.verticalCenter
-            x: Math.max(0, (parent.width - width) / 2 - 22)
-            width: Math.min(parent.width - 52, 320)
+            x: Math.max(0, (parent.width - width) / 2)
+            width: Math.min(parent.width - 60, 420)
             height: parent.height - 10
             vertical: false
             group: "[Master]"
             key: "crossfader"
             ticks: 7
             handleThickness: height * 0.95
-        }
-        CLButton {
-            anchors.left: crossfader.right
-            anchors.leftMargin: 6
-            anchors.verticalCenter: parent.verticalCenter
-            width: 40
-            height: 40
-            round: true
-            bordered: false
-            fillColor: "#48484b"
-            icon: "chevron_down"
-            iconSize: 18
-            onClicked: root.menuRequested()
         }
     }
 }

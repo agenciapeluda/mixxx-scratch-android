@@ -2,10 +2,13 @@ import ".." as Skin
 import QtQuick
 
 // Both scrolling waveforms one above the other, Serato style: the beats of
-// the two decks line up under the playhead and the phase meter between
-// them says how far apart they are.
+// the two decks line up under the playhead, and the four beat lights of
+// each deck say on which beat of the bar it is.
 Item {
     id: root
+
+    property var sections1: null
+    property var sections2: null
 
     Column {
         anchors.fill: parent
@@ -39,8 +42,16 @@ Item {
                     height: parent.height
                     color: Style.playhead
                 }
-                Rectangle {
+                BeatLights {
                     x: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    group: lane.modelData
+                    trackSections: lane.index === 0 ? root.sections1 : root.sections2
+                    lightWidth: 14
+                    lightHeight: Math.max(8, Math.min(22, (lane.height - 40) / 5))
+                }
+                Rectangle {
+                    x: 32
                     y: 8
                     width: 24
                     height: 20
@@ -88,22 +99,6 @@ Item {
                     }
                 }
             }
-        }
-    }
-
-    Rectangle {
-        anchors.centerIn: parent
-        width: phase.width + 20
-        height: phase.height + 8
-        radius: 12
-        color: Style.background
-        opacity: 0.92
-
-        PhaseMeter {
-            id: phase
-
-            anchors.centerIn: parent
-            width: Math.min(300, root.width * 0.4)
         }
     }
 }

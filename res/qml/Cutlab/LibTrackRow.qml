@@ -33,9 +33,36 @@ Rectangle {
 
     height: Math.round((selected ? 68 : 56) * u)
     radius: Math.round(10 * u)
-    color: selected ? Style.track : (mouse.pressed ? Style.raised : "transparent")
+    // The deck this track is loaded on ("" if none): the row takes its color
+    readonly property string onDeck: url === "" ? "" : (url === loadedUrlA ? "[Channel1]" : (url === loadedUrlB ? "[Channel2]" : ""))
+
+    color: selected ? Style.track : (mouse.pressed ? Style.raised
+        : (onDeck !== "" ? Qt.rgba(Style.deckColor(onDeck).r, Style.deckColor(onDeck).g, Style.deckColor(onDeck).b, 0.16) : "transparent"))
     border.width: 2
-    border.color: selected ? Style.accent : "transparent"
+    border.color: selected ? Style.accent : (onDeck !== "" ? Style.deckColor(onDeck) : "transparent")
+
+    // The letter of the deck over the cover, big, while it is loaded
+    Rectangle {
+        z: 3
+        visible: root.onDeck !== ""
+        x: cover.x + cover.width - width / 2 - 2
+        y: cover.y - 4
+        width: deckTag.implicitWidth + Math.round(10 * root.u)
+        height: deckTag.implicitHeight + 2
+        radius: 5
+        color: root.onDeck !== "" ? Style.deckColor(root.onDeck) : "transparent"
+
+        Text {
+            id: deckTag
+
+            anchors.centerIn: parent
+            color: Style.background
+            font.family: Style.mono
+            font.weight: Font.Bold
+            font.pixelSize: root.fs(12)
+            text: root.onDeck !== "" ? Style.deckLetter(root.onDeck) : ""
+        }
+    }
 
     Behavior on height {
         NumberAnimation {

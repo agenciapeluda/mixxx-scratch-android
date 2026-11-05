@@ -11,6 +11,8 @@ import "../Cutlab" as Cutlab
 Category {
     id: root
 
+    readonly property var waveColorNames: [qsTr("RGB Cutlab"), qsTr("Color del deck"), qsTr("de la configuración")]
+
     property bool dirty: false
     label: qsTr("Waveforms")
     readonly property string graphicsApiName: {
@@ -47,7 +49,7 @@ Category {
         waveformTypeInput.currentIndex = root.waveformTypes.indexOf(Mixxx.Config.waveformType);
         if (waveformTypeInput.currentIndex < 0)
             waveformTypeInput.currentIndex = 3;
-        waveColorsInput.selected = Cutlab.Style.cutlabWaveColors ? "Cutlab" : qsTr("de la configuración");
+        waveColorsInput.selected = root.waveColorNames[["rgb", "deck", "config"].indexOf(Cutlab.Style.waveColors)];
         zoomSynchronizationInput.selected = Mixxx.Config.waveformZoomSynchronization ? "on" : "off";
         var options = Mixxx.Config.waveformOptions;
         splitStereoSignalInput.selected = (options & Mixxx.WaveformDisplay.Option.SplitStereoSignal) ? "on" : "off";
@@ -82,7 +84,7 @@ Category {
         overviewMinuteMarkersInput.selected = "on";
         overviewScalingInput.selected = "global gain";
         waveformTypeInput.currentIndex = 3;
-        waveColorsInput.selected = "Cutlab";
+        waveColorsInput.selected = root.waveColorNames[0];
         zoomSynchronizationInput.selected = "on";
         waveformEnabledInput.selected = "on";
         frameRateInput.value = 60;
@@ -114,7 +116,7 @@ Category {
         Mixxx.Config.waveformOverviewMinuteMarkers = overviewMinuteMarkersInput.selected === "on";
         Mixxx.Config.waveformOverviewNormalized = overviewScalingInput.selected === "normalize";
         Mixxx.Config.waveformType = root.waveformTypes[waveformTypeInput.currentIndex];
-        Cutlab.Style.setCutlabWaveColors(waveColorsInput.selected === "Cutlab");
+        Cutlab.Style.setWaveColors(["rgb", "deck", "config"][Math.max(0, root.waveColorNames.indexOf(waveColorsInput.selected))]);
         Mixxx.Config.waveformEnabled = waveformEnabledInput.selected === "on";
         Mixxx.Config.waveformZoomSynchronization = zoomSynchronizationInput.selected === "on";
         Mixxx.Config.waveformFrameRate = frameRateInput.value;
@@ -278,7 +280,7 @@ Category {
                 RatioChoice {
                     id: waveColorsInput
 
-                    options: ["Cutlab", qsTr("de la configuración")]
+                    options: root.waveColorNames
 
                     onSelectedChanged: root.markDirty()
                 }
@@ -287,7 +289,7 @@ Category {
                 Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
-                text: qsTr("Cutlab: cada deck con su color. De la configuración: los colores propios del tipo elegido (RGB en rojo, verde y azul). El tipo de onda siempre es el que elegís arriba.")
+                text: qsTr("RGB Cutlab: graves, medios y agudos en colores vivos, para ver bombos, voces y platillos. Color del deck: cada deck en su color. De la configuración: los colores propios del tipo elegido. El tipo de onda siempre es el que elegís arriba.")
                 wrapMode: Text.WordWrap
             }
             RowLayout {
