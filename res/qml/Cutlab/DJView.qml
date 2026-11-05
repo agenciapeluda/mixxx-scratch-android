@@ -12,14 +12,18 @@ Rectangle {
 
     // 0 turntables and mixer, 1 waveforms, 2 pads
     // The waveforms by default, like djay; the last one picked is kept
-    property int view: parseInt(Mixxx.Application.configValue("[Cutlab]", "view", "1"))
-    onViewChanged: Mixxx.Application.setConfigValue("[Cutlab]", "view", root.view.toString())
     property bool tools1: false
-    // The mode of the pads view: 0 samples, 1 hot cues, 2 rolls, 3 Scratch Bank
-    property int padsMode: 0
     property bool tools2: false
-    property int tool1: 1
-    property int tool2: 1
+    // The mixer first: the tools button of a deck opens it
+    property int tool1: 4
+    property int tool2: 4
+    // The deck whose tools opened last (upright only one is shown)
+    property string lastTools: ""
+    // What the 8 pads of each deck do: 0 hot cues, 1 rolls, 2 samples
+    property int padMode1: 0
+    property int padMode2: 0
+    // The pads big, over the stage
+    property bool padsBig: false
     readonly property bool libraryOpen: library.visible
     // Held upright, the screen switches to the one hand layout
     readonly property bool portrait: height > width * 1.05
@@ -174,14 +178,21 @@ Rectangle {
     // in the middle) or "dial" like Serato (big dials, the waveforms one
     // above the other). Only the one on screen is loaded. Upright, Dial is
     // the light screen (platters, no scrolling waveforms).
-    property string mainView: Mixxx.Application.configValue("[Cutlab]", "main_view", "onda") === "dial" ? "dial" : "onda"
-    readonly property bool lite: root.mainView === "dial"
-    function setMainView(look) {
-        root.mainView = look;
-        Mixxx.Application.setConfigValue("[Cutlab]", "main_view", look);
+    // The waveforms: "vertical" (upright, side by side), "horizontal" (one
+    // above the other) or "extended" (the whole width, no dials)
+    property string waveMode: {
+        const stored = Mixxx.Application.configValue("[Cutlab]", "wave_mode", "vertical");
+        return ["vertical", "horizontal", "extended"].indexOf(stored) >= 0 ? stored : "vertical";
     }
-    function setView(index) {
-        root.view = index;
+    function setWaveMode(mode) {
+        root.waveMode = mode;
+        Mixxx.Application.setConfigValue("[Cutlab]", "wave_mode", mode);
+    }
+    // The decks as dials (tempo and time) or as turntables
+    property string deckLook: Mixxx.Application.configValue("[Cutlab]", "deck_look", "dial") === "platter" ? "platter" : "dial"
+    function setDeckLook(look) {
+        root.deckLook = look;
+        Mixxx.Application.setConfigValue("[Cutlab]", "deck_look", look);
     }
 
     // The tools of a deck open in its half (FX too): the waveforms stay
@@ -277,16 +288,13 @@ Rectangle {
         const open = deck === 1 ? (root.tools1 && root.tool1 === 3) : (root.tools2 && root.tool2 === 3);
         if (on) {
             (deck === 1 ? fxClose1 : fxClose2).stop();
-            if (!open && !root.portrait) {
+            if (!open) {
                 root.openTool(group, 3);
                 if (deck === 1) {
                     root.fxAuto1 = true;
                 } else {
                     root.fxAuto2 = true;
                 }
-            } else if (root.portrait && !toolsSheet.visible) {
-                toolsSheet.group = group;
-                toolsSheet.open();
             }
         } else if (deck === 1 ? root.fxAuto1 : root.fxAuto2) {
             (deck === 1 ? fxClose1 : fxClose2).restart();
@@ -363,13 +371,11 @@ Rectangle {
         }
         const group = deck === 1 ? "[Channel1]" : "[Channel2]";
         if (on) {
-            if (!root.portrait) {
-                root.openTool(group, 3);
-                if (deck === 1) {
-                    root.fxAuto1 = true;
-                } else {
-                    root.fxAuto2 = true;
-                }
+            root.openTool(group, 3);
+            if (deck === 1) {
+                root.fxAuto1 = true;
+            } else {
+                root.fxAuto2 = true;
             }
         } else {
             root.fxStateChanged(deck);
@@ -486,13 +492,6 @@ Rectangle {
     function showFxPad(group) {
         const deck = group === "[Channel2]" ? 2 : 1;
         (deck === 1 ? fxClose1 : fxClose2).stop();
-        if (root.portrait) {
-            if (!toolsSheet.visible) {
-                toolsSheet.group = group;
-                toolsSheet.open();
-            }
-            return;
-        }
         const open = deck === 1 ? (root.tools1 && root.tool1 === 3) : (root.tools2 && root.tool2 === 3);
         if (!open) {
             root.openTool(group, 3);
@@ -534,20 +533,10 @@ Rectangle {
             root.openLibrary("");
         }
     }
-    function openToolsSheet(group, tool) {
-        toolsSheet.group = group;
-        toolsSheet.tool = tool;
-        toolsSheet.open();
-    }
     function openTool(group, tool) {
         // Upright, the tools come up from below
-        if (root.portrait) {
-            root.openToolsSheet(group, tool);
-            return;
-        }
-        if (root.view === 2) {
-            root.view = 1;
-        }
+        root.lastTools = group;
+        root.padsBig = false;
         if (group === "[Channel1]") {
             root.tool1 = tool;
             root.tools1 = true;
@@ -643,14 +632,14 @@ Rectangle {
         }
     }
 
-    // ===== The main screen held sideways =====
+    // ===== The main screen, sideways or upright =====
     Loader {
         id: mainLandscape
 
         anchors.fill: parent
-        active: !root.portrait
         sourceComponent: MainLandscape {
             host: root
+            portrait: root.portrait
             recording: recording.value > 0
             sections1: sectionsA
             sections2: sectionsB
@@ -659,73 +648,77 @@ Rectangle {
         }
     }
 
-    // Pads, hot cues, rolls and the Scratch Bank over the whole screen
-    Rectangle {
-        id: padsOverlay
+    // Waveform zoom and quantize of both decks, for the menu
+    Mixxx.ControlProxy {
+        id: zoomIn1
 
-        anchors.fill: parent
-        visible: false
-        z: 6
-        color: Style.background
-        onVisibleChanged: root.releaseFocus()
+        group: "[Channel1]"
+        key: "waveform_zoom_down"
+    }
+    Mixxx.ControlProxy {
+        id: zoomIn2
 
-        Loader {
-            anchors.fill: parent
-            anchors.topMargin: 48
-            active: padsOverlay.visible
-            sourceComponent: PadsTab {
-                mode: root.padsMode
-                onModeChanged: root.padsMode = mode
-                onLoadSampleRequested: group => root.openLibrary(group)
-            }
-        }
-        Text {
-            x: 16
-            y: 14
-            color: Style.text
-            font.family: Style.font
-            font.pixelSize: 18
-            font.weight: Font.Bold
-            text: qsTr("Pads")
-        }
-        CLButton {
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            y: 2
-            width: 44
-            height: 44
-            icon: "close"
-            iconSize: 18
-            bordered: false
-            fillColor: "transparent"
-            onClicked: padsOverlay.visible = false
-        }
+        group: "[Channel2]"
+        key: "waveform_zoom_down"
+    }
+    Mixxx.ControlProxy {
+        id: zoomOut1
+
+        group: "[Channel1]"
+        key: "waveform_zoom_up"
+    }
+    Mixxx.ControlProxy {
+        id: zoomOut2
+
+        group: "[Channel2]"
+        key: "waveform_zoom_up"
+    }
+    Mixxx.ControlProxy {
+        id: quantize1
+
+        group: "[Channel1]"
+        key: "quantize"
+    }
+    Mixxx.ControlProxy {
+        id: quantize2
+
+        group: "[Channel2]"
+        key: "quantize"
     }
 
-    // The menu of the mark: the look of the screen and big tiles
+    // The menu of the mark: quick toggles, the look of the screen, the rest
     MainMenu {
         id: mainMenu
 
         recording: recording.value > 0
-        mainView: root.mainView
+        waveMode: root.waveMode
+        deckLook: root.deckLook
+        quantize: quantize1.value > 0 && quantize2.value > 0
         stemsAuto: root.stemsAuto
         diagnostics: root.showDiagnostics
         onClosed: root.releaseFocus()
         onPicked: key => {
-            if (key === "view_onda" || key === "view_dial") {
-                root.setMainView(key === "view_dial" ? "dial" : "onda");
+            if (key.startsWith("wave_")) {
+                root.setWaveMode(key.substring(5));
+            } else if (key.startsWith("look_")) {
+                root.setDeckLook(key.substring(5));
+            } else if (key === "zoom_in" || key === "zoom_out") {
+                // Both decks: in = more detail
+                for (const control of key === "zoom_in" ? [zoomIn1, zoomIn2] : [zoomOut1, zoomOut2]) {
+                    control.value = 1;
+                    control.value = 0;
+                }
+            } else if (key === "quantize") {
+                const on = quantize1.value > 0 && quantize2.value > 0 ? 0 : 1;
+                quantize1.value = on;
+                quantize2.value = on;
             } else if (key === "autodj") {
                 root.autoDJRequested();
             } else if (key === "record") {
                 toggleRecording.value = 1;
                 toggleRecording.value = 0;
             } else if (key === "pads") {
-                if (root.portrait) {
-                    root.padsMode = 0;
-                    padsOverlay.visible = true;
-                } else {
-                    root.setView(2);
-                }
+                root.padsBig = !root.padsBig;
             } else if (key === "library") {
                 root.openLibrary("");
             } else if (key === "stems") {
@@ -738,49 +731,6 @@ Rectangle {
             } else if (key === "settings") {
                 root.settingsRequested();
             }
-        }
-    }
-
-    Loader {
-        anchors.fill: parent
-        active: root.portrait
-        sourceComponent: PortraitView {
-            recording: recording.value > 0
-            lite: root.lite
-            onLibraryRequested: group => root.openLibrary(group)
-            onToolsRequested: group => {
-                toolsSheet.group = group;
-                toolsSheet.open();
-            }
-            onMenuRequested: anchor => mainMenu.open()
-        }
-    }
-
-    // All the tools of a deck (FX first) over the upright layout
-    Popup {
-        id: toolsSheet
-
-        property string group: "[Channel1]"
-
-        x: 0
-        y: parent.height - height
-        width: parent.width
-        height: Math.min(parent.height * 0.62, 520)
-        modal: true
-        padding: 0
-        background: Rectangle {
-            color: Style.panel
-            radius: 16
-        }
-        property int tool: 3
-
-        onClosed: root.releaseFocus()
-
-        contentItem: ToolPanel {
-            group: toolsSheet.group
-            tool: toolsSheet.tool
-            onToolChanged: toolsSheet.tool = tool
-            onCloseRequested: toolsSheet.close()
         }
     }
 

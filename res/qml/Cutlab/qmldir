@@ -58,3 +58,7 @@ DropRadar 1.0 DropRadar.qml
 UprightWaves 1.0 UprightWaves.qml
 DeckToolbar 1.0 DeckToolbar.qml
 MainMenu 1.0 MainMenu.qml
+DeckRow 1.0 DeckRow.qml
+DeckPadArea 1.0 DeckPadArea.qml
+PitchStrip 1.0 PitchStrip.qml
+MixerTool 1.0 MixerTool.qml

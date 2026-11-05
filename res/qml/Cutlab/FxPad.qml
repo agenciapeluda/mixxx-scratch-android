@@ -8,8 +8,9 @@ Item {
     id: root
 
     required property string group
-    // Scale of the design (1 = 1284 x 600)
-    property real u: 1
+    // Scale: from its own size, so it fits the half of a deck or the whole
+    // width without anything over anything
+    property real u: Math.max(0.6, Math.min(1.15, width / 620, height / 430))
     readonly property int unitNumber: group === "[Channel2]" ? 2 : 1
     readonly property string unitGroup: `[EffectRack1_EffectUnit${unitNumber}]`
     readonly property string slotGroup: `[EffectRack1_EffectUnit${unitNumber}_Effect1]`
@@ -291,13 +292,25 @@ Item {
     }
 
     // ---- Effects: RITMO and AMBIENTE, as in the design ----
-    Flow {
+    // One row that scrolls sideways: it never wraps over the pad
+    Flickable {
         id: chips
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: Math.round(6 * root.u)
+        height: Math.round(36 * root.u)
+        contentWidth: chipRow.width
+        contentHeight: height
+        flickableDirection: Flickable.HorizontalFlick
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
+
+        Row {
+            id: chipRow
+
+            height: chips.height
+            spacing: Math.round(6 * root.u)
 
         Repeater {
             model: [{header: qsTr("RITMO")}].concat(root.rhythmEffects).concat([{header: qsTr("AMBIENTE")}]).concat(root.ambientEffects)
@@ -355,6 +368,7 @@ Item {
             }
         }
     }
+    }
 
     // ---- Fractions and HOLD ----
     Row {
@@ -398,7 +412,7 @@ Item {
         }
     }
 
-    readonly property bool narrow: width < 360
+    readonly property bool narrow: width < 460
 
     // ---- One shots: a column on the side, a row when narrow ----
     Grid {

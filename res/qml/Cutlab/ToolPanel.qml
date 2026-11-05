@@ -7,14 +7,15 @@ Rectangle {
     id: root
 
     required property string group
-    // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 EQ, 5 Scratch Bank
+    // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 mixer (volume, EQ,
+    // filter), 5 Scratch Bank
     property int tool: 1
     readonly property var tools: [
         {icon: "stems", name: qsTr("Stems")},
         {icon: "hotcue", name: qsTr("Cues")},
         {icon: "loop", name: qsTr("Loop")},
         {icon: "fx", name: qsTr("FX")},
-        {icon: "eq", name: qsTr("EQ")},
+        {icon: "mixer", name: qsTr("Mezcla")},
         {icon: "scratch", name: qsTr("Scratch Bank")}
     ]
 
@@ -74,7 +75,7 @@ Rectangle {
     Component {
         id: eqTool
 
-        EqTool {
+        MixerTool {
             group: root.group
         }
     }

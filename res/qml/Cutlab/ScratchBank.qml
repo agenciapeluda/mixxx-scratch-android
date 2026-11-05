@@ -291,6 +291,11 @@ Rectangle {
         }
     }
 
+    // Narrow (in the half of a deck): shorter texts, the steps without
+    // their explanation, everything sized from the width
+    readonly property bool compact: width < 640
+    readonly property real unitWidth: (captureRow.width - 6 * captureRow.spacing) / 9.6
+
     // ---- Capture ----
     Row {
         id: captureRow
@@ -298,8 +303,8 @@ Rectangle {
         x: 10
         y: 10
         width: parent.width - 20
-        height: 44
-        spacing: 8
+        height: root.compact ? 40 : 44
+        spacing: root.compact ? 6 : 8
 
         Repeater {
             model: ["[Channel1]", "[Channel2]"]
@@ -307,11 +312,11 @@ Rectangle {
             CLButton {
                 required property string modelData
 
-                width: Math.min(170, (captureRow.width - 8 * 6) / 4)
+                width: root.unitWidth * 2.2
                 height: captureRow.height
                 radius: 10
-                text: qsTr("Capturar de %1").arg(Style.deckLetter(modelData))
-                fontSize: 13
+                text: root.compact ? qsTr("Capturar %1").arg(Style.deckLetter(modelData)) : qsTr("Capturar de %1").arg(Style.deckLetter(modelData))
+                fontSize: root.compact ? 12 : 13
                 fontWeight: Font.DemiBold
                 litColor: Style.deckColor(modelData)
                 lit: true
@@ -324,7 +329,7 @@ Rectangle {
             CLButton {
                 required property real modelData
 
-                width: 46
+                width: root.unitWidth * 0.9
                 height: captureRow.height
                 radius: 10
                 text: String(modelData)
@@ -334,11 +339,11 @@ Rectangle {
             }
         }
         CLButton {
-            width: 104
+            width: root.unitWidth * 1.6
             height: captureRow.height
             radius: 10
-            text: qsTr("Solo voz")
-            fontSize: 13
+            text: root.compact ? qsTr("Voz") : qsTr("Solo voz")
+            fontSize: root.compact ? 12 : 13
             highlighted: root.voiceOnly
             onClicked: root.voiceOnly = !root.voiceOnly
         }
@@ -352,8 +357,8 @@ Rectangle {
         anchors.top: captureRow.bottom
         anchors.topMargin: 10
         width: parent.width - 20
-        height: 74
-        spacing: 8
+        height: root.compact ? 44 : 74
+        spacing: root.compact ? 6 : 8
 
         Repeater {
             model: [
@@ -405,7 +410,9 @@ Rectangle {
                     color: stepCard.current ? Style.text : Style.textSecondary
                     font.family: Style.font
                     font.weight: Font.Bold
-                    font.pixelSize: 14
+                    font.pixelSize: root.compact ? 12 : 14
+                    elide: Text.ElideRight
+                    width: stepCard.width - x - (stepCard.index === 1 ? 84 : 8)
                     text: stepCard.modelData.title
                 }
                 // Where the phrases go, in the second step
@@ -449,6 +456,7 @@ Rectangle {
                     anchors.top: stepNumber.bottom
                     anchors.margins: 10
                     anchors.topMargin: 6
+                    visible: !root.compact
                     color: Style.textSecondary
                     font.family: Style.font
                     font.pixelSize: 12
@@ -502,6 +510,7 @@ Rectangle {
                 Text {
                     x: 10
                     y: 8
+                    visible: slotPad.height > 56
                     color: Style.textSecondary
                     font.family: Style.mono
                     font.pixelSize: 11
@@ -521,13 +530,13 @@ Rectangle {
                         elide: Text.ElideRight
                         horizontalAlignment: Text.AlignHCenter
                         font.family: Style.font
-                        font.pixelSize: 14
+                        font.pixelSize: slotPad.height > 56 ? 14 : 12
                         font.weight: Font.DemiBold
                         text: slotPad.slot ? slotPad.slot.title : qsTr("vacío")
                     }
                     Text {
                         width: parent.width
-                        visible: !!slotPad.slot
+                        visible: !!slotPad.slot && slotPad.height > 56
                         color: Style.textSecondary
                         elide: Text.ElideRight
                         horizontalAlignment: Text.AlignHCenter
