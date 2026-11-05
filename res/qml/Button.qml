@@ -21,7 +21,7 @@ AbstractButton {
             id: backgroundImage
 
             anchors.fill: parent
-            color: '#2b2b2b'
+            color: '#1d1b33'
             radius: 2
         }
         DropShadow {
@@ -38,7 +38,7 @@ AbstractButton {
             id: effect2
 
             anchors.fill: backgroundImage
-            color: "#343434"
+            color: "#2a2940"
             horizontalOffset: 1
             radius: 1
             samples: 16
@@ -47,7 +47,7 @@ AbstractButton {
         }
         InnerShadow {
             anchors.fill: backgroundImage
-            color: "#343434"
+            color: "#2a2940"
             horizontalOffset: -1
             radius: 1
             samples: 16

@@ -60,7 +60,7 @@ SpinBox {
             id: bottomInnerEffect
 
             anchors.fill: parent
-            color: "#353535"
+            color: "#2a2940"
             horizontalOffset: -1
             radius: 8
             samples: 32
@@ -72,7 +72,7 @@ SpinBox {
             id: topInnerEffect
 
             anchors.fill: parent
-            color: "#353535"
+            color: "#2a2940"
             horizontalOffset: 1
             radius: 8
             samples: 32

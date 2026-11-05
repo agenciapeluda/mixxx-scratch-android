@@ -659,8 +659,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#171717"
-        border.color: "#2c2c2c"
+        color: "#0e0d1a"
+        border.color: "#1d1b33"
         border.width: 1
         radius: 8
 
@@ -675,7 +675,7 @@ Category {
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
                 color: root.dirty ? "#2e2616" : "#1d2a21"
-                border.color: root.dirty ? "#ff9f0a" : "#34c759"
+                border.color: root.dirty ? "#ffb547" : "#2bd67b"
                 border.width: 1
 
                 RowLayout {
@@ -688,7 +688,7 @@ Category {
                         text: root.dirty ? "●" : "✓"
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: root.dirty ? "#ff9f0a" : "#34c759"
+                        color: root.dirty ? "#ffb547" : "#2bd67b"
                     }
                     Text {
                         elide: Text.ElideRight
@@ -696,7 +696,7 @@ Category {
                         text: root.dirty ? qsTr("Unsaved changes") : qsTr("Waveforms saved")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: root.dirty ? "#ff9f0a" : "#34c759"
+                        color: root.dirty ? "#ffb547" : "#2bd67b"
                     }
                 }
             }
@@ -708,7 +708,7 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff6961"
+                color: "#ff4d5e"
                 font.pixelSize: 11
                 text: ""
             }
@@ -720,21 +720,21 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
                 radius: 6
-                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#2b2b2b")
-                border.color: "#ff6961"
+                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#1d1b33")
+                border.color: "#ff4d5e"
                 border.width: 1
 
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
+                    Text { text: "↺"; color: "#ff4d5e"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                     Text {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: "#ff6961"
+                        color: "#ff4d5e"
                     }
                 }
 
@@ -755,7 +755,7 @@ Category {
                 Layout.preferredWidth: 110
                 radius: 6
                 visible: root.dirty
-                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#2e2e2e" : "#262626")
+                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
                 border.width: 1
 
@@ -786,9 +786,9 @@ Category {
                 Layout.preferredWidth: 230
                 radius: 6
                 color: root.dirty
-                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
-                       : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
-                border.color: root.dirty ? "#34c759" : "#908aff"
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
+                       : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))
+                border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {

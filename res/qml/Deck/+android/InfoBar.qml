@@ -17,12 +17,12 @@ Rectangle {
 
     readonly property bool isDeck1: group === "[Channel1]"
     readonly property bool isDeck2: group === "[Channel2]"
-    readonly property color deckColor: isDeck1 ? "#837cff" : (isDeck2 ? "#ff7a3d" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
-    readonly property color deckBgColor: isDeck1 ? "#332cb8" : (isDeck2 ? "#bf360c" : "#212121")
+    readonly property color deckColor: isDeck1 ? "#8b85ff" : (isDeck2 ? "#00c2d8" : (group === "[Channel3]" ? "#2bd67b" : "#e040fb"))
+    readonly property color deckBgColor: isDeck1 ? "#4a43c9" : (isDeck2 ? "#bf360c" : "#17162a")
     readonly property string deckName: isDeck1 ? "Deck 1" : (isDeck2 ? "Deck 2" : (group === "[Channel3]" ? "Deck 3" : "Deck 4"))
 
     radius: 6
-    color: "#1d1d1d"
+    color: "#0e0d1a"
     border.color: isDeck1 ? "#00b0ff44" : (isDeck2 ? "#ff6d0044" : "#3a3a3a")
     border.width: 1
 
@@ -94,7 +94,7 @@ Rectangle {
             Layout.preferredHeight: root.minimized ? 22 : 36
             Layout.preferredWidth: root.minimized ? 22 : 36
             radius: 4
-            color: "#212121"
+            color: "#17162a"
             clip: true
             visible: !root.minimized && root.width >= 400
 
@@ -110,7 +110,7 @@ Rectangle {
                 anchors.centerIn: parent
                 text: ""
                 font.pixelSize: 14
-                color: "#969696"
+                color: "#9ca1b8"
                 visible: !root.currentTrack?.coverArtUrl
             }
         }
@@ -127,7 +127,7 @@ Rectangle {
                 text: (root.deckPlayer?.isLoaded && root.currentTrack?.title)
                     ? root.currentTrack.title
                     : qsTr("No track - press LOAD")
-                color: root.deckPlayer?.isLoaded ? "#ffffff" : "#969696"
+                color: root.deckPlayer?.isLoaded ? "#ffffff" : "#9ca1b8"
                 font.weight: Font.DemiBold
                 font.pixelSize: (root.width < 360 || root.minimized) ? 10 : 12
                 elide: Text.ElideRight
@@ -150,7 +150,7 @@ Rectangle {
             Layout.preferredHeight: root.minimized ? 22 : 36
             Layout.preferredWidth: bpmCol.implicitWidth + 10
             radius: 4
-            color: bpmMouseArea.pressed ? "#343434" : "#171717"
+            color: bpmMouseArea.pressed ? "#2a2940" : "#0e0d1a"
             border.color: root.deckColor
             border.width: 1
 
@@ -164,7 +164,7 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     font.weight: Font.DemiBold
                     font.pixelSize: (root.width < 360 || root.minimized) ? 10 : 12
-                    color: bpmControl.value > 0 ? "#ffffff" : "#7a7a7a"
+                    color: bpmControl.value > 0 ? "#ffffff" : "#7d8199"
                     text: bpmControl.value > 0 ? (bpmControl.value.toFixed(2) + " BPM") : "--.-- BPM"
                 }
 
@@ -201,8 +201,8 @@ Rectangle {
             Layout.preferredHeight: 28
             Layout.preferredWidth: keyText.implicitWidth + 10
             radius: 4
-            color: "#282828"
-            border.color: "#343434"
+            color: "#1d1b33"
+            border.color: "#2a2940"
             border.width: 1
 
             Text {
@@ -224,8 +224,8 @@ Rectangle {
             Layout.preferredHeight: root.minimized ? 22 : 36
             Layout.preferredWidth: Math.max(76, timeText.implicitWidth + 14)
             radius: 4
-            color: "#1a1a1a"
-            border.color: timeMouse.containsMouse ? "#908aff" : "#343434"
+            color: "#0e0d1a"
+            border.color: timeMouse.containsMouse ? "#908aff" : "#2a2940"
             border.width: 1
 
             Text {
@@ -291,7 +291,7 @@ Rectangle {
                     text: "CUE"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: pflControl.value > 0 ? "#000000" : "#bebebe"
+                    color: pflControl.value > 0 ? "#000000" : "#c9cce0"
                 }
             }
 
@@ -309,8 +309,8 @@ Rectangle {
             id: loadButton
             Layout.preferredHeight: root.minimized ? 24 : 36
             Layout.preferredWidth: (root.width < 360) ? 58 : (root.minimized ? 66 : 76)
-            activeColor: root.isDeck1 ? "#908aff" : "#f7c86a"
-            backgroundColor: root.isDeck1 ? "#453de0" : "#e2622a"
+            activeColor: root.isDeck1 ? "#908aff" : "#7fe6f2"
+            backgroundColor: root.isDeck1 ? "#635bff" : "#00c2d8"
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             font.pixelSize: (root.width < 360 || root.minimized) ? 9 : 11

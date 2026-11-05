@@ -51,7 +51,7 @@ ColumnLayout {
                     width: 12
 
                     ShapePath {
-                        fillColor: '#626262'
+                        fillColor: '#5a5f75'
                         startX: 0
                         startY: 5
                         strokeColor: 'transparent'
@@ -152,7 +152,7 @@ ColumnLayout {
 
                     ShapePath {
                         capStyle: ShapePath.RoundCap
-                        fillColor: '#626262'
+                        fillColor: '#5a5f75'
                         fillRule: ShapePath.WindingFill
                         startX: 0
                         startY: 0

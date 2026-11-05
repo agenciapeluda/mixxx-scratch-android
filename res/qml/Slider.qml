@@ -29,7 +29,7 @@ RowLayout {
                 width: parent.width
                 height: 4
                 radius: 2
-                color: "#181818"
+                color: "#0e0d1a"
             }
             Repeater {
                 id: delegate
@@ -86,7 +86,7 @@ RowLayout {
                 horizontalOffset: 0
                 verticalOffset: 0
                 radius: 16.0
-                color: "#353535"
+                color: "#2a2940"
                 source: handle
             }
             DropShadow {
@@ -135,7 +135,7 @@ RowLayout {
             samples: 24
             horizontalOffset: 0
             verticalOffset: 0
-            color: "#343434"
+            color: "#2a2940"
         }
         Item {
             anchors.fill: parent

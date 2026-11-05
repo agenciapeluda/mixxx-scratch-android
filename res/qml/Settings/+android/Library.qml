@@ -141,7 +141,7 @@ Category {
                 Layout.preferredHeight: localCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 ColumnLayout {
@@ -170,7 +170,7 @@ Category {
                             Layout.preferredWidth: scannerStatusText.implicitWidth + 16
                             radius: 12
                             color: root.isScanning ? "#ff910022" : "#00e67622"
-                            border.color: root.isScanning ? "#ff9f0a" : "#34c759"
+                            border.color: root.isScanning ? "#ffb547" : "#2bd67b"
                             border.width: 1
 
                             Text {
@@ -179,7 +179,7 @@ Category {
                                 anchors.centerIn: parent
                                 font.pixelSize: 11
                                 font.weight: Font.DemiBold
-                                color: root.isScanning ? "#ff9f0a" : "#34c759"
+                                color: root.isScanning ? "#ffb547" : "#2bd67b"
                                 text: root.isScanning ? qsTr("Scanning...") : qsTr("✓ Collection ready")
                             }
                         }
@@ -189,7 +189,7 @@ Category {
                         Layout.minimumWidth: 0
                         text: qsTr("Choose the folders on your device where you keep your music. Mixxx will watch them and index the tracks it finds automatically.")
                         font.pixelSize: 11
-                        color: "#969696"
+                        color: "#9ca1b8"
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
@@ -201,7 +201,7 @@ Category {
                         text: qsTr("Folders currently added:")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: "#bebebe"
+                        color: "#c9cce0"
                     }
 
                     ColumnLayout {
@@ -214,7 +214,7 @@ Category {
                             Rectangle {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 48
-                                color: "#171717"
+                                color: "#0e0d1a"
                                 radius: 6
                                 border.color: "#363636"
                                 border.width: 1
@@ -252,16 +252,16 @@ Category {
                                             text: qsTr("%1 tracks indexed").arg(modelData.trackCount || 0) +
                                                   (modelData.totalSecond > 0 ? " • " + qsTr("%1 min").arg(Math.round(modelData.totalSecond / 60)) : "")
                                             font.pixelSize: 10
-                                            color: "#837cff"
+                                            color: "#8b85ff"
                                         }
                                     }
 
                                     Skin.Button {
                                         Layout.preferredHeight: 30
                                         Layout.preferredWidth: 80
-                                        activeColor: "#ff6961"
+                                        activeColor: "#ff4d5e"
                                         backgroundColor: "#2e1c1c"
-                                        normalColor: "#ff6961"
+                                        normalColor: "#ff4d5e"
                                         font.weight: Font.DemiBold
                                         font.pixelSize: 10
                                         text: qsTr("Remove")
@@ -277,7 +277,7 @@ Category {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 42
-                            color: "#242424"
+                            color: "#17162a"
                             radius: 6
                             visible: !root.sourcesList || root.sourcesList.length === 0
 
@@ -289,7 +289,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("No folders added yet. Use the buttons below to add one.")
                                     font.pixelSize: 11
-                                    color: "#ff9f0a"
+                                    color: "#ffb547"
                                 }
                             }
                         }
@@ -302,7 +302,7 @@ Category {
                         text: qsTr("Shortcuts (standard Android locations):")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: "#bebebe"
+                        color: "#c9cce0"
                     }
 
                     Flow {
@@ -312,9 +312,9 @@ Category {
                         Skin.Button {
                             height: 32
                             width: 170
-                            activeColor: "#837cff"
-                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Music") ? "#1d2a21" : "#272727"
-                            normalColor: root.isFolderAdded("/storage/emulated/0/Music") ? "#34c759" : "#ffffff"
+                            activeColor: "#8b85ff"
+                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Music") ? "#1d2a21" : "#17162a"
+                            normalColor: root.isFolderAdded("/storage/emulated/0/Music") ? "#2bd67b" : "#ffffff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: (root.isFolderAdded("/storage/emulated/0/Music") ? "✓ " : "+ ") + qsTr("Music (/sdcard)")
@@ -326,9 +326,9 @@ Category {
                         Skin.Button {
                             height: 32
                             width: 180
-                            activeColor: "#837cff"
-                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Download") ? "#1d2a21" : "#272727"
-                            normalColor: root.isFolderAdded("/storage/emulated/0/Download") ? "#34c759" : "#ffffff"
+                            activeColor: "#8b85ff"
+                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Download") ? "#1d2a21" : "#17162a"
+                            normalColor: root.isFolderAdded("/storage/emulated/0/Download") ? "#2bd67b" : "#ffffff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: (root.isFolderAdded("/storage/emulated/0/Download") ? "✓ " : "+ ") + qsTr("Downloads (/Download)")
@@ -340,9 +340,9 @@ Category {
                         Skin.Button {
                             height: 32
                             width: 160
-                            activeColor: "#837cff"
-                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Mixxx") ? "#1d2a21" : "#272727"
-                            normalColor: root.isFolderAdded("/storage/emulated/0/Mixxx") ? "#34c759" : "#ffffff"
+                            activeColor: "#8b85ff"
+                            backgroundColor: root.isFolderAdded("/storage/emulated/0/Mixxx") ? "#1d2a21" : "#17162a"
+                            normalColor: root.isFolderAdded("/storage/emulated/0/Mixxx") ? "#2bd67b" : "#ffffff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: (root.isFolderAdded("/storage/emulated/0/Mixxx") ? "✓ " : "+ ") + "Mixxx DJ (/Mixxx)"
@@ -361,8 +361,8 @@ Category {
                             Layout.preferredHeight: 36
                             Layout.preferredWidth: 220
                             activeColor: "#8b85ff"
-                            backgroundColor: root.showFolderBrowser ? "#262433" : "#212121"
-                            normalColor: "#837cff"
+                            backgroundColor: root.showFolderBrowser ? "#262433" : "#17162a"
+                            normalColor: "#8b85ff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: root.showFolderBrowser ? qsTr("▲ Hide browser") : qsTr("Browse / other folder...")
@@ -377,8 +377,8 @@ Category {
                         Skin.Button {
                             Layout.preferredHeight: 36
                             Layout.preferredWidth: 190
-                            activeColor: "#837cff"
-                            backgroundColor: "#453de0"
+                            activeColor: "#8b85ff"
+                            backgroundColor: "#635bff"
                             normalColor: "#ffffff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
@@ -396,7 +396,7 @@ Category {
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: browserCol.implicitHeight + 20
-                        color: "#181818"
+                        color: "#0e0d1a"
                         radius: 6
                         border.color: "#00e5ff44"
                         border.width: 1
@@ -414,7 +414,7 @@ Category {
                                 text: qsTr("Device folder browser:")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 11
-                                color: "#837cff"
+                                color: "#8b85ff"
                             }
 
                             // Current path display with Back/Up button
@@ -426,7 +426,7 @@ Category {
                                     Layout.preferredHeight: 32
                                     Layout.preferredWidth: 80
                                     activeColor: "#8b85ff"
-                                    backgroundColor: "#2a2a2a"
+                                    backgroundColor: "#1d1b33"
                                     normalColor: "#ffffff"
                                     font.weight: Font.DemiBold
                                     font.pixelSize: 11
@@ -444,9 +444,9 @@ Category {
                                     color: "#ffffff"
                                     font.pixelSize: 11
                                     background: Rectangle {
-                                        color: "#232323"
+                                        color: "#17162a"
                                         radius: 4
-                                        border.color: pathInputField.activeFocus ? "#8b85ff" : "#343434"
+                                        border.color: pathInputField.activeFocus ? "#8b85ff" : "#2a2940"
                                         border.width: 1
                                     }
                                     onAccepted: {
@@ -462,7 +462,7 @@ Category {
                                 Layout.minimumWidth: 0
                                 text: qsTr("Subfolders in this location (tap to open):")
                                 font.pixelSize: 10
-                                color: "#969696"
+                                color: "#9ca1b8"
                             }
 
                             Flow {
@@ -476,7 +476,7 @@ Category {
                                         height: 28
                                         width: dirLabel.implicitWidth + 20
                                         radius: 4
-                                        color: "#262626"
+                                        color: "#17162a"
                                         border.color: "#444444"
                                         border.width: 1
 
@@ -521,7 +521,7 @@ Category {
                                 Skin.Button {
                                     Layout.preferredHeight: 34
                                     Layout.fillWidth: true
-                                    activeColor: "#34c759"
+                                    activeColor: "#2bd67b"
                                     backgroundColor: "#1d2a21"
                                     normalColor: "#ffffff"
                                     font.weight: Font.DemiBold
@@ -536,9 +536,9 @@ Category {
                                 Skin.Button {
                                     Layout.preferredHeight: 34
                                     Layout.preferredWidth: 90
-                                    activeColor: "#ff6961"
+                                    activeColor: "#ff4d5e"
                                     backgroundColor: "#363636"
-                                    normalColor: "#bebebe"
+                                    normalColor: "#c9cce0"
                                     font.pixelSize: 11
                                     text: qsTr("Close")
                                     onClicked: {
@@ -557,7 +557,7 @@ Category {
                 Layout.preferredHeight: streamingCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 ColumnLayout {
@@ -572,7 +572,7 @@ Category {
                         text: qsTr("Streaming storage & cache")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#837cff"
+                        color: "#8b85ff"
                         Layout.fillWidth: true
                     }
 
@@ -580,7 +580,7 @@ Category {
                         Layout.minimumWidth: 0
                         text: qsTr("Tracks played from streaming platforms (Navidrome, Audius, SoundCloud, Tidal) are stored locally so playback continues without dropouts even if the internet connection is lost.")
                         font.pixelSize: 11
-                        color: "#969696"
+                        color: "#9ca1b8"
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
@@ -592,9 +592,9 @@ Category {
                         Rectangle {
                             Layout.preferredHeight: 40
                             Layout.fillWidth: true
-                            color: "#171717"
+                            color: "#0e0d1a"
                             radius: 6
-                            border.color: "#333333"
+                            border.color: "#2a2940"
                             border.width: 1
 
                             RowLayout {
@@ -607,7 +607,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("Space used:")
                                     font.pixelSize: 11
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                 }
 
                                 Text {
@@ -622,7 +622,7 @@ Category {
                                     }
                                     font.weight: Font.DemiBold
                                     font.pixelSize: 12
-                                    color: "#34c759"
+                                    color: "#2bd67b"
                                 }
 
                                 // Shortened to the space left next to the size
@@ -641,9 +641,9 @@ Category {
                         Skin.Button {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 150
-                            activeColor: "#ff6961"
+                            activeColor: "#ff4d5e"
                             backgroundColor: "#2e1c1c"
-                            normalColor: "#ff6961"
+                            normalColor: "#ff4d5e"
                             font.weight: Font.DemiBold
                             text: qsTr("Clear cache")
                             onClicked: {
@@ -662,7 +662,7 @@ Category {
                 Layout.preferredHeight: backupCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 ColumnLayout {
@@ -677,7 +677,7 @@ Category {
                         text: qsTr("Library backup")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#837cff"
+                        color: "#8b85ff"
                         Layout.fillWidth: true
                     }
 
@@ -685,7 +685,7 @@ Category {
                         Layout.minimumWidth: 0
                         text: qsTr("Saves the library (tracks, BPM, key, cues, playlists, crates and history) and the settings to %1. That folder is kept when Mixxx is uninstalled or its data is cleared, so a backup can be restored afterwards.").arg(Mixxx.MobileLibrary.backupDirectory)
                         font.pixelSize: 11
-                        color: "#969696"
+                        color: "#9ca1b8"
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
@@ -697,9 +697,9 @@ Category {
                         Skin.Button {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 170
-                            activeColor: "#34c759"
+                            activeColor: "#2bd67b"
                             backgroundColor: "#1d2a21"
-                            normalColor: "#34c759"
+                            normalColor: "#2bd67b"
                             font.weight: Font.DemiBold
                             text: qsTr("Back up now")
                             onClicked: {
@@ -715,7 +715,7 @@ Category {
                             Layout.fillWidth: true
                             text: root.backupMessage
                             font.pixelSize: 11
-                            color: root.backupError ? "#ff6961" : "#34c759"
+                            color: root.backupError ? "#ff4d5e" : "#2bd67b"
                             wrapMode: Text.WordWrap
                         }
                     }
@@ -752,9 +752,9 @@ Category {
                             Skin.Button {
                                 Layout.preferredHeight: 36
                                 Layout.preferredWidth: 130
-                                activeColor: "#ff9f0a"
+                                activeColor: "#ffb547"
                                 backgroundColor: "#2e2616"
-                                normalColor: "#ff9f0a"
+                                normalColor: "#ffb547"
                                 font.weight: Font.DemiBold
                                 text: qsTr("Restore")
                                 onClicked: {
@@ -780,7 +780,7 @@ Category {
                 Layout.preferredHeight: driveBackupCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 Connections {
@@ -804,7 +804,7 @@ Category {
                         text: qsTr("Rekordbox stick backup")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#837cff"
+                        color: "#8b85ff"
                         Layout.fillWidth: true
                     }
 
@@ -812,7 +812,7 @@ Category {
                         Layout.minimumWidth: 0
                         text: qsTr("Copies the Rekordbox export of a USB stick (playlists, analysis and tracks) to %1/<name>. The copy appears under Rekordbox in the library like the stick itself, also when the stick is not plugged in. Backing up the stick again only copies what changed, and deletes what was removed from the stick.").arg("/storage/emulated/0/Music/Mixxx/Rekordbox")
                         font.pixelSize: 11
-                        color: "#969696"
+                        color: "#9ca1b8"
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
@@ -825,8 +825,8 @@ Category {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 170
                             enabled: !Mixxx.MobileLibrary.rekordboxDrivesLoading
-                            activeColor: "#837cff"
-                            backgroundColor: "#272727"
+                            activeColor: "#8b85ff"
+                            backgroundColor: "#17162a"
                             normalColor: "#ada9ff"
                             font.weight: Font.DemiBold
                             text: Mixxx.MobileLibrary.rekordboxDrivesLoading ? qsTr("Looking…") : qsTr("Find sticks")
@@ -873,9 +873,9 @@ Category {
                                 Layout.preferredHeight: 40
                                 Layout.preferredWidth: 130
                                 enabled: !Mixxx.MobileLibrary.driveBackupRunning && driveBackupName.text.trim().length > 0
-                                activeColor: "#34c759"
+                                activeColor: "#2bd67b"
                                 backgroundColor: "#1d2a21"
-                                normalColor: "#34c759"
+                                normalColor: "#2bd67b"
                                 font.weight: Font.DemiBold
                                 text: qsTr("BACK UP")
                                 onClicked: {
@@ -915,9 +915,9 @@ Category {
                         Skin.Button {
                             Layout.preferredHeight: 40
                             Layout.preferredWidth: 130
-                            activeColor: "#ff6961"
+                            activeColor: "#ff4d5e"
                             backgroundColor: "#2e1c1c"
-                            normalColor: "#ff6961"
+                            normalColor: "#ff4d5e"
                             font.weight: Font.DemiBold
                             text: qsTr("STOP")
                             onClicked: Mixxx.MobileLibrary.cancelDriveBackup()
@@ -930,7 +930,7 @@ Category {
                         visible: driveBackupCard.message.length > 0
                         text: driveBackupCard.message
                         font.pixelSize: 11
-                        color: driveBackupCard.messageIsError ? "#ff6961" : "#34c759"
+                        color: driveBackupCard.messageIsError ? "#ff4d5e" : "#2bd67b"
                         wrapMode: Text.WordWrap
                     }
                 }
@@ -942,7 +942,7 @@ Category {
                 Layout.preferredHeight: searchCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 ColumnLayout {
@@ -1019,7 +1019,7 @@ Category {
                 Layout.preferredHeight: analysisCol.implicitHeight + 24
                 color: Theme.darkGray3
                 radius: 8
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
 
                 ColumnLayout {
@@ -1034,7 +1034,7 @@ Category {
                         text: qsTr("Collection pre-analysis (BPM & Camelot key)")
                         font.weight: Font.DemiBold
                         font.pixelSize: 13
-                        color: "#837cff"
+                        color: "#8b85ff"
                         Layout.fillWidth: true
                     }
 
@@ -1042,7 +1042,7 @@ Category {
                         Layout.minimumWidth: 0
                         text: qsTr("Calculates the BPM, beatgrid and musical key of your tracks in the background. Pre-analyzed tracks load instantly and the harmonic assistant can highlight compatible tracks.")
                         font.pixelSize: 11
-                        color: "#969696"
+                        color: "#9ca1b8"
                         wrapMode: Text.WordWrap
                         Layout.fillWidth: true
                     }
@@ -1056,7 +1056,7 @@ Category {
                             Layout.preferredHeight: 38
                             Layout.fillWidth: true
                             Layout.preferredWidth: 1
-                            activeColor: "#34c759"
+                            activeColor: "#2bd67b"
                             backgroundColor: "#1d2a21"
                             normalColor: "#ffffff"
                             font.weight: Font.DemiBold
@@ -1073,9 +1073,9 @@ Category {
                             Layout.preferredHeight: 38
                             Layout.fillWidth: true
                             Layout.preferredWidth: 1
-                            activeColor: "#ff9f0a"
-                            backgroundColor: "#212121"
-                            normalColor: "#ff9f0a"
+                            activeColor: "#ffb547"
+                            backgroundColor: "#17162a"
+                            normalColor: "#ffb547"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11
                             text: qsTr("Re-analyze the whole collection")
@@ -1094,8 +1094,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#171717"
-        border.color: "#2c2c2c"
+        color: "#0e0d1a"
+        border.color: "#1d1b33"
         border.width: 1
         radius: 8
 
@@ -1110,7 +1110,7 @@ Category {
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
                 color: root.isScanning ? "#2e2616" : (root.dirty ? "#2e2616" : "#1d2a21")
-                border.color: root.isScanning ? "#ff9f0a" : (root.dirty ? "#ff9f0a" : "#34c759")
+                border.color: root.isScanning ? "#ffb547" : (root.dirty ? "#ffb547" : "#2bd67b")
                 border.width: 1
 
                 RowLayout {
@@ -1123,7 +1123,7 @@ Category {
                         text: root.isScanning ? "" : (root.dirty ? "●" : "✓")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: (root.isScanning || root.dirty) ? "#ff9f0a" : "#34c759"
+                        color: (root.isScanning || root.dirty) ? "#ffb547" : "#2bd67b"
                     }
                     Text {
                         elide: Text.ElideRight
@@ -1131,7 +1131,7 @@ Category {
                         text: root.isScanning ? qsTr("Scanning...") : (root.dirty ? qsTr("Unsaved changes") : qsTr("Collection ready"))
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: (root.isScanning || root.dirty) ? "#ff9f0a" : "#34c759"
+                        color: (root.isScanning || root.dirty) ? "#ffb547" : "#2bd67b"
                     }
                 }
             }
@@ -1143,7 +1143,7 @@ Category {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 160
                 radius: 6
-                color: rescanMouse.pressed ? "#453de0" : (rescanMouse.containsMouse ? "#584fff" : "#332cb8")
+                color: rescanMouse.pressed ? "#635bff" : (rescanMouse.containsMouse ? "#635bff" : "#4a43c9")
                 border.color: "#908aff"
                 border.width: 1
 
@@ -1181,7 +1181,7 @@ Category {
                 Layout.preferredWidth: 110
                 radius: 6
                 visible: root.dirty
-                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#2e2e2e" : "#262626")
+                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
                 border.width: 1
 
@@ -1212,9 +1212,9 @@ Category {
                 Layout.preferredWidth: 220
                 radius: 6
                 color: root.dirty
-                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
-                       : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
-                border.color: root.dirty ? "#34c759" : "#908aff"
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
+                       : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))
+                border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {
@@ -1264,9 +1264,9 @@ Category {
         padding: 18
 
         background: Rectangle {
-            color: "#171717"
+            color: "#0e0d1a"
             radius: 10
-            border.color: "#ff9f0a"
+            border.color: "#ffb547"
             border.width: 1
         }
 
@@ -1288,7 +1288,7 @@ Category {
                 Layout.fillWidth: true
                 text: qsTr("The waveforms, keys and the rest of the analysis are done again in the background. You can keep the beatgrids or analyze them again too.")
                 font.pixelSize: 11
-                color: "#bebebe"
+                color: "#c9cce0"
                 wrapMode: Text.WordWrap
             }
 
@@ -1297,7 +1297,7 @@ Category {
                 Layout.fillWidth: true
                 text: qsTr("Analyzing the beatgrids again replaces the ones you corrected by hand, unless you locked them. Locked beatgrids and those of Rekordbox are always kept.")
                 font.pixelSize: 11
-                color: "#ff9f0a"
+                color: "#ffb547"
                 wrapMode: Text.WordWrap
             }
 
@@ -1333,9 +1333,9 @@ Category {
                 Skin.Button {
                     Layout.preferredHeight: 40
                     Layout.preferredWidth: 170
-                    activeColor: "#ff9f0a"
+                    activeColor: "#ffb547"
                     backgroundColor: "#2e2616"
-                    normalColor: "#ff9f0a"
+                    normalColor: "#ffb547"
                     font.weight: Font.DemiBold
                     text: qsTr("ALSO BEATGRIDS")
                     onClicked: {
@@ -1366,9 +1366,9 @@ Category {
         }
 
         background: Rectangle {
-            color: "#171717"
+            color: "#0e0d1a"
             radius: 10
-            border.color: "#ff9f0a"
+            border.color: "#ffb547"
             border.width: 1
         }
 
@@ -1390,7 +1390,7 @@ Category {
                 Layout.fillWidth: true
                 text: qsTr("Your current library and settings are replaced by the backup (a copy of them is kept). Mixxx closes; open it again to finish.")
                 font.pixelSize: 11
-                color: "#bebebe"
+                color: "#c9cce0"
                 wrapMode: Text.WordWrap
             }
 
@@ -1401,7 +1401,7 @@ Category {
                 Layout.fillWidth: true
                 visible: text.length > 0
                 font.pixelSize: 11
-                color: restorePopup.restoring ? "#34c759" : "#ff6961"
+                color: restorePopup.restoring ? "#2bd67b" : "#ff4d5e"
                 wrapMode: Text.WordWrap
             }
 
@@ -1424,9 +1424,9 @@ Category {
                 Skin.Button {
                     Layout.preferredHeight: 40
                     Layout.preferredWidth: 150
-                    activeColor: "#ff9f0a"
+                    activeColor: "#ffb547"
                     backgroundColor: "#2e2616"
-                    normalColor: "#ff9f0a"
+                    normalColor: "#ffb547"
                     font.weight: Font.DemiBold
                     text: qsTr("Restore")
                     onClicked: {

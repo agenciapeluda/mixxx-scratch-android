@@ -13,8 +13,8 @@ Popup {
     property int activeTab: 0 // 0: Local Library, 1: Streaming Hub
 
     readonly property bool isDeck1: targetDeck === "[Channel1]"
-    readonly property color deckColor: isDeck1 ? "#837cff" : "#ff7a3d"
-    readonly property color deckBgColor: isDeck1 ? "#332cb8" : "#bf360c"
+    readonly property color deckColor: isDeck1 ? "#8b85ff" : "#00c2d8"
+    readonly property color deckBgColor: isDeck1 ? "#4a43c9" : "#bf360c"
     readonly property string deckName: isDeck1 ? "DECK 1" : "DECK 2"
 
     modal: true
@@ -23,7 +23,7 @@ Popup {
     dim: true
 
     background: Rectangle {
-        color: "#171717"
+        color: "#0e0d1a"
         border.color: root.deckColor
         border.width: 2
         radius: 8
@@ -54,7 +54,7 @@ Popup {
             Layout.fillWidth: true
             Layout.preferredHeight: 50
             color: "#1f1f1f"
-            border.color: "#343434"
+            border.color: "#2a2940"
             border.width: 1
 
             RowLayout {
@@ -93,9 +93,9 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 130
-                    activeColor: root.isDeck1 ? "#ff7a3d" : "#837cff"
-                    backgroundColor: "#2b2b2b"
-                    normalColor: root.isDeck1 ? "#f7c86a" : "#ada9ff"
+                    activeColor: root.isDeck1 ? "#00c2d8" : "#8b85ff"
+                    backgroundColor: "#1d1b33"
+                    normalColor: root.isDeck1 ? "#7fe6f2" : "#ada9ff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: root.isDeck1 ? qsTr("GO TO DECK 2") : qsTr("GO TO DECK 1")
@@ -110,9 +110,9 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 110
-                    activeColor: "#837cff"
-                    backgroundColor: root.activeTab === 0 ? "#333333" : "#212121"
-                    normalColor: root.activeTab === 0 ? "#837cff" : "#969696"
+                    activeColor: "#8b85ff"
+                    backgroundColor: root.activeTab === 0 ? "#2a2940" : "#17162a"
+                    normalColor: root.activeTab === 0 ? "#8b85ff" : "#9ca1b8"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
                     text: qsTr("LOCAL MUSIC")
@@ -123,7 +123,7 @@ Popup {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 120
                     activeColor: "#00ffff"
-                    backgroundColor: root.activeTab === 1 ? "#123a2a" : "#212121"
+                    backgroundColor: root.activeTab === 1 ? "#123a2a" : "#17162a"
                     normalColor: root.activeTab === 1 ? "#00ffff" : "#ada9ff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
@@ -135,7 +135,7 @@ Popup {
                 Skin.Button {
                     Layout.preferredHeight: 30
                     Layout.preferredWidth: 72
-                    activeColor: "#ff5d6c"
+                    activeColor: "#ff4d5e"
                     backgroundColor: "#b71c1c"
                     normalColor: "#ffffff"
                     font.weight: Font.DemiBold
@@ -167,7 +167,7 @@ Popup {
 
                         Text {
                             text: qsTr("Local track collection")
-                            color: "#bebebe"
+                            color: "#c9cce0"
                             font.weight: Font.DemiBold
                             font.pixelSize: 12
                         }
@@ -177,8 +177,8 @@ Popup {
                         Skin.Button {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 210
-                            activeColor: "#837cff"
-                            backgroundColor: "#2a2a2a"
+                            activeColor: "#8b85ff"
+                            backgroundColor: "#1d1b33"
                             normalColor: "#ada9ff"
                             font.weight: Font.DemiBold
                             font.pixelSize: 11

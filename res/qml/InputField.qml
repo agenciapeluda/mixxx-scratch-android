@@ -11,7 +11,7 @@ FocusScope {
     Rectangle {
         id: backgroundInput
         radius: 4
-        color: '#232323'
+        color: '#17162a'
         anchors.fill: parent
     }
     DropShadow {
@@ -32,7 +32,7 @@ FocusScope {
         samples: 24
         horizontalOffset: 0
         verticalOffset: 0
-        color: "#343434"
+        color: "#2a2940"
     }
     TextInput {
         id: inputField

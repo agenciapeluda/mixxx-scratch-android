@@ -56,7 +56,7 @@ Item {
     }
 
     Rectangle {
-        color: '#0e0e0e'
+        color: '#0b0a16'
 
         anchors {
             bottom: parent.bottom
@@ -112,7 +112,7 @@ Item {
                             id: backgroundImage
 
                             anchors.fill: parent
-                            color: hotcue.isSet ? hotcue.color : (activator.pressed ? "#464646" : "#262626")
+                            color: hotcue.isSet ? hotcue.color : (activator.pressed ? "#464646" : "#17162a")
                             radius: 3
                             border.color: hotcue.isSet ? "#ffffff" : "#3c3c3c"
                             border.width: 1
@@ -138,7 +138,7 @@ Item {
                             id: effect2
 
                             anchors.fill: parent
-                            color: "#343434"
+                            color: "#2a2940"
                             horizontalOffset: 1
                             radius: 12
                             samples: 24
@@ -148,7 +148,7 @@ Item {
                         }
                         InnerShadow {
                             anchors.fill: parent
-                            color: "#343434"
+                            color: "#2a2940"
                             horizontalOffset: -1
                             radius: 12
                             samples: 24
@@ -237,8 +237,8 @@ Item {
                             anchors.fill: parent
                             radius: 4
                             color: (loopEnabledProxy.value > 0)
-                                ? "#837cff"
-                                : (loopPadMouse.pressed ? "#343434" : "#242424")
+                                ? "#8b85ff"
+                                : (loopPadMouse.pressed ? "#2a2940" : "#17162a")
                             border.color: (loopEnabledProxy.value > 0) ? "#ffffff" : "#3c3c3c"
                             border.width: (loopEnabledProxy.value > 0) ? 2 : 1
 
@@ -250,7 +250,7 @@ Item {
                                     Layout.alignment: Qt.AlignHCenter
                                     font.weight: Font.DemiBold
                                     font.pixelSize: 15
-                                    color: (loopEnabledProxy.value > 0) ? "#0c0c0c" : "#837cff"
+                                    color: (loopEnabledProxy.value > 0) ? "#0b0a16" : "#8b85ff"
                                     text: loopPadItem.modelData.label
                                 }
 
@@ -258,7 +258,7 @@ Item {
                                     Layout.alignment: Qt.AlignHCenter
                                     font.weight: Font.DemiBold
                                     font.pixelSize: 8
-                                    color: (loopEnabledProxy.value > 0) ? "#252525" : "#7a7a7a"
+                                    color: (loopEnabledProxy.value > 0) ? "#252525" : "#7d8199"
                                     text: "BEATS"
                                 }
                             }
@@ -369,7 +369,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
                             text: `${Math.round(volumeControl.value * 100)}%`
-                            color: "#dbdbdb"
+                            color: "#f4f5fb"
                             font.pixelSize: 9
                         }
                         VolumeStep {
@@ -395,8 +395,8 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: 5
-            color: root.activePadMode === 0 ? ((root.group === "[Channel2]") ? "#e2622a" : "#453de0") : (cueTabMouse.pressed ? "#373737" : "#1e1e1e")
-            border.color: root.activePadMode === 0 ? "#ffffff" : "#383838"
+            color: root.activePadMode === 0 ? ((root.group === "[Channel2]") ? "#00c2d8" : "#635bff") : (cueTabMouse.pressed ? "#2a2940" : "#0e0d1a")
+            border.color: root.activePadMode === 0 ? "#ffffff" : "#2a2940"
             border.width: root.activePadMode === 0 ? 1.5 : 1
 
             ColumnLayout {
@@ -409,7 +409,7 @@ Item {
                     height: 10
                     antialiasing: true
                     ShapePath {
-                        fillColor: root.activePadMode === 0 ? "#ffffff" : "#949494"
+                        fillColor: root.activePadMode === 0 ? "#ffffff" : "#9ca1b8"
                         strokeColor: "transparent"
                         startX: 1; startY: 0
                         PathLine { x: 11; y: 5 }
@@ -423,7 +423,7 @@ Item {
                     text: "CUE"
                     font.weight: Font.DemiBold
                     font.pixelSize: 9
-                    color: root.activePadMode === 0 ? "#ffffff" : "#949494"
+                    color: root.activePadMode === 0 ? "#ffffff" : "#9ca1b8"
                 }
             }
 
@@ -440,8 +440,8 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: 5
-            color: root.activePadMode === 1 ? "#07008f" : (loopTabMouse.pressed ? "#373737" : "#1e1e1e")
-            border.color: root.activePadMode === 1 ? "#ffffff" : "#383838"
+            color: root.activePadMode === 1 ? "#07008f" : (loopTabMouse.pressed ? "#2a2940" : "#0e0d1a")
+            border.color: root.activePadMode === 1 ? "#ffffff" : "#2a2940"
             border.width: root.activePadMode === 1 ? 1.5 : 1
 
             ColumnLayout {
@@ -455,7 +455,7 @@ Item {
                     antialiasing: true
                     ShapePath {
                         fillColor: "transparent"
-                        strokeColor: root.activePadMode === 1 ? "#ffffff" : "#949494"
+                        strokeColor: root.activePadMode === 1 ? "#ffffff" : "#9ca1b8"
                         strokeWidth: 1.6
                         capStyle: ShapePath.RoundCap
                         startX: 2; startY: 2.5
@@ -464,7 +464,7 @@ Item {
                         PathLine { x: 2; y: 7.5 }
                     }
                     ShapePath {
-                        fillColor: root.activePadMode === 1 ? "#ffffff" : "#949494"
+                        fillColor: root.activePadMode === 1 ? "#ffffff" : "#9ca1b8"
                         strokeColor: "transparent"
                         startX: 0.5; startY: 5.5
                         PathLine { x: 4; y: 5.5 }
@@ -478,7 +478,7 @@ Item {
                     text: "LOOP"
                     font.weight: Font.DemiBold
                     font.pixelSize: 9
-                    color: root.activePadMode === 1 ? "#ffffff" : "#949494"
+                    color: root.activePadMode === 1 ? "#ffffff" : "#9ca1b8"
                 }
             }
 
@@ -496,8 +496,8 @@ Item {
             Layout.fillHeight: true
             visible: stemCountControl.value > 0
             radius: 5
-            color: root.activePadMode === 2 ? "#211b9a" : (stemsTabMouse.pressed ? "#373737" : "#1e1e1e")
-            border.color: root.activePadMode === 2 ? "#ffffff" : "#383838"
+            color: root.activePadMode === 2 ? "#211b9a" : (stemsTabMouse.pressed ? "#2a2940" : "#0e0d1a")
+            border.color: root.activePadMode === 2 ? "#ffffff" : "#2a2940"
             border.width: root.activePadMode === 2 ? 1.5 : 1
 
             Text {
@@ -505,7 +505,7 @@ Item {
                 text: "STEM"
                 font.weight: Font.DemiBold
                 font.pixelSize: 9
-                color: root.activePadMode === 2 ? "#ffffff" : "#949494"
+                color: root.activePadMode === 2 ? "#ffffff" : "#9ca1b8"
             }
 
             MouseArea {
@@ -529,13 +529,13 @@ Item {
         Layout.minimumWidth: 14
         Layout.fillHeight: true
         radius: 4
-        color: volumeStepMouse.pressed ? "#373737" : "#1e1e1e"
-        border.color: "#383838"
+        color: volumeStepMouse.pressed ? "#2a2940" : "#0e0d1a"
+        border.color: "#2a2940"
 
         Text {
             anchors.centerIn: parent
             text: volumeStep.step < 0 ? "−" : "+"
-            color: "#dbdbdb"
+            color: "#f4f5fb"
             font.weight: Font.DemiBold
             font.pixelSize: 12
         }

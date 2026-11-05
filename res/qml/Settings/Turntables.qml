@@ -141,7 +141,7 @@ Category {
                         id: usbStatus
 
                         Layout.fillWidth: true
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("If your sound card (EP-136, mixer…) is not in the list, tap here. If it still is missing, close and open the app.")
                         wrapMode: Text.WordWrap
@@ -149,7 +149,7 @@ Category {
                     Connections {
                         function onCommitted(error) {
                             usbStatus.text = error ? error : qsTr("Done: choose the input of each deck below.");
-                            usbStatus.color = error ? "#ff6961" : "#969696";
+                            usbStatus.color = error ? "#ff4d5e" : "#9ca1b8";
                             root.devicesChanged();
                         }
 
@@ -187,7 +187,7 @@ Category {
 
                         Layout.fillWidth: true
                         visible: false
-                        color: "#34c759"
+                        color: "#2bd67b"
                         font.pixelSize: 11
                         text: qsTr("Copied: paste it in the chat.")
                         wrapMode: Text.WordWrap
@@ -231,7 +231,7 @@ Category {
                     Text {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("Inputs of the USB sound card")
                     }
@@ -263,8 +263,8 @@ Category {
                                     Layout.preferredHeight: 70
                                     Layout.alignment: Qt.AlignHCenter
                                     radius: 4
-                                    color: "#0e0e0e"
-                                    border.color: "#343434"
+                                    color: "#0b0a16"
+                                    border.color: "#2a2940"
 
                                     Rectangle {
                                         anchors.bottom: parent.bottom
@@ -274,14 +274,14 @@ Category {
                                         radius: 3
                                         // A dB scale, -60 dB at the bottom
                                         height: (parent.height - 4) * Math.max(0, Math.min(1, 1 + 20 * Math.log(Math.max(peak.value, 1e-6)) / Math.LN10 / 60))
-                                        color: peak.value > 0.9 ? "#ff6961" : (peak.value > 0.5 ? "#ff9f0a" : "#34c759")
+                                        color: peak.value > 0.9 ? "#ff4d5e" : (peak.value > 0.5 ? "#ffb547" : "#2bd67b")
                                     }
                                 }
                                 Text {
                                     elide: Text.ElideRight
                                     Layout.minimumWidth: 0
                                     Layout.alignment: Qt.AlignHCenter
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                     font.pixelSize: 11
                                     text: String(meter.index + 1)
                                 }
@@ -291,7 +291,7 @@ Category {
                             Layout.minimumWidth: 0
                             Layout.fillWidth: true
                             Layout.leftMargin: 10
-                            color: usbInputs.receiving ? "#34c759" : "#ff9f0a"
+                            color: usbInputs.receiving ? "#2bd67b" : "#ffb547"
                             font.pixelSize: 11
                             wrapMode: Text.WordWrap
                             text: usbInputs.receiving
@@ -328,7 +328,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("Audio input")
                         }
@@ -414,7 +414,7 @@ Category {
 
                             Layout.columnSpan: 3
                             Layout.fillWidth: true
-                            color: text === qsTr("Not routed") ? "#ff6961" : "#34c759"
+                            color: text === qsTr("Not routed") ? "#ff4d5e" : "#2bd67b"
                             font.pixelSize: 11
                             function read() {
                                 const name = Mixxx.SoundManager.vinylControlInputName(deckRow.index);
@@ -439,7 +439,7 @@ Category {
                             Layout.minimumWidth: 0
                             Layout.columnSpan: 3
                             Layout.fillWidth: true
-                            color: inputConfigured.value > 0 ? "#34c759" : "#ff9f0a"
+                            color: inputConfigured.value > 0 ? "#2bd67b" : "#ffb547"
                             font.pixelSize: 11
                             wrapMode: Text.WordWrap
                             text: inputConfigured.value > 0
@@ -456,7 +456,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("DVS")
                         }
@@ -467,7 +467,7 @@ Category {
                             Skin.Button {
                                 Layout.preferredHeight: 40
                                 Layout.preferredWidth: 150
-                                activeColor: "#34c759"
+                                activeColor: "#2bd67b"
                                 highlight: dvsEnabled.value > 0
                                 text: dvsEnabled.value > 0 ? qsTr("DVS on") : qsTr("DVS off")
                                 onClicked: dvsEnabled.value = dvsEnabled.value > 0 ? 0 : 1
@@ -475,7 +475,7 @@ Category {
                             Text {
                                 Layout.minimumWidth: 0
                                 Layout.fillWidth: true
-                                color: "#969696"
+                                color: "#9ca1b8"
                                 font.pixelSize: 11
                                 text: qsTr("With DVS on, the turntable moves this deck. It is the same as the DVS button next to the deck.")
                                 wrapMode: Text.WordWrap
@@ -491,7 +491,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("Signal")
                         }
@@ -502,8 +502,8 @@ Category {
                             Rectangle {
                                 Layout.preferredHeight: 120
                                 Layout.preferredWidth: 120
-                                border.color: "#2c2c2c"
-                                color: "#0e0e0e"
+                                border.color: "#1d1b33"
+                                color: "#0b0a16"
                                 radius: 10
 
                                 Mixxx.VinylSignalQuality {
@@ -516,7 +516,7 @@ Category {
                             Text {
                                 Layout.minimumWidth: 0
                                 Layout.fillWidth: true
-                                color: ["#969696", "#34c759", "#ff9f0a", "#ff6961"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
+                                color: ["#9ca1b8", "#2bd67b", "#ffb547", "#ff4d5e"][Math.max(0, Math.min(3, Math.round(vinylStatus.value)))]
                                 font.pixelSize: 11
                                 text: [qsTr("DVS is off on this deck: turn it on with the DVS button of the deck."),
                                     qsTr("DVS on and the timecode is read well."),
@@ -535,7 +535,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("Timecode")
                         }
@@ -555,7 +555,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("Speed")
                         }
@@ -573,7 +573,7 @@ Category {
                         Text {
                             elide: Text.ElideRight
                             Layout.minimumWidth: 0
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.pixelSize: 11
                             text: qsTr("Lead-in (s)")
                         }
@@ -604,7 +604,7 @@ Category {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
                         Layout.preferredWidth: 90
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("Curve")
                     }
@@ -632,7 +632,7 @@ Category {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
                         Layout.preferredWidth: 90
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("Cut edge")
                     }
@@ -696,7 +696,7 @@ Category {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
                         Layout.preferredWidth: 90
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("Hamster")
                     }
@@ -725,9 +725,9 @@ Category {
         property string title
 
         Layout.fillWidth: true
-        border.color: "#2c2c2c"
+        border.color: "#1d1b33"
         border.width: 1
-        color: "#171717"
+        color: "#0e0d1a"
         implicitHeight: cardColumn.implicitHeight + 32
         radius: 12
 
@@ -741,7 +741,7 @@ Category {
             Text {
                 elide: Text.ElideRight
                 Layout.minimumWidth: 0
-                color: "#ececec"
+                color: "#f4f5fb"
                 font.pixelSize: 14
                 font.weight: Font.DemiBold
                 text: card.title
@@ -749,7 +749,7 @@ Category {
             Text {
                 Layout.minimumWidth: 0
                 Layout.fillWidth: true
-                color: "#969696"
+                color: "#9ca1b8"
                 font.pixelSize: 11
                 text: card.subtitle
                 visible: text !== ""

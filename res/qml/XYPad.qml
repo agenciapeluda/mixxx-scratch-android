@@ -18,16 +18,16 @@ Rectangle {
 
     // The look, for the skins
     property string title: qsTr("XY TOUCH PAD")
-    property color accentColor: "#837cff"
-    property color deck1Color: "#837cff"
-    property color deck2Color: "#ff7a3d"
+    property color accentColor: "#8b85ff"
+    property color deck1Color: "#8b85ff"
+    property color deck2Color: "#00c2d8"
     property color wetColor: "#e040fb"
     property color holdColor: "#ab47bc"
-    property color buttonColor: "#242424"
+    property color buttonColor: "#17162a"
     property color buttonBorderColor: "#404040"
-    property color buttonTextColor: "#969696"
-    property color surfaceColor: "#0c0c0c"
-    property color surfaceBorderColor: "#2b2b2b"
+    property color buttonTextColor: "#9ca1b8"
+    property color surfaceColor: "#0b0a16"
+    property color surfaceBorderColor: "#1d1b33"
     property int controlRadius: 4
     property int surfaceRadius: 8
 
@@ -204,7 +204,7 @@ Rectangle {
                     text: "DECK 1"
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: root.targetDeck === "[Channel1]" ? "#0c0c0c" : root.buttonTextColor
+                    color: root.targetDeck === "[Channel1]" ? "#0b0a16" : root.buttonTextColor
                 }
 
                 MouseArea {
@@ -263,7 +263,7 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 54
                 radius: root.controlRadius
-                color: resetMouse.pressed ? "#545454" : "#212121"
+                color: resetMouse.pressed ? "#545454" : "#17162a"
                 border.color: "#545454"
                 border.width: 1
 
@@ -272,7 +272,7 @@ Rectangle {
                     text: qsTr("RESET")
                     font.weight: Font.DemiBold
                     font.pixelSize: 10
-                    color: "#dbdbdb"
+                    color: "#f4f5fb"
                 }
 
                 MouseArea {
@@ -288,7 +288,7 @@ Rectangle {
                 Layout.preferredHeight: 28
                 Layout.preferredWidth: 28
                 radius: 14
-                color: closeMouse.pressed ? "#b71c1c" : "#343434"
+                color: closeMouse.pressed ? "#b71c1c" : "#2a2940"
 
                 Text {
                     anchors.centerIn: parent

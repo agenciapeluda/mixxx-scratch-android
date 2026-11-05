@@ -364,7 +364,7 @@ Category {
                         Rectangle {
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.verticalCenter: parent.verticalCenter
-                            color: '#343434'
+                            color: '#2a2940'
                             height: width / 16 * 9
                             width: parent.width - 160
 

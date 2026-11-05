@@ -136,6 +136,27 @@ Rectangle {
         }
     }
 
+    // ---- Keylock on by default: changing the tempo keeps the key
+    // (time-stretching), like djay and Serato. KEY next to the hot cues
+    // turns it off
+    Repeater {
+        model: Mixxx.Application.configValue("[Cutlab]", "keylock_default", "1") === "1" ? ["[Channel1]", "[Channel2]"] : []
+
+        Item {
+            id: keylockDefault
+
+            required property string modelData
+
+            Mixxx.ControlProxy {
+                id: keylock
+
+                group: keylockDefault.modelData
+                key: "keylock"
+            }
+            Component.onCompleted: keylock.value = 1
+        }
+    }
+
     // ---- The light screen, for phones that lag: no scrolling waveforms,
     // bigger platters, fewer animations
     property bool lite: Mixxx.Application.configValue("[Cutlab]", "lite", "0") === "1"
@@ -155,12 +176,41 @@ Rectangle {
 
     // Turning the browse knob of a controller opens the library; LOAD
     // loads and closes it
-    LibraryComponent.Control {
-        enabled: !library.visible && !folderSetup.visible
+    // The browse knob with the library closed: in the menu it moves and
+    // picks, in the music folders it moves and LOAD builds the library,
+    // elsewhere it opens the library. The settings handle it themselves.
+    Mixxx.ControlProxy {
+        id: modalOpen
 
-        onMoveVertical: offset => root.openLibrary("")
-        onLoadSelectedTrack: (group, play) => {}
-        onLoadSelectedTrackIntoNextAvailableDeck: play => {}
+        group: "[Cutlab]"
+        key: "modal_open"
+    }
+    LibraryComponent.Control {
+        enabled: !library.visible && modalOpen.value <= 0
+
+        onMoveVertical: offset => {
+            if (moreMenu.opened) {
+                for (let i = 0; i < Math.min(8, Math.abs(offset)); ++i) {
+                    Mixxx.Cutlab.sendKey(offset > 0 ? Qt.Key_Down : Qt.Key_Up);
+                }
+            } else if (folderSetup.visible) {
+                folderSetup.knobMove(offset);
+            } else {
+                root.openLibrary("");
+            }
+        }
+        onLoadSelectedTrack: (group, play) => {
+            if (moreMenu.opened) {
+                moreMenu.close();
+            } else if (folderSetup.visible) {
+                folderSetup.apply();
+            }
+        }
+        onLoadSelectedTrackIntoNextAvailableDeck: play => {
+            if (folderSetup.visible) {
+                folderSetup.apply();
+            }
+        }
     }
 
     // An effect turned on from a controller opens the FX pad of its deck,
@@ -417,7 +467,14 @@ Rectangle {
         group: "[Cutlab]"
         key: "browse_press"
         onValueChanged: {
-            if (library.visible) {
+            if (modalOpen.value > 0) {
+                return;
+            }
+            if (moreMenu.opened) {
+                Mixxx.Cutlab.sendKey(Qt.Key_Return);
+            } else if (folderSetup.visible) {
+                folderSetup.knobPress();
+            } else if (library.visible) {
                 library.browsePress();
             } else {
                 root.openLibrary("");

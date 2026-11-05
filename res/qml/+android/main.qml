@@ -67,7 +67,7 @@ ApplicationWindow {
     property var themeDefaults: null
 
     // A skin can change the shared colors (Theme) through a skinTheme
-    // property of its main window, e.g. {"accentColor": "#453de0"}. The
+    // property of its main window, e.g. {"accentColor": "#635bff"}. The
     // values of the previous skin are undone first.
     function applySkinTheme(skinTheme) {
         if (root.themeDefaults === null) {
@@ -180,9 +180,9 @@ ApplicationWindow {
         padding: 18
 
         background: Rectangle {
-            color: "#171717"
+            color: "#0e0d1a"
             radius: 10
-            border.color: "#ff5d6c"
+            border.color: "#ff4d5e"
             border.width: 1
         }
 
@@ -202,7 +202,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 text: qsTr("The music stops. The loaded tracks and the settings are saved.")
                 font.pixelSize: 12
-                color: "#bebebe"
+                color: "#c9cce0"
                 wrapMode: Text.WordWrap
             }
 
@@ -224,7 +224,7 @@ ApplicationWindow {
                 Skin.Button {
                     Layout.preferredHeight: 44
                     Layout.preferredWidth: 140
-                    activeColor: "#ff5d6c"
+                    activeColor: "#ff4d5e"
                     backgroundColor: "#4a1c1c"
                     normalColor: "#ff8f99"
                     font.weight: Font.DemiBold
@@ -238,7 +238,7 @@ ApplicationWindow {
     Rectangle {
         id: splash
         anchors.fill: parent
-        color: "#0e0e0e"
+        color: "#0b0a16"
         z: 99999
         visible: opacity > 0
 
@@ -306,7 +306,7 @@ ApplicationWindow {
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#ececec"
+                color: "#f4f5fb"
                 font.pixelSize: 30
                 font.weight: Font.DemiBold
                 font.letterSpacing: -0.5
@@ -317,7 +317,7 @@ ApplicationWindow {
             Text {
                 id: subtitleText
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: "#969696"
+                color: "#9ca1b8"
                 font.pixelSize: 13
                 font.letterSpacing: 0.2
                 text: qsTr("DJ software for Android")
@@ -343,8 +343,8 @@ ApplicationWindow {
                     width: parent.width
                     height: 6
                     radius: 3
-                    color: "#171717"
-                    border.color: "#2c2c2c"
+                    color: "#0e0d1a"
+                    border.color: "#1d1b33"
                     border.width: 1
                     clip: true
 
@@ -355,7 +355,7 @@ ApplicationWindow {
                         anchors.bottom: parent.bottom
                         width: Math.max(6, parent.width * splash.progress)
                         radius: 3
-                        color: "#837cff"
+                        color: "#8b85ff"
 
                         Behavior on width {
                             NumberAnimation { duration: 150; easing.type: Easing.OutCubic }

@@ -14,14 +14,14 @@ Rectangle {
 
     readonly property bool recording: statusControl.value > 0
     property int fontPixelSize: 10
-    property color idleColor: "#212121"
-    property color idleBorderColor: "#343434"
+    property color idleColor: "#17162a"
+    property color idleBorderColor: "#2a2940"
 
     implicitHeight: 30
     implicitWidth: Math.max(recording ? 76 : 50, recRow.implicitWidth + 16)
     radius: 4
-    color: recording ? "#b71c1c" : (recMouse.pressed ? "#282828" : idleColor)
-    border.color: recording ? "#ff5d6c" : idleBorderColor
+    color: recording ? "#b71c1c" : (recMouse.pressed ? "#1d1b33" : idleColor)
+    border.color: recording ? "#ff4d5e" : idleBorderColor
     border.width: 1
 
     Mixxx.ControlProxy {
@@ -58,13 +58,13 @@ Rectangle {
             Layout.preferredHeight: 8
             Layout.preferredWidth: 8
             radius: 4
-            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#7a7a7a"
+            color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#7d8199"
         }
         Text {
             text: root.recording ? Mixxx.Recording.durationText : "REC"
             font.weight: Font.DemiBold
             font.pixelSize: root.fontPixelSize
-            color: root.recording ? "#ffffff" : "#bebebe"
+            color: root.recording ? "#ffffff" : "#c9cce0"
         }
     }
 
@@ -91,9 +91,9 @@ Rectangle {
         padding: 18
 
         background: Rectangle {
-            color: "#171717"
+            color: "#0e0d1a"
             radius: 10
-            border.color: "#ff5d6c"
+            border.color: "#ff4d5e"
             border.width: 1
         }
 
@@ -112,7 +112,7 @@ Rectangle {
                 Layout.fillWidth: true
                 text: qsTr("%1 recorded. It is in REC of the library.").arg(Mixxx.Recording.durationText)
                 font.pixelSize: 12
-                color: "#bebebe"
+                color: "#c9cce0"
                 wrapMode: Text.WordWrap
             }
             RowLayout {
@@ -131,7 +131,7 @@ Rectangle {
                 Skin.Button {
                     Layout.preferredHeight: 44
                     Layout.preferredWidth: 140
-                    activeColor: "#ff5d6c"
+                    activeColor: "#ff4d5e"
                     backgroundColor: "#4a1c1c"
                     normalColor: "#ff8f99"
                     font.weight: Font.DemiBold

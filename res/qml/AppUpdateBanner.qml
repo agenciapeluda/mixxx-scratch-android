@@ -22,7 +22,7 @@ Rectangle {
     height: 48
     radius: 8
     color: "#e61e1e1e"
-    border.color: "#837cff"
+    border.color: "#8b85ff"
     border.width: 1
 
     Connections {
@@ -43,7 +43,7 @@ Rectangle {
         Text {
             text: "⬆"
             font.pixelSize: 16
-            color: "#837cff"
+            color: "#8b85ff"
         }
 
         Skin.AppUpdateStatusText {
@@ -68,8 +68,8 @@ Rectangle {
             Layout.preferredHeight: 36
             Layout.preferredWidth: 130
             visible: root.update.state === Mixxx.AppUpdate.Available || root.update.state === Mixxx.AppUpdate.Downloaded
-            activeColor: "#837cff"
-            backgroundColor: "#262626"
+            activeColor: "#8b85ff"
+            backgroundColor: "#17162a"
             normalColor: "#ada9ff"
             font.weight: Font.DemiBold
             text: root.update.state === Mixxx.AppUpdate.Downloaded ? qsTr("INSTALL") : qsTr("DOWNLOAD")

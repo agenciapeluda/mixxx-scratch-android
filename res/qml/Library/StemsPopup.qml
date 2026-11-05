@@ -158,7 +158,7 @@ Popup {
             Text {
                 Layout.fillWidth: true
                 wrapMode: Text.WordWrap
-                color: "#dbdbdb"
+                color: "#f4f5fb"
                 font.pixelSize: 12
                 text: {
                     if (!root.allTracks)
@@ -170,7 +170,7 @@ Popup {
             // The model
             Text {
                 text: qsTr("Model")
-                color: "#969696"
+                color: "#9ca1b8"
                 font.pixelSize: 13
             }
 
@@ -196,7 +196,7 @@ Popup {
                 Layout.fillWidth: true
                 visible: root.model === "htdemucs" && root.freeMemoryMb >= 0 && root.freeMemoryMb < 2500
                 wrapMode: Text.WordWrap
-                color: "#f7c86a"
+                color: "#7fe6f2"
                 font.pixelSize: 13
                 text: qsTr("Only %1 GB of memory is free now: HTDemucs may run out of memory. Close other apps or use Spleeter.").arg((root.freeMemoryMb / 1024).toFixed(1))
             }
@@ -208,7 +208,7 @@ Popup {
                 implicitHeight: playingText.implicitHeight + 16
                 radius: 10
                 color: "#3a2a12"
-                border.color: "#ff9f0a"
+                border.color: "#ffb547"
                 border.width: 1
 
                 Text {
@@ -235,7 +235,7 @@ Popup {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text: qsTr("Separate again the tracks that have stems")
-                    color: "#dbdbdb"
+                    color: "#f4f5fb"
                     font.pixelSize: 13
                 }
                 Cutlab.CLButton {
@@ -352,14 +352,14 @@ Popup {
             Text {
                 Layout.fillWidth: true
                 text: choice.summary
-                color: "#dbdbdb"
+                color: "#f4f5fb"
                 font.pixelSize: 12
                 wrapMode: Text.WordWrap
             }
             Text {
                 Layout.fillWidth: true
                 text: choice.speed > 0 ? qsTr("This device: ~%1 per 5 minute track").arg(StemsText.trackTime(choice.speed)) : choice.ranges
-                color: choice.speed > 0 ? "#574ff7" : "#969696"
+                color: choice.speed > 0 ? "#574ff7" : "#9ca1b8"
                 font.pixelSize: 12
                 wrapMode: Text.WordWrap
             }

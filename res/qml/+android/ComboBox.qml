@@ -68,7 +68,7 @@ ComboBox {
         readonly property bool selected: root.currentIndex === itemDlgt.index
 
         background: Rectangle {
-            color: itemDlgt.down ? "#3a3a3d" : (itemDlgt.highlighted ? "#2f2f32" : "transparent")
+            color: itemDlgt.down ? "#2a2940" : (itemDlgt.highlighted ? "#2f2f32" : "transparent")
             radius: 8
         }
         // The chosen entry is ticked and in the accent color
@@ -159,8 +159,8 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: "#1c1c1c"
-            border.color: "#343434"
+            color: "#0e0d1a"
+            border.color: "#2a2940"
             border.width: 1
             radius: 8
 
@@ -196,7 +196,7 @@ ComboBox {
                     policy: popupListView.contentHeight > popupListView.height ? ScrollBar.AlwaysOn : ScrollBar.AsNeeded
                     width: 8
                     contentItem: Rectangle {
-                        color: popupScrollBar.pressed ? "#837cff" : "#666666"
+                        color: popupScrollBar.pressed ? "#8b85ff" : "#5a5f75"
                         radius: 4
                     }
                 }

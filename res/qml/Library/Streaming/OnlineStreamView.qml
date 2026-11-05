@@ -82,8 +82,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#232323"
-            border.color: "#2c2c2c"
+            color: "#17162a"
+            border.color: "#1d1b33"
             border.width: 1
 
             RowLayout {
@@ -124,7 +124,7 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#bebebe"
+                    color: "#c9cce0"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 320
                 }
@@ -148,8 +148,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#171717"
-            border.color: "#2c2c2c"
+            color: "#0e0d1a"
+            border.color: "#1d1b33"
             border.width: 1
 
             RowLayout {
@@ -166,8 +166,8 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 13
                     background: Rectangle {
-                        color: "#2a2a2a"
-                        border.color: searchInput.activeFocus ? "#ff8f57" : "#3a3a3a"
+                        color: "#1d1b33"
+                        border.color: searchInput.activeFocus ? "#7fe6f2" : "#3a3a3a"
                         border.width: 1
                         radius: 4
                     }
@@ -215,8 +215,8 @@ Item {
                                 width: chipText.implicitWidth + 20
                                 height: 32
                                 radius: 16
-                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#e2622a" : "#212121"
-                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#ff8f57" : "#404040"
+                                color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#00c2d8" : "#17162a"
+                                border.color: root.currentGenre === modelData.genre && searchInput.text === "" ? "#7fe6f2" : "#404040"
                                 border.width: 1
 
                                 Text {
@@ -273,8 +273,8 @@ Item {
                     id: trackDelegate
                     width: tracksList.width
                     height: 58
-                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
-                    border.color: "#212121"
+                    color: index % 2 === 0 ? "#0e0d1a" : "#0e0d1a"
+                    border.color: "#17162a"
                     border.width: 1
 
                     readonly property var track: modelData
@@ -353,7 +353,7 @@ Item {
                                 text: track.genre || ""
                                 font.pixelSize: 9
                                 font.weight: Font.DemiBold
-                                color: "#f7c86a"
+                                color: "#7fe6f2"
                             }
                         }
 
@@ -366,7 +366,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#7a7a7a"
+                            color: "#7d8199"
                         }
 
                         // Cache status badge
@@ -375,7 +375,7 @@ Item {
                             Layout.preferredWidth: cacheStatusText.implicitWidth + 10
                             radius: 10
                             color: track.isCached ? "#00e67622" : "#ff910022"
-                            border.color: track.isCached ? "#2bd67b" : "#ff8f57"
+                            border.color: track.isCached ? "#2bd67b" : "#7fe6f2"
                             border.width: 1
 
                             Text {
@@ -383,7 +383,7 @@ Item {
                                 anchors.centerIn: parent
                                 font.pixelSize: 9
                                 font.weight: Font.DemiBold
-                                color: track.isCached ? "#2bd67b" : "#ff8f57"
+                                color: track.isCached ? "#2bd67b" : "#7fe6f2"
                                 text: track.isCached ? qsTr("Ready") : qsTr("Stream")
                             }
                         }
@@ -426,7 +426,7 @@ Item {
                         height: 3
                         visible: trackDelegate.isDownloading
                         width: parent.width * Math.max(0.05, trackDelegate.downloadProg)
-                        color: "#ff8f57"
+                        color: "#7fe6f2"
                     }
                 }
 
@@ -445,7 +445,7 @@ Item {
                         Text {
                             text: qsTr("Explore music by genre or search for any track or artist")
                             font.pixelSize: 13
-                            color: "#7a7a7a"
+                            color: "#7d8199"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -459,8 +459,8 @@ Item {
                 width: 140
                 height: 40
                 radius: 6
-                color: "#282828"
-                border.color: "#ff8f57"
+                color: "#1d1b33"
+                border.color: "#7fe6f2"
                 border.width: 1
                 visible: root.isBusy
 
@@ -471,7 +471,7 @@ Item {
                     Text {
                         text: ""
                         font.pixelSize: 16
-                        color: "#ff8f57"
+                        color: "#7fe6f2"
                         RotationAnimation on rotation {
                             from: 0
                             to: 360

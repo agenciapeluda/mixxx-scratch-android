@@ -193,7 +193,7 @@ Category {
                         // anchors.left: parent.left
                         // anchors.right: parent.right
                         Layout.minimumWidth: sourcePane.implicitWidth
-                        color: '#0e0e0e'
+                        color: '#0b0a16'
                         implicitHeight: sourcePane.implicitHeight + 20
 
                         ColumnLayout {
@@ -234,8 +234,8 @@ Category {
                                     }
                                 }
                                 SettingComponents.FormButton {
-                                    activeColor: "#969696"
-                                    backgroundColor: "#343434"
+                                    activeColor: "#9ca1b8"
+                                    backgroundColor: "#2a2940"
                                     opacity: enabled ? 1.0 : 0.5
                                     text: qsTr("Add")
 
@@ -287,7 +287,7 @@ Category {
                                     }
                                     Rectangle {
                                         anchors.fill: parent
-                                        color: index % 2 == 0 ? '#343434' : '#2b2b2b'
+                                        color: index % 2 == 0 ? '#2a2940' : '#1d1b33'
 
                                         // width: 180; height: 40
                                         RowLayout {
@@ -324,8 +324,8 @@ Category {
                                             SettingComponents.FormButton {
                                                 id: relinkButton
 
-                                                activeColor: "#969696"
-                                                backgroundColor: "#343434"
+                                                activeColor: "#9ca1b8"
+                                                backgroundColor: "#2a2940"
                                                 opacity: enabled ? 1.0 : 0.5
                                                 text: modelData.relink ? qsTr("Save to proceed") : qsTr("Relink")
                                                 visible: selected && modelData.trackCount !== undefined && !Mixxx.Library.scanner.running
@@ -352,7 +352,7 @@ Category {
                                                 SettingComponents.FormButton {
                                                     id: actionButton
 
-                                                    activeColor: "#969696"
+                                                    activeColor: "#9ca1b8"
                                                     anchors.centerIn: parent
                                                     backgroundColor: "#5a2a30"
                                                     opacity: enabled ? 1.0 : 0.5
@@ -402,7 +402,7 @@ Category {
                                                 }
                                             }
                                             Text {
-                                                color: '#626262'
+                                                color: '#5a5f75'
                                                 font.italic: modelData.trackCount === undefined || modelData.totalMinute === undefined || !!modelData.relink
                                                 font.pixelSize: 14
                                                 font.weight: Font.Medium
@@ -458,8 +458,8 @@ Category {
                                 }
                             }
                             SettingComponents.FormButton {
-                                activeColor: "#969696"
-                                backgroundColor: Mixxx.Library.scanner.cancelling ? "#969696" : "#635bff"
+                                activeColor: "#9ca1b8"
+                                backgroundColor: Mixxx.Library.scanner.cancelling ? "#9ca1b8" : "#635bff"
                                 enabled: !Mixxx.Library.scanner.cancelling
                                 text: qsTr("Cancel")
 
@@ -957,7 +957,7 @@ Category {
         height: 20
 
         SettingComponents.FormButton {
-            activeColor: "#969696"
+            activeColor: "#9ca1b8"
             anchors.left: parent.left
             backgroundColor: "#5a2a30"
             opacity: enabled ? 1.0 : 0.5
@@ -980,8 +980,8 @@ Category {
                 text: ""
             }
             SettingComponents.FormButton {
-                activeColor: "#969696"
-                backgroundColor: "#343434"
+                activeColor: "#9ca1b8"
+                backgroundColor: "#2a2940"
                 opacity: enabled ? 1.0 : 0.5
                 text: qsTr("Cancel")
                 visible: root.dirty
@@ -991,8 +991,8 @@ Category {
                 }
             }
             SettingComponents.FormButton {
-                activeColor: "#969696"
-                backgroundColor: root.dirty ? "#635bff" : "#343434"
+                activeColor: "#9ca1b8"
+                backgroundColor: root.dirty ? "#635bff" : "#2a2940"
                 enabled: root.dirty
                 opacity: enabled ? 1.0 : 0.5
                 text: qsTr("Save")

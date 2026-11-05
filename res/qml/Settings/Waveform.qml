@@ -624,7 +624,7 @@ Category {
         height: 20
 
         Setting.FormButton {
-            activeColor: "#969696"
+            activeColor: "#9ca1b8"
             anchors.left: parent.left
             backgroundColor: "#5a2a30"
             opacity: enabled ? 1.0 : 0.5
@@ -647,8 +647,8 @@ Category {
                 text: ""
             }
             Setting.FormButton {
-                activeColor: "#969696"
-                backgroundColor: "#343434"
+                activeColor: "#9ca1b8"
+                backgroundColor: "#2a2940"
                 opacity: enabled ? 1.0 : 0.5
                 text: "Cancel"
                 visible: root.dirty
@@ -658,8 +658,8 @@ Category {
                 }
             }
             Setting.FormButton {
-                activeColor: "#969696"
-                backgroundColor: root.dirty ? "#635bff" : "#343434"
+                activeColor: "#9ca1b8"
+                backgroundColor: root.dirty ? "#635bff" : "#2a2940"
                 enabled: root.dirty
                 opacity: enabled ? 1.0 : 0.5
                 text: "Save"

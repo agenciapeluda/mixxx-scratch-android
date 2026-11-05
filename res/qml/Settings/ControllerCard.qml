@@ -54,7 +54,7 @@ Item {
 
         anchors.fill: parent
         anchors.margins: 8
-        color: '#181818'
+        color: '#0e0d1a'
         radius: root.focused ? 18 : 22
 
         Item {

@@ -12,6 +12,22 @@ Rectangle {
     property var candidates: []
     property var chosen: ({})
     property bool searching: false
+    // The folder under the browse knob of a controller
+    property int knobIndex: 0
+
+    // The controller: BROWSE turned moves, pressed turns the folder on or
+    // off, LOAD builds the library
+    function knobMove(offset) {
+        root.knobIndex = Math.max(0, Math.min(root.candidates.length - 1, root.knobIndex + offset));
+    }
+    function knobPress() {
+        const folder = root.candidates[root.knobIndex];
+        if (folder) {
+            const chosen = Object.assign({}, root.chosen);
+            chosen[folder.path] = !(root.chosen[folder.path] === true);
+            root.chosen = chosen;
+        }
+    }
 
     signal done
 
@@ -115,12 +131,13 @@ Rectangle {
                     id: folderRow
 
                     required property var modelData
+                    required property int index
                     readonly property bool on: root.chosen[modelData.path] === true
 
                     width: column.width
                     height: 66
                     radius: 14
-                    color: Style.panel
+                    color: root.knobIndex === index ? Style.raised : Style.panel
                     border.width: 2
                     border.color: on ? Style.accent : "transparent"
 

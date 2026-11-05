@@ -277,7 +277,9 @@ Item {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
+                    // The last seconds blink on the beat, like Rekordbox
                     color: endOfTrack.value > 0 ? Style.danger : Style.text
+                    opacity: endOfTrack.value > 0 && beatActive.value > 0 ? 0.35 : 1
                     font.family: Style.mono
                     font.weight: Font.Medium
                     font.pixelSize: root.fs(18)

@@ -105,8 +105,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#232323"
-            border.color: "#2c2c2c"
+            color: "#17162a"
+            border.color: "#1d1b33"
             border.width: 1
 
             RowLayout {
@@ -120,7 +120,7 @@ Item {
                     font.weight: Font.DemiBold
                     font.pixelSize: 13
                     font.letterSpacing: 1
-                    color: "#837cff"
+                    color: "#8b85ff"
                 }
 
                 Rectangle {
@@ -128,7 +128,7 @@ Item {
                     Layout.preferredWidth: statusText.implicitWidth + 14
                     radius: 11
                     color: Mixxx.StreamingManager.isSubsonicConnected ? "#00e67622" : "#ff525222"
-                    border.color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff5d6c"
+                    border.color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff4d5e"
                     border.width: 1
 
                     Text {
@@ -136,7 +136,7 @@ Item {
                         anchors.centerIn: parent
                         font.pixelSize: 10
                         font.weight: Font.DemiBold
-                        color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff5d6c"
+                        color: Mixxx.StreamingManager.isSubsonicConnected ? "#2bd67b" : "#ff4d5e"
                         text: Mixxx.StreamingManager.isSubsonicConnected ? qsTr("● Connected") : qsTr("● Disconnected")
                     }
                 }
@@ -147,7 +147,7 @@ Item {
                     visible: root.statusMessage !== ""
                     text: root.statusMessage
                     font.pixelSize: 11
-                    color: "#bebebe"
+                    color: "#c9cce0"
                     elide: Text.ElideRight
                     Layout.maximumWidth: 280
                 }
@@ -170,7 +170,7 @@ Item {
             implicitHeight: 90
             visible: root.showSettings
             clip: true
-            color: "#1a1a1a"
+            color: "#0e0d1a"
             border.color: "#303030"
             border.width: 1
 
@@ -196,8 +196,8 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#282828"
-                            border.color: serverUrlField.activeFocus ? "#837cff" : "#343434"
+                            color: "#1d1b33"
+                            border.color: serverUrlField.activeFocus ? "#8b85ff" : "#2a2940"
                             border.width: 1
                             radius: 4
                         }
@@ -213,8 +213,8 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#282828"
-                            border.color: userField.activeFocus ? "#837cff" : "#343434"
+                            color: "#1d1b33"
+                            border.color: userField.activeFocus ? "#8b85ff" : "#2a2940"
                             border.width: 1
                             radius: 4
                         }
@@ -231,8 +231,8 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 12
                         background: Rectangle {
-                            color: "#282828"
-                            border.color: passField.activeFocus ? "#837cff" : "#343434"
+                            color: "#1d1b33"
+                            border.color: passField.activeFocus ? "#8b85ff" : "#2a2940"
                             border.width: 1
                             radius: 4
                         }
@@ -263,7 +263,7 @@ Item {
                     Text {
                         text: qsTr("Compatible with Navidrome, Funkwhale, Ampache, Subsonic, Airsonic and Nextcloud Music.")
                         font.pixelSize: 11
-                        color: "#7a7a7a"
+                        color: "#7d8199"
                         Layout.fillWidth: true
                     }
 
@@ -286,8 +286,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 46
-            color: "#171717"
-            border.color: "#2c2c2c"
+            color: "#0e0d1a"
+            border.color: "#1d1b33"
             border.width: 1
 
             RowLayout {
@@ -329,8 +329,8 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 13
                     background: Rectangle {
-                        color: "#2a2a2a"
-                        border.color: searchInput.activeFocus ? "#837cff" : "#3a3a3a"
+                        color: "#1d1b33"
+                        border.color: searchInput.activeFocus ? "#8b85ff" : "#3a3a3a"
                         border.width: 1
                         radius: 4
                     }
@@ -359,7 +359,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.activeMode === "playlist_tracks" ? 34 : 0
             visible: root.activeMode === "playlist_tracks"
-            color: "#282828"
+            color: "#1d1b33"
             clip: true
 
             RowLayout {
@@ -407,7 +407,7 @@ Item {
                         implicitWidth: 10
                         implicitHeight: 40
                         radius: 5
-                        color: subScroll.pressed ? "#837cff" : "#595959"
+                        color: subScroll.pressed ? "#8b85ff" : "#595959"
                     }
                 }
 
@@ -415,8 +415,8 @@ Item {
                     id: trackDelegate
                     width: tracksList.width
                     height: 56
-                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
-                    border.color: "#212121"
+                    color: index % 2 === 0 ? "#0e0d1a" : "#0e0d1a"
+                    border.color: "#17162a"
                     border.width: 1
 
                     readonly property var song: modelData
@@ -474,7 +474,7 @@ Item {
                                 Text {
                                     text: song.artist + (song.album ? (" • " + song.album) : "")
                                     font.pixelSize: 11
-                                    color: "#969696"
+                                    color: "#9ca1b8"
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -485,7 +485,7 @@ Item {
                         Rectangle {
                             Layout.preferredHeight: 18
                             Layout.preferredWidth: formatText.implicitWidth + 8
-                            color: "#262626"
+                            color: "#17162a"
                             radius: 3
 
                             Text {
@@ -507,7 +507,7 @@ Item {
                                 return m + ":" + (sec < 10 ? "0" : "") + sec;
                             }
                             font.pixelSize: 11
-                            color: "#7a7a7a"
+                            color: "#7d8199"
                         }
 
                         // Offline Cache Status Pill
@@ -567,7 +567,7 @@ Item {
                         height: 3
                         visible: trackDelegate.isDownloading
                         width: parent.width * Math.max(0.05, trackDelegate.downloadProg)
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
                 }
 
@@ -588,7 +588,7 @@ Item {
                                 ? qsTr("Type an artist, title or album to search your server")
                                 : qsTr("Connect your Navidrome / Subsonic server in the settings above")
                             font.pixelSize: 13
-                            color: "#7a7a7a"
+                            color: "#7d8199"
                             horizontalAlignment: Text.AlignHCenter
                             Layout.alignment: Qt.AlignHCenter
                         }
@@ -613,8 +613,8 @@ Item {
                 delegate: Rectangle {
                     width: playlistsList.width
                     height: 52
-                    color: index % 2 === 0 ? "#1c1c1c" : "#181818"
-                    border.color: "#212121"
+                    color: index % 2 === 0 ? "#0e0d1a" : "#0e0d1a"
+                    border.color: "#17162a"
                     border.width: 1
 
                     RowLayout {
@@ -644,7 +644,7 @@ Item {
                             Text {
                                 text: qsTr("%1 tracks").arg(modelData.songCount)
                                 font.pixelSize: 11
-                                color: "#969696"
+                                color: "#9ca1b8"
                             }
                         }
 
@@ -671,8 +671,8 @@ Item {
                 width: 140
                 height: 40
                 radius: 6
-                color: "#282828"
-                border.color: "#837cff"
+                color: "#1d1b33"
+                border.color: "#8b85ff"
                 border.width: 1
                 visible: root.isBusy
 
@@ -683,7 +683,7 @@ Item {
                     Text {
                         text: ""
                         font.pixelSize: 16
-                        color: "#837cff"
+                        color: "#8b85ff"
                         RotationAnimation on rotation {
                             from: 0
                             to: 360

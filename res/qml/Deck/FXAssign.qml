@@ -41,7 +41,7 @@ Item {
     Label {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        color: '#626262'
+        color: '#5a5f75'
         font.pixelSize: 8
         text: qsTr("FX Assign")
     }

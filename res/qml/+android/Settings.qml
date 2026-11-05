@@ -60,7 +60,7 @@ Popup {
         color: root.backgroundColor
         opacity: parent.radius < 0 ? Math.max(0.1, 1 + parent.radius / 8) : 1
         radius: 12
-        border.color: "#2c2c2e"
+        border.color: "#1d1b33"
         border.width: 1
     }
 

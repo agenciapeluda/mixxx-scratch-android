@@ -22,9 +22,9 @@ Popup {
     onAboutToShow: root.needsPermission = false
 
     background: Rectangle {
-        color: "#171717"
+        color: "#0e0d1a"
         radius: 10
-        border.color: "#837cff"
+        border.color: "#8b85ff"
         border.width: 1
     }
 
@@ -44,7 +44,7 @@ Popup {
             Layout.fillWidth: true
             text: qsTr("Mixxx closes while Android installs the update, so the music stops. Your library and settings are kept.")
             font.pixelSize: 12
-            color: "#bebebe"
+            color: "#c9cce0"
             wrapMode: Text.WordWrap
         }
 
@@ -75,8 +75,8 @@ Popup {
             Skin.Button {
                 Layout.preferredHeight: 44
                 Layout.preferredWidth: 140
-                activeColor: "#837cff"
-                backgroundColor: "#262626"
+                activeColor: "#8b85ff"
+                backgroundColor: "#17162a"
                 normalColor: "#ada9ff"
                 font.weight: Font.DemiBold
                 text: qsTr("INSTALL")

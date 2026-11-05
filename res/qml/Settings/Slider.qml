@@ -93,7 +93,7 @@ Item {
             x: control.leftPadding + 7
 
             Rectangle {
-                color: "#181818"
+                color: "#0e0d1a"
                 height: 4
                 radius: 2
                 width: parent.width
@@ -159,7 +159,7 @@ Item {
                 id: handleEffect1
 
                 anchors.fill: parent
-                color: "#353535"
+                color: "#2a2940"
                 horizontalOffset: 0
                 radius: 16.0
                 samples: 16
@@ -215,7 +215,7 @@ Item {
             id: effect2
 
             anchors.fill: backgroundInput
-            color: "#343434"
+            color: "#2a2940"
             horizontalOffset: 0
             radius: 12
             samples: 24

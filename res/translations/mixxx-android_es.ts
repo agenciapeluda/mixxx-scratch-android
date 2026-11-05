@@ -17,7 +17,7 @@
     </message>
     <message>
         <source>Cutlab is made by xhellvirax. It is a fork of the Android port of Mixxx by JaviLabarumDJ and Angelos Exarchos, itself based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Interface font: Roboto, Apache 2.0 license.</source>
-        <translation>Cutlab está hecho por xhellvirax. Es un fork del port de Mixxx para Android de JaviLabarumDJ y Angelos Exarchos, que a su vez se basa en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografía de la interfaz: Roboto, licencia Apache 2.0.</translation>
+        <translation>Cutlab está hecho por xhellvirax. Es un fork del port de Mixxx para Android de JaviLabarumDJ y Angelos Exarchos, que a su vez se basa en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografías: Inter Tight y JetBrains Mono, licencia SIL Open Font 1.1.</translation>
     </message>
     <message>
         <source>by xhellvirax</source>
@@ -50,7 +50,7 @@ This edition of Mixxx for Android was born from a personal need as a DJ: to have
 • Built independently with a passion for music, for the DJ community.</source>
         <translation>Durante mucho tiempo, las opciones de software DJ en móviles han estado limitadas por suscripciones caras, latencias inaceptables o interfaces poco profesionales.
 
-Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tener una cabina completa, libre, potente y ultra-estable en el bolsillo.
+Esta edición de Cutlab para Android nace de una necesidad personal como DJ: tener una cabina completa, libre, potente y ultra-estable en el bolsillo.
 
 • Motor de audio profesional en tiempo real C++ sin cortes.
 • Soporte para controladoras DJ USB externas (plug &amp; play por OTG).
@@ -95,7 +95,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>Look for updates when Mixxx starts (once a day at most). The versions are read from the GitHub releases of Mixxx Android, and nothing is downloaded without asking.</source>
-        <translation>Buscar actualizaciones al abrir Mixxx (una vez al día como mucho). Las versiones se consultan en las releases de Mixxx Android en GitHub, y no se descarga nada sin preguntar.</translation>
+        <translation>Buscar actualizaciones al abrir Cutlab (una vez al día como mucho). Las versiones se consultan en las releases de Cutlab Android en GitHub, y no se descarga nada sin preguntar.</translation>
     </message>
     <message>
         <source>Based on the open source Mixxx project. Mobile adaptation by JaviLabarum.</source>
@@ -103,7 +103,7 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
 <message>
         <source>Live stems in Mixxx: his mixxx-stems project inspired the stem separation of this app.</source>
-        <translation>Stems en directo en Mixxx: su proyecto mixxx-stems inspiró la separación de stems de esta app.</translation>
+        <translation>Stems en directo en Cutlab: su proyecto mixxx-stems inspiró la separación de stems de esta app.</translation>
     </message>
     <message>
         <source>Beatgrid editing, Rekordbox playlists and dates, library backups and controller navigation.</source>
@@ -180,15 +180,15 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     <name>AppUpdateInstallPopup</name>
     <message>
         <source>Install Mixxx %1?</source>
-        <translation>¿Instalar Mixxx %1?</translation>
+        <translation>¿Instalar Cutlab %1?</translation>
     </message>
     <message>
         <source>Mixxx closes while Android installs the update, so the music stops. Your library and settings are kept.</source>
-        <translation>Mixxx se cierra mientras Android instala la actualización, así que la música se detiene. Se conservan la biblioteca y los ajustes.</translation>
+        <translation>Cutlab se cierra mientras Android instala la actualización, así que la música se detiene. Se conservan la biblioteca y los ajustes.</translation>
     </message>
     <message>
         <source>Android has opened its setting to install apps from Mixxx: allow it, come back and press INSTALL again.</source>
-        <translation>Android ha abierto su ajuste para instalar apps desde Mixxx: actívalo, vuelve y pulsa INSTALAR otra vez.</translation>
+        <translation>Android ha abierto su ajuste para instalar apps desde Cutlab: actívalo, vuelve y pulsa INSTALAR otra vez.</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -231,15 +231,15 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>Mixxx is up to date.</source>
-        <translation>Mixxx está actualizado.</translation>
+        <translation>Cutlab está actualizado.</translation>
     </message>
     <message>
         <source>Mixxx %1 is available (%2).</source>
-        <translation>Mixxx %1 está disponible (%2).</translation>
+        <translation>Cutlab %1 está disponible (%2).</translation>
     </message>
     <message>
         <source>Downloading Mixxx %1… %2%</source>
-        <translation>Descargando Mixxx %1… %2%</translation>
+        <translation>Descargando Cutlab %1… %2%</translation>
     </message>
     <message>
         <source>Checking the download…</source>
@@ -247,11 +247,11 @@ Esta edición de Mixxx para Android nace de una necesidad personal como DJ: tene
     </message>
     <message>
         <source>Mixxx %1 is ready to install.</source>
-        <translation>Mixxx %1 está lista para instalar.</translation>
+        <translation>Cutlab %1 está lista para instalar.</translation>
     </message>
     <message>
         <source>Look for a newer version of Mixxx Android.</source>
-        <translation>Busca si hay una versión más nueva de Mixxx Android.</translation>
+        <translation>Busca si hay una versión más nueva de Cutlab Android.</translation>
     </message>
 </context>
 <context>
@@ -557,7 +557,7 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>To read Rekordbox and Engine DJ playlists from a USB drive, Android has to grant Mixxx access to all files. Enable it on the screen that opens, then tap the section again.</source>
-        <translation>Para leer las playlists de Rekordbox y Engine DJ de un USB, Android tiene que permitir a Mixxx el acceso a todos los archivos. Actívalo en la pantalla que se abre y vuelve a tocar la sección.</translation>
+        <translation>Para leer las playlists de Rekordbox y Engine DJ de un USB, Android tiene que permitir a Cutlab el acceso a todos los archivos. Actívalo en la pantalla que se abre y vuelve a tocar la sección.</translation>
     </message>
     <message>
         <source>NOT NOW</source>
@@ -774,7 +774,7 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>MIDI controllers (like the DDJ-400) need no permission. If Android asks 'Allow Mixxx to access the USB device?' (HID controllers), tick 'Always use for this device' and press OK.</source>
-        <translation>Las controladoras MIDI (como la DDJ-400) no necesitan permiso. Si Android pregunta '¿Permitir a Mixxx acceder al dispositivo USB?' (controladoras HID), marca 'Usar siempre para este dispositivo' y pulsa ACEPTAR.</translation>
+        <translation>Las controladoras MIDI (como la DDJ-400) no necesitan permiso. Si Android pregunta '¿Permitir a Cutlab acceder al dispositivo USB?' (controladoras HID), marca 'Usar siempre para este dispositivo' y pulsa ACEPTAR.</translation>
     </message>
     <message>
         <source>Enable audio on the controller (main + CUE headphones)</source>
@@ -794,7 +794,7 @@ Usa el modo avanzado para verla</translation>
     </message>
     <message>
         <source>✓ &lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.&lt;br&gt;To add a new or modified mapping, copy it to the public Mixxx folder and press 'Scan for USB devices':</source>
-        <translation>&lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Mixxx y pulsa 'Buscar Dispositivos USB':</translation>
+        <translation>&lt;b&gt;Pioneer DDJ-400&lt;/b&gt;, FLX4, Inpulse y +100 mesas traen su mapeo oficial: al conectarlas por primera vez se les asigna y activa automáticamente.&lt;br&gt;Si quieres añadir un mapeo nuevo o modificado, cópialo a la carpeta pública de Cutlab y pulsa 'Buscar Dispositivos USB':</translation>
     </message>
     <message>
         <source>✓ Copied!</source>
@@ -1222,7 +1222,7 @@ Cue</translation>
     </message>
     <message>
         <source>Library and effect names change after restarting Mixxx.</source>
-        <translation>Los nombres de la biblioteca y de los efectos cambian al reiniciar Mixxx.</translation>
+        <translation>Los nombres de la biblioteca y de los efectos cambian al reiniciar Cutlab.</translation>
     </message>
     <message>
         <source>Skin</source>
@@ -1358,7 +1358,7 @@ Cue</translation>
     </message>
     <message>
         <source>Mixxx (no blinking)</source>
-        <translation>Mixxx (sin parpadeo)</translation>
+        <translation>Cutlab (sin parpadeo)</translation>
     </message>
     <message>
         <source>Track load point</source>
@@ -1577,7 +1577,7 @@ Cue</translation>
     </message>
     <message>
         <source>To read Rekordbox and Engine DJ playlists from a USB drive, Android has to grant Mixxx access to all files. Enable it on the screen that opens, then tap the section again.</source>
-        <translation>Para leer las playlists de Rekordbox y Engine DJ de un USB, Android tiene que permitir a Mixxx el acceso a todos los archivos. Actívalo en la pantalla que se abre y vuelve a tocar la sección.</translation>
+        <translation>Para leer las playlists de Rekordbox y Engine DJ de un USB, Android tiene que permitir a Cutlab el acceso a todos los archivos. Actívalo en la pantalla que se abre y vuelve a tocar la sección.</translation>
     </message>
     <message>
         <source>NOT NOW</source>
@@ -1605,7 +1605,7 @@ Cue</translation>
     </message>
     <message>
         <source>Choose the folders on your device where you keep your music. Mixxx will watch them and index the tracks it finds automatically.</source>
-        <translation>Elige las carpetas de tu móvil donde guardas tu música. Mixxx monitorizará e indexará automáticamente las pistas encontradas.</translation>
+        <translation>Elige las carpetas de tu móvil donde guardas tu música. Cutlab monitorizará e indexará automáticamente las pistas encontradas.</translation>
     </message>
     <message>
         <source>Folders currently added:</source>
@@ -1705,7 +1705,7 @@ Cue</translation>
     </message>
     <message>
         <source>Saves the library (tracks, BPM, key, cues, playlists, crates and history) and the settings to %1. That folder is kept when Mixxx is uninstalled or its data is cleared, so a backup can be restored afterwards.</source>
-        <translation>Guarda la librería (pistas, BPM, tonalidad, cues, playlists, cajas e historial) y los ajustes en %1. Esa carpeta se conserva al desinstalar Mixxx o borrar sus datos, así que la copia se puede restaurar después.</translation>
+        <translation>Guarda la librería (pistas, BPM, tonalidad, cues, playlists, cajas e historial) y los ajustes en %1. Esa carpeta se conserva al desinstalar Cutlab o borrar sus datos, así que la copia se puede restaurar después.</translation>
     </message>
     <message>
         <source>Back up now</source>
@@ -1841,7 +1841,7 @@ Cue</translation>
     </message>
     <message>
         <source>Your current library and settings are replaced by the backup (a copy of them is kept). Mixxx closes; open it again to finish.</source>
-        <translation>La librería y los ajustes actuales se sustituyen por la copia (se guarda una copia de ellos). Mixxx se cierra; ábrelo de nuevo para terminar.</translation>
+        <translation>La librería y los ajustes actuales se sustituyen por la copia (se guarda una copia de ellos). Cutlab se cierra; ábrelo de nuevo para terminar.</translation>
     </message>
     <message>
         <source>This or a parent directory is already in your library.</source>
@@ -2725,7 +2725,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Mixxx USB driver</source>
-        <translation>Driver USB de Mixxx</translation>
+        <translation>Driver USB de Cutlab</translation>
     </message>
     <message>
         <source>auto</source>
@@ -2753,7 +2753,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Mixxx drives the USB sound card directly when Android cannot use all of its channels (e.g. the headphones of a DJ controller). Changes take effect after restarting Mixxx.</source>
-        <translation>Mixxx controla directamente la tarjeta de sonido USB cuando Android no puede usar todos sus canales (p. ej. los auriculares de una controladora DJ). Los cambios se aplican al reiniciar Mixxx.</translation>
+        <translation>Cutlab controla directamente la tarjeta de sonido USB cuando Android no puede usar todos sus canales (p. ej. los auriculares de una controladora DJ). Los cambios se aplican al reiniciar Cutlab.</translation>
     </message>
     <message>
         <source>Main output only</source>
@@ -3321,7 +3321,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Copies the files to the folder below and creates a Mixxx playlist with this name, in the order of the Rekordbox playlist. Beatgrids, cues, keys and colors from Rekordbox are kept. Copying the playlist again only copies new files and updates the Mixxx playlist. Other playlists and folders with the same name are never replaced.</source>
-        <translation>Copia los archivos a la carpeta de abajo y crea una playlist de Mixxx con este nombre, en el orden de la playlist de Rekordbox. Se conservan los beatgrids, cues, tonalidades y colores de Rekordbox. Si vuelves a copiarla, solo se copian los archivos nuevos y se actualiza la playlist de Mixxx. Nunca se sustituyen otras playlists ni carpetas con el mismo nombre.</translation>
+        <translation>Copia los archivos a la carpeta de abajo y crea una playlist de Cutlab con este nombre, en el orden de la playlist de Rekordbox. Se conservan los beatgrids, cues, tonalidades y colores de Rekordbox. Si vuelves a copiarla, solo se copian los archivos nuevos y se actualiza la playlist de Cutlab. Nunca se sustituyen otras playlists ni carpetas con el mismo nombre.</translation>
     </message>
     <message>
         <source>Playlist name</source>
@@ -3834,7 +3834,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Quit Mixxx?</source>
-        <translation>¿Salir de Mixxx?</translation>
+        <translation>¿Salir de Cutlab?</translation>
     </message>
     <message>
         <source>The music stops. The loaded tracks and the settings are saved.</source>
@@ -3885,7 +3885,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Could not create the folder %1. Grant Mixxx access to all files and try again.</source>
-        <translation>No se pudo crear la carpeta %1. Da a Mixxx acceso a todos los archivos e inténtalo de nuevo.</translation>
+        <translation>No se pudo crear la carpeta %1. Da a Cutlab acceso a todos los archivos e inténtalo de nuevo.</translation>
     </message>
     <message>
         <source>Could not write to the folder %1.</source>
@@ -3936,7 +3936,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>A Mixxx playlist named %1 already exists. Choose another name.</source>
-        <translation>Ya existe una playlist de Mixxx llamada %1. Elige otro nombre.</translation>
+        <translation>Ya existe una playlist de Cutlab llamada %1. Elige otro nombre.</translation>
     </message>
     <message>
         <source>The folder %1 already has other files. Choose another name.</source>
@@ -3944,7 +3944,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Could not create the folder %1. Grant Mixxx access to all files and try again.</source>
-        <translation>No se pudo crear la carpeta %1. Da a Mixxx acceso a todos los archivos e inténtalo de nuevo.</translation>
+        <translation>No se pudo crear la carpeta %1. Da a Cutlab acceso a todos los archivos e inténtalo de nuevo.</translation>
     </message>
     <message>
         <source>Not enough free space on the device: the copy needs %1 and %2 are free.</source>
@@ -4007,7 +4007,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Mixxx closes now. Open it again to finish restoring %1.</source>
-        <translation>Mixxx se cierra ahora. Ábrelo de nuevo para terminar de restaurar %1.</translation>
+        <translation>Cutlab se cierra ahora. Ábrelo de nuevo para terminar de restaurar %1.</translation>
     </message>
     <message>
         <source>This list is not a Rekordbox playlist</source>

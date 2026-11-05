@@ -79,7 +79,7 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: topBarCol.implicitHeight + 20
-                color: "#232323"
+                color: "#17162a"
                 radius: 12
                 border.color: "#3c3c3c"
                 border.width: 1
@@ -99,8 +99,8 @@ Category {
                             width: 38
                             height: 38
                             radius: 19
-                            color: "#332cb8"
-                            border.color: "#584fff"
+                            color: "#4a43c9"
+                            border.color: "#635bff"
                             border.width: 1
                             Text {
                                 elide: Text.ElideRight
@@ -135,7 +135,7 @@ Category {
                                          ? qsTr("%1 device(s) detected without a mapping").arg(root.unmappedDevices.length)
                                          : qsTr("No USB controller is currently detected"))
                                 font.pixelSize: 11
-                                color: root.activeDevices.length > 0 ? "#34c759" : (root.unmappedDevices.length > 0 ? "#ff9f0a" : "#9e9e9e")
+                                color: root.activeDevices.length > 0 ? "#2bd67b" : (root.unmappedDevices.length > 0 ? "#ffb547" : "#9e9e9e")
                             }
                         }
 
@@ -144,7 +144,7 @@ Category {
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 38
                             radius: 8
-                            color: rescanMouse.pressed ? "#453de0" : (rescanMouse.containsMouse ? "#584fff" : "#332cb8")
+                            color: rescanMouse.pressed ? "#635bff" : (rescanMouse.containsMouse ? "#635bff" : "#4a43c9")
                             border.color: "#908aff"
                             border.width: 1
 
@@ -251,8 +251,8 @@ Category {
                             width: 80
                             height: 24
                             radius: 12
-                            color: guideToggleArea.containsMouse ? "#212121" : "#242424"
-                            border.color: "#343434"
+                            color: guideToggleArea.containsMouse ? "#17162a" : "#17162a"
+                            border.color: "#2a2940"
                             border.width: 1
 
                             Text {
@@ -260,7 +260,7 @@ Category {
                                 anchors.centerIn: parent
                                 text: root.showGuide ? qsTr("Hide") : qsTr("Show guide")
                                 font.pixelSize: 11
-                                color: "#bebebe"
+                                color: "#c9cce0"
                             }
 
                             MouseArea {
@@ -315,7 +315,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("Use an OTG-capable USB-C to USB-B/A adapter or cable directly to the phone.")
                                     font.pixelSize: 11
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                 }
                             }
                         }
@@ -329,7 +329,7 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#ff9f0a"
+                                color: "#ffb547"
                                 Text {
                                     elide: Text.ElideRight
                                     anchors.centerIn: parent
@@ -349,13 +349,13 @@ Category {
                                     text: qsTr("Power supply: connect through a USB-C hub")
                                     font.pixelSize: 12
                                     font.weight: Font.DemiBold
-                                    color: "#ff9f0a"
+                                    color: "#ffb547"
                                 }
                                 Text {
                                     Layout.minimumWidth: 0
                                     text: qsTr("Tablets only supply ~500mA. To keep your controller (Pioneer DDJ-400, etc.) from flickering or disconnecting, connect the tablet charger to the USB-C PD port of the hub, the controller to a USB port of the hub, and the hub cable to the tablet.")
                                     font.pixelSize: 11
-                                    color: "#dbdbdb"
+                                    color: "#f4f5fb"
                                     wrapMode: Text.WordWrap
                                     Layout.fillWidth: true
                                 }
@@ -371,7 +371,7 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#34c759"
+                                color: "#2bd67b"
                                 Text {
                                     elide: Text.ElideRight
                                     anchors.centerIn: parent
@@ -397,7 +397,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("MIDI controllers (like the DDJ-400) need no permission. If Android asks 'Allow Mixxx to access the USB device?' (HID controllers), tick 'Always use for this device' and press OK.")
                                     font.pixelSize: 11
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                     wrapMode: Text.WordWrap
                                     Layout.fillWidth: true
                                 }
@@ -439,7 +439,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("• <b>Full DJ booth</b>: speakers to the RCA outputs of the controller and headphones to the front jack. Select the 'DJ controller' profile.<br>• <b>Hybrid mode</b>: if you have no external speakers, select 'Tablet + controller headphones' so the music plays through the tablet and the pre-listening through your headphones.")
                                     font.pixelSize: 11
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                     wrapMode: Text.WordWrap
                                     Layout.fillWidth: true
                                 }
@@ -477,7 +477,7 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#837cff"
+                                color: "#8b85ff"
                                 Text {
                                     elide: Text.ElideRight
                                     anchors.centerIn: parent
@@ -503,7 +503,7 @@ Category {
                                     Layout.minimumWidth: 0
                                     text: qsTr("✓ <b>Pioneer DDJ-400</b>, FLX4, Inpulse and 100+ controllers come with an official mapping: it is assigned and enabled automatically the first time they are connected.<br>To add a new or modified mapping, copy it to the public Mixxx folder and press 'Scan for USB devices':")
                                     font.pixelSize: 11
-                                    color: "#bebebe"
+                                    color: "#c9cce0"
                                     wrapMode: Text.WordWrap
                                     Layout.fillWidth: true
                                 }
@@ -517,7 +517,7 @@ Category {
                                         Layout.preferredHeight: 28
                                         color: "#151515"
                                         radius: 4
-                                        border.color: "#212121"
+                                        border.color: "#17162a"
                                         border.width: 1
 
                                         Text {
@@ -529,7 +529,7 @@ Category {
                                             elide: Text.ElideMiddle
                                             text: Mixxx.MobileControllers.mappingsDirectory || "/storage/emulated/0/Mixxx/controllers/"
                                             font.pixelSize: 11
-                                            font.family: "monospace"
+                                            font.family: "JetBrains Mono"
                                             color: "#ada9ff"
                                         }
                                     }
@@ -575,14 +575,14 @@ Category {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
                             radius: 6
-                            color: "#262626"
+                            color: "#17162a"
 
                             Text {
                                 elide: Text.ElideRight
                                 anchors.centerIn: parent
                                 text: qsTr("Compatible with Pioneer DDJ (FLX4, 400, SB3, 200), Hercules Inpulse, Traktor S2/S4, Numark, Reloop and 100+ controllers.")
                                 font.pixelSize: 11
-                                color: "#34c759"
+                                color: "#2bd67b"
                             }
                         }
                     }
@@ -593,9 +593,9 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 140
-                color: "#181818"
+                color: "#0e0d1a"
                 radius: 12
-                border.color: "#2c2c2c"
+                border.color: "#1d1b33"
                 border.width: 1
                 visible: root.selectedController == null && root.activeDevices.length === 0 && root.unmappedDevices.length === 0
 
@@ -636,7 +636,7 @@ Category {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 58
-                color: "#332cb8"
+                color: "#4a43c9"
                 radius: 10
                 border.color: "#4b42f5"
                 border.width: 1.5
@@ -672,7 +672,7 @@ Category {
                                   ? qsTr("Assigned mapping: %1 (%2)").arg(root.selectedController.mapping.name).arg(root.selectedController.enabled ? qsTr("Enabled") : qsTr("Disabled"))
                                   : qsTr("Select its mapping in the drop-down list and press Save")
                             font.pixelSize: 11
-                            color: root.selectedController?.mapping ? "#34c759" : "#ff9f0a"
+                            color: root.selectedController?.mapping ? "#2bd67b" : "#ffb547"
                         }
                     }
 
@@ -707,7 +707,7 @@ Category {
                         Layout.preferredWidth: 90
                         Layout.preferredHeight: 32
                         radius: 6
-                        color: backMouse.pressed ? "#110b8a" : (backMouse.containsMouse ? "#453de0" : "#584fff")
+                        color: backMouse.pressed ? "#110b8a" : (backMouse.containsMouse ? "#635bff" : "#635bff")
                         border.color: "#9590f9"
                         border.width: 1
 
@@ -797,7 +797,7 @@ Category {
                     required property int index
                     required property var modelData
 
-                    color: index % 2 == 0 ? '#0c0c0c' : '#272727'
+                    color: index % 2 == 0 ? '#0b0a16' : '#17162a'
                     height: 38
                     width: ListView.view.width
 
@@ -853,7 +853,7 @@ Category {
                             text: modelData.name
                         }
                         Skin.FormButton {
-                            activeColor: "#584fff"
+                            activeColor: "#635bff"
                             text: qsTr("Configure mapping")
                             visible: true
 
@@ -899,8 +899,8 @@ Category {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 58
-        color: "#171717"
-        border.color: "#2c2c2c"
+        color: "#0e0d1a"
+        border.color: "#1d1b33"
         border.width: 1
         radius: 8
 
@@ -914,8 +914,8 @@ Category {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
                 radius: 17
-                color: root.dirty ? "#2e2616" : (root.activeDevices.length > 0 ? "#1d2a21" : "#272727")
-                border.color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#2b21f3")
+                color: root.dirty ? "#2e2616" : (root.activeDevices.length > 0 ? "#1d2a21" : "#17162a")
+                border.color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#2b21f3")
                 border.width: 1
 
                 RowLayout {
@@ -928,7 +928,7 @@ Category {
                         text: root.dirty ? "●" : (root.activeDevices.length > 0 ? "✓" : "")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#908aff")
+                        color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#908aff")
                     }
                     Text {
                         elide: Text.ElideRight
@@ -940,7 +940,7 @@ Category {
                                  : (root.activeDevices.length > 0 ? qsTr("Controller ready") : qsTr("USB MIDI")))
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: root.dirty ? "#ff9f0a" : (root.activeDevices.length > 0 ? "#34c759" : "#bebbfb")
+                        color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#bebbfb")
                     }
                 }
             }
@@ -952,7 +952,7 @@ Category {
                 id: errorMessage
                 Layout.alignment: Qt.AlignVCenter
                 visible: text.length > 0
-                color: "#ff6961"
+                color: "#ff4d5e"
                 font.pixelSize: 11
                 text: ""
             }
@@ -965,21 +965,21 @@ Category {
                 Layout.preferredWidth: 140
                 radius: 6
                 visible: !!root.selectedController?.mapping?.hasSettings
-                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#2b2b2b")
-                border.color: "#ff6961"
+                color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#1d1b33")
+                border.color: "#ff4d5e"
                 border.width: 1
 
                 RowLayout {
                     anchors.centerIn: parent
                     spacing: 6
-                    Text { text: "↺"; color: "#ff6961"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
+                    Text { text: "↺"; color: "#ff4d5e"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                     Text {
                         elide: Text.ElideRight
                         Layout.minimumWidth: 0
                         text: qsTr("Reset")
                         font.weight: Font.DemiBold
                         font.pixelSize: 11
-                        color: "#ff6961"
+                        color: "#ff4d5e"
                     }
                 }
 
@@ -1001,7 +1001,7 @@ Category {
                 Layout.preferredWidth: 130
                 radius: 6
                 visible: root.dirty || root.selectedController !== null
-                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#2e2e2e" : "#262626")
+                color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
                 border.width: 1
 
@@ -1033,9 +1033,9 @@ Category {
                 Layout.preferredWidth: 220
                 radius: 6
                 color: root.dirty
-                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#34c759" : "#34c759"))
-                       : (saveMouse.pressed ? "#332cb8" : (saveMouse.containsMouse ? "#584fff" : "#584fff"))
-                border.color: root.dirty ? "#34c759" : "#908aff"
+                       ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
+                       : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))
+                border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
                 RowLayout {

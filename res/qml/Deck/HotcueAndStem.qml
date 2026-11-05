@@ -26,7 +26,7 @@ Item {
         key: "track_loaded"
     }
     Rectangle {
-        color: '#0e0e0e'
+        color: '#0b0a16'
 
         states: [
             State {
@@ -134,7 +134,7 @@ Item {
                             id: backgroundImage
 
                             anchors.fill: parent
-                            color: hotcue.isSet ? hotcue.color : '#2b2b2b'
+                            color: hotcue.isSet ? hotcue.color : '#1d1b33'
 
                             MouseArea {
                                 id: activator
@@ -157,7 +157,7 @@ Item {
                             id: effect2
 
                             anchors.fill: parent
-                            color: "#343434"
+                            color: "#2a2940"
                             horizontalOffset: 1
                             radius: 12
                             samples: 24
@@ -167,7 +167,7 @@ Item {
                         }
                         InnerShadow {
                             anchors.fill: parent
-                            color: "#343434"
+                            color: "#2a2940"
                             horizontalOffset: -1
                             radius: 12
                             samples: 24
@@ -181,14 +181,14 @@ Item {
 
                             Label {
                                 Layout.alignment: Qt.AlignHCenter
-                                color: "#626262"
+                                color: "#5a5f75"
                                 font.pixelSize: 14
                                 font.weight: Font.Bold
                                 text: `${index + 1}`
                             }
                             Label {
                                 Layout.alignment: Qt.AlignHCenter
-                                color: "#626262"
+                                color: "#5a5f75"
                                 font.pixelSize: 12
                                 text: hotcue.label ?? ""
                                 visible: hotcue.label
@@ -295,7 +295,7 @@ Item {
                                 id: effect2
 
                                 anchors.fill: parent
-                                color: "#343434"
+                                color: "#2a2940"
                                 horizontalOffset: 2
                                 radius: 4.0
                                 samples: 24
@@ -306,7 +306,7 @@ Item {
                             }
                             InnerShadow {
                                 anchors.fill: parent
-                                color: "#343434"
+                                color: "#2a2940"
                                 horizontalOffset: -2
                                 radius: 4.0
                                 samples: 24
@@ -498,7 +498,7 @@ Item {
                 layer.samples: 4
 
                 ShapePath {
-                    fillColor: '#d9d9d9'
+                    fillColor: '#f4f5fb'
                     startX: 10
                     startY: 4
 
@@ -544,7 +544,7 @@ Item {
 
             contentItem: Item {
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -557,7 +557,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -570,7 +570,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -583,7 +583,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -596,7 +596,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -609,7 +609,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {
@@ -622,7 +622,7 @@ Item {
                     }
                 }
                 Rectangle {
-                    color: '#d9d9d9'
+                    color: '#f4f5fb'
                     height: 1
 
                     anchors {

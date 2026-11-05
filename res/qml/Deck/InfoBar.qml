@@ -173,7 +173,7 @@ Rectangle {
                             width: 16
 
                             ShapePath {
-                                fillColor: mouse.containsMouse && !(mouse.pressedButtons & Qt.RightButton) && mouse.mouseX > star.x + stars.x ? "#635bff" : (!mouse.containsMouse || mouse.pressedButtons & Qt.RightButton) && root.currentTrack?.stars > index ? (mouse.containsMouse ? "#5a2a30" : '#d9d9d9') : '#96d9d9d9'
+                                fillColor: mouse.containsMouse && !(mouse.pressedButtons & Qt.RightButton) && mouse.mouseX > star.x + stars.x ? "#635bff" : (!mouse.containsMouse || mouse.pressedButtons & Qt.RightButton) && root.currentTrack?.stars > index ? (mouse.containsMouse ? "#5a2a30" : '#f4f5fb') : '#96d9d9d9'
                                 startX: 8
                                 startY: 0
                                 strokeColor: 'transparent'

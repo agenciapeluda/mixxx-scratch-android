@@ -88,7 +88,7 @@ Item {
             width: 50
             height: 22
             radius: 3
-            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#e2622a" : "#453de0") : "#1f1f1f"
+            color: (root.deck && root.deck.mobilePadView === 0) ? ((root.group === "[Channel2]") ? "#00c2d8" : "#635bff") : "#1f1f1f"
             border.color: (root.deck && root.deck.mobilePadView === 0) ? "#ffffff" : "#3a3a3a"
             border.width: 1
 

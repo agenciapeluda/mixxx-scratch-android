@@ -47,7 +47,7 @@ ColumnLayout {
 
         Text {
             Layout.fillWidth: true
-            color: Mixxx.Stems.hold !== "" ? "#f7c86a" : "#dbdbdb"
+            color: Mixxx.Stems.hold !== "" ? "#7fe6f2" : "#f4f5fb"
             font.pixelSize: 12
             wrapMode: Text.WordWrap
             text: {
@@ -64,7 +64,7 @@ ColumnLayout {
             implicitWidth: 110
             implicitHeight: 34
             activeColor: "#ffffff"
-            backgroundColor: Mixxx.Stems.hold === "paused" ? "#1e5f3a" : "#373737"
+            backgroundColor: Mixxx.Stems.hold === "paused" ? "#1e5f3a" : "#2a2940"
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             text: Mixxx.Stems.hold === "paused" ? qsTr("▶ RESUME") : qsTr("⏸ PAUSE")
@@ -88,7 +88,7 @@ ColumnLayout {
             implicitWidth: 160
             implicitHeight: 34
             activeColor: "#ffffff"
-            backgroundColor: "#373737"
+            backgroundColor: "#2a2940"
             normalColor: "#ffffff"
             font.weight: Font.DemiBold
             text: qsTr("CLEAR DONE")
@@ -109,7 +109,7 @@ ColumnLayout {
             Layout.fillWidth: true
             implicitHeight: rowLayout.implicitHeight + 12
             radius: 6
-            color: running ? "#2c2c2c" : "#202020"
+            color: running ? "#1d1b33" : "#202020"
             border.color: running ? "#4b42f5" : "#2f2f2f"
             border.width: 1
 
@@ -161,7 +161,7 @@ ColumnLayout {
                     }
                     Text {
                         Layout.fillWidth: true
-                        color: row.modelData.state === "failed" ? "#ef9a9a" : "#969696"
+                        color: row.modelData.state === "failed" ? "#ef9a9a" : "#9ca1b8"
                         font.pixelSize: 10
                         elide: Text.ElideRight
                         text: {
@@ -191,7 +191,7 @@ ColumnLayout {
                     implicitWidth: 36
                     implicitHeight: 30
                     activeColor: "#ffffff"
-                    backgroundColor: "#373737"
+                    backgroundColor: "#2a2940"
                     normalColor: "#ef9a9a"
                     font.weight: Font.DemiBold
                     font.pixelSize: 16

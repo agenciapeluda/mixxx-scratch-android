@@ -38,14 +38,14 @@ Item {
 
         Layout.preferredWidth: 24
         radius: 4
-        color: control.value > 0 ? "#343434" : "#1c1c1c"
-        border.color: "#343434"
+        color: control.value > 0 ? "#2a2940" : "#0e0d1a"
+        border.color: "#2a2940"
         border.width: 1
 
         // Drawn, as Android draws ◀ ▶ as emoji
         Skin.Triangle {
             anchors.centerIn: parent
-            color: "#bebebe"
+            color: "#c9cce0"
             height: 8
             pointsRight: parent.pointsRight
             width: 7
@@ -66,8 +66,8 @@ Item {
         required property string group
         required property bool isDeck1
 
-        readonly property color accentColor: isDeck1 ? "#837cff" : "#ff7a3d"
-        readonly property color accentDim: isDeck1 ? "#332cb8" : "#bf360c"
+        readonly property color accentColor: isDeck1 ? "#8b85ff" : "#00c2d8"
+        readonly property color accentDim: isDeck1 ? "#4a43c9" : "#bf360c"
         readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
         readonly property var currentTrack: deckPlayer?.currentTrack
         readonly property bool isLoaded: !!deckPlayer?.isLoaded
@@ -137,7 +137,7 @@ Item {
                         var a = card.currentTrack?.artist || "";
                         return a.length > 0 ? (a + " - " + t) : t;
                     }
-                    color: card.isLoaded ? "#ffffff" : "#7a7a7a"
+                    color: card.isLoaded ? "#ffffff" : "#7d8199"
                     font.weight: Font.DemiBold
                     font.pixelSize: 11
                 }
@@ -148,7 +148,7 @@ Item {
                     Layout.preferredHeight: 18
                     Layout.preferredWidth: keyText.implicitWidth + 10
                     radius: 3
-                    color: "#242424"
+                    color: "#17162a"
                     border.color: card.accentColor
                     border.width: 1
 
@@ -168,14 +168,14 @@ Item {
                     Layout.preferredHeight: 18
                     Layout.preferredWidth: 26
                     radius: 3
-                    color: quantizeControl.value > 0 ? card.accentColor : "#242424"
+                    color: quantizeControl.value > 0 ? card.accentColor : "#17162a"
                     border.color: card.accentColor
                     border.width: 1
 
                     Text {
                         anchors.centerIn: parent
                         text: "Q"
-                        color: quantizeControl.value > 0 ? "#000000" : "#7a7a7a"
+                        color: quantizeControl.value > 0 ? "#000000" : "#7d8199"
                         font.weight: Font.DemiBold
                         font.pixelSize: 10
                     }
@@ -199,8 +199,8 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     radius: 4
-                    color: "#0c0c0c"
-                    border.color: timeMouse.containsMouse ? card.accentColor : "#262626"
+                    color: "#0b0a16"
+                    border.color: timeMouse.containsMouse ? card.accentColor : "#17162a"
                     border.width: 1
 
                     RowLayout {
@@ -219,7 +219,7 @@ Item {
                         Text {
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignRight
-                            font.family: "monospace"
+                            font.family: "JetBrains Mono"
                             font.weight: Font.DemiBold
                             font.pixelSize: card.width < 380 ? 13 : 15
                             color: "#ffffff"
@@ -262,8 +262,8 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: card.width < 380 ? 46 : 56
                     radius: 4
-                    color: "#0c0c0c"
-                    border.color: "#262626"
+                    color: "#0b0a16"
+                    border.color: "#17162a"
                     border.width: 1
 
                     ColumnLayout {
@@ -274,7 +274,7 @@ Item {
                             Layout.alignment: Qt.AlignHCenter
                             text: "TEMPO"
                             font.pixelSize: 7
-                            color: "#969696"
+                            color: "#9ca1b8"
                             font.weight: Font.DemiBold
                         }
                         Text {
@@ -301,8 +301,8 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: card.width < 380 ? 70 : 84
                     radius: 4
-                    color: "#0c0c0c"
-                    border.color: (syncModeControl.value >= 2) ? "#ff8f57" : (syncEnabledControl.value > 0 ? "#2bd67b" : card.accentColor)
+                    color: "#0b0a16"
+                    border.color: (syncModeControl.value >= 2) ? "#7fe6f2" : (syncEnabledControl.value > 0 ? "#2bd67b" : card.accentColor)
                     border.width: 1
 
                     RowLayout {
@@ -319,14 +319,14 @@ Item {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: "BPM"
                                 font.pixelSize: 7
-                                color: "#969696"
+                                color: "#9ca1b8"
                                 font.weight: Font.DemiBold
                             }
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
                                 font.weight: Font.DemiBold
                                 font.pixelSize: card.width < 380 ? 12 : 14
-                                color: (syncModeControl.value >= 2) ? "#f7c86a" : "#ffffff"
+                                color: (syncModeControl.value >= 2) ? "#7fe6f2" : "#ffffff"
                                 text: bpmControl.value > 0 ? bpmControl.value.toFixed(1) : "--.-"
                             }
                         }
@@ -339,7 +339,7 @@ Item {
                             Layout.preferredHeight: 24
                             Layout.preferredWidth: 38
                             radius: 3
-                            color: (syncModeControl.value >= 2) ? "#ff8f57" : (syncEnabledControl.value > 0 ? "#2bd67b" : (syncMouse.pressed ? "#212121" : "#252525"))
+                            color: (syncModeControl.value >= 2) ? "#7fe6f2" : (syncEnabledControl.value > 0 ? "#2bd67b" : (syncMouse.pressed ? "#17162a" : "#252525"))
                             border.color: "#2bd67b"
                             border.width: 1
 
@@ -348,7 +348,7 @@ Item {
                                 text: (syncModeControl.value >= 2) ? "MSTR" : (syncEnabledControl.value > 0 ? "LOCK" : "SYNC")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 9
-                                color: (syncModeControl.value >= 2 || syncEnabledControl.value > 0) ? "#000000" : "#bebebe"
+                                color: (syncModeControl.value >= 2 || syncEnabledControl.value > 0) ? "#000000" : "#c9cce0"
                             }
 
                             MouseArea {
@@ -379,8 +379,8 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: 36
                     radius: 4
-                    color: cueMouse.pressed ? "#ff8f57" : "#1c1c1c"
-                    border.color: "#ff8f57"
+                    color: cueMouse.pressed ? "#7fe6f2" : "#0e0d1a"
+                    border.color: "#7fe6f2"
                     border.width: 1
 
                     Text {
@@ -388,7 +388,7 @@ Item {
                         text: "CUE"
                         font.weight: Font.DemiBold
                         font.pixelSize: 10
-                        color: cueMouse.pressed ? "#000000" : "#ff8f57"
+                        color: cueMouse.pressed ? "#000000" : "#7fe6f2"
                     }
 
                     MouseArea {
@@ -403,7 +403,7 @@ Item {
                     Layout.preferredHeight: parent.height
                     Layout.preferredWidth: 38
                     radius: 4
-                    color: playControl.value > 0 ? "#2bd67b" : (playMouse.pressed ? "#00b248" : "#1c1c1c")
+                    color: playControl.value > 0 ? "#2bd67b" : (playMouse.pressed ? "#00b248" : "#0e0d1a")
                     border.color: "#2bd67b"
                     border.width: 1
 
@@ -447,7 +447,7 @@ Item {
                 Layout.preferredHeight: 26
                 radius: 4
                 color: "#080808"
-                border.color: "#262626"
+                border.color: "#17162a"
                 border.width: 1
                 clip: true
 

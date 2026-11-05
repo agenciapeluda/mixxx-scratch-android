@@ -275,7 +275,7 @@ Rectangle {
             id: backgroundImage
 
             anchors.fill: parent
-            color: '#2b2b2b'
+            color: '#1d1b33'
         }
         DropShadow {
             anchors.fill: backgroundImage
@@ -287,7 +287,7 @@ Rectangle {
         }
         InnerShadow {
             anchors.fill: backgroundImage
-            color: "#343434"
+            color: "#2a2940"
             horizontalOffset: -0
             radius: 1
             samples: 16

@@ -52,13 +52,13 @@ Category {
                         text: qsTr("STEMS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
                     Text {
                         Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#dbdbdb"
+                        color: "#f4f5fb"
                         font.pixelSize: 11
                         text: qsTr("Splits the tracks you choose into drums, bass, vocals and the rest, so that you can mute or mix each part on the deck. In the library, select a track or open a list and tap STEMS. The stems are saved next to each track, in a hidden .stems folder, and they are used whenever you load the track. If its folder can't be written, they stay in the app.")
                     }
@@ -66,7 +66,7 @@ Category {
                         Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#ff9f0a"
+                        color: "#ffb547"
                         font.pixelSize: 11
                         text: qsTr("Separating uses a lot of CPU. While you play it may cause audio dropouts: better prepare your tracks before the session.")
                     }
@@ -86,13 +86,13 @@ Category {
                         text: qsTr("MODELS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
                     Text {
                         Layout.minimumWidth: 0
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        color: "#969696"
+                        color: "#9ca1b8"
                         font.pixelSize: 11
                         text: qsTr("Download the models you want to use. The times are for a 5 minute track and depend a lot on the device: tap MEASURE to know yours.")
                     }
@@ -119,7 +119,7 @@ Category {
                         Layout.fillWidth: true
                         visible: root.message !== ""
                         wrapMode: Text.WordWrap
-                        color: "#ff6961"
+                        color: "#ff4d5e"
                         font.pixelSize: 11
                         text: root.message
                     }
@@ -139,7 +139,7 @@ Category {
                         text: qsTr("OPTIONS")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
 
                     ChoiceRow {
@@ -203,7 +203,7 @@ Category {
                         text: qsTr("QUEUE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
 
                     Skin.StemsQueue {
@@ -225,7 +225,7 @@ Category {
                         text: qsTr("STORAGE")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: "#837cff"
+                        color: "#8b85ff"
                     }
 
                     RowLayout {
@@ -240,7 +240,7 @@ Category {
 
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            color: "#dbdbdb"
+                            color: "#f4f5fb"
                             font.pixelSize: 11
                             text: qsTr("Stems kept in the app (tracks of folders that can't be written): %1 MB. The stems next to your tracks are deleted from the library, with STEMS.").arg(storedMb)
 
@@ -278,9 +278,9 @@ Category {
 
         Layout.fillWidth: true
         implicitHeight: (holder.children.length > 0 ? holder.children[0].implicitHeight : 0) + 24
-        color: "#171717"
+        color: "#0e0d1a"
         radius: 8
-        border.color: "#2c2c2c"
+        border.color: "#1d1b33"
         border.width: 1
 
         Item {
@@ -321,7 +321,7 @@ Category {
                 Layout.fillWidth: true
                 visible: choiceRow.hint !== ""
                 text: choiceRow.hint
-                color: "#7a7a7a"
+                color: "#7d8199"
                 font.pixelSize: 10
                 wrapMode: Text.WordWrap
             }
@@ -336,8 +336,8 @@ Category {
                 implicitWidth: Math.max(80, choiceMetrics.width + 24)
                 implicitHeight: 32
                 activeColor: "#ffffff"
-                backgroundColor: choiceRow.value === modelData.value ? "#25225b" : "#212121"
-                normalColor: choiceRow.value === modelData.value ? "#ffffff" : "#969696"
+                backgroundColor: choiceRow.value === modelData.value ? "#25225b" : "#17162a"
+                normalColor: choiceRow.value === modelData.value ? "#ffffff" : "#9ca1b8"
                 highlight: choiceRow.value === modelData.value
                 font.weight: Font.DemiBold
                 font.pixelSize: 11
@@ -371,7 +371,7 @@ Category {
         implicitHeight: modelLayout.implicitHeight + 16
         radius: 6
         color: "#202020"
-        border.color: installed ? "#34c759" : "#2f2f2f"
+        border.color: installed ? "#2bd67b" : "#2f2f2f"
         border.width: 1
 
         Connections {
@@ -397,7 +397,7 @@ Category {
                     elide: Text.ElideRight
                     Layout.minimumWidth: 0
                     text: StemsText.modelLabel(modelRow.model) + (modelRow.installed ? "  ✓" : "")
-                    color: modelRow.installed ? "#34c759" : "#ffffff"
+                    color: modelRow.installed ? "#2bd67b" : "#ffffff"
                     font.weight: Font.DemiBold
                     font.pixelSize: 11
                 }
@@ -405,7 +405,7 @@ Category {
                     Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     text: modelRow.description
-                    color: "#dbdbdb"
+                    color: "#f4f5fb"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
@@ -413,7 +413,7 @@ Category {
                     Layout.minimumWidth: 0
                     Layout.fillWidth: true
                     text: modelRow.ranges
-                    color: "#969696"
+                    color: "#9ca1b8"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
@@ -432,7 +432,7 @@ Category {
                     Layout.fillWidth: true
                     visible: modelRow.warning !== ""
                     text: modelRow.warning
-                    color: "#ff9f0a"
+                    color: "#ffb547"
                     font.pixelSize: 10
                     wrapMode: Text.WordWrap
                 }
@@ -453,7 +453,7 @@ Category {
                 implicitHeight: 34
                 enabled: !Mixxx.Stems.benchmarking && Mixxx.Stems.pendingCount === 0
                 activeColor: "#ffffff"
-                backgroundColor: "#373737"
+                backgroundColor: "#2a2940"
                 normalColor: "#ffffff"
                 font.weight: Font.DemiBold
                 text: Mixxx.Stems.benchmarking ? qsTr("MEASURING…") : qsTr("MEASURE")

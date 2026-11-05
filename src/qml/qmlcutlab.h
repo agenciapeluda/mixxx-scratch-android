@@ -55,6 +55,9 @@ class QmlCutlab : public QObject {
     Q_INVOKABLE bool useFolders(const QStringList& paths) const;
     /// The music folders of the library
     Q_INVOKABLE QStringList folders() const;
+    /// A key press and release on whatever has the focus: lets the browse
+    /// knob of a controller move through menus and the settings
+    Q_INVOKABLE void sendKey(int key, int modifiers = 0) const;
     /// MicroSD cards and USB drives plugged in: {name, path}
     Q_INVOKABLE QVariantList storageVolumes() const;
     /// Adds one folder to the library (keeping the others) and scans it

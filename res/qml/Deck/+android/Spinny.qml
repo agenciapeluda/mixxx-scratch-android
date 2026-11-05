@@ -14,8 +14,8 @@ Item {
 
     readonly property color deckAccentColor: {
         switch (root.group) {
-        case "[Channel1]": return "#837cff";
-        case "[Channel2]": return "#ff7a3d";
+        case "[Channel1]": return "#8b85ff";
+        case "[Channel2]": return "#00c2d8";
         case "[Channel3]": return "#2bd67b";
         case "[Channel4]": return "#e040fb";
         default: return Theme.accentColor;
@@ -33,7 +33,7 @@ Item {
         id: spinner
 
         anchors.centerIn: parent
-        color: "#1c1c1c"
+        color: "#0e0d1a"
         border.color: trackLoadedControl.value ? root.deckAccentColor : "#3c3c3c"
         border.width: 2.5
         height: Math.min(140, Math.max(80, Math.min(parent.width, parent.height) - 6))
@@ -55,7 +55,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 14
             color: "transparent"
-            border.color: "#2a2a2a"
+            border.color: "#1d1b33"
             border.width: 1
             radius: width / 2
         }
@@ -93,7 +93,7 @@ Item {
 
             anchors.centerIn: parent
             clip: true
-            color: "#0e0e0e"
+            color: "#0b0a16"
             border.color: "#2d2d2d"
             border.width: 1
             height: Math.round(spinner.height * 0.44)

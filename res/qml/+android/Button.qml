@@ -27,7 +27,7 @@ AbstractButton {
         id: backgroundImage
 
         anchors.fill: parent
-        border.color: "#3a3a3d"
+        border.color: "#2a2940"
         border.width: 1
         color: root.backgroundColor
         radius: Math.min(9, height / 3)
@@ -94,7 +94,7 @@ AbstractButton {
             when: root.pressed
 
             PropertyChanges {
-                color: root.checked ? "#5149d6" : "#3a3a3d"
+                color: root.checked ? "#5149d6" : "#2a2940"
                 target: backgroundImage
             }
             PropertyChanges {

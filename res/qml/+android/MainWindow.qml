@@ -9,6 +9,7 @@ import Qt5Compat.GraphicalEffects
 import "Theme"
 import "stems.js" as StemsText
 import "Cutlab" as Cutlab
+import "Library" as CutlabLibrary
 
 Item {
     id: root
@@ -318,9 +319,9 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 236 * root.shownTopBarViews / 4
                         visible: root.shownTopBarViews > 0
-                        color: "#171717"
+                        color: "#0e0d1a"
                         radius: 4
-                        border.color: "#2c2c2c"
+                        border.color: "#1d1b33"
                         border.width: 1
 
                         RowLayout {
@@ -332,8 +333,8 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 1 ? "#343434" : "transparent"
-                                normalColor: root.viewMode === 1 ? "#ffffff" : "#969696"
+                                backgroundColor: root.viewMode === 1 ? "#2a2940" : "transparent"
+                                normalColor: root.viewMode === 1 ? "#ffffff" : "#9ca1b8"
                                 text: "Mix"
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
@@ -345,8 +346,8 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 3 ? "#343434" : "transparent"
-                                normalColor: root.viewMode === 3 ? "#ffffff" : "#969696"
+                                backgroundColor: root.viewMode === 3 ? "#2a2940" : "transparent"
+                                normalColor: root.viewMode === 3 ? "#ffffff" : "#9ca1b8"
                                 text: qsTr("Waves")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
@@ -358,8 +359,8 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 2 ? "#343434" : "transparent"
-                                normalColor: root.viewMode === 2 ? "#ffffff" : "#969696"
+                                backgroundColor: root.viewMode === 2 ? "#2a2940" : "transparent"
+                                normalColor: root.viewMode === 2 ? "#ffffff" : "#9ca1b8"
                                 text: qsTr("Library")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
@@ -371,8 +372,8 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
                                 activeColor: Theme.accentColor
-                                backgroundColor: root.viewMode === 0 ? "#343434" : "transparent"
-                                normalColor: root.viewMode === 0 ? "#ffffff" : "#969696"
+                                backgroundColor: root.viewMode === 0 ? "#2a2940" : "transparent"
+                                normalColor: root.viewMode === 0 ? "#ffffff" : "#9ca1b8"
                                 text: qsTr("Controls")
                                 font.weight: Font.DemiBold
                                 font.pixelSize: 10
@@ -416,8 +417,8 @@ Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 42
                         activeColor: "#ffffff"
-                        backgroundColor: root.showEffects ? "#343434" : "#212121"
-                        normalColor: root.showEffects ? "#ffffff" : "#bebebe"
+                        backgroundColor: root.showEffects ? "#2a2940" : "#17162a"
+                        normalColor: root.showEffects ? "#ffffff" : "#c9cce0"
                         checkable: true
                         checked: root.showEffects
                         text: "FX"
@@ -431,9 +432,9 @@ Item {
                         visible: root.topBarItemShown("xy")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 54
-                        activeColor: "#837cff"
-                        backgroundColor: xyPadOverlay.visible ? "#343434" : "#212121"
-                        normalColor: xyPadOverlay.visible ? "#ffffff" : "#bebebe"
+                        activeColor: "#8b85ff"
+                        backgroundColor: xyPadOverlay.visible ? "#2a2940" : "#17162a"
+                        normalColor: xyPadOverlay.visible ? "#ffffff" : "#c9cce0"
                         checkable: true
                         checked: xyPadOverlay.visible
                         text: "XY"
@@ -447,9 +448,9 @@ Item {
                         visible: root.topBarItemShown("split")
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 52
-                        activeColor: "#ff8f57"
-                        backgroundColor: headSplitControl.value > 0 ? "#343434" : "#212121"
-                        normalColor: headSplitControl.value > 0 ? "#ff9f73" : "#bebebe"
+                        activeColor: "#7fe6f2"
+                        backgroundColor: headSplitControl.value > 0 ? "#2a2940" : "#17162a"
+                        normalColor: headSplitControl.value > 0 ? "#ff9f73" : "#c9cce0"
                         checkable: true
                         checked: headSplitControl.value > 0
                         text: "Split"
@@ -465,8 +466,8 @@ Item {
 
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 64
-                        backgroundColor: autoDJEnabled.value > 0 ? Qt.rgba(0.17, 0.84, 0.48, 0.2) : "#212121"
-                        normalColor: autoDJEnabled.value > 0 ? "#2bd67b" : "#bebebe"
+                        backgroundColor: autoDJEnabled.value > 0 ? Qt.rgba(0.17, 0.84, 0.48, 0.2) : "#17162a"
+                        normalColor: autoDJEnabled.value > 0 ? "#2bd67b" : "#c9cce0"
                         text: qsTr("Auto DJ")
                         font.pixelSize: 10
 
@@ -1003,6 +1004,35 @@ Item {
         }
     }
 
+    // Cutlab: the controller drives the settings. BROWSE turned moves from
+    // option to option, pressed changes it (like a tap), LOAD closes them.
+    Mixxx.ControlProxy {
+        id: modalOpen
+
+        group: "[Cutlab]"
+        key: "modal_open"
+        value: settingsPopup.opened ? 1 : 0
+    }
+    Mixxx.ControlProxy {
+        group: "[Cutlab]"
+        key: "browse_press"
+        onValueChanged: {
+            if (settingsPopup.opened) {
+                Mixxx.Cutlab.sendKey(Qt.Key_Space);
+            }
+        }
+    }
+    CutlabLibrary.Control {
+        enabled: settingsPopup.opened
+
+        onMoveVertical: offset => {
+            for (let i = 0; i < Math.min(8, Math.abs(offset)); ++i) {
+                Mixxx.Cutlab.sendKey(offset > 0 ? Qt.Key_Tab : Qt.Key_Backtab);
+            }
+        }
+        onLoadSelectedTrack: (group, play) => settingsPopup.close()
+        onLoadSelectedTrackIntoNextAvailableDeck: play => settingsPopup.close()
+    }
     Skin.Settings {
         id: settingsPopup
 
@@ -1172,9 +1202,9 @@ Item {
         padding: 16
 
         background: Rectangle {
-            color: "#171717"
+            color: "#0e0d1a"
             radius: 10
-            border.color: "#2c2c2c"
+            border.color: "#1d1b33"
             border.width: 1
         }
 
@@ -1204,7 +1234,7 @@ Item {
                         implicitWidth: 90
                         implicitHeight: 32
                         activeColor: Theme.accentColor
-                        backgroundColor: "#373737"
+                        backgroundColor: "#2a2940"
                         normalColor: "#ffffff"
                         font.weight: Font.DemiBold
                         text: qsTr("CLOSE")
@@ -1235,7 +1265,7 @@ Item {
         width: Math.min(560, parent.width - 40)
         implicitHeight: stemsToastText.implicitHeight + 20
         radius: 8
-        color: isError ? "#4a1e1e" : "#2c2c2c"
+        color: isError ? "#4a1e1e" : "#1d1b33"
         border.color: isError ? "#ef5350" : "#66bb6a"
         border.width: 1
 

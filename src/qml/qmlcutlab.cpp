@@ -8,6 +8,9 @@
 #include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QKeyEvent>
 #include <QSqlQuery>
 #include <QStorageInfo>
 #include <QtDebug>
@@ -189,6 +192,9 @@ void QmlCutlab::createControls() {
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_on%1").arg(deck)));
         }
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_bank")));
+        // 1 while the settings or a dialog cover the screen: the browse knob
+        // moves in them instead of opening the library
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("modal_open")));
         return true;
     }();
     Q_UNUSED(created);
@@ -653,6 +659,23 @@ QStringList QmlCutlab::folders() const {
         }
     }
     return result;
+}
+
+void QmlCutlab::sendKey(int key, int modifiers) const {
+    QObject* pTarget = QGuiApplication::focusObject();
+    if (!pTarget) {
+        pTarget = QGuiApplication::focusWindow();
+    }
+    if (!pTarget) {
+        return;
+    }
+    const auto mods = static_cast<Qt::KeyboardModifiers>(modifiers);
+    QKeyEvent press(QEvent::KeyPress, key, mods);
+    QCoreApplication::sendEvent(pTarget, &press);
+    // The press may have moved the focus: the release goes to the new one
+    QObject* pRelease = QGuiApplication::focusObject() ? QGuiApplication::focusObject() : pTarget;
+    QKeyEvent release(QEvent::KeyRelease, key, mods);
+    QCoreApplication::sendEvent(pRelease, &release);
 }
 
 QVariantList QmlCutlab::storageVolumes() const {

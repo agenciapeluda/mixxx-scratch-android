@@ -72,8 +72,8 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 110
-            color: "#1a1a1a"
-            border.color: "#2c2c2c"
+            color: "#0e0d1a"
+            border.color: "#1d1b33"
             border.width: 1
             radius: 6
 
@@ -98,7 +98,7 @@ Item {
                     color: "#ffffff"
                     font.pixelSize: 12
                     background: Rectangle {
-                        color: "#2a2a2a"
+                        color: "#1d1b33"
                         radius: 4
                         border.color: customUrlInput.activeFocus ? "#f5b544" : "#414141"
                         border.width: 1
@@ -117,9 +117,9 @@ Item {
                         color: "#ffffff"
                         font.pixelSize: 11
                         background: Rectangle {
-                            color: "#232323"
+                            color: "#17162a"
                             radius: 3
-                            border.color: "#2c2c2c"
+                            border.color: "#1d1b33"
                         }
                     }
 
