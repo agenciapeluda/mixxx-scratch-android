@@ -192,7 +192,6 @@ Category {
                 id: themeScrollView
                 anchors.fill: parent
                 clip: true
-                contentWidth: availableWidth
 
                 ColumnLayout {
                     width: themeScrollView.availableWidth
@@ -679,7 +678,6 @@ Category {
                 id: decksScrollView
                 anchors.fill: parent
                 clip: true
-                contentWidth: availableWidth
 
                 ColumnLayout {
                     width: decksScrollView.availableWidth

@@ -77,7 +77,6 @@ Category {
         anchors.right: parent.right
         anchors.top: parent.top
         clip: true
-        contentWidth: availableWidth
 
         ColumnLayout {
             spacing: 16
