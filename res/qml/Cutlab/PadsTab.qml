@@ -5,7 +5,7 @@ import QtQuick
 Rectangle {
     id: root
 
-    // 0 samples, 1 hot cues, 2 loop rolls (the Scratch Bank is in the bar
+    // 0 samples, 1 hot cues, 2 loop rolls (Scratch is in the bar
     // of each deck)
     property int mode: 0
 

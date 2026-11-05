@@ -16,16 +16,20 @@ Item {
     // The deck in letsktch!, "" when off
     property string group: ""
     readonly property bool active: root.group !== ""
+    // Still setting up: the screen says "armando…"
+    readonly property bool busy: setup.running
+    // What it is doing now, for the screen
+    readonly property string stepText: [qsTr("leyendo los stems"), qsTr("armando el loop"), qsTr("cargando el beat en el deck oculto"), qsTr("separando el beat"), qsTr("sincronizando")][Math.max(0, setup.stage + 1)] || ""
     readonly property string helper: "[Channel3]"
-    // Why it didn't start, for the screen
-    property string message: ""
     // The loop was made here (and is removed when it stops)
     property bool madeLoop: false
     property real previousLoopSize: 4
 
     readonly property var player: Mixxx.PlayerManager.getPlayer(root.group !== "" ? root.group : "[Channel1]")
     readonly property var track: root.player ? root.player.currentTrack : null
-    readonly property var helperPlayer: Mixxx.PlayerManager.getPlayer(root.helper)
+    // Looked up when it starts: the hidden deck may not exist yet when the
+    // screen opens
+    property var helperPlayer: null
     readonly property var helperTrack: root.helperPlayer ? root.helperPlayer.currentTrack : null
 
     signal failed(string text)
@@ -54,6 +58,12 @@ Item {
         setup.start();
     }
 
+    function fail(text) {
+        setup.stop();
+        root.stop();
+        root.failed(text);
+    }
+
     function stop() {
         if (!root.active) {
             return;
@@ -67,34 +77,38 @@ Item {
         }
         root.madeLoop = false;
         helperDeck.play.value = 0;
-        helperDeck.eject.value = 1;
-        helperDeck.eject.value = 0;
+        if (root.helperPlayer) {
+            helperDeck.eject.value = 1;
+            helperDeck.eject.value = 0;
+        }
         root.group = "";
     }
 
-    // Two steps: the loop of the deck is set, then the hidden deck has the
-    // track and gets the same loop, place and tempo
+    // Step by step, each with its own time: the stems of the deck, the loop
+    // of the deck, the track on the hidden deck (a stem file takes long on a
+    // phone), its stems, and the same loop, place and tempo there
     Timer {
         id: setup
 
         property int tries: 0
         property int stage: 0
 
+        function next(stage) {
+            setup.stage = stage;
+            setup.tries = 0;
+        }
+
         interval: 120
         repeat: true
         onTriggered: {
-            if (++tries > 80) {
-                stop();
-                root.stop();
-                root.failed(qsTr("letsktch! no pudo armar el loop. Probá de nuevo."));
-                return;
-            }
+            ++tries;
             if (stage === -1) {
-                // The stems of the deck are read by now
+                // The stems of the deck: up to 6 s after a fresh load
+                if (mainStems.stemCount === 0 && tries < 50) {
+                    return;
+                }
                 if (mainStems.stemCount === 0 || !mainStems.has("Vocals")) {
-                    stop();
-                    root.group = "";
-                    root.failed(qsTr("letsktch! necesita el tema separado en stems, con la voz aparte. Separalo desde Stems."));
+                    root.fail(qsTr("letsktch! necesita el tema separado en stems, con la voz aparte. Separalo desde Stems."));
                     return;
                 }
                 // 4 bars from where it is, unless a loop already runs
@@ -105,28 +119,55 @@ Item {
                     main.loopActivate.value = 0;
                     root.madeLoop = true;
                 }
-                stage = 0;
+                next(0);
                 return;
             }
             if (stage === 0) {
                 if (main.loopEnabled.value <= 0 || main.loopEnd.value <= main.loopStart.value) {
+                    if (tries > 40) {
+                        root.fail(qsTr("letsktch! no pudo armar el loop en el deck (paso 1 de 3). ¿Tiene grilla de tiempos el tema?"));
+                    }
                     return;
                 }
                 mainStems.muteAllBut("Vocals");
-                const url = root.track ? root.track.trackLocationUrl : "";
-                if (root.helperTrack && root.helperTrack.trackLocationUrl.toString() === url.toString()) {
-                    stage = 2;
-                } else {
-                    root.helperPlayer.loadTrackFromLocationUrl(url, false);
-                    stage = 1;
+                if (!root.helperPlayer) {
+                    root.helperPlayer = Mixxx.PlayerManager.getPlayer(root.helper);
                 }
+                if (!root.helperPlayer) {
+                    // The hidden deck is created with 4 decks
+                    numDecks.value = Math.max(numDecks.value, 4);
+                    if (tries > 40) {
+                        root.fail(qsTr("letsktch! no encontró el deck oculto (paso 2 de 3). Cerrá y abrí Cutlab."));
+                    }
+                    return;
+                }
+                const url = root.track ? root.track.trackLocationUrl : "";
+                if (!(root.helperTrack && root.helperTrack.trackLocationUrl.toString() === url.toString())) {
+                    root.helperPlayer.loadTrackFromLocationUrl(url, false);
+                }
+                next(1);
                 return;
             }
             if (stage === 1) {
+                // Up to 45 s for the track on the hidden deck
                 if (!root.track || !root.helperTrack || helperDeck.samples.value <= 0 || root.helperTrack.trackLocationUrl.toString() !== root.track.trackLocationUrl.toString()) {
+                    if (tries > 375) {
+                        root.fail(qsTr("letsktch! no pudo cargar el beat en el deck oculto (paso 2 de 3). Probá de nuevo."));
+                    }
                     return;
                 }
-                stage = 2;
+                next(2);
+                return;
+            }
+            if (stage === 2) {
+                // Up to 10 s for its stems
+                if (!helperStems.has("Vocals")) {
+                    if (tries > 85) {
+                        root.fail(qsTr("letsktch! no pudo sacar la voz del beat (paso 3 de 3). Probá de nuevo."));
+                    }
+                    return;
+                }
+                next(3);
                 return;
             }
             // The beat: same loop, place, tempo and level, voice muted,
@@ -146,13 +187,21 @@ Item {
             helperDeck.pfl.value = 0;
             helperStems.muteAllBut("!Vocals");
             helperDeck.play.value = main.play.value > 0 ? 1 : 0;
+            setup.stage = 4;
             stop();
         }
     }
 
+    Mixxx.ControlProxy {
+        id: numDecks
+
+        group: "[App]"
+        key: "num_decks"
+    }
+
     // While on, the beat follows the deck: play, pitch fader and volume
     Connections {
-        target: root.active && setup.stage === 2 && !setup.running ? main.play : null
+        target: root.active && setup.stage === 4 && !setup.running ? main.play : null
         function onValueChanged() {
             helperDeck.play.value = main.play.value > 0 ? 1 : 0;
         }
@@ -370,10 +419,12 @@ Item {
 
         group: root.group !== "" ? root.group : "[Channel1]"
     }
+    // Bound to the hidden deck once it is found, so its controls connect
+    // even when the deck is created after this screen
     DeckControls {
         id: helperDeck
 
-        group: root.helper
+        group: root.helperPlayer ? root.helper : "[CutlabNone]"
     }
     StemMuter {
         id: mainStems

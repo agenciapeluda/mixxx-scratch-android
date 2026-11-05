@@ -14,11 +14,13 @@ Popup {
     property bool quantize: false
     property bool stemsAuto: false
     property bool diagnostics: false
+    // Upright there is no extended waveform: it is horizontal
+    property bool portrait: false
     // The item lit by the knob, by its key ("" none)
     property int current: -1
 
     // Every item in the order the knob walks them
-    readonly property var order: ["record", "autodj", "quantize", "wave_vertical", "wave_horizontal", "wave_extended", "look_dial", "look_platter", "zoom_out", "zoom_in", "library", "pads", "stems", "folders", "diagnostics", "settings"]
+    readonly property var order: ["record", "autodj", "quantize", "wave_vertical", "wave_horizontal"].concat(root.portrait ? [] : ["wave_extended"]).concat(["look_dial", "look_platter", "zoom_out", "zoom_in", "library", "pads", "stems", "folders", "diagnostics", "settings"])
     readonly property string currentKey: current >= 0 ? order[current] : ""
     // These stay open after a tap: they are toggles or looks
     readonly property var stays: ["quantize", "wave_vertical", "wave_horizontal", "wave_extended", "look_dial", "look_platter", "zoom_out", "zoom_in", "stems", "diagnostics"]
@@ -224,20 +226,21 @@ Popup {
                     text: qsTr("ONDA")
                 }
                 Repeater {
+                    id: waveButtons
+
                     model: [
                         {key: "wave_vertical", title: qsTr("Vertical")},
-                        {key: "wave_horizontal", title: qsTr("Horizontal")},
-                        {key: "wave_extended", title: qsTr("Extendida")}
-                    ]
+                        {key: "wave_horizontal", title: qsTr("Horizontal")}
+                    ].concat(root.portrait ? [] : [{key: "wave_extended", title: qsTr("Extendida")}])
 
                     MenuButton {
                         required property var modelData
 
-                        width: (content.width - 70 - 24) / 3
+                        width: (content.width - 70 - 8 * waveButtons.count) / waveButtons.count
                         height: 44
                         key: modelData.key
                         title: modelData.title
-                        on: root.waveMode === modelData.key.substring(5)
+                        on: root.waveMode === modelData.key.substring(5) || (root.portrait && root.waveMode === "extended" && modelData.key === "wave_horizontal")
                     }
                 }
             }

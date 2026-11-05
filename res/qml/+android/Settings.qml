@@ -23,6 +23,96 @@ Popup {
     // then the chosen page with a back arrow
     readonly property bool narrow: width < 720
     property bool showingPage: false
+    // Pages are drawn as wide as they need and shrunk to the window, so no
+    // page and no bar at the bottom gets cut on the right in any orientation
+    property real pageScale: 1
+    readonly property real minPageScale: 0.7
+
+    // Rightmost edge of everything visible in a page, in page coordinates.
+    // Sideways lists are taken as a whole (they scroll on purpose)
+    function contentRight(page) {
+        let right = 0;
+        const visit = function(item, depth) {
+            if (!item || !item.visible || depth > 40 || item.opacity === 0) {
+                return;
+            }
+            if (item.width > 0 && item.height > 0) {
+                const p = item.mapToItem(page, item.width, 0);
+                if (p.x > right) {
+                    right = p.x;
+                }
+            }
+            const sideways = (item.orientation === ListView.Horizontal) || (item.flickableDirection === Flickable.HorizontalFlick);
+            if (sideways) {
+                return;
+            }
+            const kids = item.children;
+            for (let i = 0; i < kids.length; i++) {
+                visit(kids[i], depth + 1);
+            }
+        };
+        const kids = page.children;
+        for (let i = 0; i < kids.length; i++) {
+            visit(kids[i], 0);
+        }
+        return right;
+    }
+
+    function fitPage() {
+        const page = root.activeCategory;
+        const available = managerItem.width;
+        if (!page || !root.visible || available <= 0) {
+            return;
+        }
+        const logical = available / root.pageScale;
+        const needed = root.contentRight(page);
+        let next = root.pageScale;
+        if (needed > logical + 1) {
+            next = Math.max(root.minPageScale, available / needed);
+        }
+        if (Math.abs(next - root.pageScale) > 0.005 && fitTimer.passes < 6) {
+            root.pageScale = next;
+            fitTimer.passes++;
+            fitTimer.restart();
+        }
+    }
+
+    function refit() {
+        fitTimer.passes = 0;
+        fitTimer.restart();
+        recheckTimer.ticks = 0;
+        recheckTimer.restart();
+    }
+
+    // New width (rotation, split screen): start from full size again
+    function resetFit() {
+        root.pageScale = 1;
+        root.refit();
+    }
+
+    Timer {
+        id: fitTimer
+        property int passes: 0
+        interval: 60
+        onTriggered: root.fitPage()
+    }
+
+    // Pages change size while they load data (sound cards, controllers):
+    // check again a little later
+    Timer {
+        id: recheckTimer
+        property int ticks: 0
+        interval: 700
+        repeat: true
+        onTriggered: {
+            if (!root.visible || ++ticks > 8) {
+                stop();
+                return;
+            }
+            fitTimer.passes = 0;
+            root.fitPage();
+        }
+    }
 
     function updateActiveCategory() {
         root.activeCategory?.deactivated();
@@ -32,6 +122,8 @@ Popup {
             root.activeCategory = null;
         }
         root.activeCategory?.activated();
+        root.pageScale = 1;
+        root.refit();
     }
 
     function resetSearch() {
@@ -45,7 +137,10 @@ Popup {
     onOpened: {
         resetSearch();
         root.showingPage = false;
+        root.refit();
     }
+    onWidthChanged: root.resetFit()
+    onShowingPageChanged: root.refit()
 
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     focus: true
@@ -139,7 +234,8 @@ Popup {
 
         RowLayout {
             Layout.fillHeight: true
-            Layout.fillWidth: parent.width
+            Layout.fillWidth: true
+            Layout.minimumWidth: 0
             spacing: 6
 
             // Left Sidebar: Categories
@@ -384,6 +480,7 @@ Popup {
             ColumnLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Layout.minimumWidth: 0
                 visible: !root.narrow || root.showingPage
                 spacing: 4
 
@@ -412,8 +509,10 @@ Popup {
                                 required property string modelData
 
                                 Layout.alignment: Qt.AlignHCenter
+                                Layout.fillWidth: true
+                                Layout.minimumWidth: 0
                                 Layout.preferredHeight: 28
-                                Layout.preferredWidth: Math.max(100, Math.floor(parent.width / (tabBar.tabs.length + 0.5)))
+                                Layout.preferredWidth: Math.floor(parent.width / tabBar.tabs.length)
                                 activeColor: Theme.accentColor
                                 checked: tabBar.selectedIndex === index
                                 text: modelData
@@ -433,60 +532,103 @@ Popup {
 
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    Layout.leftMargin: 6
+                    Layout.minimumWidth: 0
+                    Layout.leftMargin: root.narrow ? 0 : 6
+                    clip: true
+                    onWidthChanged: root.resetFit()
 
                     Settings.SoundHardware {
                         id: soundHardwareSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 0
                         enabled: visible
                     }
 
                     Settings.Controller {
                         id: controllerSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 1
                         enabled: visible
                     }
 
                     Settings.Turntables {
                         id: turntablesSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 2
                         enabled: visible
                     }
 
                     Settings.Library {
                         id: librarySection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 3
                         enabled: visible
                     }
 
                     Settings.Waveform {
                         id: waveformSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 4
                         enabled: visible
                     }
 
                     Settings.Interface {
                         id: interfaceSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 5
                         enabled: visible
                     }
 
                     Settings.Stems {
                         id: stemsSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 6
                         enabled: visible
                     }
 
                     Settings.About {
                         id: aboutSection
-                        anchors.fill: parent
+                        x: 0
+                        y: 0
+                        width: managerItem.width / root.pageScale
+                        height: managerItem.height / root.pageScale
+                        scale: root.pageScale
+                        transformOrigin: Item.TopLeft
                         visible: categoryList.currentIndex === 7
                         enabled: visible
                     }

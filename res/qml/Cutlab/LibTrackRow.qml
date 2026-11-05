@@ -23,6 +23,23 @@ Rectangle {
     readonly property string camelot: track ? Mixxx.Cutlab.camelot(track.keyText) : ""
     readonly property var match: Style.matchWith(track ? track.bpm : 0, camelot, versusBpm, versusKey)
 
+    // Already split in stems: a mark next to the artist
+    property bool stemmed: false
+    function refreshStems() {
+        root.stemmed = root.url !== "" && Mixxx.Stems.hasStems(root.url);
+    }
+    onUrlChanged: root.refreshStems()
+    Component.onCompleted: root.refreshStems()
+    Connections {
+        target: Mixxx.Stems
+        function onTrackFinished(location, name, error) {
+            root.refreshStems();
+        }
+        function onJobsChanged() {
+            root.refreshStems();
+        }
+    }
+
     signal clicked
     signal loadRequested(string group)
     signal menuRequested
@@ -219,13 +236,39 @@ Rectangle {
             font.pixelSize: root.fs(root.selected ? 18 : 15)
             text: root.track ? root.track.title : ""
         }
-        Text {
+        Row {
             width: parent.width
-            elide: Text.ElideRight
-            color: Style.textSecondary
-            font.family: Style.font
-            font.pixelSize: root.fs(root.compact ? 12 : 13)
-            text: root.track ? root.track.artist : ""
+            spacing: Math.round(6 * root.u)
+
+            Rectangle {
+                id: stemsTag
+
+                anchors.verticalCenter: parent.verticalCenter
+                visible: root.stemmed
+                width: visible ? stemsLabel.implicitWidth + Math.round(10 * root.u) : 0
+                height: stemsLabel.implicitHeight + 2
+                radius: 4
+                color: Style.stemVocals
+
+                Text {
+                    id: stemsLabel
+
+                    anchors.centerIn: parent
+                    color: Style.background
+                    font.family: Style.mono
+                    font.weight: Font.Bold
+                    font.pixelSize: root.fs(root.compact ? 9 : 10)
+                    text: qsTr("STEMS")
+                }
+            }
+            Text {
+                width: parent.width - (stemsTag.visible ? stemsTag.width + parent.spacing : 0)
+                elide: Text.ElideRight
+                color: Style.textSecondary
+                font.family: Style.font
+                font.pixelSize: root.fs(root.compact ? 12 : 13)
+                text: root.track ? root.track.artist : ""
+            }
         }
     }
 

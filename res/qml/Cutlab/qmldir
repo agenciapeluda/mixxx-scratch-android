@@ -44,7 +44,8 @@ FxPad 1.0 FxPad.qml
 Diagnostics 1.0 Diagnostics.qml
 singleton Shots 1.0 Shots.qml
 CutlabWave 1.0 CutlabWave.qml
-ScratchBank 1.0 ScratchBank.qml
+ScratchTool 1.0 ScratchTool.qml
+ScratchEngine 1.0 ScratchEngine.qml
 TurntableDial 1.0 TurntableDial.qml
 CueColumn 1.0 CueColumn.qml
 MixerCard 1.0 MixerCard.qml

@@ -542,6 +542,18 @@ Rectangle {
     }
     // letsktch!: the deck it is on ("" off)
     readonly property string letsktchGroup: letsktch.group
+    readonly property var letsktchEngine: letsktch
+    // Scratch: the bank of phrases and the way back, shared by both decks
+    readonly property var scratchEngine: scratchEngine
+    // The deck whose Scratch tool is on screen, the last opened first
+    readonly property string scratchToolGroup: {
+        const open1 = root.tools1 && root.tool1 === 5;
+        const open2 = root.tools2 && root.tool2 === 5;
+        if (open1 && open2) {
+            return root.lastTools === "[Channel2]" ? "[Channel2]" : "[Channel1]";
+        }
+        return open1 ? "[Channel1]" : (open2 ? "[Channel2]" : "");
+    }
     function toggleLetsktch(group) {
         letsktch.toggle(group);
     }
@@ -718,11 +730,19 @@ Rectangle {
     Letsktch {
         id: letsktch
 
-        onFailed: text => {
-            letsktchToast.text = text;
-            letsktchToast.opacity = 1;
-            letsktchToastTimer.restart();
-        }
+        onFailed: text => root.showScratchMessage(text)
+    }
+    ScratchEngine {
+        id: scratchEngine
+
+        toolGroup: root.scratchToolGroup
+        letsktch: letsktch
+        onFailed: text => root.showScratchMessage(text)
+    }
+    function showScratchMessage(text) {
+        letsktchToast.text = text;
+        letsktchToast.opacity = 1;
+        letsktchToastTimer.restart();
     }
     Rectangle {
         id: letsktchToast
@@ -773,6 +793,7 @@ Rectangle {
 
         recording: recording.value > 0
         waveMode: root.waveMode
+        portrait: root.portrait
         deckLook: root.deckLook
         quantize: quantize1.value > 0 && quantize2.value > 0
         stemsAuto: root.stemsAuto

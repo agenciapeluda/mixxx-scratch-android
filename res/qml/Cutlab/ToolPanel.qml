@@ -1,14 +1,15 @@
 import QtQuick
 
 // The tools of a deck, shown in its half instead of its turntable (the
-// waveforms stay on screen): stems, hot cues, loops, effects, EQ and the
-// Scratch Bank, picked in the bar at the bottom.
+// waveforms stay on screen): stems, hot cues, loops, effects, EQ and
+// Scratch (letsktch! and the bank of phrases), picked in the bar at the
+// bottom.
 Rectangle {
     id: root
 
     required property string group
     // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 mixer (volume, EQ,
-    // filter), 5 Scratch Bank
+    // filter), 5 Scratch
     property int tool: 1
     readonly property var tools: [
         {icon: "stems", name: qsTr("Stems")},
@@ -16,14 +17,14 @@ Rectangle {
         {icon: "loop", name: qsTr("Loop")},
         {icon: "fx", name: qsTr("FX")},
         {icon: "mixer", name: qsTr("Mezcla")},
-        {icon: "scratch", name: qsTr("Scratch Bank")}
+        {icon: "scratch", name: qsTr("Scratch")}
     ]
 
-    // letsktch! is on for this deck
-    property bool letsktchOn: false
+    // The ScratchEngine and Letsktch of the main screen
+    property var scratch: null
+    property var letsktch: null
 
     signal closeRequested
-    signal letsktchRequested
 
     color: Style.panel
 
@@ -46,8 +47,6 @@ Rectangle {
 
         StemsTool {
             group: root.group
-            letsktchOn: root.letsktchOn
-            onLetsktchRequested: root.letsktchRequested()
         }
     }
     Component {
@@ -74,8 +73,10 @@ Rectangle {
     Component {
         id: scratchTool
 
-        ScratchBank {
-            Component.onCompleted: target = root.group
+        ScratchTool {
+            group: root.group
+            engine: root.scratch
+            letsktch: root.letsktch
         }
     }
     Component {

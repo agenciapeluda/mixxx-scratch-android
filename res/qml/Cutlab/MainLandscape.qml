@@ -9,7 +9,7 @@ import QtQuick
 //    crossfader
 //  - below, for each deck: its buttons (tools, PLAY, CUE, SYNC, loop) and
 //    its 8 pads; ▲ in the middle makes the pads big
-// The tools of a deck (mixer, FX, stems, cues, loops, Scratch Bank) open in
+// The tools of a deck (mixer, FX, stems, cues, loops, Scratch) open in
 // the room of its dial and pads: the waveforms stay on screen. Upright they
 // take the room of the pads. What is not on screen is not loaded.
 Rectangle {
@@ -203,6 +203,8 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 6
                 group: root.host.letsktchGroup
+                busy: root.host.letsktchEngine.busy
+                stepText: root.host.letsktchEngine.stepText
                 onStopRequested: root.host.toggleLetsktch(group)
             }
         }
@@ -333,8 +335,8 @@ Rectangle {
                     tool: toolsArea.index === 0 ? root.host.tool1 : root.host.tool2
                     onToolChanged: root.host.setTool(toolsArea.modelData, tool)
                     onCloseRequested: root.host.closeTools(toolsArea.modelData)
-                    letsktchOn: root.host.letsktchGroup === toolsArea.modelData
-                    onLetsktchRequested: root.host.toggleLetsktch(toolsArea.modelData)
+                    scratch: root.host.scratchEngine
+                    letsktch: root.host.letsktchEngine
                 }
             }
         }

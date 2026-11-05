@@ -93,7 +93,12 @@ Rectangle {
 
         readonly property real rowHeight: 50
         readonly property real xfaderHeight: 52
-        readonly property real panelHeight: root.panelOpen ? Math.round(height * 0.44) : 0
+        // The pads alone are almost square, never stretched: two rows of
+        // four per deck under the mode tab. What they leave goes to the
+        // waveforms. The tools keep their room
+        readonly property real padSide: Math.floor(((width - root.gap) / 2 - 3 * 4) / 4)
+        readonly property real padsHeight: Math.min(Math.round(height * 0.44), 26 + 4 + Math.round(padSide * 1.12) * 2 + 4)
+        readonly property real panelHeight: root.toolsGroup !== "" ? Math.round(height * 0.44) : (root.host.padsBig ? padsHeight : 0)
         readonly property real stageHeight: height - rowHeight - xfaderHeight - panelHeight - root.gap * (root.panelOpen ? 3 : 2)
         readonly property real dialSize: Math.min((width - root.gap) / 2, Math.round(stageHeight * 0.36))
 
@@ -127,6 +132,8 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 6
                 group: root.host.letsktchGroup
+                busy: root.host.letsktchEngine.busy
+                stepText: root.host.letsktchEngine.stepText
                 onStopRequested: root.host.toggleLetsktch(group)
             }
             Repeater {
@@ -204,8 +211,8 @@ Rectangle {
                     tool: root.toolsGroup === "[Channel2]" ? root.host.tool2 : root.host.tool1
                     onToolChanged: root.host.setTool(root.toolsGroup, tool)
                     onCloseRequested: root.host.closeTools(root.toolsGroup)
-                    letsktchOn: root.host.letsktchGroup === root.toolsGroup
-                    onLetsktchRequested: root.host.toggleLetsktch(root.toolsGroup)
+                    scratch: root.host.scratchEngine
+                    letsktch: root.host.letsktchEngine
                 }
             }
             Repeater {

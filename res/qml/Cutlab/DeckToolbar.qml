@@ -1,7 +1,7 @@
 import QtQuick
 
 // The bar of a deck, like djay: stems, hot cues, loops, FX, EQ and the
-// Scratch Bank. A tap opens that tool in the half of the deck.
+// Scratch. A tap opens that tool in the half of the deck.
 Rectangle {
     id: root
 

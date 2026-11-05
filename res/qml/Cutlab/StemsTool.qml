@@ -12,8 +12,6 @@ Item {
     id: root
 
     required property string group
-    // letsktch! is on for this deck
-    property bool letsktchOn: false
     readonly property var deckPlayer: Mixxx.PlayerManager.getPlayer(group)
     readonly property var currentTrack: deckPlayer ? deckPlayer.currentTrack : null
     readonly property bool hasStems: stemRepeater.count > 0
@@ -150,8 +148,6 @@ Item {
         }
     }
 
-    signal letsktchRequested
-
     // The stems themselves, hidden: the parts below drive them
     Repeater {
         id: stemRepeater
@@ -188,29 +184,8 @@ Item {
         }
     }
 
-    // letsktch!: scratch the voice over its own beat, on this deck
-    CLButton {
-        id: letsktchButton
-
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 4
-        height: root.hasStems ? 44 : 0
-        visible: root.hasStems
-        radius: 22
-        text: root.letsktchOn ? qsTr("letsktch!  ·  tocá para volver al tema") : qsTr("letsktch!  ·  voz al plato, beat en loop")
-        fontSize: 14
-        fontWeight: Font.Bold
-        highlighted: root.letsktchOn
-        litColor: Style.stemVocals
-        textColor: root.letsktchOn ? Style.background : Style.stemVocals
-        onClicked: root.letsktchRequested()
-    }
-
     Row {
-        anchors.top: letsktchButton.bottom
-        anchors.topMargin: root.hasStems ? 6 : 0
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
