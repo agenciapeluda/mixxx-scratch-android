@@ -48,6 +48,10 @@ class Library: public QObject {
     Q_OBJECT
 
   public:
+    /// Cutlab: the batch analysis (pause while playing, progress)
+    AnalysisFeature* analysisFeature() const {
+        return m_pAnalysisFeature.get();
+    }
     Library(QObject* parent,
             UserSettingsPointer pConfig,
             mixxx::DbConnectionPoolPtr pDbConnectionPool,

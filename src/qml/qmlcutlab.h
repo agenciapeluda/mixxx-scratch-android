@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QUrl>
 #include <QVariantList>
+#include <QVariantMap>
 
 namespace mixxx {
 namespace qml {
@@ -22,8 +23,32 @@ class QmlCutlab : public QObject {
     QML_NAMED_ELEMENT(Cutlab)
     QML_SINGLETON
 
+    /// The batch analysis: tracks done and in all of it (0 when idle),
+    /// whether it waits for the decks to stop, and the tracks that could
+    /// not be analyzed
+    Q_PROPERTY(int analysisDone READ analysisDone NOTIFY analysisChanged)
+    Q_PROPERTY(int analysisTotal READ analysisTotal NOTIFY analysisChanged)
+    Q_PROPERTY(bool analysisHeld READ analysisHeld NOTIFY analysisChanged)
+    Q_PROPERTY(int analysisFailed READ analysisFailed NOTIFY analysisChanged)
+
   public:
     explicit QmlCutlab(QObject* pParent = nullptr);
+
+    int analysisDone() const;
+    int analysisTotal() const;
+    bool analysisHeld() const;
+    int analysisFailed() const;
+    /// While a deck plays the analysis waits (the screen and the audio
+    /// keep the CPU); it goes on once they stop
+    Q_INVOKABLE void setAnalysisHeld(bool held);
+    /// Measures each frame of `window` (a QQuickWindow): the time the GUI
+    /// thread is blocked syncing, the time to record the frame, the time
+    /// to present it, and how late the GUI thread answers; frameStats() once
+    /// a second, also written to the log
+    Q_INVOKABLE void watchFrames(QObject* window, bool on);
+    /// Opens the share sheet with the log of this run, the one before and
+    /// the crash reports
+    Q_INVOKABLE bool shareLog() const;
 
     static QmlCutlab* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
 
@@ -107,8 +132,12 @@ class QmlCutlab : public QObject {
   signals:
     /// A library scan is over: the folders and the tracks may have changed
     void libraryScanned();
+    void analysisChanged();
+    void frameStats(const QVariantMap& stats);
 
   private:
+    /// The batch is over: marks the tracks it could not analyze
+    void markFailedAnalysis() const;
     /// Shows the tracks of the chosen folders and hides the rest
     void applyFolderVisibility(const QStringList& paths) const;
 };

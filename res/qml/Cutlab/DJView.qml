@@ -126,6 +126,10 @@ Rectangle {
             }
         }
     }
+    // The analysis waits while a deck plays (it would take the CPU of the
+    // screen and the audio) and goes on once both stop
+    readonly property bool anyPlaying: playing1.value > 0 || playing2.value > 0
+    onAnyPlayingChanged: Mixxx.Cutlab.setAnalysisHeld(root.anyPlaying)
     Mixxx.ControlProxy {
         id: playing1
 

@@ -68,6 +68,7 @@ Rectangle {
         root.compatKey = Mixxx.Cutlab.deckKey(root.playingGroup);
     }
     property int missing: 0
+    property int failedAnalysis: 0
     readonly property string versusKey: {
         // Again when a key changes
         keyA.value;
@@ -135,6 +136,7 @@ Rectangle {
         root.readLoaded();
         root.refreshSuggestions();
         root.missing = Mixxx.Cutlab.missingAnalysis();
+        root.failedAnalysis = Mixxx.Cutlab.analysisFailed;
         root.folderRows = Mixxx.Cutlab.musicFolders();
         root.genreRows = Mixxx.Cutlab.genres();
         root.volumes = Mixxx.Cutlab.storageVolumes();
@@ -1443,10 +1445,91 @@ Rectangle {
             }
         }
 
+        // The analysis, always in sight while something is missing: how far
+        // it goes, whether it waits for the decks, and Analizar todo
+        Rectangle {
+            id: analysisBar
+
+            readonly property int done: Mixxx.Cutlab.analysisDone
+            readonly property int total: Mixxx.Cutlab.analysisTotal
+            readonly property bool running: total > 0
+            readonly property int failed: root.failedAnalysis
+
+            anchors.top: tableHeader.bottom
+            x: trackView.x
+            width: trackView.width
+            visible: running || root.missing > 0 || failed > 0
+            height: visible ? Math.round(40 * root.u) : 0
+            radius: Math.round(8 * root.u)
+            color: Style.raised
+            clip: true
+
+            // Progress
+            Rectangle {
+                visible: analysisBar.running
+                width: parent.width * (analysisBar.total > 0 ? analysisBar.done / analysisBar.total : 0)
+                height: parent.height
+                radius: parent.radius
+                color: Style.accentDark
+            }
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: Math.round(12 * root.u)
+                anchors.right: analyzeAllButton.left
+                anchors.rightMargin: 8
+                anchors.verticalCenter: parent.verticalCenter
+                color: Style.text
+                elide: Text.ElideRight
+                font.family: Style.font
+                font.pixelSize: root.fs(13)
+                text: {
+                    let main;
+                    if (analysisBar.running) {
+                        main = Mixxx.Cutlab.analysisHeld
+                            ? qsTr("Análisis en pausa mientras suena un deck · %1 de %2").arg(analysisBar.done).arg(analysisBar.total)
+                            : qsTr("Analizando %1 de %2").arg(analysisBar.done).arg(analysisBar.total);
+                    } else if (root.missing > 0) {
+                        main = qsTr("%1 temas sin BPM ni tonalidad").arg(root.missing);
+                    } else {
+                        main = qsTr("Todo analizado");
+                    }
+                    return analysisBar.failed > 0 ? main + " · " + qsTr("%1 no se pudieron analizar").arg(analysisBar.failed) : main;
+                }
+            }
+            CLButton {
+                id: analyzeAllButton
+
+                anchors.right: parent.right
+                anchors.rightMargin: Math.round(4 * root.u)
+                anchors.verticalCenter: parent.verticalCenter
+                visible: !analysisBar.running && root.missing > 0
+                width: visible ? Math.round(120 * root.u) : 0
+                height: parent.height - Math.round(8 * root.u)
+                text: qsTr("Analizar todo")
+                fontSize: root.fs(13)
+                highlighted: true
+                onClicked: {
+                    Mixxx.Cutlab.analyzeMissing();
+                    root.missing = Mixxx.Cutlab.missingAnalysis();
+                }
+            }
+        }
+        Connections {
+            target: Mixxx.Cutlab
+
+            function onAnalysisChanged() {
+                if (Mixxx.Cutlab.analysisTotal <= 0) {
+                    root.missing = Mixxx.Cutlab.missingAnalysis();
+                    root.failedAnalysis = Mixxx.Cutlab.analysisFailed;
+                }
+            }
+        }
+
         ListView {
             id: trackView
 
-            anchors.top: tableHeader.bottom
+            anchors.top: analysisBar.bottom
+            anchors.topMargin: analysisBar.visible ? 4 : 0
             anchors.bottom: parent.bottom
             x: root.wide ? Math.round(8 * root.u) : 8
             width: parent.width - 2 * x
@@ -1750,14 +1833,6 @@ Rectangle {
     CLMenu {
         id: moreMenu
 
-        CLMenuItem {
-            text: root.missing > 0 ? qsTr("Analizar BPM y tono (%1 pendientes)").arg(root.missing) : qsTr("Todo analizado")
-            enabled: root.missing > 0
-            onTriggered: {
-                Mixxx.Cutlab.analyzeMissing();
-                root.missing = 0;
-            }
-        }
         CLMenuItem {
             text: qsTr("Separar stems de esta lista…")
             enabled: root.page && root.page.showTracks && trackView.count > 0

@@ -8,16 +8,14 @@ import QtQuick.Window
 Rectangle {
     id: root
 
-    property int frames: 0
-    property int fps: 0
-    // The longest gap between two frames in the last second, and how many
-    // frames came late (more than one and a half frames of the screen)
-    property real lastFrame: 0
-    property real worstNow: 0
-    property real worst: 0
-    property int lateNow: 0
-    property int late: 0
-    readonly property real hz: root.Screen.refreshRate > 0 ? root.Screen.refreshRate : 60
+    // Measured by the app for each frame (Cutlab.watchFrames), once a
+    // second; also written to the log
+    property var stats: ({})
+    readonly property real hz: stats.hz > 0 ? stats.hz : (root.Screen.refreshRate > 0 ? root.Screen.refreshRate : 60)
+    readonly property real frameMs: 1000 / root.hz
+    function n(key) {
+        return root.stats[key] !== undefined ? Number(root.stats[key]) : 0;
+    }
 
     implicitWidth: column.implicitWidth + 20
     implicitHeight: column.implicitHeight + 14
@@ -26,47 +24,13 @@ Rectangle {
     border.width: 1
     border.color: Style.buttonBorder
 
+    onVisibleChanged: Mixxx.Cutlab.watchFrames(root.Window.window, root.visible)
+    Component.onCompleted: if (root.visible) Mixxx.Cutlab.watchFrames(root.Window.window, true)
     Connections {
-        target: root.Window.window
-        enabled: root.visible
+        target: Mixxx.Cutlab
 
-        function onFrameSwapped() {
-            root.frames += 1;
-            const now = Date.now();
-            if (root.lastFrame > 0) {
-                const gap = now - root.lastFrame;
-                root.worstNow = Math.max(root.worstNow, gap);
-                if (gap > 1.5 * 1000 / root.hz) {
-                    root.lateNow += 1;
-                }
-            }
-            root.lastFrame = now;
-        }
-    }
-    Timer {
-        interval: 1000
-        repeat: true
-        running: root.visible
-        onTriggered: {
-            root.fps = root.frames;
-            root.frames = 0;
-            root.worst = root.worstNow;
-            root.worstNow = 0;
-            root.late = root.lateNow;
-            root.lateNow = 0;
-        }
-    }
-    // Keeps the screen drawing so the count means something
-    Rectangle {
-        width: 4
-        height: 4
-        color: "transparent"
-        RotationAnimation on rotation {
-            running: root.visible
-            loops: Animation.Infinite
-            from: 0
-            to: 360
-            duration: 1000
+        function onFrameStats(stats) {
+            root.stats = stats;
         }
     }
 
@@ -97,10 +61,19 @@ Rectangle {
         spacing: 2
 
         Repeater {
+            // Frames: what the screen got; then where the time of a frame
+            // goes: the interface thread (QML) blocked, syncing, recording
+            // the frame, and presenting it (waiting for the GPU)
             model: [
-                {label: qsTr("Pantalla"), value: root.fps + " fps · " + Math.round(root.hz) + " Hz", good: root.fps >= root.hz * 0.92},
-                {label: qsTr("Peor cuadro"), value: Math.round(root.worst) + " ms", good: root.worst <= 1.6 * 1000 / root.hz},
-                {label: qsTr("Cuadros tarde"), value: root.late + " /s", good: root.late < 1},
+                {label: qsTr("Pantalla"), value: root.n("fps") + " fps · " + Math.round(root.hz) + " Hz", good: root.n("fps") >= root.hz * 0.9},
+                {label: qsTr("Peor cuadro"), value: root.n("worstMs").toFixed(1) + " ms", good: root.n("worstMs") <= 1.6 * root.frameMs},
+                {label: qsTr("Cuadros tarde"), value: root.n("late") + " /s", good: root.n("late") < 1},
+                {label: qsTr("Interfaz trabada"), value: root.n("guiStallMs").toFixed(1) + " ms", good: root.n("guiStallMs") <= root.frameMs},
+                {label: qsTr("Sincronizar"), value: root.n("syncMs").toFixed(1) + " / " + root.n("syncMaxMs").toFixed(1) + " ms", good: root.n("syncMaxMs") <= root.frameMs * 0.3},
+                {label: qsTr("Dibujar"), value: root.n("renderMs").toFixed(1) + " / " + root.n("renderMaxMs").toFixed(1) + " ms", good: root.n("renderMaxMs") <= root.frameMs * 0.5},
+                {label: qsTr("Presentar (GPU)"), value: root.n("presentMs").toFixed(1) + " / " + root.n("presentMaxMs").toFixed(1) + " ms", good: root.n("presentMs") <= root.frameMs},
+                {label: qsTr("Resolución"), value: root.stats.pixels || "", good: true},
+                {label: qsTr("Análisis"), value: root.stats.analyzing ? (root.stats.analysisHeld ? qsTr("en pausa") : qsTr("corriendo")) : qsTr("no"), good: !root.stats.analyzing || root.stats.analysisHeld},
                 {label: qsTr("Latencia del audio"), value: Math.round(latency.value) + " ms", good: latency.value <= 25},
                 {label: qsTr("Carga del audio"), value: Math.round(usage.value) + " %", good: usage.value < 70},
                 {label: qsTr("Cortes de audio"), value: String(Math.round(overloads.value)), good: overloads.value < 1}
@@ -125,6 +98,39 @@ Rectangle {
                     font.weight: Font.Bold
                     text: modelData.value
                 }
+            }
+        }
+        Text {
+            width: 230
+            color: Style.textDim
+            font.family: Style.font
+            font.pixelSize: 10
+            wrapMode: Text.WordWrap
+            text: qsTr("Tiempos: promedio / peor del último segundo. Quieto, la pantalla descansa y los fps bajan: es normal.")
+        }
+        Rectangle {
+            width: shareLabel.implicitWidth + 24
+            height: 32
+            radius: 8
+            color: shareMouse.pressed ? Style.accentDark : Style.accent
+
+            Text {
+                id: shareLabel
+
+                anchors.centerIn: parent
+                color: "#ffffff"
+                font.family: Style.font
+                font.pixelSize: 13
+                font.weight: Font.DemiBold
+                text: shareMouse.failed ? qsTr("No hay log para compartir") : qsTr("Compartir log")
+            }
+            MouseArea {
+                id: shareMouse
+
+                property bool failed: false
+
+                anchors.fill: parent
+                onClicked: failed = !Mixxx.Cutlab.shareLog()
             }
         }
     }

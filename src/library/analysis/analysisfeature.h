@@ -34,6 +34,8 @@ class AnalysisFeature : public LibraryFeature {
 
   signals:
     void analysisActive(bool bActive);
+    /// Cutlab: tracks done and in all of the batch (0, 0 when it is over)
+    void batchProgress(int done, int total);
     void trackProgress(TrackId trackId, AnalyzerProgress progress);
 
   public slots:
@@ -43,6 +45,17 @@ class AnalysisFeature : public LibraryFeature {
     void suspendAnalysis();
     void resumeAnalysis();
     void stopAnalysis();
+    /// Cutlab: held while a deck plays, so the analysis never takes the
+    /// CPU the screen and the audio need; it goes on when they stop
+    void setHeldForPlay(bool held);
+
+  public:
+    bool isHeldForPlay() const {
+        return m_heldForPlay;
+    }
+    bool isBatchActive() const {
+        return static_cast<bool>(m_pTrackAnalysisScheduler);
+    }
 
   private slots:
     void onTrackAnalysisSchedulerProgress(AnalyzerProgress currentTrackProgress, int currentTrackNumber, int totalTracksCount);
@@ -67,4 +80,5 @@ class AnalysisFeature : public LibraryFeature {
 
     // The title is dynamic and reflects the current progress
     QString m_title;
+    bool m_heldForPlay{false};
 };

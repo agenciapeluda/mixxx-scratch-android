@@ -1,6 +1,16 @@
 #include "qml/qmlcutlab.h"
 
 #include <QDateTime>
+#include <QElapsedTimer>
+#include <QPointer>
+#include <QSGRendererInterface>
+#include <QQuickWindow>
+#include <QScreen>
+#include <QTimer>
+#include <atomic>
+#ifdef Q_OS_ANDROID
+#include <QJniObject>
+#endif
 #include <QDir>
 #include <QDirIterator>
 #include <QFileInfo>
@@ -27,6 +37,7 @@
 #include "library/trackset/setlogfeature.h"
 #include "library/scanner/libraryscanner.h"
 #include "library/trackcollectionmanager.h"
+#include "util/cmdlineargs.h"
 #include "util/fileinfo.h"
 #include "util/sandbox.h"
 #include "mixer/playerinfo.h"
@@ -41,6 +52,7 @@
 
 #ifdef Q_OS_ANDROID
 #include "library/androidscanorder.h"
+#include "library/analysis/analysisfeature.h"
 #endif
 
 namespace mixxx {
@@ -180,9 +192,31 @@ const QStringList kNonMusicFolders = {
 } // namespace
 
 namespace {
+const QString kMissingAnalysis = QStringLiteral(
+        "FROM library INNER JOIN track_locations ON library.location = track_locations.id "
+        "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0 AND "
+        "(library.bpm IS NULL OR library.bpm <= 0 OR library.key IS NULL OR library.key = '') AND "
+        "library.id NOT IN (SELECT track_id FROM cutlab_analysis_failed)");
+} // namespace
+
+namespace {
 // The folders chosen in this session: applied again once their scan is over,
 // when their tracks are in the library
 QStringList s_chosenFolders;
+// The batch analysis, as the analysis feature reports it
+int s_analysisDone = 0;
+int s_analysisTotal = 0;
+// The tracks queued for analysis in this session (once each)
+QSet<int> s_queuedForAnalysis;
+
+// Tracks the analysis could not read (a damaged file, an odd format): kept,
+// so they are not queued again and again, and counted apart
+const QString kFailedTable = QStringLiteral("cutlab_analysis_failed");
+void ensureFailedTable(QSqlDatabase& db) {
+    QSqlQuery query(db);
+    query.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS ") + kFailedTable +
+            QStringLiteral(" (track_id INTEGER PRIMARY KEY)"));
+}
 } // namespace
 
 QmlCutlab::QmlCutlab(QObject* pParent)
@@ -205,6 +239,93 @@ QmlCutlab::QmlCutlab(QObject* pParent)
                 },
                 Qt::QueuedConnection);
     }
+    if (pLibrary && pLibrary->analysisFeature()) {
+        connect(pLibrary->analysisFeature(),
+                &AnalysisFeature::batchProgress,
+                this,
+                [this](int done, int total) {
+                    const bool over = total <= 0 && s_analysisTotal > 0;
+                    s_analysisDone = done;
+                    s_analysisTotal = total;
+                    if (over) {
+                        markFailedAnalysis();
+                    }
+                    emit analysisChanged();
+                });
+    }
+}
+
+void QmlCutlab::markFailedAnalysis() const {
+    // The batch is over: the queued tracks still with no BPM or key could
+    // not be analyzed
+    QSqlDatabase db = database();
+    if (!db.isOpen() || s_queuedForAnalysis.isEmpty()) {
+        return;
+    }
+    ensureFailedTable(db);
+    QSqlQuery query(db);
+    if (!query.exec(QStringLiteral("SELECT library.id ") + kMissingAnalysis)) {
+        return;
+    }
+    QList<int> failed;
+    while (query.next()) {
+        const int id = query.value(0).toInt();
+        if (s_queuedForAnalysis.contains(id)) {
+            failed.append(id);
+        }
+    }
+    for (const int id : std::as_const(failed)) {
+        QSqlQuery insert(db);
+        insert.prepare(QStringLiteral("INSERT OR IGNORE INTO ") + kFailedTable +
+                QStringLiteral(" (track_id) VALUES (?)"));
+        insert.addBindValue(id);
+        insert.exec();
+    }
+    if (!failed.isEmpty()) {
+        qInfo() << "Cutlab:" << failed.size() << "tracks could not be analyzed";
+    }
+}
+
+int QmlCutlab::analysisDone() const {
+    return s_analysisDone;
+}
+
+int QmlCutlab::analysisTotal() const {
+    return s_analysisTotal;
+}
+
+bool QmlCutlab::analysisHeld() const {
+    Library* pLibrary = QmlLibraryProxy::get();
+    return pLibrary && pLibrary->analysisFeature() &&
+            pLibrary->analysisFeature()->isHeldForPlay();
+}
+
+int QmlCutlab::analysisFailed() const {
+    QSqlDatabase db = database();
+    if (!db.isOpen()) {
+        return 0;
+    }
+    ensureFailedTable(db);
+    QSqlQuery query(db);
+    if (!query.exec(QStringLiteral(
+                "SELECT COUNT(*) FROM library WHERE mixxx_deleted = 0 AND "
+                "(bpm IS NULL OR bpm <= 0 OR key IS NULL OR key = '') AND id IN "
+                "(SELECT track_id FROM ") +
+                kFailedTable + QStringLiteral(")")) ||
+            !query.next()) {
+        return 0;
+    }
+    return query.value(0).toInt();
+}
+
+void QmlCutlab::setAnalysisHeld(bool held) {
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (!pLibrary || !pLibrary->analysisFeature() ||
+            pLibrary->analysisFeature()->isHeldForPlay() == held) {
+        return;
+    }
+    pLibrary->analysisFeature()->setHeldForPlay(held);
+    emit analysisChanged();
 }
 
 QmlCutlab* QmlCutlab::create(QQmlEngine* pQmlEngine, QJSEngine*) {
@@ -860,15 +981,13 @@ void QmlCutlab::applyFolderVisibility(const QStringList& paths) const {
 #endif
 }
 
-namespace {
-const QString kMissingAnalysis = QStringLiteral(
-        "FROM library INNER JOIN track_locations ON library.location = track_locations.id "
-        "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0 AND "
-        "(library.bpm IS NULL OR library.bpm <= 0 OR library.key IS NULL OR library.key = '')");
-} // namespace
+
 
 int QmlCutlab::missingAnalysis() const {
     QSqlDatabase db = database();
+    if (db.isOpen()) {
+        ensureFailedTable(db);
+    }
     QSqlQuery query(db);
     if (!db.isOpen() || !query.exec(QStringLiteral("SELECT COUNT(*) ") + kMissingAnalysis) ||
             !query.next()) {
@@ -883,6 +1002,7 @@ int QmlCutlab::analyzeMissing() const {
     if (!pLibrary || !db.isOpen()) {
         return 0;
     }
+    ensureFailedTable(db);
     QSqlQuery query(db);
     // Newest first: the tracks just added are the ones looked for
     if (!query.exec(QStringLiteral("SELECT library.id ") + kMissingAnalysis +
@@ -892,14 +1012,13 @@ int QmlCutlab::analyzeMissing() const {
     }
     // Each track is queued once per session: a scan or the timer again
     // don't pile the same tracks up
-    static QSet<int> s_queued;
     QList<AnalyzerScheduledTrack> tracks;
     while (query.next()) {
         const int id = query.value(0).toInt();
-        if (s_queued.contains(id)) {
+        if (s_queuedForAnalysis.contains(id)) {
             continue;
         }
-        s_queued.insert(id);
+        s_queuedForAnalysis.insert(id);
         tracks.append(AnalyzerScheduledTrack(TrackId(query.value(0))));
     }
     if (!tracks.isEmpty()) {
@@ -1239,6 +1358,211 @@ bool QmlCutlab::markPlayed(const QString& group) const {
         pTrack->updatePlayCounter();
     }
     return true;
+}
+
+
+namespace {
+// The frames of the watched window. The render thread writes, the GUI
+// thread reads once a second.
+struct FrameWatch {
+    QPointer<QQuickWindow> window;
+    QObject* context{nullptr}; // owns the connections and the timers
+    QElapsedTimer clock;
+    std::atomic<qint64> syncStart{0};
+    std::atomic<qint64> syncEnd{0};
+    std::atomic<qint64> renderEnd{0};
+    std::atomic<qint64> lastSwap{0};
+    std::atomic<qint64> syncSum{0};
+    std::atomic<qint64> syncMax{0};
+    std::atomic<qint64> renderSum{0};
+    std::atomic<qint64> renderMax{0};
+    std::atomic<qint64> presentSum{0};
+    std::atomic<qint64> presentMax{0};
+    std::atomic<qint64> gapMax{0};
+    std::atomic<int> frames{0};
+    std::atomic<int> late{0};
+    // GUI thread: how late a 4 ms timer fires
+    qint64 lastProbe{0};
+    qint64 guiStallMax{0};
+};
+FrameWatch* s_frameWatch = nullptr;
+
+void raiseMax(std::atomic<qint64>& max, qint64 value) {
+    qint64 current = max.load(std::memory_order_relaxed);
+    while (value > current &&
+            !max.compare_exchange_weak(current, value, std::memory_order_relaxed)) {
+    }
+}
+} // namespace
+
+void QmlCutlab::watchFrames(QObject* windowObject, bool on) {
+    if (s_frameWatch) {
+        // Disconnects all; the few bytes of the watch stay, a frame of the
+        // render thread may still be writing to them
+        delete s_frameWatch->context;
+        s_frameWatch = nullptr;
+    }
+    auto* const pWindow = qobject_cast<QQuickWindow*>(windowObject);
+    if (!on || !pWindow) {
+        return;
+    }
+    auto* const pWatch = new FrameWatch;
+    s_frameWatch = pWatch;
+    pWatch->window = pWindow;
+    pWatch->context = new QObject(this);
+    pWatch->clock.start();
+    // Render thread (direct): sync, record, present
+    connect(pWindow,
+            &QQuickWindow::beforeSynchronizing,
+            pWatch->context,
+            [pWatch]() { pWatch->syncStart = pWatch->clock.nsecsElapsed(); },
+            Qt::DirectConnection);
+    connect(pWindow,
+            &QQuickWindow::afterSynchronizing,
+            pWatch->context,
+            [pWatch]() {
+                const qint64 now = pWatch->clock.nsecsElapsed();
+                pWatch->syncEnd = now;
+                const qint64 sync = now - pWatch->syncStart;
+                pWatch->syncSum += sync;
+                raiseMax(pWatch->syncMax, sync);
+            },
+            Qt::DirectConnection);
+    connect(pWindow,
+            &QQuickWindow::afterRendering,
+            pWatch->context,
+            [pWatch]() {
+                const qint64 now = pWatch->clock.nsecsElapsed();
+                pWatch->renderEnd = now;
+                const qint64 render = now - pWatch->syncEnd;
+                pWatch->renderSum += render;
+                raiseMax(pWatch->renderMax, render);
+            },
+            Qt::DirectConnection);
+    connect(pWindow,
+            &QQuickWindow::frameSwapped,
+            pWatch->context,
+            [pWatch]() {
+                const qint64 now = pWatch->clock.nsecsElapsed();
+                const qint64 present = now - pWatch->renderEnd;
+                pWatch->presentSum += present;
+                raiseMax(pWatch->presentMax, present);
+                const qint64 previous = pWatch->lastSwap.exchange(now);
+                if (previous > 0) {
+                    const qint64 gap = now - previous;
+                    raiseMax(pWatch->gapMax, gap);
+                    const qreal hz = pWatch->window && pWatch->window->screen()
+                            ? pWatch->window->screen()->refreshRate()
+                            : 60.0;
+                    if (gap > static_cast<qint64>(1.5e9 / std::max<qreal>(30.0, hz))) {
+                        pWatch->late++;
+                    }
+                }
+                pWatch->frames++;
+            },
+            Qt::DirectConnection);
+    // GUI thread: a 4 ms timer; when it fires late, the GUI thread was busy
+    auto* const pProbe = new QTimer(pWatch->context);
+    pProbe->setTimerType(Qt::PreciseTimer);
+    pProbe->setInterval(4);
+    connect(pProbe, &QTimer::timeout, pWatch->context, [pWatch]() {
+        const qint64 now = pWatch->clock.nsecsElapsed();
+        if (pWatch->lastProbe > 0) {
+            pWatch->guiStallMax = std::max(pWatch->guiStallMax, now - pWatch->lastProbe);
+        }
+        pWatch->lastProbe = now;
+    });
+    pProbe->start();
+    // Once a second: the numbers, to the screen and to the log
+    auto* const pReport = new QTimer(pWatch->context);
+    pReport->setInterval(1000);
+    connect(pReport, &QTimer::timeout, this, [this, pWatch]() {
+        const int frames = pWatch->frames.exchange(0);
+        const int n = std::max(1, frames);
+        const auto ms = [](qint64 ns) {
+            return std::round(ns / 1e5) / 10.0;
+        };
+        QVariantMap stats;
+        stats.insert(QStringLiteral("fps"), frames);
+        stats.insert(QStringLiteral("hz"),
+                pWatch->window && pWatch->window->screen()
+                        ? pWatch->window->screen()->refreshRate()
+                        : 0.0);
+        stats.insert(QStringLiteral("late"), pWatch->late.exchange(0));
+        stats.insert(QStringLiteral("worstMs"), ms(pWatch->gapMax.exchange(0)));
+        stats.insert(QStringLiteral("syncMs"), ms(pWatch->syncSum.exchange(0) / n));
+        stats.insert(QStringLiteral("syncMaxMs"), ms(pWatch->syncMax.exchange(0)));
+        stats.insert(QStringLiteral("renderMs"), ms(pWatch->renderSum.exchange(0) / n));
+        stats.insert(QStringLiteral("renderMaxMs"), ms(pWatch->renderMax.exchange(0)));
+        stats.insert(QStringLiteral("presentMs"), ms(pWatch->presentSum.exchange(0) / n));
+        stats.insert(QStringLiteral("presentMaxMs"), ms(pWatch->presentMax.exchange(0)));
+        stats.insert(QStringLiteral("guiStallMs"), ms(pWatch->guiStallMax));
+        pWatch->guiStallMax = 0;
+        stats.insert(QStringLiteral("analyzing"), s_analysisTotal > 0);
+        stats.insert(QStringLiteral("analysisHeld"), analysisHeld());
+        const QSize size = pWatch->window ? pWatch->window->size() * pWatch->window->devicePixelRatio()
+                                          : QSize();
+        stats.insert(QStringLiteral("pixels"),
+                QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
+        qInfo().noquote() << "Cutlab frames:"
+                          << QStringLiteral(
+                                     "fps=%1 hz=%2 late=%3 worst=%4ms sync=%5/%6ms "
+                                     "render=%7/%8ms present=%9/%10ms gui_stall=%11ms "
+                                     "analyzing=%12 held=%13 pixels=%14")
+                                     .arg(stats.value(QStringLiteral("fps")).toInt())
+                                     .arg(stats.value(QStringLiteral("hz")).toDouble(), 0, 'f', 0)
+                                     .arg(stats.value(QStringLiteral("late")).toInt())
+                                     .arg(stats.value(QStringLiteral("worstMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("syncMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("syncMaxMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("renderMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("renderMaxMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("presentMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("presentMaxMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("guiStallMs")).toDouble())
+                                     .arg(stats.value(QStringLiteral("analyzing")).toBool() ? 1 : 0)
+                                     .arg(stats.value(QStringLiteral("analysisHeld")).toBool() ? 1 : 0)
+                                     .arg(stats.value(QStringLiteral("pixels")).toString());
+        emit frameStats(stats);
+    });
+    pReport->start();
+    qInfo() << "Cutlab: watching frames, graphics API"
+            << static_cast<int>(pWindow->rendererInterface()
+                               ? pWindow->rendererInterface()->graphicsApi()
+                               : QSGRendererInterface::Unknown);
+}
+
+bool QmlCutlab::shareLog() const {
+#ifdef Q_OS_ANDROID
+    QStringList files;
+    const QString settingsPath = CmdlineArgs::Instance().getSettingsPath();
+    for (const QString& name : {QStringLiteral("mixxx.log"), QStringLiteral("mixxx.log.1")}) {
+        const QString path = QDir(settingsPath).filePath(name);
+        if (QFileInfo::exists(path)) {
+            files.append(path);
+        }
+    }
+    // The crash reports
+    const QDir crashes(QStringLiteral("/storage/emulated/0/Mixxx/logs"));
+    for (const QFileInfo& info : crashes.entryInfoList(QDir::Files, QDir::Time)) {
+        if (files.size() >= 8) {
+            break;
+        }
+        if (info.fileName() != QStringLiteral("mixxx-previous.log")) {
+            files.append(info.absoluteFilePath());
+        }
+    }
+    if (files.isEmpty()) {
+        return false;
+    }
+    return QJniObject::callStaticMethod<jboolean>("org/mixxx/LogShare",
+            "share",
+            "(Landroid/content/Context;Ljava/lang/String;)Z",
+            QNativeInterface::QAndroidApplication::context().object(),
+            QJniObject::fromString(files.join(QLatin1Char('\n'))).object<jstring>());
+#else
+    return false;
+#endif
 }
 
 } // namespace qml

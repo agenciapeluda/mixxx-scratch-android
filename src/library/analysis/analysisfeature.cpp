@@ -27,9 +27,9 @@ inline
 int numberOfAnalyzerThreads() {
 #ifdef __ANDROID__
     // Cutlab: on a phone all the cores decoding at once take the memory and
-    // the CPU the audio needs, and Android closes the app. One thread is
-    // enough in the background.
-    return 1;
+    // the CPU the audio needs, and Android closes the app. Two tracks at a
+    // time, only while no deck plays (setHeldForPlay).
+    return 2;
 #else
     return kNumberOfAnalyzerThreads;
 #endif
@@ -207,9 +207,24 @@ void AnalysisFeature::suspendAnalysis() {
     m_pTrackAnalysisScheduler->suspend();
 }
 
+void AnalysisFeature::setHeldForPlay(bool held) {
+    if (m_heldForPlay == held) {
+        return;
+    }
+    m_heldForPlay = held;
+    if (held) {
+        suspendAnalysis();
+    } else {
+        resumeAnalysis();
+    }
+}
+
 void AnalysisFeature::resumeAnalysis() {
     if (!m_pTrackAnalysisScheduler) {
         return; // inactive
+    }
+    if (m_heldForPlay) {
+        return; // a deck plays: later
     }
     kLogger.info() << "Resuming analysis";
     m_pTrackAnalysisScheduler->resume();
@@ -232,6 +247,7 @@ void AnalysisFeature::onTrackAnalysisSchedulerProgress(
     if (!m_pTrackAnalysisScheduler) {
         return; // inactive
     }
+    emit batchProgress(currentTrackNumber > 0 ? currentTrackNumber - 1 : 0, totalTracksCount);
     if (totalTracksCount > 0) {
         setTitleProgress(currentTrackNumber, totalTracksCount);
     } else {
@@ -253,6 +269,7 @@ void AnalysisFeature::onTrackAnalysisSchedulerFinished() {
         m_pTrackAnalysisScheduler.reset();
     }
     resetTitle();
+    emit batchProgress(0, 0);
     emit analysisActive(false);
 }
 
