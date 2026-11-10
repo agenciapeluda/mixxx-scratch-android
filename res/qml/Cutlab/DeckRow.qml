@@ -71,6 +71,12 @@ Row {
         key: "bpm"
     }
     Mixxx.ControlProxy {
+        id: syncLeader
+
+        group: root.group
+        key: "sync_leader"
+    }
+    Mixxx.ControlProxy {
         id: sync
 
         group: root.group
@@ -156,8 +162,13 @@ Row {
         width: root.buttonWidth
         height: root.height
         radius: height / 2
-        text: "SYNC"
+        // On: filled in the deck color, bold (it says the beats are locked;
+        // the leader carries a dot)
+        text: sync.value > 0 && syncLeader.value > 0 ? "SYNC •" : "SYNC"
         fontSize: Math.max(11, Math.min(14, height * 0.3))
+        fontWeight: sync.value > 0 ? Font.Bold : Font.Medium
+        litColor: Style.deckColor(root.group)
+        textColor: sync.value > 0 ? Style.background : Style.text
         highlighted: sync.value > 0
         onClicked: sync.value = sync.value > 0 ? 0 : 1
         onPressAndHold: {

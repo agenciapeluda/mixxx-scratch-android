@@ -26,14 +26,16 @@ Rectangle {
         root.bpmNow = bpm.value;
         root.bpmFile = fileBpm.value;
         root.pitch = (rateRatio.value - 1) * 100;
-        root.remaining = Math.max(0, duration.value * (1 - playPosition.value)) / Math.max(0.01, rateRatio.value);
+        root.remaining = Math.max(0, duration.value * (1 - Clock.position(root.group))) / Math.max(0.01, rateRatio.value);
     }
-    Timer {
-        interval: 100
-        repeat: true
-        running: root.visible && root.loaded
-        triggeredOnStart: true
-        onTriggered: root.read()
+    // With the shared position reader, 15 times a second
+    Connections {
+        target: Clock
+        enabled: root.visible && root.loaded
+
+        function onTick() {
+            root.read();
+        }
     }
     onLoadedChanged: root.read()
 
@@ -66,12 +68,6 @@ Rectangle {
 
         group: root.group
         key: "duration"
-    }
-    Mixxx.ControlProxy {
-        id: playPosition
-
-        group: root.group
-        key: "playposition"
     }
     Mixxx.ControlProxy {
         id: keyControl

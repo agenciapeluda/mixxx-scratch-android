@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QMetaObject>
+#include <QElapsedTimer>
 #include <QQuickItem>
+#include <QTimer>
 #include <QSharedPointer>
 #include <QString>
 #include <chrono>
@@ -63,6 +65,11 @@ class QmlSpinnyPosition : public QQuickItem, public VSyncTimeProvider {
     void resetFrameTiming();
     void resetPositions();
     void updatePositions();
+    // Cutlab: a new frame only while the record moves; still, a cheap look
+    // (no redraw) for it to move again
+    void refreshAndSchedule();
+    QTimer m_poll;
+    QElapsedTimer m_lastMove;
 
     static constexpr auto kDefaultSyncInterval = std::chrono::microseconds(16667);
 

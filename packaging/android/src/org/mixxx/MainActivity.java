@@ -7,7 +7,9 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Process;
+import android.view.Display;
 import android.view.WindowManager;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,6 +23,65 @@ public class MainActivity extends QtActivityBase {
             UsbPermission.notifyDevicesChanged();
         }
     };
+
+    // Cutlab: the screen at its highest refresh rate while the app is open
+    // (120 Hz on most phones), 60 Hz in battery saver. Phones with an
+    // adaptive rate (Samsung and others) otherwise change it on their own
+    // while a track plays, and the waveforms judder.
+    private final BroadcastReceiver mPowerSaveReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            applyRefreshRate();
+        }
+    };
+
+    private void applyRefreshRate() {
+        try {
+            final Display display = getWindow().getDecorView().getDisplay() != null
+                    ? getWindow().getDecorView().getDisplay()
+                    : getWindowManager().getDefaultDisplay();
+            if (display == null) {
+                return;
+            }
+            final PowerManager power = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            final boolean saving = power != null && power.isPowerSaveMode();
+            final Display.Mode current = display.getMode();
+            Display.Mode best = null;
+            for (Display.Mode mode : display.getSupportedModes()) {
+                if (mode.getPhysicalWidth() != current.getPhysicalWidth()
+                        || mode.getPhysicalHeight() != current.getPhysicalHeight()) {
+                    continue;
+                }
+                final float rate = mode.getRefreshRate();
+                if (saving) {
+                    // The mode closest to 60 Hz
+                    if (best == null || Math.abs(rate - 60f) < Math.abs(best.getRefreshRate() - 60f)) {
+                        best = mode;
+                    }
+                } else if (best == null || rate > best.getRefreshRate()) {
+                    best = mode;
+                }
+            }
+            if (best == null) {
+                return;
+            }
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            if (lp.preferredDisplayModeId != best.getModeId()
+                    || lp.preferredRefreshRate != best.getRefreshRate()) {
+                lp.preferredDisplayModeId = best.getModeId();
+                lp.preferredRefreshRate = best.getRefreshRate();
+                getWindow().setAttributes(lp);
+            }
+        } catch (RuntimeException e) {
+            // Keep the system's choice
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        applyRefreshRate();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +115,11 @@ public class MainActivity extends QtActivityBase {
         registerReceiver(mUsbHotplugReceiver, usbFilter, Context.RECEIVER_NOT_EXPORTED);
 
         MidiHelper.init(this);
+
+        registerReceiver(mPowerSaveReceiver,
+                new IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED),
+                Context.RECEIVER_NOT_EXPORTED);
+        applyRefreshRate();
     }
 
     /// Saves the settings and the loaded tracks on the main thread of Mixxx,
@@ -64,6 +130,11 @@ public class MainActivity extends QtActivityBase {
     public void onDestroy() {
         try {
             unregisterReceiver(mUsbHotplugReceiver);
+        } catch (IllegalArgumentException e) {
+            // Receiver was not registered
+        }
+        try {
+            unregisterReceiver(mPowerSaveReceiver);
         } catch (IllegalArgumentException e) {
             // Receiver was not registered
         }

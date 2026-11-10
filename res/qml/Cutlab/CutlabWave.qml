@@ -17,7 +17,8 @@ Skin.WaveformDisplay {
     highColor: colors === "rgb" ? Style.waveHigh : (colors === "deck" ? Style.deckLight(root.group) : (rgb ? "#3a8bff" : "#d5c2a2"))
     simpleColor: colors === "deck" ? Style.deckColor(root.group) : (colors === "rgb" ? Style.waveHigh : "#d5c2a2")
     axesColor: Qt.rgba(1, 1, 1, 0.06)
-    beatColor: Qt.rgba(1, 1, 1, 0.18)
+    // 1.26: a clearer grid (the beat lights are gone: the beats line up here)
+    beatColor: Qt.rgba(1, 1, 1, 0.42)
     playMarkerColor: Style.playhead
     cueColor: Style.cue
     loopColor: Style.ok

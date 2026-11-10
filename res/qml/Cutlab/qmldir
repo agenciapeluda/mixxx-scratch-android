@@ -67,3 +67,4 @@ MainPortrait 1.0 MainPortrait.qml
 Letsktch 1.0 Letsktch.qml
 LetsktchChip 1.0 LetsktchChip.qml
 DeckInfoStrip 1.0 DeckInfoStrip.qml
+singleton Clock 1.0 Clock.qml

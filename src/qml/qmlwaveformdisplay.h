@@ -165,6 +165,8 @@ class QmlWaveformDisplay : public QQuickItem, VSyncTimeProvider, public Waveform
   private:
     void setCurrentTrack(TrackPointer pTrack);
     void requestUpdateAtFrameRate();
+    void slotPoll();
+    void updateSyncInterval();
 
     // Properties
     QPointer<QmlPlayerProxy> m_pPlayer;
@@ -179,6 +181,12 @@ class QmlWaveformDisplay : public QQuickItem, VSyncTimeProvider, public Waveform
     std::chrono::microseconds m_syncInterval;
     int m_frameRate;
     double m_lastFramePlayPos{-1.0};
+    // Cutlab: the waveform moves with the screen's vsync while the track
+    // moves; still, a cheap poll (no redraw) looks for it to move again
+    QElapsedTimer m_lastMove;
+    QElapsedTimer m_lastStillRefresh;
+    int m_frameCounter{0};
+    int m_frameDivisor{1};
     enum class DirtyFlag : int {
         None = 0x0,
         Geometry = 0x1,

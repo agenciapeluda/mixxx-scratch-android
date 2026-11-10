@@ -1,6 +1,7 @@
 #include "qml/qmlwaveformdisplay.h"
 
 #include <QQuickWindow>
+#include <QScreen>
 #include <QSGFlatColorMaterial>
 #include <QSGSimpleRectNode>
 #include <QSGVertexColorMaterial>
@@ -29,7 +30,7 @@ using namespace allshader;
 namespace {
 constexpr int kDefaultFrameRate = 60;
 // Refresh interval of a still waveform, see requestUpdateAtFrameRate()
-constexpr int kStillRefreshMillis = 100;
+constexpr int kStillRefreshMillis = 500;
 } // namespace
 
 namespace mixxx {
@@ -60,10 +61,7 @@ QmlWaveformDisplay::QmlWaveformDisplay(QQuickItem* parent)
 
     m_frameRateTimer.setSingleShot(true);
     m_frameRateTimer.setTimerType(Qt::PreciseTimer);
-    connect(&m_frameRateTimer, &QTimer::timeout, this, [this]() {
-        m_frameRequestTimer.restart();
-        update();
-    });
+    connect(&m_frameRateTimer, &QTimer::timeout, this, &QmlWaveformDisplay::slotPoll);
 
     connect(this,
             &QmlWaveformDisplay::windowChanged,
@@ -79,8 +77,7 @@ void QmlWaveformDisplay::setFrameRate(int frameRate) {
         return;
     }
     m_frameRate = clampedFrameRate;
-    m_syncInterval = std::chrono::microseconds(
-            std::max(1, 1'000'000 / m_frameRate));
+    updateSyncInterval();
     if (window()) {
         m_frameRateTimer.stop();
         requestUpdateAtFrameRate();
@@ -318,6 +315,21 @@ std::chrono::microseconds QmlWaveformDisplay::fromTimerToNextSync(const Performa
     return m_syncInterval + std::chrono::microseconds(m_timer.difference(timer).toIntegerMicros());
 }
 
+void QmlWaveformDisplay::updateSyncInterval() {
+    // Cutlab: frames at the screen's own pace. The frame rate setting picks
+    // every frame (120 on a 120 Hz screen) or every second one (60), never
+    // a timer of its own: a timer out of step with the screen made the
+    // waveform move unevenly, some frames twice, some not at all.
+    double refreshRate = 60.0;
+    if (window() && window()->screen()) {
+        refreshRate = std::max(30.0, window()->screen()->refreshRate());
+    }
+    m_frameDivisor = std::max(1,
+            static_cast<int>(std::lround(refreshRate / std::max(1, m_frameRate))));
+    m_syncInterval = std::chrono::microseconds(
+            static_cast<qint64>(1'000'000.0 * m_frameDivisor / refreshRate));
+}
+
 void QmlWaveformDisplay::slotFrameSwapped() {
     m_timer.restart();
     requestUpdateAtFrameRate();
@@ -327,10 +339,6 @@ void QmlWaveformDisplay::requestUpdateAtFrameRate() {
     if (!window()) {
         return;
     }
-
-    // Redraw at the frame rate only while the waveform moves. Each redraw
-    // repaints the whole window, so redrawing still or empty waveforms kept
-    // the UI thread busy and made the app stutter on Android.
     if (!getTrackInfo()) {
         m_frameRateTimer.stop();
         return;
@@ -338,32 +346,53 @@ void QmlWaveformDisplay::requestUpdateAtFrameRate() {
     const double playPos = WaveformWidgetRenderer::m_visualPlayPosition
             ? WaveformWidgetRenderer::m_visualPlayPosition->getEnginePlayPos()
             : -1.0;
-    if (playPos == m_lastFramePlayPos) {
-        // Still: a slow refresh for marks, analysis progress and the like
+    if (playPos != m_lastFramePlayPos) {
+        m_lastFramePlayPos = playPos;
+        m_lastMove.restart();
+    }
+    // The engine reports a new position every few milliseconds, not each
+    // frame: the track counts as moving until it has been still a while
+    const bool moving = m_lastMove.isValid() && m_lastMove.elapsed() < 250;
+    if (!moving) {
+        // Still: no redraw, only a cheap look every frame or so for the
+        // track to move again
+        m_frameCounter = 0;
         if (!m_frameRateTimer.isActive()) {
-            m_frameRateTimer.start(kStillRefreshMillis);
+            m_frameRateTimer.start(8);
         }
         return;
     }
-    m_lastFramePlayPos = playPos;
-
-    if (!m_frameRequestTimer.isValid()) {
-        m_frameRequestTimer.start();
+    m_frameRateTimer.stop();
+    if (++m_frameCounter >= m_frameDivisor) {
+        m_frameCounter = 0;
+        update();
+    } else if (window()) {
+        // A frame of the screen with this waveform as it is
+        window()->requestUpdate();
     }
+}
 
-    const qint64 elapsedMicros = m_frameRequestTimer.nsecsElapsed() / 1000;
-    const qint64 intervalMicros = m_syncInterval.count();
-    if (elapsedMicros >= intervalMicros) {
-        m_frameRateTimer.stop();
-        m_frameRequestTimer.restart();
+void QmlWaveformDisplay::slotPoll() {
+    if (!getTrackInfo()) {
+        return;
+    }
+    const double playPos = WaveformWidgetRenderer::m_visualPlayPosition
+            ? WaveformWidgetRenderer::m_visualPlayPosition->getEnginePlayPos()
+            : -1.0;
+    const bool moved = playPos != m_lastFramePlayPos;
+    // Marks, analysis progress and the like still show, slowly
+    const bool refresh = !m_lastStillRefresh.isValid() || m_lastStillRefresh.elapsed() >= kStillRefreshMillis;
+    if (moved || refresh) {
+        m_lastStillRefresh.restart();
+        if (moved) {
+            m_lastFramePlayPos = playPos;
+            m_lastMove.restart();
+        }
+        updateSyncInterval();
         update();
         return;
     }
-
-    const qint64 remainingMicros = intervalMicros - elapsedMicros;
-    const int remainingMillis = static_cast<int>(
-            std::max<qint64>(1, (remainingMicros + 999) / 1000));
-    m_frameRateTimer.start(remainingMillis);
+    m_frameRateTimer.start(8);
 }
 
 void QmlWaveformDisplay::geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) {

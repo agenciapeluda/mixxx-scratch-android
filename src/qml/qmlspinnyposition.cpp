@@ -20,6 +20,9 @@ constexpr auto kMaximumSyncInterval = std::chrono::microseconds(100000);
 QmlSpinnyPosition::QmlSpinnyPosition(QQuickItem* parent)
         : QQuickItem(parent) {
     setFlag(QQuickItem::ItemHasContents, true);
+    m_poll.setSingleShot(true);
+    m_poll.setTimerType(Qt::PreciseTimer);
+    connect(&m_poll, &QTimer::timeout, this, &QmlSpinnyPosition::refreshAndSchedule);
 
     connect(this,
             &QQuickItem::windowChanged,
@@ -83,8 +86,29 @@ void QmlSpinnyPosition::slotFrameSwapped() {
         m_syncInterval = frameInterval;
     }
     m_haveFrameInterval = true;
+    refreshAndSchedule();
+}
+
+void QmlSpinnyPosition::refreshAndSchedule() {
+    if (!isVisible()) {
+        return;
+    }
+    const double before = m_playPosition;
+    const bool wasValid = m_valid;
     refresh();
-    update();
+    if (m_playPosition != before || m_valid != wasValid) {
+        m_lastMove.restart();
+    }
+    // The engine reports a new position every few milliseconds, not each
+    // frame: moving until it has been still a while
+    if (m_lastMove.isValid() && m_lastMove.elapsed() < 250) {
+        m_poll.stop();
+        update();
+    } else {
+        // Still: no frame asked for, the screen can rest
+        m_haveFrameInterval = false;
+        m_poll.start(8);
+    }
 }
 
 std::chrono::microseconds QmlSpinnyPosition::fromTimerToNextSync(

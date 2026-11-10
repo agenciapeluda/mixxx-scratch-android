@@ -109,7 +109,9 @@ Item {
     readonly property int effectiveFrameRate: lowDetail ? Math.min(60, Mixxx.Config.waveformFrameRate) : Mixxx.Config.waveformFrameRate
     // The options stay the same while scratching: changing them rebuilds
     // all the renderers, a hitch right when the hand lands on the record
-    readonly property int effectiveOptions: Mixxx.Config.waveformOptions
+    // Cutlab 1.26: no high detail on the phone (with two waveforms moving
+    // it costs the most and shows the least)
+    readonly property int effectiveOptions: Mixxx.Config.waveformOptions & ~Mixxx.WaveformDisplay.Option.HighDetail
 
     onScratchNowChanged: {
         if (scratchNow) {

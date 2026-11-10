@@ -43,11 +43,11 @@ Item {
         group: root.group
         key: "duration"
     }
-    Mixxx.ControlProxy {
+    // The shared position reader (15 times a second)
+    QtObject {
         id: playPosition
 
-        group: root.group
-        key: "playposition"
+        readonly property real value: Clock.position(root.group)
     }
     Mixxx.ControlProxy {
         id: rateRatio

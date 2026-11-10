@@ -243,11 +243,11 @@ Rectangle {
                     group: card.modelData
                     key: "duration"
                 }
-                Mixxx.ControlProxy {
+                // The shared position reader (15 times a second)
+                QtObject {
                     id: position
 
-                    group: card.modelData
-                    key: "playposition"
+                    readonly property real value: Clock.position(card.modelData)
                 }
                 Mixxx.ControlProxy {
                     id: rate

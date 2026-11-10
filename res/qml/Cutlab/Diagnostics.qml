@@ -1,5 +1,6 @@
 import Mixxx 1.0 as Mixxx
 import QtQuick
+import QtQuick.Window
 
 // Measures how the app runs, to tune it with numbers: frames per second of
 // the screen, latency of the audio (what DVS feels), how loaded the audio
@@ -9,6 +10,14 @@ Rectangle {
 
     property int frames: 0
     property int fps: 0
+    // The longest gap between two frames in the last second, and how many
+    // frames came late (more than one and a half frames of the screen)
+    property real lastFrame: 0
+    property real worstNow: 0
+    property real worst: 0
+    property int lateNow: 0
+    property int late: 0
+    readonly property real hz: root.Screen.refreshRate > 0 ? root.Screen.refreshRate : 60
 
     implicitWidth: column.implicitWidth + 20
     implicitHeight: column.implicitHeight + 14
@@ -23,6 +32,15 @@ Rectangle {
 
         function onFrameSwapped() {
             root.frames += 1;
+            const now = Date.now();
+            if (root.lastFrame > 0) {
+                const gap = now - root.lastFrame;
+                root.worstNow = Math.max(root.worstNow, gap);
+                if (gap > 1.5 * 1000 / root.hz) {
+                    root.lateNow += 1;
+                }
+            }
+            root.lastFrame = now;
         }
     }
     Timer {
@@ -32,6 +50,10 @@ Rectangle {
         onTriggered: {
             root.fps = root.frames;
             root.frames = 0;
+            root.worst = root.worstNow;
+            root.worstNow = 0;
+            root.late = root.lateNow;
+            root.lateNow = 0;
         }
     }
     // Keeps the screen drawing so the count means something
@@ -76,7 +98,9 @@ Rectangle {
 
         Repeater {
             model: [
-                {label: qsTr("Pantalla"), value: root.fps + " fps", good: root.fps >= 55},
+                {label: qsTr("Pantalla"), value: root.fps + " fps · " + Math.round(root.hz) + " Hz", good: root.fps >= root.hz * 0.92},
+                {label: qsTr("Peor cuadro"), value: Math.round(root.worst) + " ms", good: root.worst <= 1.6 * 1000 / root.hz},
+                {label: qsTr("Cuadros tarde"), value: root.late + " /s", good: root.late < 1},
                 {label: qsTr("Latencia del audio"), value: Math.round(latency.value) + " ms", good: latency.value <= 25},
                 {label: qsTr("Carga del audio"), value: Math.round(usage.value) + " %", good: usage.value < 70},
                 {label: qsTr("Cortes de audio"), value: String(Math.round(overloads.value)), good: overloads.value < 1}

@@ -32,11 +32,26 @@ Item {
     readonly property real pulseStrength: root.ending ? 0.85 : Math.max(0.35, 1 - (root.barsToDrop - 1) / 8 * 0.65)
     readonly property bool pulsing: play.value > 0 && !root.scratching && (root.ending || (root.dropSoon && root.barsToDrop <= 8))
 
-    Mixxx.ControlProxy {
+    // The shared position reader (15 times a second)
+
+    QtObject {
+
         id: playPosition
 
+
+        readonly property real value: Clock.position(root.group)
+
+    }
+
+    Mixxx.ControlProxy {
+
+        id: livePosition
+
+
         group: root.group
+
         key: "playposition"
+
     }
     Mixxx.ControlProxy {
         id: rateRatio
@@ -158,7 +173,7 @@ Item {
             // The marker turns with the music: 33 1/3 rpm
             Item {
                 anchors.fill: parent
-                rotation: (playPosition.value * duration.value * 200) % 360
+                rotation: (livePosition.value * duration.value * 200) % 360
 
                 Rectangle {
                     x: parent.width / 2 - width / 2
