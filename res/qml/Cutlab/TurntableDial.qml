@@ -117,8 +117,7 @@ Item {
         // Track ring
         Shape {
             anchors.fill: parent
-            layer.enabled: true
-            layer.samples: 4
+            preferredRendererType: Shape.CurveRenderer
 
             ShapePath {
                 fillColor: "transparent"

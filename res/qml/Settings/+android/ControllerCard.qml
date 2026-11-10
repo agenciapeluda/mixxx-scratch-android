@@ -684,6 +684,17 @@ Item {
                 }
             ]
 
+            // Cutlab: a tap opens the whole list with a search (MIDI or
+            // HID, all of the device's type), the matching ones first
+            MouseArea {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: parent.width - 34
+                z: 10
+                onClicked: mappingPicker.open()
+            }
+
             onActivateFooter: footerIndex => {
                 mappingsCombobox.footerItems = [];
                 mappingsCombobox.showAllMappings = true;
@@ -786,6 +797,133 @@ Item {
         radius: root.focused ? 0 : 8.0
         source: content
         verticalOffset: 0
+    }
+
+    Popup {
+        id: mappingPicker
+
+        readonly property var allMappings: Mixxx.ControllerManager.mappings(root.modelData.type)
+        property string filter: ""
+        readonly property var shown: {
+            const words = mappingPicker.filter.toLowerCase().split(/\s+/).filter(w => w !== "");
+            const matching = [];
+            const rest = [];
+            for (let i = 0; i < mappingPicker.allMappings.length; ++i) {
+                const mapping = mappingPicker.allMappings[i];
+                const name = (mapping.name || "").toLowerCase();
+                if (!words.every(w => name.indexOf(w) >= 0)) {
+                    continue;
+                }
+                const item = {mapping: mapping, index: i};
+                if (root.modelData.availableMappings && root.modelData.availableMappings.indexOf(mapping) >= 0) {
+                    matching.push(item);
+                } else {
+                    rest.push(item);
+                }
+            }
+            const byName = (a, b) => a.mapping.name.localeCompare(b.mapping.name);
+            return matching.sort(byName).concat(rest.sort(byName));
+        }
+
+        parent: Overlay.overlay
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round(Math.max(8, (parent.height - height) / 2 - 40))
+        width: Math.min(parent.width - 24, 520)
+        height: Math.min(parent.height - 24, 560)
+        modal: true
+        focus: true
+        padding: 12
+        onOpened: {
+            mappingPicker.filter = "";
+            searchField.text = "";
+        }
+
+        background: Rectangle {
+            color: "#17162a"
+            radius: 12
+            border.width: 1
+            border.color: "#2a2940"
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 8
+
+            Text {
+                Layout.fillWidth: true
+                color: "#f4f5fb"
+                elide: Text.ElideRight
+                font.pixelSize: 16
+                font.weight: Font.Medium
+                text: qsTr("Mapeo para %1").arg(root.modelData.name || "")
+            }
+            TextField {
+                id: searchField
+
+                Layout.fillWidth: true
+                placeholderText: qsTr("Buscar mapeo (marca o modelo)")
+                inputMethodHints: Qt.ImhNoPredictiveText
+                color: "#f4f5fb"
+                font.pixelSize: 14
+                onTextChanged: mappingPicker.filter = text
+                background: Rectangle {
+                    color: "#0e0d1a"
+                    radius: 8
+                    border.width: 1
+                    border.color: searchField.activeFocus ? "#635bff" : "#2a2940"
+                }
+            }
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                model: mappingPicker.shown
+                boundsBehavior: Flickable.StopAtBounds
+
+                delegate: Rectangle {
+                    id: mappingRow
+
+                    required property var modelData
+                    readonly property bool current: root.modelData.mapping === modelData.mapping
+                    readonly property bool matching: root.modelData.availableMappings && root.modelData.availableMappings.indexOf(modelData.mapping) >= 0
+
+                    width: ListView.view.width
+                    height: 44
+                    radius: 8
+                    color: current ? "#2b2766" : (rowMouse.pressed ? "#2a2650" : "transparent")
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: mappingRow.matching ? "#f4f5fb" : "#9ca1b8"
+                        elide: Text.ElideRight
+                        font.pixelSize: 14
+                        text: (mappingRow.matching ? "★ " : "") + mappingRow.modelData.mapping.name
+                    }
+                    MouseArea {
+                        id: rowMouse
+
+                        anchors.fill: parent
+                        onClicked: {
+                            root.modelData.mapping = mappingRow.modelData.mapping;
+                            root.modelData.enabled = true;
+                            mappingPicker.close();
+                        }
+                    }
+                }
+            }
+            Text {
+                Layout.fillWidth: true
+                visible: mappingPicker.shown.length === 0
+                color: "#9ca1b8"
+                font.pixelSize: 13
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("Ningún mapeo coincide con «%1»").arg(mappingPicker.filter)
+            }
+        }
     }
 
     component Settings: ControllerSettings {

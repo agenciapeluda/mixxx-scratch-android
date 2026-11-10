@@ -11,6 +11,7 @@ Popup {
     property bool recording: false
     property string waveMode: "vertical"
     property string deckLook: "dial"
+    property bool padsHidden: true
     property bool quantize: false
     property bool stemsAuto: false
     property bool diagnostics: false
@@ -303,7 +304,7 @@ Popup {
                 Repeater {
                     model: [
                         {key: "library", icon: "library", title: qsTr("Biblioteca"), detail: qsTr("Cola y listas")},
-                        {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
+                        root.waveMode === "extended" && !root.portrait ? {key: "pads", icon: "pads", title: qsTr("Pads"), detail: root.padsHidden ? qsTr("Ocultos: más onda") : qsTr("A la vista")} : {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
                         {key: "stems", icon: "stems", title: qsTr("Stems solos"), detail: root.stemsAuto ? qsTr("Prendido") : qsTr("Apagado")},
                         {key: "folders", icon: "folder", title: qsTr("Carpetas"), detail: qsTr("Tu música")},
                         {key: "diagnostics", icon: "list", title: qsTr("Diagnóstico"), detail: root.diagnostics ? qsTr("Visible") : qsTr("Oculto")},

@@ -251,6 +251,19 @@ ReloopMixtour.Deck = class extends components.Deck {
                 components.HotcueButton.prototype.input.call(this, channel, control, value, status, group);
             };
         };
+        // Cutlab: LOOP held + CUE turns letsktch! on or off on the deck
+        this.cue.input = function(channel, control, value, status, group) {
+            if (theDeck.loopHeld && control < 0x40) {
+                theDeck.loopUsed = true;
+                const deckNumber = parseInt(theDeck.currentDeck.replace(/\D/g, ""));
+                if (value > 0 && deckNumber <= 2) {
+                    engine.setValue("[Cutlab]", `letsktch${deckNumber}`,
+                        (engine.getValue("[Cutlab]", `letsktch${deckNumber}`) + 1) % 1000);
+                }
+                return;
+            }
+            components.CueButton.prototype.input.call(this, channel, control, value, status, group);
+        };
         // LOOP sets a loop when released without a hot cue pressed meanwhile
         this.loop.input = function(channel, control, value, status, group) {
             if (control >= 0x40) {
@@ -295,63 +308,90 @@ ReloopMixtour.Mixer = class extends components.Deck {
             key: "pregain",
         });
 
+        // Cutlab: the FILTER knob and the FX button
+        //  - FX off: the knob is only the filter (the Quick Effect, always
+        //    the Filter preset)
+        //  - FX on: the knob doses the effect picked on the FX pad of the
+        //    deck (echo by default) and the filter stays neutral
+        //  - SHIFT + FX: the next effect of the FX pad
+        // The knob is read as it is (no soft takeover): turning FX off, the
+        // filter goes to where the knob is, with no jump and never stuck.
+        const quickRack = `[QuickEffectRack1_${theMixer.currentDeck}]`;
+        // The deck can change (4 decks): read it each time
+        const rackOf = () => `[QuickEffectRack1_${theMixer.currentDeck}]`;
+        const deckNumber = () => parseInt(theMixer.currentDeck.replace(/\D/g, ""));
+        // Only decks A and B have the Cutlab FX pad
+        const hasFx = () => deckNumber() <= 2;
+        // Where the knob is, 0 to 1 (centre until it is first moved)
+        theMixer.knobPosition = 0.5;
+        engine.softTakeover(quickRack, "super1", false);
+        // An older mapping could leave an effect in the Quick Effect: back
+        // to the Filter, on
+        if (engine.getValue(quickRack, "loaded_chain_preset") !== 1) {
+            engine.setValue(quickRack, "loaded_chain_preset", 1);
+        }
+        engine.setValue(quickRack, "enabled", 1);
+
         this.fxKnob = new ReloopMixtour.Pot({
-            key: "super1",
-            group: `[QuickEffectRack1_${theMixer.currentDeck}]`,
+            group: quickRack,
+            inKey: "super1",
+            input: function(_channel, _control, value, _status, _group) {
+                theMixer.knobPosition = value / 0x7F;
+                const deck = deckNumber();
+                if (hasFx() && engine.getValue("[Cutlab]", `fx_on${deck}`) > 0) {
+                    engine.setValue("[Cutlab]", `fx_amount${deck}`, theMixer.knobPosition);
+                } else {
+                    engine.setValue(rackOf(), "super1", theMixer.knobPosition);
+                }
+            },
+            connect: function() {},
+            output: function() {},
         });
 
-        // loaded_chain_preset - values are a following:
-        // 0 is the empty/passthrough preset
-        // -1 indicates an unsaved preset (no idea if this index can be selected)
-        // 1 should be the default (Filter) preset. This can be configured by the user in the pref dialog
         this.effect = new ReloopMixtour.Button({
             midi: [0x90 + midiChannel, 0x01],
             shiftOffset: 0x40,
-            key: "loaded_chain_preset",
-            secondOutKey: "enabled",
-            group: `[QuickEffectRack1_${theMixer.currentDeck}]`,
-            // set preset to first real fx. if available at all this is number 2
-            fxPreset: (engine.getValue(`[QuickEffectRack1_${theMixer.currentDeck}]`, "num_chain_presets") > 2)?2:0,
-            nextPreset: function() {
-                const nChainPresets = engine.getValue(this.group, "num_chain_presets");
-                this.fxPreset = (this.fxPreset + 1) % nChainPresets;
-                if (nChainPresets > 2 && this.fxPreset < 2) {
-                    this.fxPreset = 2; // set preset to first real fx.
-                }
-            },
+            group: "[Cutlab]",
+            // The LED follows fx_on of the deck (connect below); the key only
+            // has to be set so the component connects
+            outKey: "fx_on",
             input: function(_channel, control, value, _status, _group) {
-                // only act on button-press and if fx are available
-                if (value && engine.getValue(this.group, "num_chain_presets") > 2) {
-                    if (control < this.shiftOffset) {
-                        const tmpSuper1Value = engine.getValue(this.group, "super1");
-                        if (this.inGetValue() !== 1) {                  // current FX is not the 'Filter'
-                            this.fxPreset = this.inGetValue() || 2;     // store current FX (but not 0)
-                            this.inSetValue(1);                         // activate the 'Filter'
-                        } else {
-                            this.inSetValue(this.fxPreset);             // activate last stored FX
+                if (!value || !hasFx()) {
+                    return;
+                }
+                const deck = deckNumber();
+                if (control >= this.shiftOffset) {
+                    // SHIFT: the next effect (it keeps playing if on)
+                    engine.setValue("[Cutlab]", `fx_next${deck}`,
+                        (engine.getValue("[Cutlab]", `fx_next${deck}`) + 1) % 1000);
+                    return;
+                }
+                const on = engine.getValue("[Cutlab]", `fx_on${deck}`) > 0;
+                if (on) {
+                    // Off: the effect stops at once, the knob is the filter
+                    // again from where it is
+                    engine.setValue("[Cutlab]", `fx_on${deck}`, 0);
+                    engine.setValue(rackOf(), "super1", theMixer.knobPosition);
+                    // Again once the screen has stopped the effect (it may
+                    // put the filter back in the centre after this)
+                    const rack = rackOf();
+                    engine.beginTimer(120, () => {
+                        if (engine.getValue("[Cutlab]", `fx_on${deck}`) <= 0) {
+                            engine.setValue(rack, "super1", theMixer.knobPosition);
                         }
-                        if (this.lastSuper1Value !== undefined) {       // activate last stored super1
-                            engine.softTakeover(this.group, "super1", false);
-                            engine.setValue(this.group, "super1", this.lastSuper1Value);
-                            engine.softTakeover(this.group, "super1", true);
-                        }
-                        this.lastSuper1Value = tmpSuper1Value;
-                    } else if (this.inGetValue() !== 1) {               // if FX is active
-                        this.nextPreset();                          // select and store next FX
-                        this.inSetValue(this.fxPreset);             // activate (new) FX
-                    }
+                    }, true);
+                } else {
+                    engine.setValue(rackOf(), "super1", 0.5);
+                    engine.setValue("[Cutlab]", `fx_amount${deck}`, theMixer.knobPosition);
+                    engine.setValue("[Cutlab]", `fx_on${deck}`, 1);
                 }
             },
-            outValueScale: function(_value) {
-                // activate FX led if any FX is selected (>2) and enabled
-                return (this.outGetValue() >= 2 && engine.getValue(this.group, this.secondOutKey)) ? this.on : this.off;
+            output: function(value) {
+                this.send(value > 0 ? this.on : this.off);
             },
             connect: function() {
-                // use two connections for the LED, one to check for any real FX (id > 2) and the other to check
-                // if effect is enabled
-                if (this.connections[0] === undefined) {
-                    this.connections.push(engine.makeConnection(this.group, this.outKey, this.output.bind(this)));
-                    this.connections.push(engine.makeConnection(this.group, this.secondOutKey, this.output.bind(this)));
+                if (this.connections[0] === undefined && hasFx()) {
+                    this.connections.push(engine.makeConnection("[Cutlab]", `fx_on${deckNumber()}`, this.output.bind(this)));
                 }
             },
         });
@@ -400,22 +440,22 @@ ReloopMixtour.Mixer = class extends components.Deck {
             max: 0x68
         });
 
+        // Lit while the filter is off centre or the effect plays
         this.fxIndicator = new ReloopMixtour.Component({
             midi: [0x90 + midiChannel, 0x00],
-            key: "super1",
-            secondOutKey: "enabled",
-            group: `[QuickEffectRack1_${theMixer.currentDeck}]`,
+            group: quickRack,
+            outKey: "super1",
             outValueScale() {
-                const super1Value = engine.getValue(this.group, this.outKey);
-                const enabledValue = engine.getValue(this.group, this.secondOutKey);
-                return (enabledValue && (Math.abs(0.5 - super1Value) > 0.01))?0x7F:0x00;
+                const filtering = Math.abs(0.5 - engine.getValue(rackOf(), "super1")) > 0.01;
+                const fxOn = hasFx() && engine.getValue("[Cutlab]", `fx_on${deckNumber()}`) > 0;
+                return (filtering || fxOn) ? 0x7F : 0x00;
             },
             connect: function() {
-                // use two connections for the LED, one to check for any real FX (id > 2) and the other to check
-                // if effect is enabled
                 if (this.connections[0] === undefined) {
-                    this.connections.push(engine.makeConnection(this.group, this.outKey, this.output.bind(this)));
-                    this.connections.push(engine.makeConnection(this.group, this.secondOutKey, this.output.bind(this)));
+                    this.connections.push(engine.makeConnection(rackOf(), "super1", this.output.bind(this)));
+                    if (hasFx()) {
+                        this.connections.push(engine.makeConnection("[Cutlab]", `fx_on${deckNumber()}`, this.output.bind(this)));
+                    }
                 }
             },
         });

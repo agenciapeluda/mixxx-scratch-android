@@ -40,8 +40,12 @@ Rectangle {
         }
     }
 
+    // A tap on the row only picks it; the cover loads it: a tap on the free
+    // deck, dragged to the side of A or B on that deck
     signal clicked
     signal loadRequested(string group)
+    signal coverTapped
+    signal coverDropped(string group)
     signal menuRequested
 
     function fs(px) {
@@ -97,6 +101,16 @@ Rectangle {
         radius: Math.round(8 * root.u)
         color: "#2a2650"
         clip: true
+        z: 2
+        // Follows the finger while it is dragged sideways
+        transform: Translate {
+            x: coverDrag.active ? coverDrag.translation.x : 0
+        }
+        // Where a drop would load it
+        readonly property string dropGroup: !coverDrag.active ? ""
+            : (coverDrag.translation.x <= -root.dropDistance ? "[Channel1]" : (coverDrag.translation.x >= root.dropDistance ? "[Channel2]" : ""))
+        border.width: dropGroup !== "" ? 2 : 0
+        border.color: dropGroup !== "" ? Style.deckColor(dropGroup) : "transparent"
 
         Image {
             anchors.fill: parent
@@ -107,7 +121,46 @@ Rectangle {
             source: root.track ? root.track.coverArtUrl : ""
             visible: status === Image.Ready
         }
+        // The deck letter while it is dragged far enough
+        Rectangle {
+            anchors.fill: parent
+            visible: cover.dropGroup !== ""
+            color: Qt.rgba(0, 0, 0, 0.55)
+
+            Text {
+                anchors.centerIn: parent
+                color: Style.deckColor(cover.dropGroup)
+                font.family: Style.font
+                font.pixelSize: root.fs(20)
+                font.weight: Font.Bold
+                text: cover.dropGroup !== "" ? Style.deckLetter(cover.dropGroup) : ""
+            }
+        }
+        TapHandler {
+            margin: Math.round(6 * root.u)
+            onTapped: root.coverTapped()
+            onLongPressed: root.menuRequested()
+        }
+        DragHandler {
+            id: coverDrag
+
+            target: null
+            yAxis.enabled: false
+            margin: Math.round(6 * root.u)
+            onActiveChanged: {
+                if (active) {
+                    cover.lastDrop = "";
+                } else if (cover.lastDrop !== "") {
+                    root.coverDropped(cover.lastDrop);
+                    cover.lastDrop = "";
+                }
+            }
+        }
+        // Kept until the finger leaves (dropGroup clears with it)
+        property string lastDrop: ""
+        onDropGroupChanged: if (coverDrag.active) cover.lastDrop = dropGroup
     }
+    readonly property real dropDistance: Math.round(48 * root.u)
 
     // Wide: the columns of the table
     Row {
@@ -277,7 +330,6 @@ Rectangle {
 
         anchors.fill: parent
         onClicked: root.clicked()
-        onDoubleClicked: root.loadRequested("")
         onPressAndHold: root.menuRequested()
     }
 }

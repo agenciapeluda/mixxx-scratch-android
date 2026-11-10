@@ -102,13 +102,14 @@ Item {
     }
 
     // Cutlab: while the deck is scratched (by touch, with the jog or with the
-    // control record) the waveform draws less, so it keeps up with the hand:
-    // no high detail and at most 60 frames a second. It goes back a moment
+    // control record) the waveform draws at most 60 frames a second. It goes back a moment
     // after the hand leaves, not on every stroke.
     readonly property bool scratchNow: scratchPositionEnableControl.value > 0 || scratch2EnableControl.value > 0 || vinylScratchingControl.value > 0
     property bool lowDetail: false
     readonly property int effectiveFrameRate: lowDetail ? Math.min(60, Mixxx.Config.waveformFrameRate) : Mixxx.Config.waveformFrameRate
-    readonly property int effectiveOptions: lowDetail ? (Mixxx.Config.waveformOptions & ~Mixxx.WaveformDisplay.Option.HighDetail) : Mixxx.Config.waveformOptions
+    // The options stay the same while scratching: changing them rebuilds
+    // all the renderers, a hitch right when the hand lands on the record
+    readonly property int effectiveOptions: Mixxx.Config.waveformOptions
 
     onScratchNowChanged: {
         if (scratchNow) {

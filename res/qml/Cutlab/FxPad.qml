@@ -172,6 +172,35 @@ Item {
         }
         root.engagedPlaying = true;
         root.start(0.6, 0.5, true);
+        if (fxAmount.value >= 0) {
+            root.dose(fxAmount.value);
+        }
+    }
+    // How much of the effect, from a controller knob (the FILTER knob of
+    // the Mixtour with FX on), 0 to 1
+    function dose(amount) {
+        const a = Math.max(0, Math.min(1, amount));
+        const effect = root.effect;
+        if (effect === "filter") {
+            quickFilter.parameter = a;
+        } else if (effect === "trans" || effect === "gater") {
+            parameter1.value = 0.35 + 0.65 * a;
+        } else if (effect === "roll" || effect === "glitch") {
+            return;
+        } else {
+            unitMix.value = a;
+        }
+    }
+    Mixxx.ControlProxy {
+        id: fxAmount
+
+        group: "[Cutlab]"
+        key: `fx_amount${root.unitNumber}`
+        onValueChanged: {
+            if (root.engagedPlaying && value >= 0) {
+                root.dose(value);
+            }
+        }
     }
     onEngagedChanged: {
         if (root.engaged) {

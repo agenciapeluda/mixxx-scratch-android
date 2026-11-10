@@ -5,9 +5,12 @@ import QtQuick
 // beat of the bar the deck is on, counted from the beat grid. The first beat
 // of the bar is the brightest. Two of them side by side show at a glance
 // whether both decks land on the same beat. Plain rectangles that change
-// color four times a bar: nothing animates.
-Column {
+// color four times a bar: nothing animates. horizontal: side by side, for
+// the bar between the waveforms one above the other.
+Grid {
     id: root
+
+    property bool horizontal: false
 
     required property string group
     // The sections of the track (TrackSections), for where the grid starts
@@ -31,7 +34,8 @@ Column {
         return beats % 4;
     }
 
-    spacing: Math.round(lightHeight * 0.3)
+    columns: root.horizontal ? 4 : 1
+    spacing: Math.round((root.horizontal ? lightWidth : lightHeight) * (root.horizontal ? 0.12 : 0.3))
 
     Mixxx.ControlProxy {
         id: trackLoaded
@@ -68,9 +72,11 @@ Column {
             width: root.lightWidth
             height: root.lightHeight
             radius: Math.round(root.lightHeight * 0.22)
-            color: on ? (index === 0 ? Style.text : Style.deckColor(root.group)) : Style.raised
-            border.width: 1
-            border.color: on ? "transparent" : Qt.rgba(1, 1, 1, 0.08)
+            // Always the color of the deck; the first beat of the bar
+            // brighter, with a white edge
+            color: on ? (index === 0 ? Style.deckLight(root.group) : Style.deckColor(root.group)) : Style.raised
+            border.width: on && index === 0 ? 2 : 1
+            border.color: on ? (index === 0 ? Style.text : "transparent") : Qt.rgba(1, 1, 1, 0.1)
             opacity: root.ready ? 1 : 0.4
         }
     }

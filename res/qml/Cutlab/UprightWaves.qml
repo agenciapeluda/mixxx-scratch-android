@@ -12,7 +12,7 @@ Item {
     property bool show1: true
     property bool show2: true
 
-    readonly property real lightsWidth: 52
+    readonly property real lightsWidth: Math.round(Math.max(64, Math.min(92, width * 0.11)))
     readonly property int lanes: (show1 ? 1 : 0) + (show2 ? 1 : 0)
     readonly property real laneWidth: (width - lightsWidth - 12) / Math.max(1, lanes)
 
@@ -31,19 +31,19 @@ Item {
 
         x: (root.show1 ? 4 + root.laneWidth + 2 : 4) + (root.lightsWidth - width) / 2
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 6
+        spacing: 4
 
         BeatLights {
             group: "[Channel1]"
             trackSections: root.sections1
-            lightWidth: 20
-            lightHeight: 26
+            lightWidth: Math.round((root.lightsWidth - 10) / 2)
+            lightHeight: Math.round(Math.max(30, Math.min(60, root.height * 0.1)))
         }
         BeatLights {
             group: "[Channel2]"
             trackSections: root.sections2
-            lightWidth: 20
-            lightHeight: 26
+            lightWidth: Math.round((root.lightsWidth - 10) / 2)
+            lightHeight: Math.round(Math.max(30, Math.min(60, root.height * 0.1)))
         }
     }
     Loader {

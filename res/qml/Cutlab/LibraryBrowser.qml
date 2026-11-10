@@ -56,6 +56,17 @@ Rectangle {
     // Only the tracks near the tempo and in a key that mixes with the deck
     // that is playing
     property bool compatible: false
+    // What "compatibles" compares with, taken when it is turned on: it does
+    // not change by itself while it is on (a deck starting to play would
+    // filter the list again)
+    property string compatGroup: "[Channel1]"
+    property real compatBpm: 0
+    property string compatKey: ""
+    function freezeCompatible() {
+        root.compatGroup = root.playingGroup;
+        root.compatBpm = root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value;
+        root.compatKey = Mixxx.Cutlab.deckKey(root.playingGroup);
+    }
     property int missing: 0
     readonly property string versusKey: {
         // Again when a key changes
@@ -109,6 +120,7 @@ Rectangle {
         if (!url || url.toString() === "") {
             return;
         }
+        root.lastLoadedUrl = url.toString();
         if (group && group !== "") {
             Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocationUrl(url, false);
         } else {
@@ -120,6 +132,7 @@ Rectangle {
     function open(group) {
         root.targetGroup = group || "";
         root.visible = true;
+        root.readLoaded();
         root.refreshSuggestions();
         root.missing = Mixxx.Cutlab.missingAnalysis();
         root.folderRows = Mixxx.Cutlab.musicFolders();
@@ -178,7 +191,10 @@ Rectangle {
         id: searchSettle
 
         interval: 250
-        onTriggered: root.refreshQuery()
+        onTriggered: {
+            root.refreshQuery();
+            root.restorePick();
+        }
     }
     function push(page) {
         root.activatePage(page);
@@ -282,11 +298,60 @@ Rectangle {
     function defaultGroup() {
         return root.targetGroup !== "" ? root.targetGroup : root.otherGroup;
     }
+    // The cover of a track: the deck asked for, else the one not playing;
+    // none playing, A; both, the one the crossfader turns down
+    function freeGroup() {
+        if (root.targetGroup !== "") {
+            return root.targetGroup;
+        }
+        const a = play1.value > 0;
+        const b = play2.value > 0;
+        if (a && !b) {
+            return "[Channel2]";
+        }
+        if (b && !a) {
+            return "[Channel1]";
+        }
+        if (a && b) {
+            return crossfader.value > 0 ? "[Channel1]" : "[Channel2]";
+        }
+        return "[Channel1]";
+    }
+    Mixxx.ControlProxy {
+        id: crossfader
+
+        group: "[Master]"
+        key: "crossfader"
+    }
+    // What is on the decks, for the rows (read when the library opens and
+    // after a load)
+    property string loadedUrlA: ""
+    property string loadedUrlB: ""
+    function readLoaded() {
+        root.loadedUrlA = root.urlOf("[Channel1]");
+        root.loadedUrlB = root.urlOf("[Channel2]");
+    }
+    // The track loaded last from here: coming back, the list stands on it
+    property string lastLoadedUrl: ""
+    function restorePick() {
+        if (root.lastLoadedUrl === "" || !root.tracklist || !trackView.model) {
+            return;
+        }
+        const count = trackView.count;
+        for (let i = 0; i < count; ++i) {
+            if (root.urlAt(i).toString() === root.lastLoadedUrl) {
+                root.selectedRow = i;
+                trackView.positionViewAtIndex(i, ListView.Center);
+                return;
+            }
+        }
+    }
     function load(row, group) {
         const url = root.urlAt(row);
         if (url.toString() === "") {
             return;
         }
+        root.lastLoadedUrl = url.toString();
         if (group && group !== "") {
             Mixxx.PlayerManager.getPlayer(group).loadTrackFromLocationUrl(url, false);
         } else {
@@ -303,13 +368,11 @@ Rectangle {
             parts.push(root.page.filter);
         }
         if (root.compatible) {
-            const bpm = root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value;
-            if (bpm > 0) {
-                parts.push("~bpm:" + bpm.toFixed(1));
+            if (root.compatBpm > 0) {
+                parts.push("~bpm:" + root.compatBpm.toFixed(1));
             }
-            const key = Mixxx.Cutlab.deckKey(root.playingGroup);
-            if (key !== "") {
-                parts.push("~key:" + key);
+            if (root.compatKey !== "") {
+                parts.push("~key:" + root.compatKey);
             }
         }
         if (searchField.text.trim() !== "") {
@@ -1084,7 +1147,9 @@ Rectangle {
                 anchors.rightMargin: Math.round(8 * root.u)
                 visible: root.wide || !root.searchOpen
                 x: 12
-                width: compatText.implicitWidth + Math.round(28 * root.u)
+                // Narrow, up to the order button
+                width: root.wide ? compatText.implicitWidth + Math.round(28 * root.u)
+                    : Math.max(Math.round(90 * root.u), Math.min(compatText.implicitWidth + Math.round(28 * root.u), orderButton.x - x - 8))
                 height: Math.round((root.wide ? 40 : 32) * root.u)
                 radius: height / 2
                 fillColor: root.compatible ? Style.accent : "transparent"
@@ -1098,14 +1163,22 @@ Rectangle {
                     font.family: Style.font
                     font.weight: Font.DemiBold
                     font.pixelSize: root.fs(root.wide ? 13 : 12)
+                    // Narrow it never runs under the order: it cuts the end
+                    width: Math.min(implicitWidth, parent.width - Math.round(20 * root.u))
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
                     text: {
-                        const bpm = root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value;
-                        const key = Mixxx.Cutlab.deckKey(root.playingGroup);
-                        const base = qsTr("Compatibles con %1").arg(Style.deckLetter(root.playingGroup));
+                        const group = root.compatible ? root.compatGroup : root.playingGroup;
+                        const bpm = root.compatible ? root.compatBpm : (group === "[Channel2]" ? bpm2.value : bpm1.value);
+                        const key = root.compatible ? root.compatKey : Mixxx.Cutlab.deckKey(group);
+                        const base = qsTr("Compatibles con %1").arg(Style.deckLetter(group));
                         return root.wide || bpm <= 0 ? base : base + " · " + Math.round(bpm) + " BPM" + (key !== "" ? " · " + key : "");
                     }
                 }
                 onClicked: {
+                    if (!root.compatible) {
+                        root.freezeCompatible();
+                    }
                     root.compatible = !root.compatible;
                     root.applySearch();
                 }
@@ -1529,17 +1602,17 @@ Rectangle {
                 selected: root.selectedRow === index && root.focusColumn !== 2
                 versusBpm: root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value
                 versusKey: root.versusKey
-                loadedUrlA: root.urlOf("[Channel1]")
-                loadedUrlB: root.urlOf("[Channel2]")
-                // A tap picks it, a second tap loads it on the free deck
+                loadedUrlA: root.loadedUrlA
+                loadedUrlB: root.loadedUrlB
+                // A tap on the row only picks it (scroll and tap without
+                // fear); the cover loads it on the free deck, or dragged to
+                // the side of A or B on that deck
                 onClicked: {
-                    if (root.selectedRow === index && root.wide) {
-                        root.load(index, root.defaultGroup());
-                    } else {
-                        root.selectedRow = index;
-                        root.focusColumn = 1;
-                    }
+                    root.selectedRow = index;
+                    root.focusColumn = 1;
                 }
+                onCoverTapped: root.load(index, root.freeGroup())
+                onCoverDropped: group => root.load(index, group)
                 onLoadRequested: group => root.load(index, group !== "" ? group : root.defaultGroup())
                 onMenuRequested: {
                     root.selectedRow = index;

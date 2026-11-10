@@ -43,9 +43,9 @@ Category {
         overviewScalingInput.selected = Mixxx.Config.waveformOverviewNormalized ? "normalize" : "global gain";
         waveformEnabledInput.selected = Mixxx.Config.waveformEnabled ? "on" : "off";
         frameRateInput.value = Mixxx.Config.waveformFrameRate;
-        if (frameRateInput.value <= 60) frameRateRatio.selected = "60 fps";
+        if (frameRateInput.value <= 60) frameRateRatio.selected = "60 fps ★";
         else if (frameRateInput.value <= 90) frameRateRatio.selected = "90 fps";
-        else frameRateRatio.selected = "120 fps ★";
+        else frameRateRatio.selected = "120 fps";
         waveformTypeInput.currentIndex = root.waveformTypes.indexOf(Mixxx.Config.waveformType);
         if (waveformTypeInput.currentIndex < 0)
             waveformTypeInput.currentIndex = 3;
@@ -320,9 +320,9 @@ Category {
                 }
                 RatioChoice {
                     id: frameRateRatio
-                    options: ["60 fps", "90 fps", "120 fps ★"]
+                    options: ["60 fps ★", "90 fps", "120 fps"]
                     onSelectedChanged: {
-                        if (selected === "60 fps") frameRateInput.value = 60;
+                        if (selected === "60 fps ★") frameRateInput.value = 60;
                         else if (selected === "90 fps") frameRateInput.value = 90;
                         else frameRateInput.value = 120;
                         root.markDirty();

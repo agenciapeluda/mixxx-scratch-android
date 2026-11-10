@@ -10,22 +10,61 @@ Item {
     property var sections1: null
     property var sections2: null
 
+    // The beat bar between the lanes: deck A's four lights above, deck
+    // B's below, wide and in the deck colors. Lined up, they light
+    // together.
+    readonly property real barHeight: Math.round(Math.max(22, Math.min(40, height * 0.12)))
+
     Column {
         anchors.fill: parent
         anchors.margins: 6
-        spacing: 6
+        spacing: 4
 
         Repeater {
             model: ["[Channel1]", "[Channel2]"]
 
-            Rectangle {
-                id: lane
+            Column {
+                id: laneBlock
 
                 required property string modelData
                 required property int index
 
                 width: parent.width
-                height: (root.height - 12 - 6) / 2
+                spacing: 4
+
+                Item {
+                    // Under lane A: the bar
+                    visible: laneBlock.index === 1
+                    width: parent.width
+                    height: visible ? root.barHeight : 0
+
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: 2
+
+                        Repeater {
+                            model: [{group: "[Channel1]", sections: root.sections1}, {group: "[Channel2]", sections: root.sections2}]
+
+                            BeatLights {
+                                required property var modelData
+
+                                horizontal: true
+                                group: modelData.group
+                                trackSections: modelData.sections
+                                lightWidth: Math.round(Math.min(110, Math.max(44, root.width * 0.09)))
+                                lightHeight: Math.round((root.barHeight - 2) / 2)
+                            }
+                        }
+                    }
+                }
+            Rectangle {
+                id: lane
+
+                readonly property string modelData: laneBlock.modelData
+                readonly property int index: laneBlock.index
+
+                width: parent.width
+                height: (root.height - 12 - 3 * 4 - root.barHeight) / 2
                 radius: 10
                 color: Style.panel
                 clip: true
@@ -42,16 +81,8 @@ Item {
                     height: parent.height
                     color: Style.playhead
                 }
-                BeatLights {
-                    x: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    group: lane.modelData
-                    trackSections: lane.index === 0 ? root.sections1 : root.sections2
-                    lightWidth: 14
-                    lightHeight: Math.max(8, Math.min(22, (lane.height - 40) / 5))
-                }
                 Rectangle {
-                    x: 32
+                    x: 10
                     y: 8
                     width: 24
                     height: 20
@@ -67,37 +98,7 @@ Item {
                         text: Style.deckLetter(lane.modelData)
                     }
                 }
-                Column {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 6
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: 6
-
-                    CLControlButton {
-                        width: 40
-                        height: 40
-                        group: lane.modelData
-                        key: "waveform_zoom_down"
-                        mode: "trigger"
-                        icon: "plus"
-                        iconSize: 18
-                        bordered: false
-                        fillColor: "transparent"
-                        lit: false
-                    }
-                    CLControlButton {
-                        width: 40
-                        height: 40
-                        group: lane.modelData
-                        key: "waveform_zoom_up"
-                        mode: "trigger"
-                        icon: "minus"
-                        iconSize: 18
-                        bordered: false
-                        fillColor: "transparent"
-                        lit: false
-                    }
-                }
+            }
             }
         }
     }

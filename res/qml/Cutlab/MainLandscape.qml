@@ -25,7 +25,11 @@ Rectangle {
     readonly property string waveMode: root.host.waveMode
     readonly property bool extended: root.waveMode === "extended"
     readonly property bool turntables: root.host.deckLook === "platter"
-    readonly property bool padsBig: root.host.padsBig
+    readonly property bool padsBig: root.host.padsBig && !root.extended
+    // Extended waveforms (sideways): the pads can hide, hidden by default;
+    // then each deck shows its info strip (what the dial shows) under its
+    // buttons and the waveforms take the room
+    readonly property bool padsHidden: root.extended && !root.portrait && root.host.padsHiddenOnda
     readonly property bool tools1: root.host.tools1
     readonly property bool tools2: root.host.tools2
     readonly property real gap: 8
@@ -103,8 +107,13 @@ Rectangle {
         anchors.margins: root.gap
 
         readonly property real xfaderHeight: root.portrait ? 48 : Math.round(Math.max(36, Math.min(48, height * 0.12)))
-        // The pads and buttons; big pads take the stage
-        readonly property real controlsHeight: root.padsBig ? height - (root.portrait ? xfaderHeight + root.gap : 0)
+        // The buttons of a deck
+        readonly property real deckRowHeight: Math.round(Math.max(38, Math.min(52, height * 0.12)))
+        readonly property real infoHeight: Math.round(Math.max(54, Math.min(72, height * 0.16)))
+        // The pads and buttons; big pads take the stage, hidden pads leave
+        // the buttons and the info strip
+        readonly property real controlsHeight: root.padsHidden ? deckRowHeight + root.gap + infoHeight
+            : root.padsBig ? height - (root.portrait ? xfaderHeight + root.gap : 0)
             : Math.round(height * (root.portrait ? 0.44 : 0.42))
         readonly property real stageHeight: root.padsBig ? 0 : height - controlsHeight - root.gap - (root.portrait ? xfaderHeight + root.gap : 0)
         readonly property real controlsY: height - controlsHeight
@@ -268,14 +277,24 @@ Rectangle {
                     id: deckRow
 
                     width: parent.width
-                    height: Math.round(Math.max(38, Math.min(52, area.height * 0.12)))
+                    height: area.deckRowHeight
                     group: deckControls.modelData
                     mirrored: deckControls.mirrored
                     toolsOpen: deckControls.toolsOpen
                     onToolsRequested: root.host.toggleTools(deckControls.modelData)
                     onLoopToolRequested: root.host.openTool(deckControls.modelData, 2)
                 }
+                DeckInfoStrip {
+                    anchors.top: deckRow.bottom
+                    anchors.topMargin: root.gap
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    visible: root.padsHidden
+                    group: deckControls.modelData
+                    mirrored: deckControls.mirrored
+                }
                 DeckPadArea {
+                    visible: !root.padsHidden
                     anchors.top: deckRow.bottom
                     anchors.topMargin: root.gap
                     anchors.bottom: parent.bottom
@@ -296,18 +315,25 @@ Rectangle {
             }
         }
 
-        // ▲ between the pads, sideways: makes them big
+        // ▲ between the pads, sideways: makes them big; with the extended
+        // waveforms it shows and hides them
         CLButton {
             visible: !root.portrait
             x: (area.width - width) / 2
             y: area.controlsY + (area.controlsHeight - height) / 2
-            width: root.centerGap - 12
+            width: Math.min(root.centerGap - 12, area.controlsHeight - 8)
             height: width
             round: true
-            text: root.padsBig ? "▼" : "▲"
+            text: root.extended ? (root.padsHidden ? "▲" : "▼") : (root.padsBig ? "▼" : "▲")
             fontSize: 16
             highlighted: root.padsBig
-            onClicked: root.host.padsBig = !root.host.padsBig
+            onClicked: {
+                if (root.extended) {
+                    root.host.setPadsHiddenOnda(!root.host.padsHiddenOnda);
+                } else {
+                    root.host.padsBig = !root.host.padsBig;
+                }
+            }
         }
 
         // ----- The tools of a deck, in its room -----

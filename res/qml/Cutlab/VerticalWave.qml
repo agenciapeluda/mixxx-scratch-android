@@ -3,7 +3,7 @@ import QtQuick
 
 // The scrolling waveform of a deck turned upright, like djay: the track
 // runs upwards and what is coming is below the white line. Drag it to
-// scratch, pinch or use + and − to zoom.
+// scratch, pinch to zoom (both waveforms).
 Rectangle {
     id: root
 
@@ -55,33 +55,6 @@ Rectangle {
             font.weight: Font.Bold
             font.pixelSize: Math.max(9, Math.round(11 * root.u))
             text: Style.deckLetter(root.group)
-        }
-    }
-
-    // Zoom, at the bottom corner away from the middle
-    Column {
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: Math.round(4 * root.u)
-        x: root.mirrored ? parent.width - width - Math.round(2 * root.u) : Math.round(2 * root.u)
-        spacing: 0
-
-        Repeater {
-            model: [{icon: "plus", key: "waveform_zoom_down"}, {icon: "minus", key: "waveform_zoom_up"}]
-
-            CLControlButton {
-                required property var modelData
-
-                width: Math.round(40 * root.u)
-                height: width
-                group: root.group
-                key: modelData.key
-                mode: "trigger"
-                icon: modelData.icon
-                iconSize: width * 0.42
-                bordered: false
-                fillColor: "transparent"
-                lit: false
-            }
         }
     }
 }

@@ -161,6 +161,29 @@ QList<Controller*> HidEnumerator::queryDevices() {
     QSet<QString> presentKeys;
     for (const auto& usbDevice : deviceList) {
         const QString usbDeviceName = usbDevice->callMethod<jstring>("getDeviceName").toString();
+        // A controller that also speaks USB MIDI (an audio class interface
+        // of the MIDI streaming subclass, like the Reloop Mixtour) is used
+        // as MIDI: its HID interface would only show a second, useless
+        // entry with no mapping
+        bool hasMidiInterface = false;
+        const jint interfaceCount = usbDevice->callMethod<jint>("getInterfaceCount");
+        for (jint i = 0; i < interfaceCount; i++) {
+            auto usbInterface = usbDevice->callMethod<jobject>("getInterface",
+                    "(I)Landroid/hardware/usb/UsbInterface;",
+                    i);
+            constexpr jint kMidiStreamingSubclass = 3;
+            if (usbInterface.callMethod<jint>("getInterfaceClass") == LIBUSB_CLASS_AUDIO &&
+                    usbInterface.callMethod<jint>("getInterfaceSubclass") ==
+                            kMidiStreamingSubclass) {
+                hasMidiInterface = true;
+                break;
+            }
+        }
+        if (hasMidiInterface) {
+            qInfo() << "Skipping the HID interfaces of" << usbDeviceName
+                    << "(it is a MIDI device)";
+            continue;
+        }
         for (jint ifaceIdx = 0;
                 ifaceIdx < usbDevice->callMethod<jint>("getInterfaceCount");
                 ifaceIdx++) {

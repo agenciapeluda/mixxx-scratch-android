@@ -9,6 +9,7 @@
 #include <QStandardItemModel>
 #include <QVariant>
 
+#include "library/basesqltablemodel.h"
 #include "library/basetracktablemodel.h"
 #include "library/browse/browsetablemodel.h"
 #include "library/columncache.h"
@@ -272,6 +273,18 @@ bool QmlLibraryTrackListModel::sortById(int sortColumnId, bool ascending) {
             static_cast<TrackModel::SortColumnId>(sortColumnId));
     if (column < 0) {
         return false;
+    }
+    // Cutlab: a fixed tie-break, artist then title. The table keeps the
+    // columns sorted before as the next keys, so without it tracks with the
+    // same BPM (or key, or date) came out in a different order each time.
+    if (auto* const pSqlModel = dynamic_cast<BaseSqlTableModel*>(sourceModel())) {
+        for (const auto tieBreak : {TrackModel::SortColumnId::Title,
+                     TrackModel::SortColumnId::Artist}) {
+            const int tieColumn = pTrackModel->columnIndexFromSortColumnId(tieBreak);
+            if (tieColumn >= 0 && tieColumn != column) {
+                pSqlModel->setSort(tieColumn, Qt::AscendingOrder);
+            }
+        }
     }
     // The source model resets itself with the new order; the proxy follows
     sourceModel()->sort(column, ascending ? Qt::AscendingOrder : Qt::DescendingOrder);

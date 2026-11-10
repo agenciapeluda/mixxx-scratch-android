@@ -14,8 +14,31 @@ Item {
     // The sections of the track (TrackSections), for the drop radar
     property var trackSections: null
     readonly property real diameter: Math.max(80, Math.min(width - 16, height - 8))
-    readonly property real elapsed: duration.value * playPosition.value
-    readonly property real remaining: Math.max(0, duration.value - elapsed)
+    // The numbers are read 10 times a second, not on every update of the
+    // engine: the text is laid out again each time it changes
+    property real elapsed: 0
+    property real remaining: 0
+    property real bpmNow: 0
+    property real pitch: 0
+    // The play position around the face, in half degree steps: the ring is
+    // drawn again only when it moves that much
+    property real ringPosition: 0
+    function read() {
+        const position = Math.max(0, Math.min(1, playPosition.value));
+        root.elapsed = duration.value * position;
+        root.remaining = Math.max(0, duration.value - root.elapsed);
+        root.bpmNow = bpm.value;
+        root.pitch = (rateRatio.value - 1) * 100;
+        root.ringPosition = Math.round(position * 720) / 720;
+    }
+    Timer {
+        interval: 100
+        repeat: true
+        running: root.visible && root.loaded
+        triggeredOnStart: true
+        onTriggered: root.read()
+    }
+    onLoadedChanged: root.read()
     readonly property bool loaded: trackLoaded.value > 0
     readonly property bool warning: loaded && endOfTrack.value > 0
 
@@ -56,6 +79,18 @@ Item {
         key: "playposition"
     }
     Mixxx.ControlProxy {
+        id: fileBpm
+
+        group: root.group
+        key: "file_bpm"
+    }
+    Mixxx.ControlProxy {
+        id: keyControl
+
+        group: root.group
+        key: "key"
+    }
+    Mixxx.ControlProxy {
         id: endOfTrack
 
         group: root.group
@@ -93,10 +128,10 @@ Item {
         }
 
         // Play position around the face
+        // Curve renderer: smooth edges with no multisampled layer
         Shape {
             anchors.fill: parent
-            layer.enabled: true
-            layer.samples: 4
+            preferredRendererType: Shape.CurveRenderer
             visible: root.loaded
 
             ShapePath {
@@ -111,7 +146,7 @@ Item {
                     radiusX: dial.width / 2 - dial.width * 0.04
                     radiusY: radiusX
                     startAngle: -90
-                    sweepAngle: 360 * Math.max(0, Math.min(1, playPosition.value))
+                    sweepAngle: 360 * root.ringPosition
                 }
             }
         }
@@ -154,7 +189,7 @@ Item {
                         font.family: Style.font
                         font.pixelSize: Math.max(18, face.height * 0.24)
                         font.weight: Font.Bold
-                        text: bpm.value > 0 ? Math.floor(bpm.value).toString() : "--"
+                        text: root.bpmNow > 0 ? Math.floor(root.bpmNow).toString() : "--"
                     }
                     Text {
                         anchors.baseline: bpmWhole.baseline
@@ -162,22 +197,32 @@ Item {
                         font.family: Style.font
                         font.pixelSize: Math.max(11, face.height * 0.13)
                         font.weight: Font.Bold
-                        text: bpm.value > 0 ? "." + Math.floor((bpm.value * 10) % 10) : ""
+                        text: root.bpmNow > 0 ? "." + Math.floor((root.bpmNow * 10) % 10) : ""
                     }
+                }
+                // The track's own tempo and the pitch
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: Math.abs(root.pitch) >= 0.05 ? "#4a43d6" : "#5a5a5e"
+                    font.family: Style.font
+                    font.pixelSize: Math.max(8, face.height * 0.068)
+                    font.weight: Font.Medium
+                    text: root.loaded && fileBpm.value > 0
+                        ? qsTr("orig. %1 · %2%3%").arg(fileBpm.value.toFixed(1)).arg(root.pitch >= 0 ? "+" : "").arg(root.pitch.toFixed(1))
+                        : ""
                 }
             }
 
-            // Pitch and range on both sides of the hub
+            // Key and range on both sides of the hub
             Text {
-                readonly property real percent: (rateRatio.value - 1) * 100
-
                 anchors.right: parent.horizontalCenter
                 anchors.rightMargin: face.hub * 0.9
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#3a3a3d"
                 font.family: Style.font
                 font.pixelSize: Math.max(8, face.height * 0.075)
-                text: (percent >= 0 ? "+" : "") + percent.toFixed(1) + "%"
+                font.weight: Font.DemiBold
+                text: root.loaded && Mixxx.KeyUtils.keyIsValid(keyControl.value) ? Mixxx.KeyUtils.keyToString(keyControl.value) : ""
             }
             Text {
                 anchors.left: parent.horizontalCenter

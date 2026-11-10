@@ -37,6 +37,12 @@ QtObject {
     function engagedFor(group) {
         return group === "[Channel2]" ? engaged2 : engaged1;
     }
+    // The next or previous effect, through all the banks
+    function step(group, by) {
+        const all = [].concat(...banks);
+        const at = all.indexOf(effectFor(group));
+        setEffect(group, all[((at < 0 ? 0 : at + by) + all.length) % all.length]);
+    }
     // A bank button: its first effect, or the next one if the effect is
     // already in that bank
     function selectBank(group, bank) {

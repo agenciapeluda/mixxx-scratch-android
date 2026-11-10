@@ -24,9 +24,29 @@ Rectangle {
     property int padMode2: 0
     // The pads big, over the stage
     property bool padsBig: false
+    // With the extended waveforms the pads are hidden by default (▲ shows
+    // them); the choice is kept
+    property bool padsHiddenOnda: Mixxx.Application.configValue("[Cutlab]", "pads_hidden_onda", "1") === "1"
+    function setPadsHiddenOnda(hidden) {
+        root.padsHiddenOnda = hidden;
+        Mixxx.Application.setConfigValue("[Cutlab]", "pads_hidden_onda", hidden ? "1" : "0");
+    }
     readonly property bool libraryOpen: library.visible
-    // Held upright, the screen switches to the one hand layout
-    readonly property bool portrait: height > width * 1.05
+    // Held upright, the screen switches to the one hand layout. Turning the
+    // phone, Android reports the new size in steps (width first, height
+    // later): the layout follows once the size has stayed the same for a
+    // moment, so it is never built for half a screen.
+    readonly property bool portraitNow: height > width * 1.05
+    property bool portrait: portraitNow
+    onPortraitNowChanged: rotationSettle.restart()
+    onWidthChanged: if (rotationSettle.running) rotationSettle.restart()
+    onHeightChanged: if (rotationSettle.running) rotationSettle.restart()
+    Timer {
+        id: rotationSettle
+
+        interval: 220
+        onTriggered: root.portrait = root.portraitNow
+    }
 
     signal settingsRequested
     signal autoDJRequested
@@ -52,11 +72,21 @@ Rectangle {
     // djay: an effect is heard as soon as it is on, from the screen or from
     // a controller
     Component.onCompleted: {
+        // From here on the layout turns only through rotationSettle
+        root.portrait = root.portraitNow;
         // RGB waveforms once, as the new default (after that, what you pick
         // in the settings stays)
         if (Mixxx.Application.configValue("[Cutlab]", "rgb_default", "0") !== "1") {
             Mixxx.Config.waveformType = Mixxx.WaveformDisplay.Type.RGB;
             Mixxx.Application.setConfigValue("[Cutlab]", "rgb_default", "1");
+        }
+        // 1.25: the waveforms at 60 fps (smooth on any phone, two
+        // waveforms and two dials at 120 fps can't keep up) and one zoom
+        // for both, once; later choices in the settings stay
+        if (Mixxx.Application.configValue("[Cutlab]", "fps60_default", "0") !== "1") {
+            Mixxx.Config.waveformFrameRate = 60;
+            Mixxx.Config.waveformZoomSynchronization = true;
+            Mixxx.Application.setConfigValue("[Cutlab]", "fps60_default", "1");
         }
         fxRoute1.value = 1;
         fxRoute2.value = 1;
@@ -479,6 +509,24 @@ Rectangle {
                     root.showFxPad(fxControls.group);
                 }
             }
+            // SHIFT + FX of the Mixtour: the next (or previous) effect of
+            // the FX pad, through all the banks
+            Mixxx.ControlProxy {
+                group: "[Cutlab]"
+                key: `fx_next${fxControls.index + 1}`
+                onValueChanged: if (value > 0) Shots.step(fxControls.group, 1)
+            }
+            Mixxx.ControlProxy {
+                group: "[Cutlab]"
+                key: `fx_prev${fxControls.index + 1}`
+                onValueChanged: if (value > 0) Shots.step(fxControls.group, -1)
+            }
+            // A button of a controller mapped to letsktch!
+            Mixxx.ControlProxy {
+                group: "[Cutlab]"
+                key: `letsktch${fxControls.index + 1}`
+                onValueChanged: if (value > 0) letsktch.toggle(fxControls.group)
+            }
             Mixxx.ControlProxy {
                 group: "[Cutlab]"
                 key: `fx_on${fxControls.index + 1}`
@@ -795,6 +843,7 @@ Rectangle {
         waveMode: root.waveMode
         portrait: root.portrait
         deckLook: root.deckLook
+        padsHidden: root.padsHiddenOnda
         quantize: quantize1.value > 0 && quantize2.value > 0
         stemsAuto: root.stemsAuto
         diagnostics: root.showDiagnostics
@@ -820,7 +869,11 @@ Rectangle {
                 toggleRecording.value = 1;
                 toggleRecording.value = 0;
             } else if (key === "pads") {
-                root.padsBig = !root.padsBig;
+                if (root.waveMode === "extended" && !root.portrait) {
+                    root.setPadsHiddenOnda(!root.padsHiddenOnda);
+                } else {
+                    root.padsBig = !root.padsBig;
+                }
             } else if (key === "library") {
                 root.openLibrary("");
             } else if (key === "stems") {

@@ -228,6 +228,15 @@ void QmlCutlab::createControls() {
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_prev%1").arg(deck)));
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_select%1").arg(deck)));
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_on%1").arg(deck)));
+            // How much of the effect, 0 to 1, while a controller plays it
+            // (the FILTER knob of the Mixtour with FX on); -1 not set
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("fx_amount%1").arg(deck)),
+                    true,
+                    false,
+                    false,
+                    -1.0);
+            // Counts up on each press: letsktch! on or off on the deck
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("letsktch%1").arg(deck)));
         }
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_bank")));
         // 1 while the settings or a dialog cover the screen: the browse knob
