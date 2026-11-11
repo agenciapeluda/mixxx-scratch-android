@@ -118,37 +118,19 @@ ComboBox {
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         focus: true
 
-        width: root.width
+        // Qt places the popup through the real transform of the combo box
+        // and keeps it inside the window: under the box, above it when it
+        // does not fit, and pushed in from the edges, never off screen
+        margins: 8
+        width: root.Window.window ? Math.min(root.width, root.Window.window.width - 16) : root.width
         height: Math.min(
             root.itemHeight * Math.min(root.popupMaxItem, Math.max(root.count, 1)) + 16 + (root.footerItems.length > 0 ? root.itemHeight * root.footerItems.length : 0),
             root.Window.window ? root.Window.window.height * 0.75 : 450
         )
         padding: 0
 
-        x: {
-            if (!root.Window.window) return (root.width - width) / 2;
-            const globalPos = root.mapToItem(null, 0, 0);
-            if (!globalPos) return (root.width - width) / 2;
-            if (globalPos.x + (root.width - width) / 2 < 8) {
-                return -globalPos.x + 8;
-            }
-            const winWidth = root.Window.window.width;
-            if (globalPos.x + (root.width + width) / 2 > winWidth - 8) {
-                return winWidth - 8 - globalPos.x - width;
-            }
-            return (root.width - width) / 2;
-        }
-
-        y: {
-            if (!root.Window.window) return root.height + 2;
-            const globalPos = root.mapToItem(null, 0, root.height);
-            if (!globalPos) return root.height + 2;
-            const winHeight = root.Window.window.height;
-            if (globalPos.y + height > winHeight - 10 && globalPos.y - height - root.height >= 10) {
-                return -height - 2;
-            }
-            return root.height + 2;
-        }
+        x: (root.width - width) / 2
+        y: root.height + 2
 
         onOpened: Qt.callLater(() => popupListView.positionViewAtIndex(Math.max(0, root.currentIndex), ListView.Contain))
 

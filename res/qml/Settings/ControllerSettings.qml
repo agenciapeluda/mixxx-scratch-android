@@ -36,7 +36,7 @@ ColumnLayout {
                 model: modelData.options
                 spacing: 2
 
-                contentItem: RowLayout {
+                contentItem: FormRow {
                     anchors.fill: parent
                     anchors.leftMargin: 10
 
@@ -71,7 +71,7 @@ ColumnLayout {
                     background: Rectangle {
                         color: itemDlgt.highlighted ? Theme.deckLineColor : "transparent"
                     }
-                    contentItem: RowLayout {
+                    contentItem: FormRow {
                         Rectangle {
                             Layout.minimumHeight: 15
                             Layout.minimumWidth: 15
@@ -248,7 +248,7 @@ ColumnLayout {
         DelegateChoice {
             roleValue: "file"
 
-            RowLayout {
+            FormRow {
                 required property var modelData
 
                 Layout.fillWidth: true

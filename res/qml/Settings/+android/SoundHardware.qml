@@ -462,7 +462,7 @@ Category {
                         anchors.margins: 14
                         spacing: 12
 
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 8
 
@@ -507,7 +507,7 @@ Category {
                                     anchors.margins: 10
                                     spacing: 4
 
-                                    RowLayout {
+                                    FormRow {
                                         Layout.fillWidth: true
                                         Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
@@ -563,7 +563,7 @@ Category {
                                     anchors.margins: 10
                                     spacing: 4
 
-                                    RowLayout {
+                                    FormRow {
                                         Layout.fillWidth: true
                                         Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
@@ -619,7 +619,7 @@ Category {
                                     anchors.margins: 10
                                     spacing: 4
 
-                                    RowLayout {
+                                    FormRow {
                                         Layout.fillWidth: true
                                         Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
@@ -675,7 +675,7 @@ Category {
                                     anchors.margins: 10
                                     spacing: 4
 
-                                    RowLayout {
+                                    FormRow {
                                         Layout.fillWidth: true
                                         Text { text: ""; font.pixelSize: 14; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                         Text {
@@ -748,7 +748,7 @@ Category {
                             border.color: "#4238f8"
                             border.width: 1
 
-                            RowLayout {
+                            FormRow {
                                 anchors.fill: parent
                                 anchors.margins: 10
                                 spacing: 8
@@ -842,7 +842,7 @@ Category {
                             rowSpacing: 12
 
                             // Sound API
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text {
                                     elide: Text.ElideRight
@@ -865,7 +865,7 @@ Category {
                             }
 
                             // Sample Rate
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text {
                                     elide: Text.ElideRight
@@ -904,7 +904,7 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 4
 
-                                RowLayout {
+                                FormRow {
                                     Layout.fillWidth: true
                                     Text {
                                         elide: Text.ElideRight
@@ -954,7 +954,7 @@ Category {
                             }
 
                             // Main Output Mode (Mono / Stereo)
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text {
                                     elide: Text.ElideRight
@@ -976,7 +976,7 @@ Category {
                             }
 
                             // Keylock engine
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text {
                                     elide: Text.ElideRight
@@ -1021,7 +1021,7 @@ Category {
                             }
 
                             // Main Mix Enabled
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text {
                                     elide: Text.ElideRight
@@ -1046,7 +1046,7 @@ Category {
                                 Layout.fillWidth: true
                                 spacing: 2
 
-                                RowLayout {
+                                FormRow {
                                     Layout.fillWidth: true
                                     Text {
                                         elide: Text.ElideRight
@@ -1098,7 +1098,7 @@ Category {
                         }
 
                         // Network Clock (oculto / avanzado)
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             visible: false
                             RatioChoice {
@@ -1129,7 +1129,7 @@ Category {
                         spacing: 8
 
                         // Header with toggle
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 8
 
@@ -1323,7 +1323,7 @@ Category {
         border.width: 1
         radius: 8
 
-        RowLayout {
+        FormRow {
             anchors.fill: parent
             anchors.leftMargin: 16
             anchors.rightMargin: 16
@@ -1384,7 +1384,7 @@ Category {
                 border.color: root.hasChanges ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 8
 

@@ -236,7 +236,7 @@ Category {
                         color: "#8b85ff"
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 8
 
@@ -299,7 +299,7 @@ Category {
     }
 
     // A row of buttons to choose one value
-    component ChoiceRow: RowLayout {
+    component ChoiceRow: FormRow {
         id: choiceRow
 
         property string label
@@ -390,7 +390,7 @@ Category {
             }
         }
 
-        RowLayout {
+        FormRow {
             id: modelLayout
 
             anchors.fill: parent

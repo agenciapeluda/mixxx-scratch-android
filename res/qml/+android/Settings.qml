@@ -23,96 +23,9 @@ Popup {
     // then the chosen page with a back arrow
     readonly property bool narrow: width < 720
     property bool showingPage: false
-    // Pages are drawn as wide as they need and shrunk to the window, so no
-    // page and no bar at the bottom gets cut on the right in any orientation
-    property real pageScale: 1
-    readonly property real minPageScale: 0.7
-
-    // Rightmost edge of everything visible in a page, in page coordinates.
-    // Sideways lists are taken as a whole (they scroll on purpose)
-    function contentRight(page) {
-        let right = 0;
-        const visit = function(item, depth) {
-            if (!item || !item.visible || depth > 40 || item.opacity === 0) {
-                return;
-            }
-            if (item.width > 0 && item.height > 0) {
-                const p = item.mapToItem(page, item.width, 0);
-                if (p.x > right) {
-                    right = p.x;
-                }
-            }
-            const sideways = (item.orientation === ListView.Horizontal) || (item.flickableDirection === Flickable.HorizontalFlick);
-            if (sideways) {
-                return;
-            }
-            const kids = item.children;
-            for (let i = 0; i < kids.length; i++) {
-                visit(kids[i], depth + 1);
-            }
-        };
-        const kids = page.children;
-        for (let i = 0; i < kids.length; i++) {
-            visit(kids[i], 0);
-        }
-        return right;
-    }
-
-    function fitPage() {
-        const page = root.activeCategory;
-        const available = managerItem.width;
-        if (!page || !root.visible || available <= 0) {
-            return;
-        }
-        const logical = available / root.pageScale;
-        const needed = root.contentRight(page);
-        let next = root.pageScale;
-        if (needed > logical + 1) {
-            next = Math.max(root.minPageScale, available / needed);
-        }
-        if (Math.abs(next - root.pageScale) > 0.005 && fitTimer.passes < 6) {
-            root.pageScale = next;
-            fitTimer.passes++;
-            fitTimer.restart();
-        }
-    }
-
-    function refit() {
-        fitTimer.passes = 0;
-        fitTimer.restart();
-        recheckTimer.ticks = 0;
-        recheckTimer.restart();
-    }
-
-    // New width (rotation, split screen): start from full size again
-    function resetFit() {
-        root.pageScale = 1;
-        root.refit();
-    }
-
-    Timer {
-        id: fitTimer
-        property int passes: 0
-        interval: 60
-        onTriggered: root.fitPage()
-    }
-
-    // Pages change size while they load data (sound cards, controllers):
-    // check again a little later
-    Timer {
-        id: recheckTimer
-        property int ticks: 0
-        interval: 700
-        repeat: true
-        onTriggered: {
-            if (!root.visible || ++ticks > 8) {
-                stop();
-                return;
-            }
-            fitTimer.passes = 0;
-            root.fitPage();
-        }
-    }
+    // Pages are as wide as the window and lay themselves out for it
+    // (narrow: label on top, control under it), so nothing is scaled or
+    // re-fitted after it shows: each page comes up already in place
 
     function updateActiveCategory() {
         root.activeCategory?.deactivated();
@@ -122,8 +35,6 @@ Popup {
             root.activeCategory = null;
         }
         root.activeCategory?.activated();
-        root.pageScale = 1;
-        root.refit();
     }
 
     function resetSearch() {
@@ -137,10 +48,7 @@ Popup {
     onOpened: {
         resetSearch();
         root.showingPage = false;
-        root.refit();
     }
-    onWidthChanged: root.resetFit()
-    onShowingPageChanged: root.refit()
 
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     focus: true
@@ -535,16 +443,13 @@ Popup {
                     Layout.minimumWidth: 0
                     Layout.leftMargin: root.narrow ? 0 : 6
                     clip: true
-                    onWidthChanged: root.resetFit()
 
                     Settings.SoundHardware {
                         id: soundHardwareSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 0
                         enabled: visible
                     }
@@ -553,10 +458,8 @@ Popup {
                         id: controllerSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 1
                         enabled: visible
                     }
@@ -565,10 +468,8 @@ Popup {
                         id: turntablesSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 2
                         enabled: visible
                     }
@@ -577,10 +478,8 @@ Popup {
                         id: librarySection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 3
                         enabled: visible
                     }
@@ -589,10 +488,8 @@ Popup {
                         id: waveformSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 4
                         enabled: visible
                     }
@@ -601,10 +498,8 @@ Popup {
                         id: interfaceSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 5
                         enabled: visible
                     }
@@ -613,10 +508,8 @@ Popup {
                         id: stemsSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 6
                         enabled: visible
                     }
@@ -625,10 +518,8 @@ Popup {
                         id: aboutSection
                         x: 0
                         y: 0
-                        width: managerItem.width / root.pageScale
-                        height: managerItem.height / root.pageScale
-                        scale: root.pageScale
-                        transformOrigin: Item.TopLeft
+                        width: managerItem.width
+                        height: managerItem.height
                         visible: categoryList.currentIndex === 7
                         enabled: visible
                     }

@@ -48,7 +48,7 @@ Category {
                     anchors.margins: 16
                     spacing: 6
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -114,7 +114,7 @@ Category {
                     anchors.margins: 12
                     spacing: 8
 
-                    RowLayout {
+                    FormRow {
                         spacing: 8
                         Text {
                             elide: Text.ElideRight
@@ -127,7 +127,7 @@ Category {
                         }
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 10
 
@@ -208,7 +208,7 @@ Category {
                         onLinkActivated: link => Qt.openUrlExternally(link)
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 10
 

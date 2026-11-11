@@ -61,8 +61,14 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             color: root.lit && !root.highlighted ? (root.litColor === Style.accent ? Style.accentText : root.litColor) : root.textColor
             font.family: Style.font
+            // Never wider than the button: a long label shrinks to fit
+            // instead of spilling over its neighbours
+            width: Math.max(0, Math.min(label.implicitWidth, root.width - 8 - (root.icon !== "" ? root.iconSize + 6 : 0)))
+            horizontalAlignment: Text.AlignHCenter
             font.pixelSize: root.fontSize
             font.weight: root.fontWeight
+            fontSizeMode: Text.HorizontalFit
+            minimumPixelSize: 7
             text: root.text
             visible: root.text !== ""
         }

@@ -108,8 +108,11 @@ QtObject {
     //  - "rgb": bass, mids and highs in their own vivid colors, so kicks,
     //    voices and hats read apart (the default)
     //  - "deck": in the color of each deck
-    //  - "config": the colors of the type picked in the settings
-    // The type of waveform always comes from the settings.
+    //  - "config" (Clásico): the colors of the type picked in the settings,
+    //    well apart from RGB Cutlab
+    // The type of waveform always comes from the settings. The scrolling
+    // waveforms, the bar of the track on top and the preview in the
+    // settings all take their colors from waveColorSet().
     property string waveColors: {
         const stored = Mixxx.Application.configValue("[Cutlab]", "wave_colors", "rgb");
         return stored === "cutlab" ? "deck" : (["rgb", "deck", "config"].indexOf(stored) >= 0 ? stored : "rgb");
@@ -121,6 +124,26 @@ QtObject {
     readonly property color waveLow: "#ff3366"
     readonly property color waveMid: "#2ee88f"
     readonly property color waveHigh: "#45b8ff"
+
+    // The colors of the waveform of `group` for the colors `mode` and the
+    // waveform `type` (Mixxx.WaveformDisplay.Type): {low, mid, high, simple}
+    function waveColorSet(mode, type, group) {
+        if (mode === "deck") {
+            return {low: deckDark(group), mid: deckColor(group), high: deckLight(group), simple: deckColor(group)};
+        }
+        if (mode === "config") {
+            if (type === Mixxx.WaveformDisplay.Type.RGB || type === Mixxx.WaveformDisplay.Type.HSV) {
+                // Classic deep blue lows, amber mids, white highs
+                return {low: "#1f4dff", mid: "#ff9a1a", high: "#f4f1ea", simple: "#f4f1ea"};
+            }
+            if (type === Mixxx.WaveformDisplay.Type.Simple) {
+                return {low: "#d5c2a2", mid: "#d5c2a2", high: "#d5c2a2", simple: "#d5c2a2"};
+            }
+            // Filtered and Stacked: the classic indigo, brown and sand
+            return {low: "#2a21d7", mid: "#97632d", high: "#d5c2a2", simple: "#d5c2a2"};
+        }
+        return {low: waveLow, mid: waveMid, high: waveHigh, simple: waveHigh};
+    }
 
     // Panels and the library slide in with this curve
     readonly property int motion: 180

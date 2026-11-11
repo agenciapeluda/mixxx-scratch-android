@@ -10,9 +10,11 @@ import QtQuick
 //   beat) in a loop of the same beats, at the tempo of the deck, straight to
 //   the output: neither the fader nor the crossfader of the deck touch it,
 //   so the voice can be cut over it. It is never scratched.
-// - A pad starts a roll of N beats from the beat before (slip on: when it
-//   ends the track is where it would have been) and the beat with it; the
-//   same pad ends it, all the stems come back and the hidden deck stops.
+// - A pad starts a loop of N beats from the beat before and the beat with
+//   it; the same pad ends it like turning a loop off: the track carries on
+//   from where it is, all the stems come back and the hidden deck stops.
+//   The loop the deck had before comes back only as its in and out marks,
+//   not active, so the track does not jump.
 // - 8 slots per track, kept like the hot cues: an empty one keeps the place
 //   and the beats and starts, a kept one jumps to its phrase and starts.
 Item {
@@ -57,7 +59,7 @@ Item {
     readonly property bool active: root.activeSlot >= 0
     // The beat waits for the hidden deck (only right after a load)
     property bool beatPending: false
-    // The loop and slip of the deck before the roll
+    // The loop marks of the deck before the pad
     property var before: null
 
     signal failed(string text)
@@ -196,13 +198,10 @@ Item {
             return;
         }
         root.before = {
-            loop: main.loopEnabled.value > 0,
             start: main.loopStart.value,
-            end: main.loopEnd.value,
-            slip: main.slip.value > 0
+            end: main.loopEnd.value
         };
-        // The roll: slip first, so the track carries on in the background
-        main.slip.value = 1;
+        // The loop of the pad replaces the one of the deck (kept as marks)
         if (main.loopEnabled.value > 0) {
             main.reloop.value = 1;
             main.reloop.value = 0;
@@ -259,54 +258,41 @@ Item {
             helperDeck.reloop.value = 0;
         }
         root.beatPending = false;
-        // The roll ends: the loop off, then the slip brings the track back
+        // Like turning a loop off: the track carries on from where it is
         if (main.loopEnabled.value > 0) {
             main.reloop.value = 1;
             main.reloop.value = 0;
         }
         const before = root.before;
-        main.slip.value = before && before.slip ? 1 : 0;
         mainStems.muteAllBut("");
         root.activeSlot = -1;
         activeControl.value = 0;
         root.before = null;
-        // The loop from before, once the track is back in its place
-        if (before) {
-            restoreLoop.before = before;
-            restoreLoop.restart();
-        }
+        root.restoreMarks(before);
     }
-    Timer {
-        id: restoreLoop
-
-        property var before: null
-
-        interval: 80
-        onTriggered: {
-            const before = restoreLoop.before;
-            restoreLoop.before = null;
-            if (!before || root.active) {
-                return;
-            }
-            if (before.start >= 0 && before.end > before.start) {
-                main.loopStart.value = before.start;
-                main.loopEnd.value = before.end;
-                if (before.loop && main.loopEnabled.value <= 0) {
-                    main.reloop.value = 1;
-                    main.reloop.value = 0;
-                }
-            } else {
-                main.loopStart.value = -1;
-            }
+    // The loop from before only as in and out marks, never active
+    function restoreMarks(before) {
+        if (main.loopEnabled.value > 0) {
+            main.reloop.value = 1;
+            main.reloop.value = 0;
+        }
+        if (before && before.start >= 0 && before.end > before.start) {
+            main.loopStart.value = before.start;
+            main.loopEnd.value = before.end;
+        } else {
+            main.loopStart.value = -1;
+        }
+        // Setting the marks never turns the loop on, but check anyway
+        if (main.loopEnabled.value > 0) {
+            main.reloop.value = 1;
+            main.reloop.value = 0;
         }
     }
 
     // A new track on the deck: everything ends without touching it
     function reset() {
-        restoreLoop.stop();
         if (root.active) {
             helperDeck.play.value = 0;
-            main.slip.value = root.before && root.before.slip ? 1 : 0;
         }
         root.activeSlot = -1;
         root.beatPending = false;
@@ -480,7 +466,6 @@ Item {
         property alias loopStart: loopStartProxy
         property alias loopEnd: loopEndProxy
         property alias reloop: reloopProxy
-        property alias slip: slipProxy
         property alias rate: rateProxy
         property alias rateRange: rateRangeProxy
         property alias keylock: keylockProxy
@@ -555,12 +540,6 @@ Item {
 
             group: deck.group
             key: "reloop_toggle"
-        }
-        Mixxx.ControlProxy {
-            id: slipProxy
-
-            group: deck.group
-            key: "slip_enabled"
         }
         Mixxx.ControlProxy {
             id: rateProxy

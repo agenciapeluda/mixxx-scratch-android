@@ -182,9 +182,10 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 8
 
-            // The whole track in the colors of the stems: the low band
-            // (kick, bass) like the beat, the mids like the music, the highs
-            // like the voice. Drops and breaks show at a glance.
+            // The whole track in the same colors as the scrolling waveforms
+            // (RGB Cutlab, the deck color or Clásico), drawn the way of their
+            // type: RGB and HSV mixed, the rest in bands. Drops and breaks
+            // show at a glance.
             Rectangle {
                 anchors.fill: parent
                 radius: 4
@@ -195,13 +196,17 @@ Item {
                     anchors.fill: parent
                     group: root.group
                     channels: Mixxx.WaveformOverview.Channels.BothChannels
-                    renderer: Mixxx.WaveformOverview.Renderer.Filtered
+                    readonly property int type: Mixxx.Config.waveformType
+                    readonly property var colorSet: Style.waveColorSet(Style.waveColors, type, root.group)
+
+                    renderer: type === Mixxx.WaveformDisplay.Type.RGB ? Mixxx.WaveformOverview.Renderer.RGB
+                        : (type === Mixxx.WaveformDisplay.Type.HSV ? Mixxx.WaveformOverview.Renderer.HSV : Mixxx.WaveformOverview.Renderer.Filtered)
                     normalized: true
                     stereo: false
                     minuteMarkers: false
-                    colorLow: Style.stemDrums
-                    colorMid: Style.stemMusic
-                    colorHigh: Style.stemVocals
+                    colorLow: type === Mixxx.WaveformDisplay.Type.Simple ? colorSet.simple : colorSet.low
+                    colorMid: type === Mixxx.WaveformDisplay.Type.Simple ? colorSet.simple : colorSet.mid
+                    colorHigh: type === Mixxx.WaveformDisplay.Type.Simple ? colorSet.simple : colorSet.high
                 }
             }
             SectionMarks {

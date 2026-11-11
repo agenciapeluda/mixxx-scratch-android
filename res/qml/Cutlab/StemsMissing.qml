@@ -3,8 +3,8 @@ import Mixxx 1.0 as Mixxx
 import QtQuick
 import QtQuick.Controls
 
-// Over gray pads when the track of the deck has no stems: "Separar" (or
-// "Usar stems" once they are ready), the progress while it separates.
+// Over gray pads when the track of the deck has no stems: "Separar"; while
+// it separates only the progress ("Separando: 86%"); once done "Usar stems".
 Item {
     id: root
 
@@ -13,6 +13,27 @@ Item {
     readonly property var track: root.player ? root.player.currentTrack : null
     readonly property bool loaded: trackLoaded.value > 0 && !!root.track
     readonly property bool ready: root.loaded && Mixxx.Stems.jobs !== undefined && Mixxx.Stems.hasStems(root.track.trackLocationUrl)
+    // The job of this track: "" none, "queued" or "running"
+    readonly property string job: {
+        if (!root.loaded || root.ready) {
+            return "";
+        }
+        const url = root.track.trackLocationUrl.toString();
+        let path = url;
+        try {
+            path = decodeURIComponent(url.replace(/^file:\/\//, ""));
+        } catch (e) {
+            path = url;
+        }
+        const jobs = Mixxx.Stems.jobs || [];
+        for (let i = 0; i < jobs.length; ++i) {
+            const job = jobs[i];
+            if ((job.location === path || job.location === url) && (job.state === "queued" || job.state === "running")) {
+                return job.state;
+            }
+        }
+        return "";
+    }
 
     // The stems are made: load them where the track is
     function useStems() {
@@ -44,11 +65,15 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             text: !root.loaded ? qsTr("Cargá un tema")
-                : (Mixxx.Stems.pendingCount > 0 && !root.ready ? qsTr("Separando: %1%").arg(Math.round(Mixxx.Stems.progress * 100)) : qsTr("Este tema no tiene stems"))
+                : root.ready ? qsTr("Stems listos")
+                : root.job === "running" ? qsTr("Separando: %1%").arg(Math.round(Mixxx.Stems.progress * 100))
+                : root.job === "queued" ? qsTr("En cola para separar…")
+                : qsTr("Este tema no tiene stems")
         }
+        // While it separates only the progress: no button
         CLButton {
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: root.loaded
+            visible: root.loaded && root.job === ""
             width: Math.min(parent.width, 180)
             height: 40
             radius: 20

@@ -1,12 +1,10 @@
 import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// The Stems pads of a deck.
-// - Top row, Voz · Melodía · Bajo · Batería: tap turns the stem on or off,
-//   hold turns it off only while held.
-// - Bottom row, combinations: Acapella · Instrumental · Solo batería ·
-//   Bajo+batería. Tap plays it (tap again: all the stems back), hold plays
-//   it only while held.
+// The Stems pads of a deck: one row of 4 big pads over the whole height,
+// Voz · Batería · Melodía · Bajo+Batería.
+// - Tap turns it on or off; hold turns it off only while held.
+// - Bajo+Batería turns the bass and the drums on or off together.
 // Gray, with "Separar", when the track has no stems.
 Item {
     id: root
@@ -18,20 +16,14 @@ Item {
     readonly property var track: root.player ? root.player.currentTrack : null
     readonly property bool hasStems: trackLoaded.value > 0 && stemRepeater.count > 0
     readonly property string prefix: root.group.substr(0, root.group.length - 1)
-    // A hold longer than this plays the pad only while held
+    // A hold longer than this turns it off only while held
     readonly property int holdMs: 300
 
-    readonly property var singles: [
-        {name: qsTr("Voz"), label: "Vocals", color: Style.stemVocals},
-        {name: qsTr("Melodía"), label: "Other", color: Style.stemMusic},
-        {name: qsTr("Bajo"), label: "Bass", color: "#2f63d6"},
-        {name: qsTr("Batería"), label: "Drums", color: Style.stemDrums}
-    ]
-    readonly property var combos: [
-        {name: qsTr("Acapella"), labels: ["Vocals"], color: Style.stemVocals},
-        {name: qsTr("Instrumental"), labels: ["Other", "Bass", "Drums"], color: Style.stemMusic},
-        {name: qsTr("Solo batería"), labels: ["Drums"], color: Style.stemDrums},
-        {name: qsTr("Bajo+batería"), labels: ["Bass", "Drums"], color: "#2f63d6"}
+    readonly property var pads: [
+        {name: qsTr("Voz"), labels: ["Vocals"], color: Style.stemVocals},
+        {name: qsTr("Batería"), labels: ["Drums"], color: Style.stemDrums},
+        {name: qsTr("Melodía"), labels: ["Other"], color: Style.stemMusic},
+        {name: qsTr("Bajo + Batería"), labels: ["Bass", "Drums"], color: "#2f63d6"}
     ]
     // Bumped when a mute changes, so the pads read them again
     property int revision: 0
@@ -45,51 +37,22 @@ Item {
         }
         return null;
     }
-    function mutes() {
+    // The stems of a pad the track has
+    function stemsOf(labels) {
         const list = [];
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            list.push(stem ? stem.muted : false);
+        for (let i = 0; i < labels.length; ++i) {
+            const stem = root.stemOf(labels[i]);
+            if (stem) {
+                list.push(stem);
+            }
         }
         return list;
     }
-    function setMutes(list) {
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            if (stem) {
-                stem.setMuted(i < list.length ? list[i] : false);
-            }
-        }
-    }
-    function isOn(label) {
+    // On when all its stems play
+    function padOn(labels) {
         root.revision;
-        const stem = root.stemOf(label);
-        return !!stem && !stem.muted;
-    }
-    // Exactly these stems on (of the ones the track has)
-    function comboOn(labels) {
-        root.revision;
-        let any = false;
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            if (!stem) {
-                continue;
-            }
-            const wanted = labels.indexOf(stem.label) >= 0;
-            any = any || wanted;
-            if (wanted === stem.muted) {
-                return false;
-            }
-        }
-        return any;
-    }
-    function playCombo(labels) {
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            if (stem) {
-                stem.setMuted(labels.indexOf(stem.label) < 0);
-            }
-        }
+        const stems = root.stemsOf(labels);
+        return stems.length > 0 && stems.every(stem => !stem.muted);
     }
 
     Repeater {
@@ -118,82 +81,48 @@ Item {
         }
     }
 
-    Grid {
-        id: pads
+    Row {
+        id: row
 
         anchors.fill: parent
-        columns: 4
-        rows: 2
         spacing: root.spacing
         enabled: root.hasStems
 
-        // Top row: one stem each
         Repeater {
-            model: root.singles
+            model: root.pads
 
             Pad {
-                id: single
+                id: pad
 
                 required property var modelData
                 property var held: null
-                readonly property bool on: root.hasStems && root.isOn(modelData.label)
+                readonly property bool on: root.hasStems && root.padOn(modelData.labels)
+                readonly property bool present: root.hasStems && root.stemsOf(modelData.labels).length > 0
 
-                width: (pads.width - (pads.columns - 1) * pads.spacing) / pads.columns
-                height: (pads.height - (pads.rows - 1) * pads.spacing) / pads.rows
+                width: (row.width - 3 * row.spacing) / 4
+                height: row.height
                 text: modelData.name
                 padColor: modelData.color
-                active: single.on
-                dimmed: !single.on
+                active: pad.on
+                dimmed: !pad.on
+                enabled: pad.present
 
                 // Answers on touch down; a long hold goes back on release
                 onPressedDown: {
-                    const stem = root.stemOf(modelData.label);
-                    if (!stem) {
+                    const stems = root.stemsOf(modelData.labels);
+                    if (stems.length === 0) {
                         return;
                     }
-                    single.held = {stem: stem, was: stem.muted, at: Date.now()};
-                    stem.setMuted(!stem.muted);
+                    const was = stems.map(stem => stem.muted);
+                    const mute = pad.on;
+                    stems.forEach(stem => stem.setMuted(mute));
+                    pad.held = {stems: stems, was: was, at: Date.now()};
                 }
                 onReleased: {
-                    const held = single.held;
-                    single.held = null;
+                    const held = pad.held;
+                    pad.held = null;
                     if (held && Date.now() - held.at >= root.holdMs) {
-                        held.stem.setMuted(held.was);
-                    }
-                }
-            }
-        }
-        // Bottom row: combinations
-        Repeater {
-            model: root.combos
-
-            Pad {
-                id: combo
-
-                required property var modelData
-                property var held: null
-                readonly property bool on: root.hasStems && root.comboOn(modelData.labels)
-
-                width: (pads.width - (pads.columns - 1) * pads.spacing) / pads.columns
-                height: (pads.height - (pads.rows - 1) * pads.spacing) / pads.rows
-                text: modelData.name
-                padColor: modelData.color
-                active: combo.on
-
-                onPressedDown: {
-                    combo.held = {was: root.mutes(), at: Date.now()};
-                    if (combo.on) {
-                        // All the stems back
-                        root.setMutes([]);
-                    } else {
-                        root.playCombo(modelData.labels);
-                    }
-                }
-                onReleased: {
-                    const held = combo.held;
-                    combo.held = null;
-                    if (held && Date.now() - held.at >= root.holdMs) {
-                        root.setMutes(held.was);
+                        held.stems.forEach((stem, i) => stem.setMuted(held.was[i]));
                     }
                 }
             }

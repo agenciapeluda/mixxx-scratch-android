@@ -3,10 +3,11 @@ import QtQuick
 // The Scratch pads of a deck (letsktch!): 8 slots of the track.
 // - empty: keeps the place (from the beat before) and the beats, and plays
 // - kept: jumps to its phrase and plays
-// - playing: tap to leave (the track is back where it would have been)
+// - playing: tap to leave (the track carries on from where it is)
 // - hold to clear (SHIFT + pad on a controller)
-// On top: the beats of a new slot and the stem to scratch. Gray, with
-// "Separar", when the track has no stems.
+// On top: the beats of a new slot and the stem to scratch, in one row or,
+// narrow, in two. Without stems the header hides and the pads go gray with
+// "Separar" (only the progress while it separates).
 Item {
     id: root
 
@@ -28,53 +29,62 @@ Item {
     }
 
     // ---- Tiempos [1 2 4 8] · Scratchear: Voz ▾ ----
-    Row {
+    // One row when it fits the width of the deck, else two (Tiempos on top,
+    // the stem below). Hidden when the track has no stems.
+    readonly property bool hasStems: !!root.engine && root.engine.hasStems
+    readonly property bool twoRows: root.width < 340
+    readonly property real rowHeight: root.headerHeight
+
+    Item {
         id: header
 
         width: parent.width
-        height: root.headerHeight
-        spacing: 6
-        enabled: !!root.engine && root.engine.hasStems
-        opacity: enabled ? 1 : 0.4
+        height: !root.hasStems ? 0 : (root.twoRows ? root.rowHeight * 2 + 4 : root.rowHeight)
+        visible: root.hasStems
+        clip: true
 
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            color: Style.textSecondary
-            font.family: Style.font
-            font.pixelSize: 12
-            text: qsTr("Tiempos")
-        }
-        Repeater {
-            model: [1, 2, 4, 8]
+        Row {
+            id: beatsRow
 
-            CLButton {
-                required property int modelData
+            width: root.twoRows ? header.width : Math.min(header.width * 0.55, beatsLabel.implicitWidth + 6 + 4 * (Math.round(root.rowHeight * 1.1) + 6))
+            height: root.rowHeight
+            spacing: 6
+
+            Text {
+                id: beatsLabel
 
                 anchors.verticalCenter: parent.verticalCenter
-                width: Math.round(header.height * 1.1)
-                height: header.height - 4
-                radius: height / 2
-                text: String(modelData)
-                fontSize: 12
-                fontWeight: Font.Bold
-                highlighted: root.engine && root.engine.beats === modelData
-                litColor: Style.deckColor(root.group)
-                onClicked: root.engine.setBeats(modelData)
+                color: Style.textSecondary
+                font.family: Style.font
+                font.pixelSize: 12
+                text: qsTr("Tiempos")
             }
-        }
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            color: Style.textDim
-            font.family: Style.font
-            font.pixelSize: 12
-            text: "·"
+            Repeater {
+                model: [1, 2, 4, 8]
+
+                CLButton {
+                    required property int modelData
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: Math.max(26, Math.min(Math.round(root.rowHeight * 1.4), (beatsRow.width - beatsLabel.implicitWidth - 6 * 4) / 4))
+                    height: root.rowHeight - 4
+                    radius: height / 2
+                    text: String(modelData)
+                    fontSize: 12
+                    fontWeight: Font.Bold
+                    highlighted: root.engine && root.engine.beats === modelData
+                    litColor: Style.deckColor(root.group)
+                    onClicked: root.engine.setBeats(modelData)
+                }
+            }
         }
         CLButton {
             id: stemButton
 
-            anchors.verticalCenter: parent.verticalCenter
-            width: Math.max(90, header.width - x)
-            height: header.height - 4
+            x: root.twoRows ? 0 : beatsRow.width + 8
+            y: root.twoRows ? root.rowHeight + 4 + 2 : 2
+            width: root.twoRows ? header.width : header.width - x
+            height: root.rowHeight - 4
             radius: height / 2
             text: qsTr("Scratchear: %1 ▾").arg(root.engine ? root.engine.stemName(root.engine.scratchStem || root.engine.stem) : qsTr("Voz"))
             fontSize: 12
@@ -101,7 +111,7 @@ Item {
     Grid {
         id: pads
 
-        y: header.height + root.spacing
+        y: header.height > 0 ? header.height + root.spacing : 0
         width: parent.width
         height: parent.height - y
         columns: 4

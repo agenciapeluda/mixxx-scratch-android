@@ -2,8 +2,8 @@ import QtQuick
 
 // The 8 pads of a deck (2 rows of 4) with the button that picks what they
 // do, on the outer side: hot cues, loop rolls, samples, Scratch (letsktch!)
-// or Stems. Tap it to go to the next mode. Narrow (upright), the mode is a
-// tab over the pads.
+// or Stems. It shows the current mode; a tap goes to the next one. Narrow
+// (upright), the same box is a tab over the pads.
 Item {
     id: root
 
@@ -27,40 +27,54 @@ Item {
         radius: 10
         color: pickerMouse.pressed ? Style.buttonPressed : Style.raised
 
+        // Sideways, like upright: a box with the current mode; a tap goes
+        // to the next one
         Column {
             anchors.centerIn: parent
-            spacing: 4
+            width: picker.width - 8
+            spacing: 6
             visible: !root.compact
 
             Text {
-                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
                 color: Style.textDim
                 font.family: Style.font
-                font.pixelSize: 10
+                font.pixelSize: 9
                 font.weight: Font.DemiBold
                 font.letterSpacing: 0.6
                 text: qsTr("PADS")
             }
-            Repeater {
-                model: root.modes
+            Text {
+                width: parent.width
+                height: 18
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: Style.text
+                font.family: Style.font
+                font.pixelSize: 12
+                font.weight: Font.Bold
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 7
+                elide: Text.ElideNone
+                text: root.modes[root.mode]
+            }
+            // Where the mode is in the cycle
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 4
 
-                Text {
-                    required property string modelData
-                    required property int index
+                Repeater {
+                    model: root.modes.length
 
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    color: root.mode === index ? Style.text : Style.textDim
-                    font.family: Style.font
-                    font.pixelSize: 10
-                    font.weight: root.mode === index ? Font.Bold : Font.Medium
-                    text: modelData
+                    Rectangle {
+                        required property int index
 
-                    // Sideways each mode is picked straight away
-                    MouseArea {
-                        anchors.centerIn: parent
-                        width: picker.width
-                        height: parent.height + 6
-                        onClicked: root.mode = parent.index
+                        width: 5
+                        height: 5
+                        radius: 2.5
+                        color: index === root.mode ? Style.text : Style.textDim
+                        opacity: index === root.mode ? 1 : 0.5
                     }
                 }
             }
@@ -79,7 +93,6 @@ Item {
             id: pickerMouse
 
             anchors.fill: parent
-            z: -1
             onClicked: root.mode = (root.mode + 1) % root.modes.length
         }
     }

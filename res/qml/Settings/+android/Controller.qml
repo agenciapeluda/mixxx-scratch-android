@@ -98,7 +98,7 @@ Category {
                     anchors.margins: 12
                     spacing: 10
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -155,7 +155,7 @@ Category {
                             border.color: "#908aff"
                             border.width: 1
 
-                            RowLayout {
+                            FormRow {
                                 anchors.centerIn: parent
                                 spacing: 8
 
@@ -240,7 +240,7 @@ Category {
                     spacing: 12
 
                     // Header row with toggle
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
 
                         Text {
@@ -287,7 +287,7 @@ Category {
                         visible: root.showGuide
 
                         // Step 1: Cable OTG
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 10
 
@@ -328,7 +328,7 @@ Category {
                         }
 
                         // Step 2: Alimentación eléctrica y HUB
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 10
 
@@ -370,7 +370,7 @@ Category {
                         }
 
                         // Step 3: Permiso USB
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 10
 
@@ -412,7 +412,7 @@ Category {
                         }
 
                         // Step 4: Salida de Audio
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 10
 
@@ -476,7 +476,7 @@ Category {
                         }
 
                         // Step 5: Mapeos Personalizados y de serie
-                        RowLayout {
+                        FormRow {
                             Layout.fillWidth: true
                             spacing: 10
 
@@ -515,7 +515,7 @@ Category {
                                     Layout.fillWidth: true
                                 }
 
-                                RowLayout {
+                                FormRow {
                                     spacing: 8
                                     Layout.fillWidth: true
 
@@ -649,7 +649,7 @@ Category {
                 border.width: 1.5
                 visible: root.selectedController != null
 
-                RowLayout {
+                FormRow {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 12
@@ -821,7 +821,7 @@ Category {
                             scrollView.contentItem.contentY = 0;
                         }
                     }
-                    RowLayout {
+                    FormRow {
                         anchors.fill: parent
                         anchors.margins: 6
 
@@ -911,7 +911,7 @@ Category {
         border.width: 1
         radius: 8
 
-        RowLayout {
+        FormRow {
             anchors.fill: parent
             anchors.margins: 10
             spacing: 12
@@ -925,7 +925,7 @@ Category {
                 border.color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#2b21f3")
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     id: statusRow
                     anchors.centerIn: parent
                     spacing: 8
@@ -976,7 +976,7 @@ Category {
                 border.color: "#ff4d5e"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 6
                     Text { text: "↺"; color: "#ff4d5e"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -1045,7 +1045,7 @@ Category {
                 border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 8
 

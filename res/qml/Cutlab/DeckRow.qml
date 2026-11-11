@@ -151,7 +151,7 @@ Row {
         height: root.height
         radius: height / 2
         text: "CUE"
-        fontSize: Math.max(11, Math.min(14, height * 0.3))
+        fontSize: Math.max(10, Math.min(14, height * 0.3, root.buttonWidth * 0.24))
         lit: root.cueLit
         litColor: Style.cue
         onPressedDown: cueDefault.value = 1
@@ -163,9 +163,9 @@ Row {
         height: root.height
         radius: height / 2
         // On: filled in the deck color, bold (it says the beats are locked;
-        // the leader carries a dot)
-        text: sync.value > 0 && syncLeader.value > 0 ? "SYNC •" : "SYNC"
-        fontSize: Math.max(11, Math.min(14, height * 0.3))
+        // the leader carries a dot under the label)
+        text: "SYNC"
+        fontSize: Math.max(10, Math.min(14, height * 0.3, root.buttonWidth * 0.24))
         fontWeight: sync.value > 0 ? Font.Bold : Font.Medium
         litColor: Style.deckColor(root.group)
         textColor: sync.value > 0 ? Style.background : Style.text
@@ -174,6 +174,19 @@ Row {
         onPressAndHold: {
             sync.value = 0;
             rate.value = 0;
+        }
+
+        // The leader: a dot inside the button, not in the label, so the
+        // label never grows past the button
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Math.max(3, parent.height * 0.12)
+            width: 5
+            height: 5
+            radius: 2.5
+            color: Style.background
+            visible: sync.value > 0 && syncLeader.value > 0
         }
     }
     // The loop of the length picked

@@ -130,7 +130,7 @@ Category {
                 title: qsTr("Vinyl control (DVS)")
                 subtitle: qsTr("Choose the sound card input of each turntable here (USB cards appear as \"directo\"), pick your timecode and turn on DVS on the deck. Start in REL mode.")
 
-                RowLayout {
+                FormRow {
                     Layout.fillWidth: true
                     spacing: 10
 
@@ -167,7 +167,7 @@ Category {
 
                 // When DVS still doesn't work: open the cards again, or copy
                 // the whole sound setup to send it
-                RowLayout {
+                FormRow {
                     Layout.fillWidth: true
                     spacing: 10
 
@@ -243,7 +243,7 @@ Category {
                         font.pixelSize: 11
                         text: qsTr("Inputs of the USB sound card")
                     }
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 6
 
@@ -468,7 +468,7 @@ Category {
                             font.pixelSize: 11
                             text: qsTr("DVS")
                         }
-                        RowLayout {
+                        FormRow {
                             Layout.columnSpan: 3
                             spacing: 12
 
@@ -503,7 +503,7 @@ Category {
                             font.pixelSize: 11
                             text: qsTr("Signal")
                         }
-                        RowLayout {
+                        FormRow {
                             Layout.columnSpan: 3
                             spacing: 14
 
@@ -604,7 +604,7 @@ Category {
                 title: qsTr("Crossfader")
                 subtitle: qsTr("Scratch and Hard cut open the channel fully in the first millimetres, like a battle mixer.")
 
-                RowLayout {
+                FormRow {
                     Layout.fillWidth: true
                     spacing: 12
 
@@ -632,7 +632,7 @@ Category {
                 }
                 // Fine tuning of the cut: how far the fader travels before
                 // the channel is fully open (sharp for scratch)
-                RowLayout {
+                FormRow {
                     Layout.fillWidth: true
                     spacing: 12
 
@@ -696,7 +696,7 @@ Category {
                         text: cutSlider.value > 0.85 ? qsTr("Razor") : (cutSlider.value > 0.5 ? qsTr("Sharp") : qsTr("Soft"))
                     }
                 }
-                RowLayout {
+                FormRow {
                     Layout.fillWidth: true
                     spacing: 12
 

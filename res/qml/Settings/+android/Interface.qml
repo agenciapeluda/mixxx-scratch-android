@@ -222,7 +222,7 @@ Category {
                             }
 
                             // Applied immediately, independently of the Save button
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Language"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Skin.ComboBox {
@@ -280,7 +280,7 @@ Category {
                                 wrapMode: Text.WordWrap
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Cutlab: one interface only
                                 visible: false
                                 Layout.fillWidth: true
@@ -301,7 +301,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (no light theme yet)
                                 visible: false
                                 Layout.fillWidth: true
@@ -314,7 +314,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (the skins have one layout)
                                 visible: false
                                 Layout.fillWidth: true
@@ -327,7 +327,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (no mouse to hover with)
                                 visible: false
                                 Layout.fillWidth: true
@@ -339,7 +339,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Keep screen on (screensaver)"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -349,7 +349,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (always fullscreen)
                                 visible: false
                                 Layout.fillWidth: true
@@ -361,7 +361,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (the top bar of the skins is always shown)
                                 visible: false
                                 Layout.fillWidth: true
@@ -489,7 +489,7 @@ Category {
                                 color: "#a9b3ff"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Search completions"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -499,7 +499,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (keyboard shortcuts)
                                 visible: false
                                 Layout.fillWidth: true
@@ -511,7 +511,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("BPM column decimals"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.SpinBox {
@@ -526,7 +526,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Track row height"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.Slider {
@@ -575,7 +575,7 @@ Category {
                                 color: "#a78bfa"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Track palette"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 ColorPaletteComboBox {
@@ -585,7 +585,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Hotcue palette"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 ColorPaletteComboBox {
@@ -595,7 +595,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Default hotcue color"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 DefaultColorSelector {
@@ -607,7 +607,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Default loop color"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 DefaultColorSelector {
@@ -619,7 +619,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 // Not used on Android (not saved by Mixxx)
                                 visible: false
                                 Layout.fillWidth: true
@@ -633,7 +633,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Key colors"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -643,7 +643,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 visible: keyPaletteInput.selected === "on"
                                 Text { Layout.fillWidth: true; text: qsTr("Key palette"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -707,7 +707,7 @@ Category {
                                 color: "#ffffff"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Cue mode"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Skin.ComboBox {
@@ -718,7 +718,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Track load point"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Skin.ComboBox {
@@ -729,7 +729,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Set intro start to main cue"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -739,7 +739,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Loading a track when deck is playing"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -749,7 +749,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Double-tap LOAD to clone deck"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -785,7 +785,7 @@ Category {
                                 color: "#a9b3ff"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Time format"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Skin.ComboBox {
@@ -809,7 +809,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Track time display"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -845,7 +845,7 @@ Category {
                                 color: "#ffb547"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Pitch slider range"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 Skin.ComboBox {
@@ -857,7 +857,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Pitch fader orientation"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -867,7 +867,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("BPM sync algorithm"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -877,7 +877,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Reset speed on track load"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -887,7 +887,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Keylock mode"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -897,7 +897,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Keyunlock mode"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -907,7 +907,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Pitch bend behavior"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 RatioChoice {
@@ -917,7 +917,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Ramping sensitivity"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.Slider {
@@ -957,7 +957,7 @@ Category {
                                 color: "#d1d1d6"
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Temporary fine (%)"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.SpinBox {
@@ -972,7 +972,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Temporary coarse (%)"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.SpinBox {
@@ -987,7 +987,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Permanent fine (%)"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.SpinBox {
@@ -1002,7 +1002,7 @@ Category {
                                 }
                             }
 
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 Text { Layout.fillWidth: true; text: qsTr("Permanent coarse (%)"); color: Theme.white; font.pixelSize: 12; elide: Text.ElideRight; Layout.minimumWidth: 0 }
                                 SettingComponents.SpinBox {
@@ -1037,7 +1037,7 @@ Category {
 
         readonly property bool hasChanges: (root.selectedIndex === 0 && themeColorTab.dirty) || (root.selectedIndex === 1 && decksTab.dirty)
 
-        RowLayout {
+        FormRow {
             anchors.fill: parent
             anchors.margins: 10
             spacing: 12
@@ -1051,7 +1051,7 @@ Category {
                 border.color: buttonActions.hasChanges ? "#ffb547" : "#2bd67b"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     id: statusRow
                     anchors.centerIn: parent
                     spacing: 8
@@ -1097,7 +1097,7 @@ Category {
                 border.color: "#ff4d5e"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 6
                     Text { text: "↺"; color: "#ff4d5e"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -1178,7 +1178,7 @@ Category {
                 border.color: buttonActions.hasChanges ? "#2bd67b" : "#8aa8ff"
                 border.width: 1.5
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 8
 
@@ -1221,7 +1221,7 @@ Category {
         }
     }
 
-    component Content: RowLayout {
+    component Content: FormRow {
         required property var mode
 
         Text {

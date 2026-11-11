@@ -11,7 +11,15 @@ import "../Cutlab" as Cutlab
 Category {
     id: root
 
-    readonly property var waveColorNames: [qsTr("RGB Cutlab"), qsTr("Color del deck"), qsTr("de la configuración")]
+    readonly property var waveColorNames: [qsTr("RGB Cutlab"), qsTr("Color del deck"), qsTr("Clásico")]
+    readonly property var waveColorKeys: ["rgb", "deck", "config"]
+    // The colors apply on the tap, with the preview; the rest on Save
+    function applyWaveColors() {
+        const key = root.waveColorKeys[Math.max(0, root.waveColorNames.indexOf(waveColorsInput.selected))];
+        if (key !== Cutlab.Style.waveColors) {
+            Cutlab.Style.setWaveColors(key);
+        }
+    }
 
     property bool dirty: false
     label: qsTr("Waveforms")
@@ -38,9 +46,6 @@ Category {
     readonly property list<int> waveformTypes: [Mixxx.WaveformDisplay.Type.Simple, Mixxx.WaveformDisplay.Type.Filtered, Mixxx.WaveformDisplay.Type.HSV, Mixxx.WaveformDisplay.Type.RGB, Mixxx.WaveformDisplay.Type.Stacked]
 
     function load() {
-        overviewTypeInput.currentIndex = Math.max(0, Math.min(2, Mixxx.Config.waveformOverviewType));
-        overviewStereoInput.selected = Mixxx.Config.waveformOverviewStereo ? "on" : "off";
-        overviewScalingInput.selected = Mixxx.Config.waveformOverviewNormalized ? "normalize" : "global gain";
         waveformEnabledInput.selected = Mixxx.Config.waveformEnabled ? "on" : "off";
         frameRateInput.value = Mixxx.Config.waveformFrameRate;
         if (frameRateInput.value <= 60) frameRateRatio.selected = "60 fps ★";
@@ -53,7 +58,6 @@ Category {
         zoomSynchronizationInput.selected = Mixxx.Config.waveformZoomSynchronization ? "on" : "off";
         var options = Mixxx.Config.waveformOptions;
         splitStereoSignalInput.selected = (options & Mixxx.WaveformDisplay.Option.SplitStereoSignal) ? "on" : "off";
-        highDetailInput.selected = (options & Mixxx.WaveformDisplay.Option.HighDetail) ? "on" : "off";
         defaultZoomInput.value = Mixxx.Config.waveformDefaultZoom;
         endOfTrackWarningInput.value = Mixxx.Config.waveformEndOfTrackWarningTime;
         beatGridAlphaInput.value = Mixxx.Config.waveformBeatGridAlpha;
@@ -79,17 +83,12 @@ Category {
             root.dirty = true;
     }
     function reset() {
-        overviewTypeInput.currentIndex = 2;
-        overviewStereoInput.selected = "on";
-        overviewMinuteMarkersInput.selected = "on";
-        overviewScalingInput.selected = "global gain";
         waveformTypeInput.currentIndex = 3;
         waveColorsInput.selected = root.waveColorNames[0];
         zoomSynchronizationInput.selected = "on";
         waveformEnabledInput.selected = "on";
         frameRateInput.value = 60;
         splitStereoSignalInput.selected = "off";
-        highDetailInput.selected = "off";
         defaultZoomInput.value = 3;
         endOfTrackWarningInput.value = 30;
         beatGridAlphaInput.value = 90;
@@ -111,20 +110,13 @@ Category {
         root.dirty = true;
     }
     function save() {
-        Mixxx.Config.waveformOverviewType = overviewTypeInput.currentIndex;
-        Mixxx.Config.waveformOverviewStereo = overviewStereoInput.selected === "on";
-        Mixxx.Config.waveformOverviewMinuteMarkers = overviewMinuteMarkersInput.selected === "on";
-        Mixxx.Config.waveformOverviewNormalized = overviewScalingInput.selected === "normalize";
         Mixxx.Config.waveformType = root.waveformTypes[waveformTypeInput.currentIndex];
-        Cutlab.Style.setWaveColors(["rgb", "deck", "config"][Math.max(0, root.waveColorNames.indexOf(waveColorsInput.selected))]);
         Mixxx.Config.waveformEnabled = waveformEnabledInput.selected === "on";
         Mixxx.Config.waveformZoomSynchronization = zoomSynchronizationInput.selected === "on";
         Mixxx.Config.waveformFrameRate = frameRateInput.value;
         var options = 0;
         if (waveformTypeInput.currentIndex === 3 && splitStereoSignalInput.selected === "on")
             options |= Mixxx.WaveformDisplay.Option.SplitStereoSignal;
-        if (highDetailInput.selected === "on")
-            options |= Mixxx.WaveformDisplay.Option.HighDetail;
         Mixxx.Config.waveformOptions = options;
         Mixxx.Config.waveformDefaultZoom = defaultZoomInput.value;
         Mixxx.Config.waveformEndOfTrackWarningTime = endOfTrackWarningInput.value;
@@ -183,80 +175,9 @@ Category {
                 color: Theme.white
                 font.pixelSize: 13
                 font.weight: Font.DemiBold
-                text: qsTr("Overview Waveforms")
-            }
-            RowLayout {
-                Layout.fillWidth: true
-
-                WaveformSettingParameter {
-                    label: qsTr("Type")
-                }
-                Skin.ComboBox {
-                    id: overviewTypeInput
-
-                    Layout.preferredWidth: 180
-                    model: [qsTr("Filtered"), "HSV", "RGB"]
-
-                    onCurrentIndexChanged: root.markDirty()
-                }
-            }
-            RowLayout {
-                Layout.fillWidth: true
-
-                WaveformSettingParameter {
-                    label: qsTr("Stereo channels")
-                }
-                RatioChoice {
-                    id: overviewStereoInput
-
-                    options: ["on", "off"]
-
-                    onSelectedChanged: root.markDirty()
-                }
-            }
-            RowLayout {
-                Layout.fillWidth: true
-
-                WaveformSettingParameter {
-                    label: qsTr("Minute markers")
-                }
-                RatioChoice {
-                    id: overviewMinuteMarkersInput
-
-                    options: ["on", "off"]
-
-                    onSelectedChanged: root.markDirty()
-                }
-            }
-            RowLayout {
-                Layout.fillWidth: true
-
-                WaveformSettingParameter {
-                    label: qsTr("Gain scaling")
-                }
-                RatioChoice {
-                    id: overviewScalingInput
-
-                    options: ["normalize", "global gain"]
-
-                    onSelectedChanged: root.markDirty()
-                }
-            }
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 1
-                color: Theme.darkGray3
-            }
-            Text {
-                elide: Text.ElideRight
-                Layout.minimumWidth: 0
-                Layout.fillWidth: true
-                color: Theme.white
-                font.pixelSize: 13
-                font.weight: Font.DemiBold
                 text: qsTr("Scrolling Waveforms")
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -278,7 +199,7 @@ Category {
                 text: qsTr("Simple, Filtered, HSV, RGB and Stacked are supported by the QML renderer.")
                 wrapMode: Text.WordWrap
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -289,17 +210,24 @@ Category {
 
                     options: root.waveColorNames
 
-                    onSelectedChanged: root.markDirty()
+                    onSelectedChanged: root.applyWaveColors()
                 }
+            }
+            // Live: the colors picked on the type picked, for both decks
+            Cutlab.WavePreview {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 92
+                colors: root.waveColorKeys[Math.max(0, root.waveColorNames.indexOf(waveColorsInput.selected))]
+                waveformType: root.waveformTypes[Math.max(0, waveformTypeInput.currentIndex)]
             }
             Text {
                 Layout.minimumWidth: 0
                 Layout.fillWidth: true
                 color: Theme.midGray
-                text: qsTr("RGB Cutlab: graves, medios y agudos en colores vivos, para ver bombos, voces y platillos. Color del deck: cada deck en su color. De la configuración: los colores propios del tipo elegido. El tipo de onda siempre es el que elegís arriba.")
+                text: qsTr("RGB Cutlab: graves, medios y agudos en colores vivos, para ver bombos, voces y platillos. Color del deck: tonos del color de A y de B. Clásico: los colores propios del tipo elegido. Se aplican al tocar, en las ondas y en la barra del tema de arriba.")
                 wrapMode: Text.WordWrap
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -313,7 +241,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
                 WaveformSettingParameter {
                     label: qsTr("Waveform smoothness (FPS)")
@@ -341,7 +269,7 @@ Category {
 
                 onValueChanged: root.markDirty()
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -443,7 +371,7 @@ Category {
 
                 onValueChanged: root.markDirty()
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -465,29 +393,7 @@ Category {
                 text: qsTr("Split stereo signal is used by the RGB renderer.")
                 wrapMode: Text.WordWrap
             }
-            RowLayout {
-                Layout.fillWidth: true
-
-                WaveformSettingParameter {
-                    label: qsTr("High detail (legacy)")
-                }
-                RatioChoice {
-                    id: highDetailInput
-
-                    enabled: false
-                    options: ["on", "off"]
-
-                    onSelectedChanged: root.markDirty()
-                }
-            }
-            Text {
-                Layout.minimumWidth: 0
-                Layout.fillWidth: true
-                color: Theme.midGray
-                text: qsTr("High detail is retained for compatibility but is unavailable in the QML scene-graph renderer.")
-                wrapMode: Text.WordWrap
-            }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -501,7 +407,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -515,7 +421,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -561,7 +467,7 @@ Category {
 
                 onValueChanged: root.markDirty()
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -575,7 +481,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -603,7 +509,7 @@ Category {
                 font.weight: Font.DemiBold
                 text: qsTr("Caching")
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -617,7 +523,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 WaveformSettingParameter {
@@ -631,7 +537,7 @@ Category {
                     onSelectedChanged: root.markDirty()
                 }
             }
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
 
                 Text {
@@ -698,7 +604,7 @@ Category {
         border.width: 1
         radius: 8
 
-        RowLayout {
+        FormRow {
             anchors.fill: parent
             anchors.margins: 10
             spacing: 12
@@ -712,7 +618,7 @@ Category {
                 border.color: root.dirty ? "#ffb547" : "#2bd67b"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     id: statusRow
                     anchors.centerIn: parent
                     spacing: 8
@@ -758,7 +664,7 @@ Category {
                 border.color: "#ff4d5e"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 6
                     Text { text: "↺"; color: "#ff4d5e"; font.pixelSize: 13; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -825,7 +731,7 @@ Category {
                 border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 8
 
@@ -873,7 +779,7 @@ Category {
             verticalAlignment: Text.AlignVCenter
         }
     }
-    component WaveformSliderRow: RowLayout {
+    component WaveformSliderRow: FormRow {
         property alias decimals: slider.decimals
         required property string label
         property alias max: slider.max

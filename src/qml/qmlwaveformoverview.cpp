@@ -29,6 +29,11 @@ QmlWaveformOverview::QmlWaveformOverview(QQuickItem* parent)
           m_colorHigh(0xFF0000),
           m_colorMid(0x00FF00),
           m_colorLow(0x0000FF) {
+    // The colors are MEMBER properties: repaint when QML changes them, so
+    // the overview follows the colors of the waveforms right away
+    connect(this, &QmlWaveformOverview::colorHighChanged, this, [this]() { update(); });
+    connect(this, &QmlWaveformOverview::colorMidChanged, this, [this]() { update(); });
+    connect(this, &QmlWaveformOverview::colorLowChanged, this, [this]() { update(); });
 }
 
 void QmlWaveformOverview::componentComplete() {

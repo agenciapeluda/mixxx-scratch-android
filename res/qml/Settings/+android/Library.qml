@@ -158,7 +158,7 @@ Category {
                     spacing: 12
 
                     // Header row
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 8
 
@@ -226,7 +226,7 @@ Category {
                                 border.color: "#363636"
                                 border.width: 1
 
-                                RowLayout {
+                                FormRow {
                                     anchors.fill: parent
                                     anchors.leftMargin: 10
                                     anchors.rightMargin: 10
@@ -288,7 +288,7 @@ Category {
                             radius: 6
                             visible: !root.sourcesList || root.sourcesList.length === 0
 
-                            RowLayout {
+                            FormRow {
                                 anchors.centerIn: parent
                                 spacing: 8
                                 Text {
@@ -360,7 +360,7 @@ Category {
                     }
 
                     // --- BOTÓN EXPLORAR / AÑADIR OTRA CARPETA ---
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 10
 
@@ -425,7 +425,7 @@ Category {
                             }
 
                             // Current path display with Back/Up button
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 spacing: 6
 
@@ -487,7 +487,7 @@ Category {
                                         border.color: "#444444"
                                         border.width: 1
 
-                                        RowLayout {
+                                        FormRow {
                                             anchors.centerIn: parent
                                             spacing: 4
                                             Text { text: ""; font.pixelSize: 11; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -521,7 +521,7 @@ Category {
                             }
 
                             // Confirm Add Button
-                            RowLayout {
+                            FormRow {
                                 Layout.fillWidth: true
                                 spacing: 10
 
@@ -592,7 +592,7 @@ Category {
                         Layout.fillWidth: true
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -604,7 +604,7 @@ Category {
                             border.color: "#2a2940"
                             border.width: 1
 
-                            RowLayout {
+                            FormRow {
                                 anchors.fill: parent
                                 anchors.margins: 8
                                 spacing: 8
@@ -697,7 +697,7 @@ Category {
                         Layout.fillWidth: true
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -739,7 +739,7 @@ Category {
                     Repeater {
                         model: root.backupList
 
-                        RowLayout {
+                        FormRow {
                             id: backupRow
 
                             required property string modelData
@@ -824,7 +824,7 @@ Category {
                         Layout.fillWidth: true
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -857,7 +857,7 @@ Category {
                     Repeater {
                         model: Mixxx.MobileLibrary.rekordboxDrives
 
-                        RowLayout {
+                        FormRow {
                             id: driveRow
 
                             required property var modelData
@@ -894,7 +894,7 @@ Category {
                         }
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         visible: Mixxx.MobileLibrary.driveBackupRunning
                         spacing: 12
@@ -968,7 +968,7 @@ Category {
                         Layout.fillWidth: true
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -996,7 +996,7 @@ Category {
                         color: "#303030"
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -1054,7 +1054,7 @@ Category {
                         Layout.fillWidth: true
                     }
 
-                    RowLayout {
+                    FormRow {
                         Layout.fillWidth: true
                         spacing: 12
 
@@ -1106,7 +1106,7 @@ Category {
         border.width: 1
         radius: 8
 
-        RowLayout {
+        FormRow {
             anchors.fill: parent
             anchors.margins: 10
             spacing: 12
@@ -1120,7 +1120,7 @@ Category {
                 border.color: root.isScanning ? "#ffb547" : (root.dirty ? "#ffb547" : "#2bd67b")
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     id: statusRow
                     anchors.centerIn: parent
                     spacing: 8
@@ -1154,7 +1154,7 @@ Category {
                 border.color: "#908aff"
                 border.width: 1
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 6
                     Text { text: ""; font.pixelSize: 11; elide: Text.ElideRight; Layout.minimumWidth: 0 }
@@ -1224,7 +1224,7 @@ Category {
                 border.color: root.dirty ? "#2bd67b" : "#908aff"
                 border.width: 1.5
 
-                RowLayout {
+                FormRow {
                     anchors.centerIn: parent
                     spacing: 8
 
@@ -1308,7 +1308,7 @@ Category {
                 wrapMode: Text.WordWrap
             }
 
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
                 spacing: 10
 
@@ -1412,7 +1412,7 @@ Category {
                 wrapMode: Text.WordWrap
             }
 
-            RowLayout {
+            FormRow {
                 Layout.fillWidth: true
                 spacing: 12
                 visible: !restorePopup.restoring
