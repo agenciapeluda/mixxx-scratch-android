@@ -1,13 +1,12 @@
 import QtQuick
 
-// The bar of a deck, like djay: stems, hot cues, loops, FX, EQ and the
-// Scratch. A tap opens that tool in the half of the deck.
+// The bar of a deck, like djay: stems, hot cues, loops, FX and EQ. A tap opens that tool in the half of the deck.
 Rectangle {
     id: root
 
     required property string group
     property bool mirrored: false
-    readonly property var tools: ["stems", "hotcue", "loop", "fx", "eq", "scratch"]
+    readonly property var tools: ["stems", "hotcue", "loop", "fx", "eq"]
 
     signal toolRequested(int tool)
 

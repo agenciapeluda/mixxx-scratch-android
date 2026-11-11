@@ -19,7 +19,8 @@ Rectangle {
     property int tool2: 4
     // The deck whose tools opened last (upright only one is shown)
     property string lastTools: ""
-    // What the 8 pads of each deck do: 0 hot cues, 1 rolls, 2 samples
+    // What the 8 pads of each deck do: 0 hot cues, 1 rolls, 2 samples,
+    // 3 Scratch (letsktch!), 4 Stems
     property int padMode1: 0
     property int padMode2: 0
     // The pads big, over the stage
@@ -592,23 +593,10 @@ Rectangle {
             root.openLibrary("");
         }
     }
-    // letsktch!: the deck it is on ("" off)
+    // letsktch!: the deck it plays on ("" off), and its engine for the
+    // Scratch pads
     readonly property string letsktchGroup: letsktch.group
     readonly property var letsktchEngine: letsktch
-    // Scratch: the bank of phrases and the way back, shared by both decks
-    readonly property var scratchEngine: scratchEngine
-    // The deck whose Scratch tool is on screen, the last opened first
-    readonly property string scratchToolGroup: {
-        const open1 = root.tools1 && root.tool1 === 5;
-        const open2 = root.tools2 && root.tool2 === 5;
-        if (open1 && open2) {
-            return root.lastTools === "[Channel2]" ? "[Channel2]" : "[Channel1]";
-        }
-        return open1 ? "[Channel1]" : (open2 ? "[Channel2]" : "");
-    }
-    function toggleLetsktch(group) {
-        letsktch.toggle(group);
-    }
     function openTool(group, tool) {
         // Upright, the tools come up from below
         root.lastTools = group;
@@ -782,13 +770,6 @@ Rectangle {
     Letsktch {
         id: letsktch
 
-        onFailed: text => root.showScratchMessage(text)
-    }
-    ScratchEngine {
-        id: scratchEngine
-
-        toolGroup: root.scratchToolGroup
-        letsktch: letsktch
         onFailed: text => root.showScratchMessage(text)
     }
     function showScratchMessage(text) {

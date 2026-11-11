@@ -1,28 +1,22 @@
 import QtQuick
 
 // The tools of a deck, shown in its half instead of its turntable (the
-// waveforms stay on screen): stems, hot cues, loops, effects, EQ and
-// Scratch (letsktch! and the bank of phrases), picked in the bar at the
-// bottom.
+// waveforms stay on screen): stems, hot cues, loops, effects and EQ,
+// picked in the bar at the bottom. Scratch is a mode of the pads.
 Rectangle {
     id: root
 
     required property string group
     // 0 stems, 1 hot cues, 2 loops, 3 effects, 4 mixer (volume, EQ,
-    // filter), 5 Scratch
+    // filter)
     property int tool: 1
     readonly property var tools: [
         {icon: "stems", name: qsTr("Stems")},
         {icon: "hotcue", name: qsTr("Cues")},
         {icon: "loop", name: qsTr("Loop")},
         {icon: "fx", name: qsTr("FX")},
-        {icon: "mixer", name: qsTr("Mezcla")},
-        {icon: "scratch", name: qsTr("Scratch")}
+        {icon: "mixer", name: qsTr("Mezcla")}
     ]
-
-    // The ScratchEngine and Letsktch of the main screen
-    property var scratch: null
-    property var letsktch: null
 
     signal closeRequested
 
@@ -38,7 +32,7 @@ Rectangle {
 
         Loader {
             anchors.fill: parent
-            sourceComponent: [stemsTool, cuesTool, loopTool, fxTool, eqTool, scratchTool][root.tool]
+            sourceComponent: [stemsTool, cuesTool, loopTool, fxTool, eqTool][Math.max(0, Math.min(4, root.tool))]
         }
     }
 
@@ -68,15 +62,6 @@ Rectangle {
 
         FxTool {
             group: root.group
-        }
-    }
-    Component {
-        id: scratchTool
-
-        ScratchTool {
-            group: root.group
-            engine: root.scratch
-            letsktch: root.letsktch
         }
     }
     Component {

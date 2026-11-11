@@ -165,11 +165,12 @@ Column {
             font.family: Style.mono
             font.weight: Font.Medium
             font.pixelSize: root.fs(12)
-            text: "LOOP " + (loopEnabled.value > 0 ? Style.beatsText(loopSize.value) : "—")
+            text: scratchActive.value > 0 ? qsTr("LOOP · Scratch") : "LOOP " + (loopEnabled.value > 0 ? Style.beatsText(loopSize.value) : "—")
 
             MouseArea {
                 anchors.fill: parent
                 anchors.margins: -10
+                enabled: scratchActive.value <= 0
                 onClicked: {
                     if (loopEnabled.value > 0) {
                         reloop.value = 1;
@@ -206,5 +207,12 @@ Column {
 
         group: root.group
         key: "reloop_toggle"
+    }
+    // letsktch! plays a roll on the deck: the loop is locked
+    Mixxx.ControlProxy {
+        id: scratchActive
+
+        group: "[Cutlab]"
+        key: `scratch_active${root.group === "[Channel2]" ? 2 : 1}`
     }
 }

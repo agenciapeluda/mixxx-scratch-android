@@ -2895,7 +2895,327 @@
 
             <!-- TrackingScratch Mode Pads start -->
                 <!-- Deck 1 pads -->
+            <control>
+                <description>PAD 1 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 1</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x20</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 1 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 1</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x20</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 2</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x21</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 2</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x21</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 3</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x22</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 3</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x22</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 4</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x23</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 4</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x23</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 5</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 5</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 6</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 6</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 7</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 7</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 8</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 + SHIFT (DECK1) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 8</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
                 <!-- Deck 2 pads -->
+            <control>
+                <description>PAD 1 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 1</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x20</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 1 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 1</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x20</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 2</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x21</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 2</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x21</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 3</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x22</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 3</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x22</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 4</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x23</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 4</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x23</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 5</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 5</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x24</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 6</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 6</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x25</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 7</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 7</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x26</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: play slot 8</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 + SHIFT (DECK2) TRACKING SCRATCH MODE - Cutlab Scratch: clear slot 8</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x27</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
                 <!-- Deck 3 pads -->
                 <!-- Deck 4 pads -->
             <!-- TrackingScratch Mode Pads end -->
@@ -4210,7 +4530,327 @@
 
             <!-- ScratchBank Mode Pads start -->
                 <!-- Deck 1 pads -->
+            <control>
+                <description>PAD 1 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 1</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x70</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 1 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 1</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x70</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 2</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x71</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 2</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x71</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 3</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x72</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 3</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x72</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 4</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x73</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 4</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x73</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 5</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x74</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 5</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x74</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 6</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x75</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 6</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x75</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 7</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x76</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 7</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x76</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (DECK1) SCRATCH BANK MODE - Cutlab Scratch: play slot 8</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x97</status>
+                <midino>0x77</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 + SHIFT (DECK1) SCRATCH BANK MODE - Cutlab Scratch: clear slot 8</description>
+                <group>[Channel1]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x98</status>
+                <midino>0x77</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
                 <!-- Deck 2 pads -->
+            <control>
+                <description>PAD 1 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 1</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x70</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 1 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 1</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x70</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 2</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x71</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 2 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 2</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x71</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 3</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x72</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 3 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 3</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x72</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 4</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x73</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 4 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 4</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x73</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 5</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x74</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 5 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 5</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x74</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 6</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x75</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 6 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 6</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x75</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 7</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x76</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 7 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 7</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x76</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 (DECK2) SCRATCH BANK MODE - Cutlab Scratch: play slot 8</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x99</status>
+                <midino>0x77</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
+            <control>
+                <description>PAD 8 + SHIFT (DECK2) SCRATCH BANK MODE - Cutlab Scratch: clear slot 8</description>
+                <group>[Channel2]</group>
+                <key>PioneerDDJREV1.cutlabScratchPad</key>
+                <status>0x9A</status>
+                <midino>0x77</midino>
+                <options>
+                    <Script-Binding/>
+                </options>
+            </control>
                 <!-- Deck 3 pads -->
                 <!-- Deck 4 pads -->
             <!-- ScratchBank Mode Pads end -->

@@ -212,9 +212,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 6
                 group: root.host.letsktchGroup
-                busy: root.host.letsktchEngine.busy
-                stepText: root.host.letsktchEngine.stepText
-                onStopRequested: root.host.toggleLetsktch(group)
+                onStopRequested: root.host.letsktchEngine.stop(group)
             }
         }
 
@@ -310,6 +308,7 @@ Rectangle {
                             root.host.padMode2 = mode;
                         }
                     }
+                    letsktch: root.host.letsktchEngine
                     onLoadSampleRequested: group => root.libraryRequested(group)
                 }
             }
@@ -361,8 +360,6 @@ Rectangle {
                     tool: toolsArea.index === 0 ? root.host.tool1 : root.host.tool2
                     onToolChanged: root.host.setTool(toolsArea.modelData, tool)
                     onCloseRequested: root.host.closeTools(toolsArea.modelData)
-                    scratch: root.host.scratchEngine
-                    letsktch: root.host.letsktchEngine
                 }
             }
         }

@@ -4,8 +4,8 @@ import QtQuick
 import QtQuick.Controls
 
 // The stems of the loaded track in three parts, the ones a DJ plays with:
-// voice (the acapella), beat (drums) and music (bass and instruments). Tap
-// a part to mute it, hold it to hear it alone, its fader sets its volume.
+// voice (the acapella), beat (drums) and music (bass and instruments), each
+// with its volume fader. Turning stems on and off is in the Stems pads.
 // With "separar el bajo" on in the settings, bass and melody come apart.
 // Tracks without stems offer to separate them.
 Item {
@@ -131,23 +131,6 @@ Item {
         }
     }
 
-    function soloPart(partIndex) {
-        const target = root.stemsOf(root.parts[partIndex].labels);
-        let othersMuted = true;
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            if (stem && target.indexOf(stem) < 0 && !stem.muted) {
-                othersMuted = false;
-            }
-        }
-        for (let i = 0; i < stemRepeater.count; ++i) {
-            const stem = stemRepeater.itemAt(i);
-            if (stem) {
-                stem.setMuted(othersMuted ? false : target.indexOf(stem) < 0);
-            }
-        }
-    }
-
     // The stems themselves, hidden: the parts below drive them
     Repeater {
         id: stemRepeater
@@ -219,15 +202,10 @@ Item {
                     height: parent.height * 0.55
                     text: part.modelData.name
                     padColor: part.modelData.color
+                    // Only shows the part (muted from the Stems pads)
+                    enabled: false
                     active: !part.muted
                     dimmed: part.muted
-                    onClicked: {
-                        const mute = !part.muted;
-                        for (const stem of part.stems) {
-                            stem.setMuted(mute);
-                        }
-                    }
-                    onPressAndHold: root.soloPart(part.index)
                 }
                 CLFader {
                     id: partFader

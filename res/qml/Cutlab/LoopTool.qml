@@ -1,11 +1,21 @@
+import Mixxx 1.0 as Mixxx
 import QtQuick
 
-// Loops of a deck: an auto loop with IN and OUT, or loop rolls.
+// Loops of a deck: an auto loop with IN and OUT, or loop rolls. Locked
+// while letsktch! plays on the deck (its roll is a loop).
 Item {
     id: root
 
     required property string group
     property int mode: 0
+    readonly property bool locked: scratchActive.value > 0
+
+    Mixxx.ControlProxy {
+        id: scratchActive
+
+        group: "[Cutlab]"
+        key: `scratch_active${root.group === "[Channel2]" ? 2 : 1}`
+    }
 
     Row {
         id: tabs
@@ -14,6 +24,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         height: 40
         spacing: 24
+        enabled: !root.locked
+        opacity: enabled ? 1 : 0.35
 
         Repeater {
             model: [qsTr("Auto"), qsTr("Roll")]
@@ -43,6 +55,8 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         visible: root.mode === 0
+        enabled: !root.locked
+        opacity: enabled ? 1 : 0.35
 
         LoopControl {
             id: autoLoop
@@ -94,5 +108,27 @@ Item {
         anchors.bottom: parent.bottom
         group: root.group
         visible: root.mode === 1
+    }
+
+    Rectangle {
+        anchors.centerIn: parent
+        visible: root.locked
+        width: lockText.implicitWidth + 32
+        height: 40
+        radius: 20
+        color: Style.raised
+        border.color: Style.deckColor(root.group)
+        border.width: 1
+
+        Text {
+            id: lockText
+
+            anchors.centerIn: parent
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 14
+            font.weight: Font.DemiBold
+            text: qsTr("Loop en uso por Scratch")
+        }
     }
 }

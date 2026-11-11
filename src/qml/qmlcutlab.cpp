@@ -358,8 +358,17 @@ void QmlCutlab::createControls() {
                     -1.0);
             // Counts up on each press: letsktch! on or off on the deck
             new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("letsktch%1").arg(deck)));
+            // A pad of a controller in Scratch mode: counter * 100 + slot
+            // (1-8 play, 11-18 clear with SHIFT)
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_pad%1").arg(deck)));
+            // Set by the app: 1 while letsktch! plays on the deck (the loop
+            // section is locked), and each slot 0 empty, 1 saved, 2 active
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_active%1").arg(deck)));
+            for (int slot = 1; slot <= 8; ++slot) {
+                new ControlObject(ConfigKey(kCutlabGroup,
+                        QStringLiteral("scratch_slot%1_%2").arg(deck).arg(slot)));
+            }
         }
-        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("scratch_bank")));
         // 1 while the settings or a dialog cover the screen: the browse knob
         // moves in them instead of opening the library
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("modal_open")));

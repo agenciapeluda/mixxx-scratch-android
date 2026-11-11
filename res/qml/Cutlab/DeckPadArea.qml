@@ -1,17 +1,20 @@
 import QtQuick
 
 // The 8 pads of a deck (2 rows of 4) with the button that picks what they
-// do, on the outer side: hot cues, loop rolls or samples. Tap it to go to
-// the next mode. Narrow (upright), the mode is a tab over the pads.
+// do, on the outer side: hot cues, loop rolls, samples, Scratch (letsktch!)
+// or Stems. Tap it to go to the next mode. Narrow (upright), the mode is a
+// tab over the pads.
 Item {
     id: root
 
     required property string group
     property bool mirrored: false
     property bool compact: false
-    // 0 hot cues, 1 loop rolls, 2 samples
+    // letsktch! of the main screen (Letsktch)
+    property var letsktch: null
+    // 0 hot cues, 1 loop rolls, 2 samples, 3 Scratch, 4 Stems
     property int mode: 0
-    readonly property var modes: [qsTr("HOT CUES"), qsTr("ROLLS"), qsTr("SAMPLES")]
+    readonly property var modes: [qsTr("HOT CUE"), qsTr("ROLL"), qsTr("SAMPLE"), qsTr("SCRATCH"), qsTr("STEMS")]
 
     signal loadSampleRequested(string group)
 
@@ -26,7 +29,7 @@ Item {
 
         Column {
             anchors.centerIn: parent
-            spacing: 2
+            spacing: 4
             visible: !root.compact
 
             Text {
@@ -51,6 +54,14 @@ Item {
                     font.pixelSize: 10
                     font.weight: root.mode === index ? Font.Bold : Font.Medium
                     text: modelData
+
+                    // Sideways each mode is picked straight away
+                    MouseArea {
+                        anchors.centerIn: parent
+                        width: picker.width
+                        height: parent.height + 6
+                        onClicked: root.mode = parent.index
+                    }
                 }
             }
         }
@@ -68,6 +79,7 @@ Item {
             id: pickerMouse
 
             anchors.fill: parent
+            z: -1
             onClicked: root.mode = (root.mode + 1) % root.modes.length
         }
     }
@@ -82,7 +94,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            sourceComponent: [cues, rolls, samples][root.mode]
+            sourceComponent: [cues, rolls, samples, scratch, stems][root.mode]
         }
         Component {
             id: cues
@@ -106,6 +118,23 @@ Item {
             SamplePads {
                 spacing: 4
                 onLoadRequested: group => root.loadSampleRequested(group)
+            }
+        }
+        Component {
+            id: scratch
+
+            ScratchPads {
+                group: root.group
+                engine: root.letsktch ? root.letsktch.deckOf(root.group) : null
+                spacing: 4
+            }
+        }
+        Component {
+            id: stems
+
+            StemPads {
+                group: root.group
+                spacing: 4
             }
         }
     }

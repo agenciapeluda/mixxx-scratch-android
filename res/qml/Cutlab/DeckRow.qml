@@ -182,10 +182,11 @@ Row {
         width: root.buttonWidth
         height: root.height
         radius: height / 2
-        text: "LOOP " + Style.beatsText(loopSize.value)
+        text: scratchActive.value > 0 ? qsTr("SCRATCH") : "LOOP " + Style.beatsText(loopSize.value)
         fontSize: Math.max(11, Math.min(14, height * 0.3))
         lit: loopEnabled.value > 0
         litColor: Style.ok
+        enabled: scratchActive.value <= 0
         onClicked: {
             if (loopEnabled.value > 0) {
                 reloop.value = 1;
@@ -196,5 +197,12 @@ Row {
             }
         }
         onPressAndHold: root.loopToolRequested()
+    }
+    // letsktch! plays a roll on the deck: the loop is locked
+    Mixxx.ControlProxy {
+        id: scratchActive
+
+        group: "[Cutlab]"
+        key: `scratch_active${root.group === "[Channel2]" ? 2 : 1}`
     }
 }

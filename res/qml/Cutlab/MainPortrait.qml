@@ -132,9 +132,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 6
                 group: root.host.letsktchGroup
-                busy: root.host.letsktchEngine.busy
-                stepText: root.host.letsktchEngine.stepText
-                onStopRequested: root.host.toggleLetsktch(group)
+                onStopRequested: root.host.letsktchEngine.stop(group)
             }
             Repeater {
                 model: root.horizontal ? ["[Channel1]", "[Channel2]"] : []
@@ -211,8 +209,6 @@ Rectangle {
                     tool: root.toolsGroup === "[Channel2]" ? root.host.tool2 : root.host.tool1
                     onToolChanged: root.host.setTool(root.toolsGroup, tool)
                     onCloseRequested: root.host.closeTools(root.toolsGroup)
-                    scratch: root.host.scratchEngine
-                    letsktch: root.host.letsktchEngine
                 }
             }
             Repeater {
@@ -238,6 +234,7 @@ Rectangle {
                             root.host.padMode2 = mode;
                         }
                     }
+                    letsktch: root.host.letsktchEngine
                     onLoadSampleRequested: group => root.libraryRequested(group)
                 }
             }

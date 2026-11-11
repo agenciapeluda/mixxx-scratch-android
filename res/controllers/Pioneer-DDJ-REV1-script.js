@@ -32,9 +32,10 @@
  *      * FX1-2 effect 1-3 META via Level/Depth knob rotate
  *
  *  Not implemented (after discussion and trial attempts):
- *      * Tracking Scratch Mode Pads
  *      * Trans Mode Pads
- *      * Scratch Bank Mode Pads
+ *
+ *  Cutlab: TRACKING SCRATCH and SCRATCH BANK mode pads play the Scratch pads
+ *  (letsktch!) of the app.
  */
 
 var PioneerDDJREV1 = {};
@@ -278,6 +279,9 @@ PioneerDDJREV1.init = function() {
         engine.makeConnection(`[Sampler${i + 1}]`, "play", PioneerDDJREV1.samplerPlayOutputCallbackFunction);
     }
 
+    // Cutlab: the lights of the Scratch pads
+    PioneerDDJREV1.cutlabScratchInit();
+
     // Query the controller for current control positions on startup
     midi.sendSysexMsg([0xF0, 0x00, 0x20, 0x7F, 0x03, 0x01, 0xF7], 7); // Serato "gimme your status" command
 };
@@ -286,6 +290,10 @@ PioneerDDJREV1.init = function() {
  * The controller mapping script SHUTDOWN method
  */
 PioneerDDJREV1.shutdown = function() {
+    if (PioneerDDJREV1.timers.cutlabScratch) {
+        engine.stopTimer(PioneerDDJREV1.timers.cutlabScratch);
+        PioneerDDJREV1.timers.cutlabScratch = 0;
+    }
     // Zero out VU meter and reloop lights
     for (let i = PioneerDDJREV1.zero; i < PioneerDDJREV1.channelCount; i++) {
         PioneerDDJREV1.setVuMeterState(PioneerDDJREV1.midiChan.subChan.ch1 + i, PioneerDDJREV1.lights.status.off);
@@ -294,7 +302,7 @@ PioneerDDJREV1.shutdown = function() {
 
     for (let mode = PioneerDDJREV1.zero; mode < 0x80; mode += 0x10) {
         // We can skip these, as we never changed them
-        if ([0x20, 0x60, 0x70].indexOf(mode) > -1) {
+        if ([0x60].indexOf(mode) > -1) {
             continue;
         }
 
@@ -890,4 +898,48 @@ PioneerDDJREV1.cutlabFxSelect = function(_channel, control, value, status) {
     const bank = control - 0x70 + 1;
     PioneerDDJREV1.cutlabFxPresses = (PioneerDDJREV1.cutlabFxPresses + 1) % 1000;
     engine.setValue("[Cutlab]", `fx_select${deck}`, bank * 1000 + PioneerDDJREV1.cutlabFxPresses);
+};
+
+/**
+ * Cutlab: the Scratch pads (letsktch!) in the TRACKING SCRATCH and SCRATCH
+ * BANK pad modes. A pad plays its slot (an empty one keeps the place and
+ * plays, a kept one jumps to its phrase, the playing one leaves);
+ * SHIFT + pad clears the slot. The app counts the presses:
+ * count * 100 + slot (1-8), or + 10 + slot to clear.
+ * Lights: off empty, on kept, blinking while it plays.
+ */
+PioneerDDJREV1.cutlabScratchPresses = 0;
+PioneerDDJREV1.cutlabScratchModes = [0x20, 0x70];
+PioneerDDJREV1.cutlabScratchBlink = false;
+
+PioneerDDJREV1.cutlabScratchPad = function(_channel, control, value, status) {
+    if (!value) {
+        return;
+    }
+    const deck = (status === 0x99 || status === 0x9A) ? 2 : 1;
+    const shift = status === 0x98 || status === 0x9A;
+    const slot = (control & 0x07) + 1;
+    PioneerDDJREV1.cutlabScratchPresses = (PioneerDDJREV1.cutlabScratchPresses + 1) % 1000;
+    engine.setValue("[Cutlab]", `scratch_pad${deck}`,
+        PioneerDDJREV1.cutlabScratchPresses * 100 + (shift ? 10 + slot : slot));
+};
+
+PioneerDDJREV1.cutlabScratchLights = function() {
+    PioneerDDJREV1.cutlabScratchBlink = !PioneerDDJREV1.cutlabScratchBlink;
+    for (let deck = 1; deck <= 2; deck++) {
+        const status = PioneerDDJREV1.midiChan.note +
+            (deck === 1 ? PioneerDDJREV1.midiChan.subChan.deck1 : PioneerDDJREV1.midiChan.subChan.deck2);
+        for (let slot = 1; slot <= PioneerDDJREV1.padCount; slot++) {
+            const state = engine.getValue("[Cutlab]", `scratch_slot${deck}_${slot}`);
+            const on = state === 1 || (state === 2 && PioneerDDJREV1.cutlabScratchBlink);
+            PioneerDDJREV1.cutlabScratchModes.forEach(function(mode) {
+                PioneerDDJREV1.setIndicatorState(status, mode + slot - 1, on);
+            });
+        }
+    }
+};
+
+PioneerDDJREV1.cutlabScratchInit = function() {
+    PioneerDDJREV1.cutlabScratchLights();
+    PioneerDDJREV1.timers.cutlabScratch = engine.beginTimer(260, PioneerDDJREV1.cutlabScratchLights);
 };

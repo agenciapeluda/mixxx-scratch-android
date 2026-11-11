@@ -44,8 +44,6 @@ FxPad 1.0 FxPad.qml
 Diagnostics 1.0 Diagnostics.qml
 singleton Shots 1.0 Shots.qml
 CutlabWave 1.0 CutlabWave.qml
-ScratchTool 1.0 ScratchTool.qml
-ScratchEngine 1.0 ScratchEngine.qml
 TurntableDial 1.0 TurntableDial.qml
 CueColumn 1.0 CueColumn.qml
 MixerCard 1.0 MixerCard.qml
@@ -68,3 +66,7 @@ Letsktch 1.0 Letsktch.qml
 LetsktchChip 1.0 LetsktchChip.qml
 DeckInfoStrip 1.0 DeckInfoStrip.qml
 singleton Clock 1.0 Clock.qml
+LetsktchDeck 1.0 LetsktchDeck.qml
+ScratchPads 1.0 ScratchPads.qml
+StemPads 1.0 StemPads.qml
+StemsMissing 1.0 StemsMissing.qml
