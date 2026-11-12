@@ -42,6 +42,10 @@ VinylControl::VinylControl(UserSettingsPointer pConfig, const QString& group)
     signalenabled = new ControlProxy(
             group, "vinylcontrol_signal_enabled", this);
     reverseButton = new ControlProxy(group, "reverse", this);
+    m_pDeckGainDb = new ControlProxy(group, "vinylcontrol_gain_db", this);
+    m_pInputLevel = new ControlProxy(group, "vinylcontrol_input_level", this);
+    m_pSyncEnabled = new ControlProxy(group, "sync_enabled", this);
+    m_pQuality = new ControlProxy(group, "vinylcontrol_quality", this);
 
     //Enabled or not -- load from saved value in case vinyl control is restarting
     m_bIsEnabled = wantenabled->get() > 0.0;

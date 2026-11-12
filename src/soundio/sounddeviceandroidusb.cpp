@@ -198,8 +198,13 @@ void SoundDeviceAndroidUsb::readProcess(SINT framesPerBuffer) {
     if (static_cast<int>(m_inputBuffer.size()) < samples) {
         m_inputBuffer.resize(samples);
     }
-    // Keep the latency low: drop what piled up beyond a few buffers
-    const int backlog = m_pInputFifo->readAvailable() - 4 * samples;
+    // Keep the latency low: drop what piled up beyond this buffer and a
+    // small margin (half a buffer, at least 3 USB transfers). Up to 1.28 it
+    // kept up to 3 extra buffers waiting, which the timecode of the DVS read
+    // late (about 30 ms at 512 frames).
+    const int marginFrames = std::max<int>(static_cast<int>(frames) / 2,
+            3 * kTransferMillis * static_cast<int>(m_sampleRate.value()) / 1000);
+    const int backlog = m_pInputFifo->readAvailable() - samples - marginFrames * channels;
     if (backlog > 0) {
         m_pInputFifo->releaseReadRegions(backlog - backlog % channels);
     }

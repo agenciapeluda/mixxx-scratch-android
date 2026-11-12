@@ -31,6 +31,8 @@ Item {
     property bool hold: false
     property bool playing: false
     property string rollKey: ""
+    // The finger moved the Quick Effect filter (to put it back on release)
+    property bool filterTouched: false
     property bool liteVisuals: Mixxx.Application.configValue("[Cutlab]", "fx_visuals_lite", "0") === "1"
 
     readonly property var rhythmEffects: [
@@ -105,7 +107,12 @@ Item {
                 parameter1.value = 0.35 + 0.65 * y;
             }
         } else if (effect === "filter") {
-            quickFilter.parameter = x;
+            // Played from a controller (preset) the filter is left to its
+            // own knob (FILTER of the Mixtour): only the finger moves it
+            if (!preset) {
+                quickFilter.parameter = x;
+                root.filterTouched = true;
+            }
         } else {
             if (!root.playing) {
                 const slot = Mixxx.EffectsManager.getEffectSlot(root.unitNumber, 1);
@@ -146,7 +153,10 @@ Item {
                 root.shots.rhythm(effect, false, 1);
             }
         } else if (effect === "filter") {
-            quickFilter.reset();
+            if (root.filterTouched) {
+                quickFilter.reset();
+                root.filterTouched = false;
+            }
         } else {
             slotEnabled.value = 0;
             unitSuper.parameter = 0;
@@ -182,7 +192,7 @@ Item {
         const a = Math.max(0, Math.min(1, amount));
         const effect = root.effect;
         if (effect === "filter") {
-            quickFilter.parameter = a;
+            return;
         } else if (effect === "trans" || effect === "gater") {
             parameter1.value = 0.35 + 0.65 * a;
         } else if (effect === "roll" || effect === "glitch") {

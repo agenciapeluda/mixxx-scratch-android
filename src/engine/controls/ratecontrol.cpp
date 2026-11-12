@@ -1,6 +1,7 @@
 #include "engine/controls/ratecontrol.h"
 
 #include <QtDebug>
+#include <cmath>
 
 #include "control/controlobject.h"
 #include "control/controlpotmeter.h"
@@ -27,6 +28,12 @@ ControlValueAtomic<double> RateControl::m_dPermanentRateChangeCoarse;
 ControlValueAtomic<double> RateControl::m_dPermanentRateChangeFine;
 int RateControl::m_iRateRampSensitivity;
 RateControl::RampMode RateControl::m_eRateRampMode;
+
+namespace {
+// Cutlab: below this the record is taken as playing at its steady speed
+// (the noise of a turntable is some 0.3 %)
+constexpr double kVinylTweakThreshold = 0.015;
+} // namespace
 
 const double RateControl::kWheelMultiplier = 40.0;
 const double RateControl::kPausedJogMultiplier = 18.0;
@@ -110,7 +117,8 @@ RateControl::RateControl(const QString& group, UserSettingsPointer pConfig)
           m_targetPos(mixxx::audio::FramePos()),
           m_bTempStarted(false),
           m_tempRateRatio(0.0),
-          m_dRateTempRampChange(0.0) {
+          m_dRateTempRampChange(0.0),
+          m_dPlatterMean(1.0) {
     // Vinyl control COs are only created for main decks
     if (PlayerManager::isDeckGroup(getGroup())) {
         m_pVCEnabled = ControlObject::getControl(
@@ -428,10 +436,19 @@ double RateControl::calculateSpeed(double baserate,
         }
 
         if (bVinylControlEnabled) {
-            if (m_pVCScratching && m_pVCScratching->toBool()) {
+            const bool vinylScratching = m_pVCScratching && m_pVCScratching->toBool();
+            if (vinylScratching) {
                 *pReportScratching = true;
             }
             rate = speed;
+            // The speed of the record when it plays steady: fast while it
+            // stays close, slow (some 2 s) when it is away, so moving the
+            // pitch fader of the turntable ends up as its new speed
+            if (!paused && !vinylScratching && speed > 0.5 && speed < 1.5) {
+                const double away = std::fabs(speed - m_dPlatterMean);
+                const double alpha = away < kVinylTweakThreshold ? 0.02 : 0.004;
+                m_dPlatterMean += alpha * (speed - m_dPlatterMean);
+            }
         } else {
             double scratchFactor = m_pScratch2->get();
             // Don't trust values from m_pScratch2
@@ -484,16 +501,29 @@ double RateControl::calculateSpeed(double baserate,
             rate = m_pScratchController->getRate();
             *pReportScratching = true;
         } else {
+            // Cutlab: with the DVS in REL (or INT) SYNC works too, like
+            // Serato: the tempo is the sync's and the record only moves the
+            // position. ABS and scratch mode still override.
+            const int vcmodeNow = m_pVCMode ? static_cast<int>(m_pVCMode->get())
+                                            : MIXXX_VCMODE_ABSOLUTE;
+            const bool vinylSync = bVinylControlEnabled && vcmodeNow != MIXXX_VCMODE_ABSOLUTE;
             // If sync lock is on, respond to it -- but vinyl and scratch mode always override.
             if (toSynchronized(getSyncMode()) && !paused &&
-                    !bVinylControlEnabled && !useScratch2Value) {
+                    (!bVinylControlEnabled || vinylSync) && !useScratch2Value) {
                 if (m_pBpmControl == nullptr) {
                     qDebug() << "ERROR: calculateRate m_pBpmControl is null during sync lock";
                     return 1.0;
                 }
 
                 double userTweak = 0.0;
-                if (!*pReportScratching) {
+                if (vinylSync) {
+                    // What the record does beyond its steady speed: a push,
+                    // a brake or a scratch, at once
+                    userTweak = speed - m_dPlatterMean;
+                    if (!*pReportScratching && std::fabs(userTweak) < kVinylTweakThreshold) {
+                        userTweak = 0.0;
+                    }
+                } else if (!*pReportScratching) {
                     // Only report user tweak if the user is not scratching.
                     userTweak = getTempRate() + wheelFactor + jogFactor;
                 }

@@ -13,6 +13,7 @@
 #include "track/track.h"
 #include "util/assert.h"
 #include "util/logger.h"
+#include "vinylcontrol/defs_vinylcontrol.h"
 
 const double SyncControl::kBpmUnity = 1.0;
 const double SyncControl::kBpmHalve = 0.5;
@@ -39,6 +40,7 @@ SyncControl::SyncControl(const QString& group,
           m_pLocalBpm(nullptr),
           m_pRateRatio(nullptr),
           m_pVCEnabled(nullptr),
+          m_pVCMode(nullptr),
           m_pSyncPhaseButton(nullptr) {
     // Play button.  We only listen to this to disable leader if the deck is
     // stopped.
@@ -135,6 +137,9 @@ void SyncControl::setEngineControls(RateControl* pRateControl,
 
         m_pVCEnabled->connectValueChanged(
                 this, &SyncControl::slotVinylControlChanged, Qt::DirectConnection);
+        m_pVCMode = new ControlProxy(getGroup(), "vinylcontrol_mode", this);
+        m_pVCMode->connectValueChanged(
+                this, &SyncControl::slotVinylModeChanged, Qt::DirectConnection);
     }
 #endif
 }
@@ -152,11 +157,13 @@ void SyncControl::setSyncMode(SyncMode mode) {
     m_pSyncMode->setAndConfirm(static_cast<double>(mode));
     m_pSyncEnabled->setAndConfirm(mode != SyncMode::None);
     m_pSyncLeaderEnabled->setAndConfirm(static_cast<double>(SyncModeToLeaderLight(mode)));
-    if (mode == SyncMode::Follower) {
-        if (m_pVCEnabled && m_pVCEnabled->toBool()) {
-            // If follower mode is enabled, disable vinyl control.
-            m_pVCEnabled->set(0.0);
-        }
+    if (mode != SyncMode::None && m_pVCEnabled && m_pVCEnabled->toBool() &&
+            m_pVCMode && static_cast<int>(m_pVCMode->get()) == MIXXX_VCMODE_ABSOLUTE) {
+        // Cutlab: SYNC keeps the DVS on, like Serato: in ABS it moves to
+        // REL, where the tempo comes from the sync and the record only
+        // moves the position (scratch, push, brake). Up to 1.28 it turned
+        // the DVS off.
+        m_pVCMode->set(MIXXX_VCMODE_RELATIVE);
     }
     if (mode != SyncMode::None && m_pPassthroughEnabled->toBool()) {
         // If any sync mode is enabled and passthrough was on somehow, disable passthrough.
@@ -261,8 +268,9 @@ void SyncControl::updateLeaderBpm(mixxx::Bpm bpm) {
         return;
     }
 
-    // Vinyl Control overrides.
-    if (m_pVCEnabled && m_pVCEnabled->get() > 0.0) {
+    // Vinyl Control overrides, only in ABS (in REL the tempo is the sync's)
+    if (m_pVCEnabled && m_pVCEnabled->get() > 0.0 && m_pVCMode &&
+            static_cast<int>(m_pVCMode->get()) == MIXXX_VCMODE_ABSOLUTE) {
         return;
     }
 
@@ -456,8 +464,19 @@ void SyncControl::slotControlPlay(double play) {
 }
 
 void SyncControl::slotVinylControlChanged(double enabled) {
-    if (enabled != 0 && getSyncMode() == SyncMode::Follower) {
-        // If vinyl control was enabled and we're a follower, disable sync mode.
+    // Cutlab: the DVS turned on with SYNC on: SYNC stays, the DVS goes to
+    // REL if it was in ABS
+    if (enabled != 0 && isSynchronized() && m_pVCMode &&
+            static_cast<int>(m_pVCMode->get()) == MIXXX_VCMODE_ABSOLUTE) {
+        m_pVCMode->set(MIXXX_VCMODE_RELATIVE);
+    }
+}
+
+void SyncControl::slotVinylModeChanged(double mode) {
+    // ABS (the record is the position) and SYNC can't go together: picking
+    // ABS turns SYNC off
+    if (static_cast<int>(mode) == MIXXX_VCMODE_ABSOLUTE && m_pVCEnabled &&
+            m_pVCEnabled->toBool() && isSynchronized()) {
         m_pChannel->getEngineBuffer()->requestSyncMode(SyncMode::None);
     }
 }

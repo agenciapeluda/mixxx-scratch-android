@@ -1,6 +1,9 @@
 #include "vinylcontrol/vinylcontrolxwax.h"
 
 #include <QtDebug>
+#include <algorithm>
+#include <cmath>
+#include <numeric>
 
 #include "audio/types.h"
 #include "control/controlobject.h"
@@ -24,6 +27,27 @@
 
 namespace {
 constexpr int kChannels = 2;
+
+// Cutlab 1.29: decoding in fast direction changes (flares)
+// A short loss of signal (the needle bounces, the carrier dips as the
+// record turns back) is bridged with the last speed, fading out: up to
+// this long, then it counts as stopped like before.
+constexpr double kDropoutHoldSeconds = 0.030;
+constexpr double kDropoutFadeSeconds = 0.010;
+// The speed read from the timecode can't change faster than a hand can
+// move a record (a flare goes from +1 to -1 in some 20 ms, 100/s): single
+// buffer spikes of the estimator are cut to this slope
+constexpr double kMaxPitchSlewPerSecond = 400.0;
+constexpr double kMaxPitch = 6.0;
+// What the screen shows (BPM, % of pitch, the pitch fader): a mean of the
+// speed of the record, so it stays still at a constant speed. The audio
+// and the scratch keep using the raw speed.
+constexpr double kShownRateSeconds = 0.35;
+// Changes smaller than this (0.05 %) are not shown
+constexpr double kShownRateStep = 0.0005;
+// Level of the input for the DVS settings, about 10 times a second
+constexpr double kLevelPublishSeconds = 0.1;
+constexpr double kLevelFallPerSecond = 20.0; // dB
 } // namespace
 
 // Sample threshold below which we consider there to be no signal.
@@ -60,7 +84,16 @@ VinylControlXwax::VinylControlXwax(UserSettingsPointer pConfig, const QString& g
           m_dDriftAmt(0.0),
           m_initialRelativeDriftAmt(0.0),
           m_deltaRelativeDriftAmount(0.0),
-          m_dUiUpdateTime(-1.0) {
+          m_dUiUpdateTime(-1.0),
+          m_dSampleRate(48000.0),
+          m_dLastPitch(0.0),
+          m_bHasLastPitch(false),
+          m_dDropoutTime(0.0),
+          m_dHoldPitch(0.0),
+          m_dLevelPeak(0.0),
+          m_dLevelTime(0.0),
+          m_dShownRate(1.0),
+          m_dShownRatePublished(-1.0) {
     // TODO(rryan): Should probably live in VinylControlManager since it's not
     // specific to a VC deck.
     signalenabled->set(m_pConfig->getValueString(
@@ -158,6 +191,10 @@ VinylControlXwax::VinylControlXwax(UserSettingsPointer pConfig, const QString& g
 
     const auto sampleRate = static_cast<unsigned int>(ControlObject::get(
             ConfigKey(QStringLiteral("[App]"), QStringLiteral("samplerate"))));
+    if (sampleRate > 0) {
+        m_dSampleRate = sampleRate;
+    }
+    m_dShownRate = m_pRateRatio->get() > 0 ? m_pRateRatio->get() : 1.0;
 
     // Set pitch ring size to 1/4 of one revolution -- a full revolution adds
     // too much stickiness to the pitch.
@@ -241,12 +278,12 @@ bool VinylControlXwax::writeQualityReport(VinylSignalQualityReport* pReport) {
 
 void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
     ScopedTimer t(QStringLiteral("VinylControlXwax::analyzeSamples"));
-    auto gain = static_cast<CSAMPLE_GAIN>(m_pVinylControlInputGain->get());
-
-    // We only support amplifying with the VC pre-amp.
-    if (gain < 1.0f) {
-        gain = 1.0f;
-    }
+    // Cutlab: the gain of the deck (Settings > Turntables) on top of the
+    // global one. Below 1 too: a hot preamp can be turned down.
+    const double deckGainDb = m_pDeckGainDb->get();
+    auto gain = static_cast<CSAMPLE_GAIN>(m_pVinylControlInputGain->get() *
+            std::pow(10.0, deckGainDb / 20.0));
+    gain = std::clamp(gain, 0.25f, 100.0f);
 
     size_t samplesSize = nFrames * kChannels;
 
@@ -255,9 +292,13 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
         m_workBufferSize = samplesSize;
     }
 
-    // Convert CSAMPLE samples to shorts, preventing overflow.
+    // Convert CSAMPLE samples to shorts, preventing overflow. The peak is
+    // taken over the whole buffer.
+    CSAMPLE peak = 0;
     for (int i = 0; i < static_cast<int>(samplesSize); ++i) {
-        CSAMPLE sample = pSamples[i] * gain * SAMPLE_MAXIMUM;
+        CSAMPLE sample = pSamples[i] * gain;
+        peak = std::max(peak, std::fabs(sample));
+        sample *= SAMPLE_MAXIMUM;
 
         if (sample > SAMPLE_MAXIMUM) {
             m_pWorkBuffer[i] = SAMPLE_MAXIMUM;
@@ -272,8 +313,32 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
     // in stereo frames.
     timecoder_submit(&timecoder, m_pWorkBuffer.data(), nFrames);
 
-    bool bHaveSignal = fabs(pSamples[0]) + fabs(pSamples[1]) > kMinSignal;
-    //qDebug() << "signal?" << bHaveSignal;
+    const double dt = static_cast<double>(nFrames) / m_dSampleRate;
+    publishInputLevel(peak, dt);
+
+    // Up to 1.28 only the first frame of the buffer was looked at: a buffer
+    // that started near a zero crossing (often in a flare) counted as no
+    // signal and the deck kept its old speed for the whole buffer.
+    const bool bSignalNow = peak > kMinSignal;
+    double dVinylPitch = timecoder_get_pitch(&timecoder);
+    const double rawPitch = dVinylPitch;
+    bool bHaveSignal = bSignalNow;
+    bool bBridging = false;
+    if (bSignalNow) {
+        m_dDropoutTime = 0.0;
+        dVinylPitch = limitPitch(dVinylPitch, dt);
+        m_dHoldPitch = dVinylPitch;
+    } else if (m_bHasLastPitch && m_dDropoutTime < kDropoutHoldSeconds) {
+        // A short loss: carry on with the last speed, fading out
+        m_dDropoutTime += dt;
+        dVinylPitch = m_dHoldPitch * std::exp(-m_dDropoutTime / kDropoutFadeSeconds);
+        m_dLastPitch = dVinylPitch;
+        bHaveSignal = true;
+        bBridging = true;
+    } else {
+        m_bHasLastPitch = false;
+        m_dLastPitch = 0.0;
+    }
 
     //TODO: Move all these config object get*() calls to an "updatePrefs()" function,
     //        and make that get called when any options get changed in the preferences dialog, rather than
@@ -282,13 +347,15 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
     // Check if vinyl control is enabled...
     m_bIsEnabled = enabled && checkEnabled(m_bIsEnabled, enabled->toBool());
 
-    double dVinylPitch = timecoder_get_pitch(&timecoder);
-
-    if(bHaveSignal) {
+    if (bSignalNow) {
         // Always analyze the input samples
         m_iPosition = timecoder_get_position(&timecoder, nullptr);
         //Notify the UI if the timecode quality is good
-        establishQuality(dVinylPitch);
+        double qualityPitch = rawPitch;
+        establishQuality(qualityPitch);
+    } else if (bBridging) {
+        // No position while bridging
+        m_iPosition = -1;
     }
 
     //are we even playing and enabled at all?
@@ -466,7 +533,7 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
                 syncPosition();
                 resetSteadyPitch(dVinylPitch, m_dVinylPosition);
                 if (uiUpdateTime(filePosition)) {
-                    m_pRateRatio->set(fabs(dVinylPitch));
+                    showRate(fabs(dVinylPitch), true);
                 }
             } else if (m_iVCMode == MIXXX_VCMODE_ABSOLUTE &&
                     (fabs(m_dVinylPosition - m_dVinylPositionOld) >= 5.0)) {
@@ -555,15 +622,17 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
             averagePitch = dVinylPitch;
         }
 
-        if (uiUpdateTime(filePosition)) {
-            // Don't show extremely high or low speeds in the UI.
-            if (reportedPlayButton && !scratching->toBool() &&
-                    dVinylPitch < 1.9 && dVinylPitch > 0.2) {
-                m_pRateRatio->set(dVinylPitch);
-            } else {
-                m_pRateRatio->set(1.0);
+        // Cutlab: the screen shows a mean of the speed of the record while
+        // it plays steady; scratching, stopped or out of range it keeps
+        // what it showed (up to 1.28 it jumped to 0 % each time)
+        if (reportedPlayButton && !scratching->toBool() && !bBridging &&
+                dVinylPitch < 1.9 && dVinylPitch > 0.2) {
+            const double alpha = 1.0 - std::exp(-dt / kShownRateSeconds);
+            m_dShownRate += alpha * (averagePitch - m_dShownRate);
+            if (uiUpdateTime(filePosition)) {
+                showRate(m_dShownRate, false);
+                m_dUiUpdateTime = filePosition;
             }
-            m_dUiUpdateTime = filePosition;
         }
 
         m_dOldFilePos = filePosition;
@@ -576,7 +645,7 @@ void VinylControlXwax::analyzeSamples(CSAMPLE* pSamples, size_t nFrames) {
         //if it hasn't been long,
         //let the track play a bit more before deciding we've stopped
 
-        m_pRateRatio->set(1.0);
+        // Cutlab: the screen keeps the last tempo (like a record that stops)
 
         if (fabs(filePosition - m_dOldFilePos) >= 0.3 ||
                 filePosition == m_dOldFilePos) {
@@ -624,7 +693,7 @@ void VinylControlXwax::enableConstantMode() {
     mode->set((double)m_iVCMode);
     togglePlayButton(true);
     double rate = m_pVCRate->get();
-    m_pRateRatio->set(fabs(rate));
+    showRate(fabs(rate), true);
     m_pVCRate->set(rate);
 }
 
@@ -633,7 +702,7 @@ void VinylControlXwax::enableConstantMode(double rate) {
     m_iVCMode = MIXXX_VCMODE_CONSTANT;
     mode->set((double)m_iVCMode);
     togglePlayButton(true);
-    m_pRateRatio->set(fabs(rate));
+    showRate(fabs(rate), true);
     m_pVCRate->set(rate);
 }
 
@@ -708,6 +777,51 @@ bool VinylControlXwax::checkEnabled(bool was, bool is) {
     }
 
     return is;
+}
+
+double VinylControlXwax::limitPitch(double pitch, double dt) {
+    if (!std::isfinite(pitch)) {
+        pitch = m_dLastPitch;
+    }
+    pitch = std::clamp(pitch, -kMaxPitch, kMaxPitch);
+    if (m_bHasLastPitch) {
+        const double maxStep = kMaxPitchSlewPerSecond * dt;
+        pitch = std::clamp(pitch, m_dLastPitch - maxStep, m_dLastPitch + maxStep);
+    }
+    m_dLastPitch = pitch;
+    m_bHasLastPitch = true;
+    return pitch;
+}
+
+void VinylControlXwax::showRate(double rate, bool now) {
+    // With SYNC on the deck shows the tempo of the sync, the record only
+    // moves its position
+    if (m_pSyncEnabled->toBool()) {
+        m_dShownRate = rate;
+        return;
+    }
+    if (now) {
+        m_dShownRate = rate;
+    }
+    const double shown = std::round(rate * 10000.0) / 10000.0;
+    if (now || m_dShownRatePublished < 0 ||
+            std::fabs(shown - m_dShownRatePublished) >= kShownRateStep) {
+        m_dShownRatePublished = shown;
+        m_pRateRatio->set(shown);
+    }
+}
+
+void VinylControlXwax::publishInputLevel(CSAMPLE peak, double dt) {
+    // Peak that falls slowly, in dBFS, about 10 times a second
+    const double peakDb = peak > 0 ? 20.0 * std::log10(static_cast<double>(peak)) : -90.0;
+    const double fallen = m_dLevelPeak - kLevelFallPerSecond * dt;
+    m_dLevelPeak = std::max({peakDb, fallen, -90.0});
+    m_dLevelTime += dt;
+    if (m_dLevelTime >= kLevelPublishSeconds) {
+        m_dLevelTime = 0.0;
+        m_pInputLevel->set(std::round(m_dLevelPeak * 10.0) / 10.0);
+        m_pQuality->set(std::round(m_fTimecodeQuality * 100.0f) / 100.0);
+    }
 }
 
 bool VinylControlXwax::uiUpdateTime(double now) {

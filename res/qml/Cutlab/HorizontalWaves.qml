@@ -9,6 +9,8 @@ Item {
 
     property var sections1: null
     property var sections2: null
+    // The DVS badge of each deck on its lane (the extended view has no dials)
+    property bool showDvs: false
 
     // No beat bar between the lanes: the beats line up on the waveforms
     readonly property real barHeight: 0
@@ -70,6 +72,12 @@ Item {
                         font.pixelSize: 12
                         text: Style.deckLetter(lane.modelData)
                     }
+                }
+                DvsBadge {
+                    x: 42
+                    y: 4
+                    visible: root.showDvs && active
+                    group: lane.modelData
                 }
             }
             }

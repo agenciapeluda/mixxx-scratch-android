@@ -91,6 +91,7 @@ class SyncControl : public EngineControl, public Syncable {
 
     // Fired by changes in vinyl control status.
     void slotVinylControlChanged(double v);
+    void slotVinylModeChanged(double v);
 
     // Fired when passthrough mode is enabled or disabled.
     void slotPassthroughChanged(double v);
@@ -154,6 +155,8 @@ class SyncControl : public EngineControl, public Syncable {
     ControlProxy* m_pLocalBpm;
     ControlProxy* m_pRateRatio;
     ControlProxy* m_pVCEnabled;
+    // Cutlab: SYNC works with the DVS in REL (and INT), not in ABS
+    ControlProxy* m_pVCMode;
     ControlProxy* m_pPassthroughEnabled;
     ControlProxy* m_pSyncPhaseButton;
     ControlProxy* m_pQuantize;

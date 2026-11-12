@@ -5089,6 +5089,30 @@ Aborting the operation to avoid library inconsistencies</source>
 <context>
     <name>Turntables</name>
     <message>
+        <source>Input gain</source>
+        <translation>Ganancia de entrada</translation>
+    </message>
+    <message>
+        <source>Level</source>
+        <translation>Nivel</translation>
+    </message>
+    <message>
+        <source>Play the record to measure the level.</source>
+        <translation>Poné a girar el disco para medir el nivel.</translation>
+    </message>
+    <message>
+        <source>Low signal (%1 dB): raise the gain.</source>
+        <translation>Señal baja (%1 dB): subí la ganancia.</translation>
+    </message>
+    <message>
+        <source>Good (%1 dB).</source>
+        <translation>Bien (%1 dB).</translation>
+    </message>
+    <message>
+        <source>Clipping: lower the gain.</source>
+        <translation>Satura: bajá la ganancia.</translation>
+    </message>
+    <message>
         <source>DVS</source>
         <translation>DVS</translation>
     </message>

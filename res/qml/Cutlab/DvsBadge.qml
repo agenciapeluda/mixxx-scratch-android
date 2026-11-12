@@ -2,13 +2,16 @@ import Mixxx 1.0 as Mixxx
 import QtQuick
 
 // Shown while a deck follows a turntable (DVS): the mode, tap to switch
-// ABS, REL and INT, and a light for the timecode signal.
+// ABS, REL and INT, a light for the timecode signal and four bars for how
+// well it is read.
 Rectangle {
     id: root
 
     required property string group
     readonly property bool active: enabledControl.value > 0
     readonly property var modes: ["ABS", "REL", "INT"]
+    // 0 to 4 bars
+    readonly property int bars: Math.round(Math.max(0, Math.min(1, quality.value)) * 4)
 
     visible: active
     width: row.implicitWidth + 18
@@ -44,6 +47,12 @@ Rectangle {
         key: "vinylcontrol_mode"
     }
     Mixxx.ControlProxy {
+        id: quality
+
+        group: root.group
+        key: "vinylcontrol_quality"
+    }
+    Mixxx.ControlProxy {
         id: status
 
         group: root.group
@@ -70,6 +79,24 @@ Rectangle {
             font.pixelSize: 12
             font.weight: Font.Medium
             text: "DVS " + root.modes[Math.max(0, Math.min(2, Math.round(mode.value)))]
+        }
+        Row {
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 2
+
+            Repeater {
+                model: 4
+
+                Rectangle {
+                    required property int index
+
+                    anchors.bottom: parent.bottom
+                    width: 3
+                    height: 5 + 2 * index
+                    radius: 1
+                    color: index < root.bars ? (root.bars >= 3 ? Style.play : root.bars === 2 ? Style.cue : Style.danger) : Style.buttonBorder
+                }
+            }
         }
     }
     MouseArea {

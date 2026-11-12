@@ -37,6 +37,12 @@ class VinylControlControl : public EngineControl {
     std::unique_ptr<ControlPushButton> m_pControlVinylWantEnabled;
     std::unique_ptr<ControlPushButton> m_pControlVinylCueing;
     std::unique_ptr<ControlPushButton> m_pControlVinylSignalEnabled;
+    // Cutlab: input gain of this deck in dB (saved) and the level of its
+    // input after the gain, in dBFS (peak, -90 silence)
+    std::unique_ptr<ControlObject> m_pControlVinylGainDb;
+    std::unique_ptr<ControlObject> m_pControlVinylInputLevel;
+    // Cutlab: how well the timecode is read, 0 to 1, for the DVS badge
+    std::unique_ptr<ControlObject> m_pControlVinylQuality;
     PollingControlProxy m_playEnabled;
     PollingControlProxy m_inputConfigured;
 

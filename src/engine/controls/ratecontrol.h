@@ -174,4 +174,8 @@ private:
   double m_tempRateRatio;
   // Speed for temporary rate change
   double m_dRateTempRampChange;
+  // Cutlab: the speed of the record when it plays steady (DVS), so with
+  // SYNC on in REL a push, a brake or a scratch is what the record does
+  // beyond it
+  double m_dPlatterMean;
 };

@@ -50,6 +50,10 @@ class VinylControlXwax : public VinylControl {
     void enableConstantMode();
     void enableConstantMode(double rate);
     bool uiUpdateTime(double time);
+    // Cutlab 1.29
+    double limitPitch(double pitch, double dt);
+    void showRate(double rate, bool now);
+    void publishInputLevel(CSAMPLE peak, double dt);
     void establishQuality(double& pitch);
     int getPositionQuality();
     int getPitchQuality(double& pitch);
@@ -131,6 +135,17 @@ class VinylControlXwax : public VinylControl {
     // Records the time of the last UI update. Used to prevent hammering the GUI
     // with updates.
     double m_dUiUpdateTime;
+
+    // Cutlab 1.29
+    double m_dSampleRate;
+    double m_dLastPitch;
+    bool m_bHasLastPitch;
+    double m_dDropoutTime;
+    double m_dHoldPitch;
+    double m_dLevelPeak;
+    double m_dLevelTime;
+    double m_dShownRate;
+    double m_dShownRatePublished;
 
     // Contains information that xwax's code needs internally about the timecode
     // and how to process it.

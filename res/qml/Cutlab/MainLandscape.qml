@@ -204,6 +204,7 @@ Rectangle {
                 sourceComponent: HorizontalWaves {
                     sections1: root.sections1
                     sections2: root.sections2
+                    showDvs: root.extended
                 }
             }
 

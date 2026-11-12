@@ -70,6 +70,23 @@ VinylControlControl::VinylControlControl(const QString& group, UserSettingsPoint
             this);
     m_pControlVinylSignalEnabled->set(1);
     m_pControlVinylSignalEnabled->setButtonMode(mixxx::control::ButtonMode::Toggle);
+
+    // Cutlab: input gain per deck, -12 to +40 dB (a turntable without a
+    // preamp on a line input needs about +30 dB). Saved in mixxx.cfg.
+    m_pControlVinylGainDb = std::make_unique<ControlObject>(
+            ConfigKey(group, QStringLiteral("vinylcontrol_gain_db")),
+            true,
+            false,
+            true,
+            0.0);
+    m_pControlVinylInputLevel = std::make_unique<ControlObject>(
+            ConfigKey(group, QStringLiteral("vinylcontrol_input_level")),
+            true,
+            false,
+            false,
+            -90.0);
+    m_pControlVinylQuality = std::make_unique<ControlObject>(
+            ConfigKey(group, QStringLiteral("vinylcontrol_quality")));
 }
 
 void VinylControlControl::trackLoaded(TrackPointer pNewTrack) {

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import Mixxx 1.0 as Mixxx
 import ".." as Skin
@@ -538,6 +539,126 @@ Category {
                                     group: deckRow.group
                                     key: "vinylcontrol_status"
                                 }
+                            }
+                        }
+                        Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
+                            color: "#9ca1b8"
+                            font.pixelSize: 11
+                            text: qsTr("Input gain")
+                        }
+                        FormRow {
+                            Layout.columnSpan: 3
+                            spacing: 8
+
+                            Mixxx.ControlProxy {
+                                id: gainDb
+
+                                group: deckRow.group
+                                key: "vinylcontrol_gain_db"
+                            }
+                            Skin.Button {
+                                Layout.preferredHeight: 40
+                                Layout.preferredWidth: 44
+                                text: "−"
+                                onClicked: gainDb.value = Math.max(-12, Math.round(gainDb.value) - 1)
+                            }
+                            QQC2.Slider {
+                                id: gainSlider
+
+                                Layout.fillWidth: true
+                                Layout.minimumWidth: 120
+                                from: -12
+                                to: 40
+                                stepSize: 1
+                                snapMode: QQC2.Slider.SnapAlways
+                                value: gainDb.value
+                                onMoved: gainDb.value = value
+                            }
+                            Skin.Button {
+                                Layout.preferredHeight: 40
+                                Layout.preferredWidth: 44
+                                text: "+"
+                                onClicked: gainDb.value = Math.min(40, Math.round(gainDb.value) + 1)
+                            }
+                            Text {
+                                Layout.preferredWidth: 64
+                                color: "#ffffff"
+                                font.pixelSize: 13
+                                font.weight: Font.DemiBold
+                                horizontalAlignment: Text.AlignRight
+                                text: (gainDb.value > 0 ? "+" : "") + Math.round(gainDb.value) + " dB"
+                            }
+                            Skin.Button {
+                                Layout.preferredHeight: 40
+                                Layout.preferredWidth: 64
+                                text: "0 dB"
+                                onClicked: gainDb.value = 0
+                            }
+                        }
+                        Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
+                            color: "#9ca1b8"
+                            font.pixelSize: 11
+                            text: qsTr("Level")
+                        }
+                        FormRow {
+                            id: levelRow
+
+                            // Peak of the input after the gain, in dBFS.
+                            // 0 no record turning, 1 low, 2 good, 3 clips
+                            readonly property real db: inputLevel.value
+                            readonly property int verdict: dvsEnabled.value <= 0 || db < -50 ? 0
+                                : db >= -1 ? 3 : db < -18 ? 1 : 2
+                            readonly property var colors: ["#9ca1b8", "#ffb547", "#2bd67b", "#ff4d5e"]
+
+                            Layout.columnSpan: 3
+                            spacing: 12
+
+                            Mixxx.ControlProxy {
+                                id: inputLevel
+
+                                group: deckRow.group
+                                key: "vinylcontrol_input_level"
+                            }
+                            Rectangle {
+                                Layout.preferredWidth: 160
+                                Layout.preferredHeight: 14
+                                radius: 4
+                                color: "#0b0a16"
+                                border.color: "#2a2940"
+
+                                // The good zone, -18 to -1 dBFS (scale -60 to 0)
+                                Rectangle {
+                                    x: 2 + (parent.width - 4) * (42 / 60)
+                                    y: 2
+                                    width: (parent.width - 4) * (17 / 60)
+                                    height: parent.height - 4
+                                    color: "#2bd67b"
+                                    opacity: 0.18
+                                }
+                                Rectangle {
+                                    x: 2
+                                    y: 2
+                                    radius: 3
+                                    height: parent.height - 4
+                                    width: (parent.width - 4) * Math.max(0, Math.min(1, (levelRow.db + 60) / 60))
+                                    color: levelRow.colors[levelRow.verdict]
+                                }
+                            }
+                            Text {
+                                Layout.minimumWidth: 0
+                                Layout.fillWidth: true
+                                color: levelRow.colors[levelRow.verdict]
+                                font.pixelSize: 12
+                                font.weight: levelRow.verdict === 2 ? Font.Normal : Font.DemiBold
+                                wrapMode: Text.WordWrap
+                                text: [qsTr("Play the record to measure the level."),
+                                    qsTr("Low signal (%1 dB): raise the gain.").arg(Math.round(levelRow.db)),
+                                    qsTr("Good (%1 dB).").arg(Math.round(levelRow.db)),
+                                    qsTr("Clipping: lower the gain.")][levelRow.verdict]
                             }
                         }
                         Text {

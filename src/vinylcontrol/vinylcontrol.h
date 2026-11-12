@@ -71,6 +71,12 @@ class VinylControl : public QObject {
     ControlProxy* signalenabled;
     // When the user has pressed the "reverse" button.
     ControlProxy* reverseButton;
+    // Cutlab: input gain of the deck (dB), level of the input after it
+    // (dBFS) and the sync of the deck (the shown tempo is the synced one)
+    ControlProxy* m_pDeckGainDb;
+    ControlProxy* m_pInputLevel;
+    ControlProxy* m_pSyncEnabled;
+    ControlProxy* m_pQuality;
     PollingControlProxy m_passthroughEnabled;
     PollingControlProxy m_scratchPositionEnabled;
 
