@@ -181,6 +181,7 @@ jobs:
           done
 
       - name: Build APK
+        id: build
         shell: bash
         run: |
           set -o pipefail
@@ -195,7 +196,8 @@ jobs:
         run: ccache --show-stats
 
       - name: Save ccache
-        if: always() && steps.ccache.outputs.cache-hit != 'true'
+        # Only after a build ran: a run stopped before it would save nothing
+        if: always() && steps.ccache.outputs.cache-hit != 'true' && steps.build.outcome != 'skipped'
         uses: actions/cache/save@v4
         with:
           path: /home/runner/.cache/ccache
