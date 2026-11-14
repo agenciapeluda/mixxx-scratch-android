@@ -1,4 +1,5 @@
 #include "engine/engineworkerscheduler.h"
+#include "util/threadnice.h"
 
 #include "engine/engineworker.h"
 #include "moc_engineworkerscheduler.cpp"
@@ -43,6 +44,7 @@ void EngineWorkerScheduler::runWorkers() {
 
 void EngineWorkerScheduler::run() {
     static const QString tag("EngineWorkerScheduler");
+    mixxx::setCurrentThreadNice(mixxx::kNiceAudio);
     bool quit = false;
     while (!quit) {
         Event::start(tag);

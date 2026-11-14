@@ -33,6 +33,29 @@ Rectangle {
         Mixxx.Application.setConfigValue("[Cutlab]", "pads_hidden_onda", hidden ? "1" : "0");
     }
     readonly property bool libraryOpen: library.visible
+    // The screen on show, for the frame times per screen of the
+    // diagnostics (1.30)
+    readonly property string screenName: {
+        if (folderSetup.visible) {
+            return qsTr("Carpetas");
+        }
+        if (library.visible) {
+            return qsTr("Biblioteca");
+        }
+        const toolNames = [qsTr("Stems"), qsTr("Cues"), qsTr("Loop"), qsTr("FX"), qsTr("Mezcla")];
+        if (root.tools1 || root.tools2) {
+            const tool = root.tools1 ? root.tool1 : root.tool2;
+            return qsTr("Herramienta %1").arg(toolNames[Math.max(0, Math.min(4, tool))]);
+        }
+        if (root.padsBig) {
+            return qsTr("Pads grandes");
+        }
+        if (root.waveMode === "extended") {
+            return root.padsHiddenOnda ? qsTr("Onda") : qsTr("Onda + pads");
+        }
+        return qsTr("Dial + pads");
+    }
+    onScreenNameChanged: Mixxx.Cutlab.setScreen(root.screenName)
     // Held upright, the screen switches to the one hand layout. Turning the
     // phone, Android reports the new size in steps (width first, height
     // later): the layout follows once the size has stayed the same for a
@@ -75,6 +98,7 @@ Rectangle {
     Component.onCompleted: {
         // From here on the layout turns only through rotationSettle
         root.portrait = root.portraitNow;
+        Mixxx.Cutlab.setScreen(root.screenName);
         // RGB waveforms once, as the new default (after that, what you pick
         // in the settings stays)
         if (Mixxx.Application.configValue("[Cutlab]", "rgb_default", "0") !== "1") {
@@ -95,6 +119,10 @@ Rectangle {
         fxMix2.value = 1;
         Shots.deck1 = shots1;
         Shots.deck2 = shots2;
+        Shots.engine1 = fxEngine1;
+        Shots.engine2 = fxEngine2;
+        Live.deck1 = live1;
+        Live.deck2 = live2;
         if (Mixxx.Application.configValue("[Cutlab]", "folders_done", "0") !== "1") {
             firstRun.start();
         }
@@ -109,6 +137,30 @@ Rectangle {
     }
     OneShots {
         id: shots2
+
+        group: "[Channel2]"
+    }
+    // What the FX pad of each deck plays, also with the pad closed: the FX
+    // button of the Mixtour and the BEAT FX lever of the REV1 turn it on
+    // and off at the first press
+    FxEngine {
+        id: fxEngine1
+
+        group: "[Channel1]"
+    }
+    FxEngine {
+        id: fxEngine2
+
+        group: "[Channel2]"
+    }
+    // A music record on the turntable: EN VIVO (passthrough) and Capturar
+    LiveCapture {
+        id: live1
+
+        group: "[Channel1]"
+    }
+    LiveCapture {
+        id: live2
 
         group: "[Channel2]"
     }
@@ -313,24 +365,17 @@ Rectangle {
     property bool fxAuto1: false
     property bool fxAuto2: false
     function fxStateChanged(deck) {
+        // 1.30: an effect turned on no longer opens the pad (the FX button
+        // and the lever play it with the pad closed); a pad opened before
+        // by a controller still closes once its effects are off
         if (!root.fxArmed) {
             return;
         }
         const on = deck === 1
             ? [fxSlot11, fxSlot12, fxSlot13].some(c => c.value > 0)
             : [fxSlot21, fxSlot22, fxSlot23].some(c => c.value > 0);
-        const group = deck === 1 ? "[Channel1]" : "[Channel2]";
-        const open = deck === 1 ? (root.tools1 && root.tool1 === 3) : (root.tools2 && root.tool2 === 3);
         if (on) {
             (deck === 1 ? fxClose1 : fxClose2).stop();
-            if (!open) {
-                root.openTool(group, 3);
-                if (deck === 1) {
-                    root.fxAuto1 = true;
-                } else {
-                    root.fxAuto2 = true;
-                }
-            }
         } else if (deck === 1 ? root.fxAuto1 : root.fxAuto2) {
             (deck === 1 ? fxClose1 : fxClose2).restart();
         }
@@ -404,15 +449,7 @@ Rectangle {
         if (!root.fxArmed) {
             return;
         }
-        const group = deck === 1 ? "[Channel1]" : "[Channel2]";
-        if (on) {
-            root.openTool(group, 3);
-            if (deck === 1) {
-                root.fxAuto1 = true;
-            } else {
-                root.fxAuto2 = true;
-            }
-        } else {
+        if (!on) {
             root.fxStateChanged(deck);
         }
     }
@@ -535,15 +572,14 @@ Rectangle {
             Mixxx.ControlProxy {
                 group: "[Cutlab]"
                 key: `fx_on${fxControls.index + 1}`
+                // Plays at once in the FxEngine of the deck; the pad stays
+                // as it is (opening it is up to the screen)
                 onValueChanged: {
                     const on = value > 0;
                     if (fxControls.index === 0) {
                         Shots.engaged1 = on;
                     } else {
                         Shots.engaged2 = on;
-                    }
-                    if (on) {
-                        root.showFxPad(fxControls.group);
                     }
                 }
             }

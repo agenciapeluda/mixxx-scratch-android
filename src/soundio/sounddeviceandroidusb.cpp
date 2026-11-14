@@ -183,6 +183,8 @@ SoundDeviceStatus SoundDeviceAndroidUsb::close() {
         return SoundDeviceStatus::Ok;
     }
     m_open = false;
+    m_inputStarted = false;
+    m_extraInputMarginFrames = 0;
     m_pDevice->stopOutput();
     m_pDevice->setCaptureCallback(nullptr);
     return SoundDeviceStatus::Ok;
@@ -202,8 +204,13 @@ void SoundDeviceAndroidUsb::readProcess(SINT framesPerBuffer) {
     // small margin (half a buffer, at least 3 USB transfers). Up to 1.28 it
     // kept up to 3 extra buffers waiting, which the timecode of the DVS read
     // late (about 30 ms at 512 frames).
-    const int marginFrames = std::max<int>(static_cast<int>(frames) / 2,
-            3 * kTransferMillis * static_cast<int>(m_sampleRate.value()) / 1000);
+    // 1.30: when the input ran short (a burst of CPU delayed the USB
+    // transfers and the timecode got a hole of silence, a cut of the deck
+    // that follows it), the margin grows by a quarter buffer, up to one more
+    // buffer, and shrinks back a transfer at a time after 20 s without it.
+    const int transferFrames = kTransferMillis * static_cast<int>(m_sampleRate.value()) / 1000;
+    const int marginFrames = std::max<int>(static_cast<int>(frames) / 2, 3 * transferFrames) +
+            m_extraInputMarginFrames;
     const int backlog = m_pInputFifo->readAvailable() - samples - marginFrames * channels;
     if (backlog > 0) {
         m_pInputFifo->releaseReadRegions(backlog - backlog % channels);
@@ -211,6 +218,19 @@ void SoundDeviceAndroidUsb::readProcess(SINT framesPerBuffer) {
     const int read = m_pInputFifo->read(m_inputBuffer.data(), samples);
     if (read < samples) {
         std::fill(m_inputBuffer.begin() + std::max(0, read), m_inputBuffer.begin() + samples, 0.0f);
+    }
+    if (read >= samples) {
+        m_inputStarted = true;
+    }
+    if (read < samples && m_inputStarted) {
+        m_pSoundManager->inputUnderflowHappened();
+        m_extraInputMarginFrames = std::min<int>(static_cast<int>(frames),
+                m_extraInputMarginFrames + std::max<int>(1, static_cast<int>(frames) / 4));
+        m_buffersSinceInputShort = 0;
+    } else if (m_extraInputMarginFrames > 0 &&
+            ++m_buffersSinceInputShort * frames > 20 * static_cast<SINT>(m_sampleRate.value())) {
+        m_extraInputMarginFrames = std::max(0, m_extraInputMarginFrames - std::max(1, transferFrames));
+        m_buffersSinceInputShort = 0;
     }
     composeInputBuffer(m_inputBuffer.data(), frames, 0, channels);
     // Hand the inputs to their destinations (vinyl control, microphones).

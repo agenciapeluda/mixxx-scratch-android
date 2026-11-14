@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QScopedPointer>
+#include <atomic>
+#include <vector>
 
 #include "engine/channels/enginechannel.h"
 #include "preferences/usersettings.h"
@@ -65,6 +67,16 @@ class EngineDeck : public EngineChannel, public AudioDestination {
     // Return whether or not passthrough is active
     bool isPassthroughActive() const;
 
+    /// Cutlab: what passthrough played is kept for the last seconds
+    /// (decks 1 and 2), for "Capturar". Copies the last `frames` stereo
+    /// frames into `pDest` (2 * frames samples), the oldest first; returns
+    /// how many it had (fewer right after passthrough came on). Any thread.
+    std::size_t copyCapturedInput(CSAMPLE* pDest, std::size_t frames) const;
+    /// The longest capture that can be asked for
+    static constexpr double kMaxCaptureSeconds = 32.0;
+    /// The deck of `group` (decks are made at start and live until the end)
+    static EngineDeck* forGroup(const QString& group);
+
 #ifdef __STEM__
     // Clone the stem state (gain and volume) from deckToClone to this. Doesn't
     // check if the loaded track is a stem so this should only be used in case
@@ -112,4 +124,9 @@ class EngineDeck : public EngineChannel, public AudioDestination {
     ControlPushButton* m_pPassing;
     bool m_bPassthroughIsActive;
     bool m_bPassthroughWasActive;
+
+    // Cutlab: the ring of the input played through (see copyCapturedInput)
+    std::vector<CSAMPLE> m_captureRing;
+    std::atomic<std::uint64_t> m_capturedFrames{0};
+    void keepCapturedInput(const CSAMPLE* pIn, std::size_t samples);
 };

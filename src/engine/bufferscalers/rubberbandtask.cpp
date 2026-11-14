@@ -1,4 +1,5 @@
 #include "engine/bufferscalers/rubberbandtask.h"
+#include "util/threadnice.h"
 
 #include "engine/engine.h"
 #include "util/assert.h"
@@ -32,6 +33,7 @@ void RubberBandTask::waitReady() {
 }
 
 void RubberBandTask::run() {
+    mixxx::setCurrentThreadNice(mixxx::kNiceAudio);
     VERIFY_OR_DEBUG_ASSERT(m_completedSema.available() == 0 && m_input && m_samples) {
         return;
     };

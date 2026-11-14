@@ -68,6 +68,10 @@ class QmlMobileLibraryProxy : public QObject {
     /// the library and the settings when Mixxx starts again. Returns
     /// {ok, message}.
     Q_INVOKABLE QVariantMap restoreBackup(const QString& name);
+    /// The automatic backup (util/androidbackup.h), if the library changed
+    /// since the last one. Runs in a worker thread; with `wait` returns
+    /// once it is written (closing the app).
+    static void autoBackup(bool wait);
 
     bool sidebarVisible() const;
     void setSidebarVisible(bool visible);

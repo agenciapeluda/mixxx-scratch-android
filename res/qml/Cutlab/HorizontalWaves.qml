@@ -50,6 +50,10 @@ Item {
                     isTouchMode: true
                     showHud: false
                 }
+                LiveOverlay {
+                    anchors.fill: parent
+                    group: lane.modelData
+                }
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: 2
@@ -73,11 +77,19 @@ Item {
                         text: Style.deckLetter(lane.modelData)
                     }
                 }
-                DvsBadge {
+                Row {
                     x: 42
                     y: 4
-                    visible: root.showDvs && active
-                    group: lane.modelData
+                    z: 45
+                    spacing: 6
+                    visible: root.showDvs
+
+                    DvsBadge {
+                        group: lane.modelData
+                    }
+                    PassthroughButton {
+                        group: lane.modelData
+                    }
                 }
             }
             }

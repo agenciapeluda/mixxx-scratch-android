@@ -34,6 +34,13 @@ Rectangle {
             anchors.fill: parent
             sourceComponent: [stemsTool, cuesTool, loopTool, fxTool, eqTool][Math.max(0, Math.min(4, root.tool))]
         }
+        // Live (passthrough): stems, cues and loops act on a track nobody
+        // hears; FX and the mixer stay, they shape the live sound
+        LiveBlock {
+            anchors.fill: parent
+            group: root.group
+            visible: live && root.tool <= 2
+        }
     }
 
     Component {

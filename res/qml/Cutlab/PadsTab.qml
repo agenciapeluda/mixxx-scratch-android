@@ -58,6 +58,10 @@ Rectangle {
                             group: deckPads.modelData
                         }
                     }
+                    LiveBlock {
+                        anchors.fill: parent
+                        group: deckPads.modelData
+                    }
                 }
             }
         }

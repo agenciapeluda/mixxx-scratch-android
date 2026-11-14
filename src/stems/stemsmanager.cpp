@@ -1,4 +1,5 @@
 #include "stems/stemsmanager.h"
+#include "util/threadnice.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -95,6 +96,14 @@ StemsManager::StemsManager(UserSettingsPointer pConfig, QObject* pParent)
     m_thread.setObjectName(QStringLiteral("Stems"));
     m_pWorker->moveToThread(&m_thread);
     connect(&m_thread, &QThread::finished, m_pWorker, &QObject::deleteLater);
+    // Cutlab: QThread's LowPriority does nothing on Android; the nice value
+    // does, and the threads of the ONNX runtime it creates inherit it
+    connect(
+            &m_thread,
+            &QThread::started,
+            m_pWorker,
+            []() { mixxx::setCurrentThreadNice(mixxx::kNiceBackground); },
+            Qt::DirectConnection);
     connect(m_pWorker, &StemsWorker::progress, this, &StemsManager::slotProgress);
     connect(m_pWorker, &StemsWorker::finished, this, &StemsManager::slotFinished);
     connect(m_pWorker,

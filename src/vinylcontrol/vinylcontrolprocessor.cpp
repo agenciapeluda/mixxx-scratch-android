@@ -1,4 +1,5 @@
 #include "vinylcontrol/vinylcontrolprocessor.h"
+#include "util/threadnice.h"
 
 #include "control/controlpushbutton.h"
 #include "moc_vinylcontrolprocessor.cpp"
@@ -80,6 +81,8 @@ void VinylControlProcessor::run() {
     unsigned static id = 0; // the id of this thread, for debugging purposes
     // FIXME copypasta (should factor this out somehow), -kousu 2/2009
     QThread::currentThread()->setObjectName(QString("VinylControlProcessor %1").arg(++id));
+    // Cutlab: the timecode decides the speed of the deck
+    mixxx::setCurrentThreadNice(mixxx::kNiceAudio);
 
     PerformanceTimer reportTimer;
     reportTimer.start();

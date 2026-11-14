@@ -170,6 +170,11 @@ class TrackDAO : public QObject, public virtual DAO, public virtual GlobalTrackC
             const QString& filePath,
             bool unremove);
     void addTracksFinish(bool rollback = false);
+    /// Commits the tracks added since addTracksPrepare() or the last
+    /// checkpoint, announces them with tracksAdded() and goes on in a new
+    /// transaction. Lets a long scan show its tracks as they are added and
+    /// keeps the write lock short.
+    void addTracksCheckpoint();
 
     bool updateTrack(const Track& track) const;
 

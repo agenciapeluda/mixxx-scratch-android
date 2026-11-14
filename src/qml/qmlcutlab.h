@@ -1,6 +1,8 @@
 #pragma once
 
+#include <QElapsedTimer>
 #include <QObject>
+#include <QTimer>
 #include <QQmlEngine>
 #include <QStringList>
 #include <QUrl>
@@ -30,6 +32,9 @@ class QmlCutlab : public QObject {
     Q_PROPERTY(int analysisTotal READ analysisTotal NOTIFY analysisChanged)
     Q_PROPERTY(bool analysisHeld READ analysisHeld NOTIFY analysisChanged)
     Q_PROPERTY(int analysisFailed READ analysisFailed NOTIFY analysisChanged)
+    /// A library scan runs, and how many new tracks it added so far
+    Q_PROPERTY(bool scanning READ scanning NOTIFY scanChanged)
+    Q_PROPERTY(int scannedTracks READ scannedTracks NOTIFY scanChanged)
 
   public:
     explicit QmlCutlab(QObject* pParent = nullptr);
@@ -38,6 +43,8 @@ class QmlCutlab : public QObject {
     int analysisTotal() const;
     bool analysisHeld() const;
     int analysisFailed() const;
+    bool scanning() const;
+    int scannedTracks() const;
     /// While a deck plays the analysis waits (the screen and the audio
     /// keep the CPU); it goes on once they stop
     Q_INVOKABLE void setAnalysisHeld(bool held);
@@ -46,6 +53,16 @@ class QmlCutlab : public QObject {
     /// to present it, and how late the GUI thread answers; frameStats() once
     /// a second, also written to the log
     Q_INVOKABLE void watchFrames(QObject* window, bool on);
+    /// The screen on show ("Onda", "Dial", "Biblioteca", "Pads"...): the
+    /// frame times are kept per screen (frameStats().screens)
+    Q_INVOKABLE void setScreen(const QString& name);
+    /// "Capturar" with passthrough on: the last `seconds` of what the
+    /// turntable of `group` played are written as a WAV in Music/Cutlab/
+    /// Capturas (in a worker thread). With `bpm` > 0 the track gets a
+    /// locked beat grid at that tempo from its first frame, so its loop of
+    /// `beats` beats stays in time. captureFinished() with the file, or
+    /// with the error.
+    Q_INVOKABLE void captureInput(const QString& group, double seconds, double bpm, int beats);
     /// Opens the share sheet with the log of this run, the one before and
     /// the crash reports
     Q_INVOKABLE bool shareLog() const;
@@ -74,6 +91,9 @@ class QmlCutlab : public QObject {
     Q_INVOKABLE QStringList listsContaining(const QUrl& url) const;
     /// Folders of the phone with music files: {name, path, count}
     Q_INVOKABLE QVariantList candidateFolders() const;
+    /// candidateFolders() in a worker thread (walking the storage takes
+    /// seconds): candidateFoldersFound() with the list
+    Q_INVOKABLE void findCandidateFolders();
     /// The music folders of the library are exactly `paths`: the old ones are
     /// replaced, the tracks outside are hidden, the ones inside shown again
     /// (except voice notes and recordings), then the library is scanned
@@ -133,9 +153,21 @@ class QmlCutlab : public QObject {
     /// A library scan is over: the folders and the tracks may have changed
     void libraryScanned();
     void analysisChanged();
+    void scanChanged();
+    /// While a scan runs, every 2 s if it added tracks: the lists can show them
+    void libraryGrew();
+    void candidateFoldersFound(const QVariantList& folders);
+    void captureFinished(const QString& group,
+            const QString& path,
+            double bpm,
+            int beats,
+            double seconds,
+            const QString& error);
     void frameStats(const QVariantMap& stats);
 
   private:
+    QTimer m_scanTick;
+    QElapsedTimer m_sinceGrow;
     /// The batch is over: marks the tracks it could not analyze
     void markFailedAnalysis() const;
     /// Shows the tracks of the chosen folders and hides the rest

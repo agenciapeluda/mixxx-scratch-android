@@ -12,6 +12,12 @@ Rectangle {
     property var candidates: []
     property var chosen: ({})
     property bool searching: false
+    // First start with a backup of the library (Music/Cutlab/backup, the
+    // Mixxx/backup of 1.29, or Android's backup): restoring it saves the
+    // whole scan and analysis
+    property string restoreName: ""
+    property string restoreMessage: ""
+    property bool restoreDismissed: false
     // The folder under the browse knob of a controller
     property int knobIndex: 0
 
@@ -37,7 +43,21 @@ Rectangle {
         root.visible = true;
         root.searching = true;
         root.candidates = [];
+        root.findBackup();
         scanTimer.start();
+    }
+    function findBackup() {
+        if (root.restoreDismissed || root.restoreMessage !== "" ||
+                Mixxx.Application.configValue("[Cutlab]", "folders_done", "0") === "1") {
+            return;
+        }
+        const list = Mixxx.MobileLibrary.backups();
+        root.restoreName = list.length > 0 ? list[0] : "";
+    }
+    // "2026-11-14_13-08-00_auto" as "14/11/2026 13:08"
+    function backupDate(name) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})/.exec(name);
+        return m ? m[3] + "/" + m[2] + "/" + m[1] + " " + m[4] + ":" + m[5] : name;
     }
     function apply() {
         const paths = Object.keys(root.chosen).filter(path => root.chosen[path]);
@@ -50,14 +70,37 @@ Rectangle {
         root.done();
     }
 
-    // Let the screen show before walking the storage
+    // Let the screen show, then walk the storage in a worker thread: the
+    // screen answers while it looks (it took seconds on a full phone)
     Timer {
         id: scanTimer
 
         interval: 120
-        onTriggered: {
+        onTriggered: Mixxx.Cutlab.findCandidateFolders()
+    }
+    // "All files access" granted in Android's settings: the backups and the
+    // folders can be seen now
+    Connections {
+        target: Qt.application
+
+        function onStateChanged() {
+            if (root.visible && Qt.application.state === Qt.ApplicationActive) {
+                root.findBackup();
+                if (!root.searching && root.candidates.length === 0) {
+                    root.searching = true;
+                    Mixxx.Cutlab.findCandidateFolders();
+                }
+            }
+        }
+    }
+    Connections {
+        target: Mixxx.Cutlab
+
+        function onCandidateFoldersFound(found) {
+            if (!root.visible) {
+                return;
+            }
             const current = Mixxx.Cutlab.folders();
-            const found = Mixxx.Cutlab.candidateFolders();
             const chosen = {};
             const norm = path => path.replace(/^\/sdcard(?=\/|$)/, "/storage/emulated/0")
                 .replace(/^\/storage\/self\/primary(?=\/|$)/, "/storage/emulated/0").replace(/\/+$/, "");
@@ -116,6 +159,79 @@ Rectangle {
                 lineHeight: 1.3
                 wrapMode: Text.WordWrap
                 text: qsTr("Encontramos estas carpetas con música. Prendé las que tengan temas para pasar: cada subcarpeta se vuelve una caja que se actualiza sola.")
+            }
+            // Restore the library of the last install
+            Rectangle {
+                visible: root.restoreName !== "" && !root.restoreDismissed
+                width: column.width
+                height: visible ? restoreColumn.implicitHeight + 28 : 0
+                radius: 14
+                color: Style.panel
+                border.width: 2
+                border.color: Style.accent
+
+                Column {
+                    id: restoreColumn
+
+                    x: 14
+                    y: 14
+                    width: parent.width - 28
+                    spacing: 10
+
+                    Text {
+                        width: parent.width
+                        color: Style.text
+                        font.family: Style.font
+                        font.weight: Font.Bold
+                        font.pixelSize: 17
+                        wrapMode: Text.WordWrap
+                        text: qsTr("Hay una copia de tu biblioteca")
+                    }
+                    Text {
+                        width: parent.width
+                        color: Style.textSecondary
+                        font.family: Style.font
+                        font.pixelSize: 13
+                        lineHeight: 1.3
+                        wrapMode: Text.WordWrap
+                        text: qsTr("Del %1. Restaurala y no hace falta volver a escanear ni analizar: vuelven las carpetas, el BPM, la tonalidad, los cues, los loops, los slots de letsktch! y las playlists.").arg(root.backupDate(root.restoreName))
+                    }
+                    Text {
+                        visible: root.restoreMessage !== ""
+                        width: parent.width
+                        color: Style.accentText
+                        font.family: Style.font
+                        font.pixelSize: 13
+                        wrapMode: Text.WordWrap
+                        text: root.restoreMessage
+                    }
+                    Row {
+                        visible: root.restoreMessage === ""
+                        spacing: 10
+
+                        CLButton {
+                            width: 200
+                            height: 46
+                            radius: 12
+                            fillColor: Style.accent
+                            bordered: false
+                            fontSize: 15
+                            text: qsTr("Restaurar biblioteca")
+                            onClicked: {
+                                const result = Mixxx.MobileLibrary.restoreBackup(root.restoreName);
+                                root.restoreMessage = result.message;
+                            }
+                        }
+                        CLButton {
+                            width: 150
+                            height: 46
+                            radius: 12
+                            fontSize: 15
+                            text: qsTr("Empezar de cero")
+                            onClicked: root.restoreDismissed = true
+                        }
+                    }
+                }
             }
             Text {
                 visible: root.searching

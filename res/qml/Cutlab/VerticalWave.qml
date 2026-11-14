@@ -36,6 +36,11 @@ Rectangle {
         height: 2
         color: Style.playhead
     }
+    LiveOverlay {
+        anchors.fill: parent
+        group: root.group
+        u: root.u
+    }
 
     // The deck letter
     Rectangle {

@@ -27,6 +27,7 @@
 #include "effects/effectsmanager.h"
 #include "qml/qmldlgpreferencesproxy.h"
 #include "qml/qmllanguageproxy.h"
+#include "qml/qmlmobilelibraryproxy.h"
 #include "qml/qmlrecordingproxy.h"
 #include "soundio/soundmanager.h"
 #include "util/versionstore.h"
@@ -452,10 +453,14 @@ QmlApplication::QmlApplication(
         }
         qInfo() << "Saving settings and loaded tracks, Mixxx went to the background";
         saveForAndroid(m_pCoreServices);
+        // Android may end the app from here on: back up the library to the
+        // Cutlab folder, in the background
+        QmlMobileLibraryProxy::autoBackup(false);
     });
     mixxx::android::setSaveBeforeExit([this]() {
         qInfo() << "Saving settings and loaded tracks, Mixxx is closed";
         saveForAndroid(m_pCoreServices);
+        QmlMobileLibraryProxy::autoBackup(true);
         shutDownForAndroid(m_pCoreServices);
     });
 #endif

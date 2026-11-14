@@ -1,6 +1,8 @@
 #pragma once
 #include <QIdentityProxyModel>
 #include <QQmlEngine>
+#include <QTimer>
+#include <QVariantMap>
 
 #include "library/trackmodel.h"
 #include "qml/qmllibrarytracklistcolumn.h"
@@ -14,6 +16,9 @@ class QmlLibraryTrackListModel : public QIdentityProxyModel {
     QML_NAMED_ELEMENT(LibraryTrackListModel)
     Q_PROPERTY(QQmlListProperty<mixxx::qml::QmlLibraryTrackListColumn> columns READ columns FINAL)
     QML_UNCREATABLE("Only accessible via Mixxx.Library")
+    /// Cutlab: goes up when rows change (a track analyzed, the list sorted
+    /// or refreshed), at most every 50 ms: rowInfo() bindings read it
+    Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
 
   public:
     enum Roles {
@@ -68,6 +73,15 @@ class QmlLibraryTrackListModel : public QIdentityProxyModel {
     int columnCount(const QModelIndex& index = QModelIndex()) const override;
     Q_INVOKABLE QUrl getUrl(int row) const;
     Q_INVOKABLE mixxx::qml::QmlTrackProxy* getTrack(int row) const;
+    /// Cutlab: what a row of the library shows, straight from the table
+    /// (memory), without loading the track: {url, title, artist, bpm,
+    /// keyText, duration, coverArtUrl}. getTrack() loads the whole track
+    /// from the database, which made scrolling stutter. Empty for the
+    /// folder browser (no table): use getTrack() there.
+    Q_INVOKABLE QVariantMap rowInfo(int row) const;
+    int revision() const {
+        return m_revision;
+    }
     Q_INVOKABLE TrackModel::Capabilities getCapabilities() const;
     Q_INVOKABLE bool hasCapabilities(TrackModel::Capabilities caps) const;
     Q_INVOKABLE void search(const QString& searchText);
@@ -80,7 +94,12 @@ class QmlLibraryTrackListModel : public QIdentityProxyModel {
     /// 13 duration, 15 bpm, 17 added, 20 key, 31 last played)
     Q_INVOKABLE bool sortById(int sortColumnId, bool ascending);
 
+  signals:
+    void revisionChanged();
+
   private:
+    int m_revision = 0;
+    QTimer m_revisionTimer;
     /// Maps a ColumnCache column to the column of the source model
     int sourceColumn(int column) const;
 

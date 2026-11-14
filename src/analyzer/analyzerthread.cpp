@@ -1,4 +1,5 @@
 #include "analyzer/analyzerthread.h"
+#include "util/threadnice.h"
 
 #include <mutex>
 
@@ -88,6 +89,14 @@ AnalyzerThread::AnalyzerThread(
 }
 
 void AnalyzerThread::doRun() {
+#ifdef __ANDROID__
+    // Cutlab: the waveform and BPM of a track just loaded on a deck must not
+    // take the CPU from the interface (the library's batch already runs
+    // with LowPriority, background)
+    if (!(m_modeFlags & AnalyzerModeFlags::LowPriority)) {
+        mixxx::setCurrentThreadNice(mixxx::kNiceLoadedTrackAnalysis);
+    }
+#endif
     std::unique_ptr<AnalysisDao> pAnalysisDao;
     // The thread-local database connection  must not be closed
     // before returning from this function.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android's Auto Backup (cloud and device-to-device transfer) only takes the
+     snapshot of the library that src/util/androidbackup.cpp keeps in the
+     settings folder (files/cloud-backup): the database (BPM, key, cues,
+     loops, letsktch! slots, playlists) and the settings without the Subsonic
+     password. Never the live database, the stems or the stem models, which
+     would go over the 25 MB limit. When Cutlab is installed again, Android
+     puts the snapshot back and the first start offers to restore it. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="cloud-backup/" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="cloud-backup/" />
+    </device-transfer>
+</data-extraction-rules>

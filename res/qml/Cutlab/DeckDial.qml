@@ -265,11 +265,20 @@ Item {
     }
 
     // DVS mode and timecode signal, when the deck follows a turntable
-    DvsBadge {
+    // EN VIVO (the turntable through the channel) next to it
+    Row {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 4
         x: root.mirrored ? 8 : parent.width - width - 8
-        group: root.group
+        spacing: 6
+        layoutDirection: root.mirrored ? Qt.LeftToRight : Qt.RightToLeft
+
+        DvsBadge {
+            group: root.group
+        }
+        PassthroughButton {
+            group: root.group
+        }
     }
     DropRadar {
         anchors.centerIn: parent

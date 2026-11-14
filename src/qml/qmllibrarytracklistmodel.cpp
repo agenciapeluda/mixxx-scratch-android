@@ -97,6 +97,24 @@ QmlLibraryTrackListModel::QmlLibraryTrackListModel(
         QObject* pParent)
         : QIdentityProxyModel(pParent),
           m_columns() {
+    // Cutlab: rowInfo() is a plain call, its bindings read `revision`
+    m_revisionTimer.setSingleShot(true);
+    m_revisionTimer.setInterval(50);
+    connect(&m_revisionTimer, &QTimer::timeout, this, [this]() {
+        ++m_revision;
+        emit revisionChanged();
+    });
+    const auto bump = [this]() {
+        if (!m_revisionTimer.isActive()) {
+            m_revisionTimer.start();
+        }
+    };
+    connect(this, &QAbstractItemModel::dataChanged, this, bump);
+    connect(this, &QAbstractItemModel::modelReset, this, bump);
+    connect(this, &QAbstractItemModel::layoutChanged, this, bump);
+    connect(this, &QAbstractItemModel::rowsInserted, this, bump);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, bump);
+
     m_columns.reserve(librarySource.size());
     for (const auto* pColumn : std::as_const(librarySource)) {
         m_columns.emplace_back(make_parented<QmlLibraryTrackListColumn>(this,
@@ -227,6 +245,33 @@ QmlTrackProxy* QmlLibraryTrackListModel::getTrack(int row) const {
         return {};
     }
     return make_qml_owned<QmlTrackProxy>(pTrackModel->getTrack(sourceModel()->index(row, 0)));
+}
+
+QVariantMap QmlLibraryTrackListModel::rowInfo(int row) const {
+    auto* const pTable = qobject_cast<BaseTrackTableModel*>(sourceModel());
+    if (!pTable || row < 0 || row >= rowCount()) {
+        return {};
+    }
+    const QModelIndex index = sourceModel()->index(row, 0);
+    const auto value = [&](ColumnCache::Column column) {
+        const int field = pTable->fieldIndex(column);
+        return field < 0 ? QVariant() : index.siblingAtColumn(field).data(Qt::EditRole);
+    };
+    const QString location = value(ColumnCache::COLUMN_TRACKLOCATIONSTABLE_LOCATION).toString();
+    if (location.isEmpty()) {
+        return {};
+    }
+    return QVariantMap{
+            {QStringLiteral("url"), QUrl::fromLocalFile(location)},
+            {QStringLiteral("title"), value(ColumnCache::COLUMN_LIBRARYTABLE_TITLE).toString()},
+            {QStringLiteral("artist"), value(ColumnCache::COLUMN_LIBRARYTABLE_ARTIST).toString()},
+            {QStringLiteral("bpm"), value(ColumnCache::COLUMN_LIBRARYTABLE_BPM).toDouble()},
+            {QStringLiteral("keyText"), value(ColumnCache::COLUMN_LIBRARYTABLE_KEY).toString()},
+            {QStringLiteral("duration"),
+                    value(ColumnCache::COLUMN_LIBRARYTABLE_DURATION).toDouble()},
+            {QStringLiteral("coverArtUrl"),
+                    AsyncImageProvider::trackLocationToCoverArtUrl(location)},
+    };
 }
 
 TrackModel::Capabilities QmlLibraryTrackListModel::getCapabilities() const {

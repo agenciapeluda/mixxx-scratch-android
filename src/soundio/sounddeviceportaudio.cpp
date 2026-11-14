@@ -1,4 +1,8 @@
 #include "soundio/sounddeviceportaudio.h"
+#include "util/threadnice.h"
+#ifdef __ANDROID__
+#include <sched.h>
+#endif
 
 #include <float.h>
 
@@ -1079,6 +1083,14 @@ int SoundDevicePortAudio::callbackProcessClkRef(
         // already set up correctly because of the audio server, or it's still set to
         // the SCHED_OTHER policy in which case the call also wouldn't do anything.
         QThread::currentThread()->setPriority(QThread::TimeCriticalPriority);
+#ifdef __ANDROID__
+        // Cutlab: AAudio gives the callback of a low latency stream the
+        // real-time policy when it can; when it can't (a shared stream on
+        // some phones), at least the most urgent nice value
+        if ((sched_getscheduler(0) & SCHED_FIFO) == 0) {
+            mixxx::setCurrentThreadNice(mixxx::kNiceUrgentAudio);
+        }
+#endif
 #endif
         m_bSetThreadPriority = true;
 

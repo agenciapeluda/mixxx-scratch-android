@@ -1,4 +1,5 @@
 #include "engine/cachingreader/cachingreaderworker.h"
+#include "util/threadnice.h"
 
 #include <QAtomicInt>
 #include <QtDebug>
@@ -119,6 +120,9 @@ void CachingReaderWorker::run() {
     const auto id = lastId.fetchAndAddRelaxed(1) + 1;
     QThread::currentThread()->setObjectName(
             QStringLiteral("CachingReaderWorker ") + QString::number(id));
+    // Cutlab: it reads the audio the deck plays; on Android QThread's
+    // HighPriority does nothing, the nice value does
+    mixxx::setCurrentThreadNice(mixxx::kNiceAudio);
 
     Event::start(m_tag);
     while (!m_stop.loadAcquire()) {

@@ -4,6 +4,9 @@ import QtQuick
 // The FX pad of a deck: pick an effect (rhythm or ambience), play it with
 // the finger on the surface, fire the one shots on the side, choose the
 // beat fraction below. The surface draws a game-like layer of its own.
+// What plays is the FxEngine of the deck (Shots.engineFor), which lives the
+// whole session: a controller plays it with the pad closed, and opening or
+// closing the pad changes nothing of the audio.
 Item {
     id: root
 
@@ -12,27 +15,18 @@ Item {
     // width without anything over anything
     property real u: Math.max(0.6, Math.min(1.15, width / 620, height / 430))
     readonly property int unitNumber: group === "[Channel2]" ? 2 : 1
-    readonly property string unitGroup: `[EffectRack1_EffectUnit${unitNumber}]`
-    readonly property string slotGroup: `[EffectRack1_EffectUnit${unitNumber}_Effect1]`
     readonly property var shots: Shots.forGroup(group)
+    readonly property var engine: Shots.engineFor(group)
     readonly property bool dvs: vinylEnabled.value > 0
     readonly property color deckColor: Style.deckColor(group)
 
-    // Shared with the FX SLOT buttons of the controllers
-    property string effect: Shots.effectFor(group)
-    // Played from the BEAT FX lever: the presets below, no finger
-    readonly property bool engaged: root.group === "[Channel2]" ? Shots.engaged2 : Shots.engaged1
-    property bool engagedPlaying: false
-    // The beats the finger picks across the surface for roll, trans, gater
-    // and glitch; the fraction buttons are where a press starts
-    property real liveFraction: fraction
-    // Beats
-    property real fraction: 0.5
-    property bool hold: false
-    property bool playing: false
-    property string rollKey: ""
-    // The finger moved the Quick Effect filter (to put it back on release)
-    property bool filterTouched: false
+    readonly property string effect: engine ? engine.effect : Shots.effectFor(group)
+    readonly property bool engaged: engine ? engine.engaged : false
+    readonly property bool engagedPlaying: engine ? engine.engagedPlaying : false
+    readonly property real liveFraction: engine ? engine.liveFraction : 0.5
+    readonly property real fraction: engine ? engine.fraction : 0.5
+    readonly property bool hold: engine ? engine.hold : false
+    readonly property bool playing: engine ? engine.playing : false
     property bool liteVisuals: Mixxx.Application.configValue("[Cutlab]", "fx_visuals_lite", "0") === "1"
 
     readonly property var rhythmEffects: [
@@ -42,13 +36,14 @@ Item {
         {id: "glitch", name: qsTr("Glitch")}
     ]
     readonly property var ambientEffects: [
-        {id: "echo", name: qsTr("Echo"), effectId: "org.mixxx.effects.echo"},
-        {id: "filter", name: qsTr("Filtro"), effectId: ""},
-        {id: "flanger", name: qsTr("Flanger"), effectId: "org.mixxx.effects.flanger"},
-        {id: "reverb", name: qsTr("Reverb"), effectId: "org.mixxx.effects.reverb"},
-        {id: "bitcrush", name: qsTr("Bitcrush"), effectId: "org.mixxx.effects.bitcrusher"}
+        {id: "echo", name: qsTr("Echo")},
+        {id: "filter", name: qsTr("Filtro")},
+        {id: "flanger", name: qsTr("Flanger")},
+        {id: "reverb", name: qsTr("Reverb")},
+        {id: "bitcrush", name: qsTr("Bitcrush")}
     ]
     readonly property var fractions: [0.125, 0.25, 0.5, 0.75, 1, 2, 4]
+    readonly property var liveFractions: [0.0625, 0.125, 0.25, 0.5, 1]
 
     function fractionText(beats) {
         if (beats === 0.75) {
@@ -56,252 +51,40 @@ Item {
         }
         return beats >= 1 ? String(beats) : "1/" + Math.round(1 / beats);
     }
-    function ambient(id) {
-        for (const effect of root.ambientEffects) {
-            if (effect.id === id) {
-                return effect;
-            }
+    function start(x, y) {
+        if (root.engine) {
+            root.engine.start(x, y, false);
         }
-        return null;
-    }
-    function rollKeyFor(beats) {
-        return `beatlooproll_${beats}_activate`;
-    }
-
-    // Left to right: 1/16 to 1 beat (the finger modulates the rhythm)
-    readonly property var liveFractions: [0.0625, 0.125, 0.25, 0.5, 1]
-    function fractionAt(x) {
-        const list = root.liveFractions;
-        return list[Math.max(0, Math.min(list.length - 1, Math.floor(x * list.length)))];
-    }
-
-    // x and y from 0 to 1; preset: played from the lever, with the
-    // fraction buttons and no finger
-    function start(x, y, preset) {
-        const effect = root.effect;
-        const rhythm = effect === "roll" || effect === "trans" || effect === "gater" || effect === "glitch";
-        if (rhythm) {
-            const beats = preset ? Math.min(1, root.fraction) : root.fractionAt(x);
-            if (root.playing && beats !== root.liveFraction && effect !== "roll" && root.shots) {
-                // A new rate while it plays
-                root.shots.rhythm(effect, true, Math.min(16, Math.max(1, 1 / beats)));
-            }
-            root.liveFraction = beats;
-        }
-        if (effect === "roll") {
-            const key = root.rollKeyFor(root.liveFraction);
-            if (key !== root.rollKey) {
-                if (root.rollKey !== "") {
-                    rollControl.value = 0;
-                }
-                root.rollKey = key;
-                rollControl.key = key;
-                rollControl.value = 1;
-            }
-        } else if (effect === "trans" || effect === "gater" || effect === "glitch") {
-            if (!root.playing && root.shots) {
-                root.shots.rhythm(effect, true, Math.min(16, Math.max(1, 1 / root.liveFraction)));
-            }
-            // Depth for trans and gater
-            if (effect !== "glitch") {
-                parameter1.value = 0.35 + 0.65 * y;
-            }
-        } else if (effect === "filter") {
-            // Played from a controller (preset) the filter is left to its
-            // own knob (FILTER of the Mixtour): only the finger moves it
-            if (!preset) {
-                quickFilter.parameter = x;
-                root.filterTouched = true;
-            }
-        } else {
-            if (!root.playing) {
-                const slot = Mixxx.EffectsManager.getEffectSlot(root.unitNumber, 1);
-                const wanted = root.ambient(effect).effectId;
-                if (slot && slot.effectId !== wanted) {
-                    slot.effectId = wanted;
-                }
-                if (effect === "echo") {
-                    // delay_time in beats
-                    parameter1.value = Math.min(2, root.fraction);
-                }
-                unitEnabled.value = 1;
-                routing.value = 1;
-                unitMix.value = 1;
-                unitSuper.parameter = 1;
-                slotEnabled.value = 1;
-            }
-            meta.parameter = x;
-            if (effect === "echo") {
-                // feedback
-                parameter2.parameter = 0.2 + 0.75 * y;
-            } else {
-                unitMix.value = 0.35 + 0.65 * y;
-            }
-        }
-        root.playing = true;
     }
     function stop() {
-        if (!root.playing) {
-            return;
+        if (root.engine) {
+            root.engine.stop();
         }
-        const effect = root.effect;
-        if (effect === "roll") {
-            rollControl.value = 0;
-            root.rollKey = "";
-        } else if (effect === "trans" || effect === "gater" || effect === "glitch") {
-            if (root.shots) {
-                root.shots.rhythm(effect, false, 1);
-            }
-        } else if (effect === "filter") {
-            if (root.filterTouched) {
-                quickFilter.reset();
-                root.filterTouched = false;
-            }
-        } else {
-            slotEnabled.value = 0;
-            unitSuper.parameter = 0;
-        }
-        root.playing = false;
     }
     function pick(effect) {
-        if (effect === root.effect) {
-            return;
-        }
-        const wasEngaged = root.engagedPlaying;
-        root.stop();
-        root.engagedPlaying = false;
-        root.effect = effect;
-        Shots.setEffect(root.group, effect);
-        if (wasEngaged && root.engaged) {
-            root.engage();
+        if (root.engine) {
+            root.engine.pick(effect);
         }
     }
-    function engage() {
-        if (root.playing) {
-            return;
-        }
-        root.engagedPlaying = true;
-        root.start(0.6, 0.5, true);
-        if (fxAmount.value >= 0) {
-            root.dose(fxAmount.value);
+    function setFraction(beats) {
+        if (root.engine) {
+            root.engine.fraction = beats;
         }
     }
-    // How much of the effect, from a controller knob (the FILTER knob of
-    // the Mixtour with FX on), 0 to 1
-    function dose(amount) {
-        const a = Math.max(0, Math.min(1, amount));
-        const effect = root.effect;
-        if (effect === "filter") {
-            return;
-        } else if (effect === "trans" || effect === "gater") {
-            parameter1.value = 0.35 + 0.65 * a;
-        } else if (effect === "roll" || effect === "glitch") {
-            return;
-        } else {
-            unitMix.value = a;
-        }
-    }
-    Mixxx.ControlProxy {
-        id: fxAmount
-
-        group: "[Cutlab]"
-        key: `fx_amount${root.unitNumber}`
-        onValueChanged: {
-            if (root.engagedPlaying && value >= 0) {
-                root.dose(value);
+    function toggleHold() {
+        if (root.engine) {
+            root.engine.hold = !root.engine.hold;
+            if (!root.engine.hold) {
+                root.engine.stop();
             }
         }
     }
-    onEngagedChanged: {
-        if (root.engaged) {
-            root.engage();
-        } else if (root.engagedPlaying) {
-            root.engagedPlaying = false;
-            root.stop();
-        }
-    }
-    // The effect changed from a controller
-    Connections {
-        target: Shots
-
-        function onEffect1Changed() {
-            if (root.group !== "[Channel2]") {
-                root.pick(Shots.effect1);
-            }
-        }
-        function onEffect2Changed() {
-            if (root.group === "[Channel2]") {
-                root.pick(Shots.effect2);
-            }
-        }
-    }
-    // Opened by the lever: play at once
-    Component.onCompleted: {
-        if (root.engaged) {
-            Qt.callLater(root.engage);
+    function fingerUp() {
+        if (root.engine) {
+            root.engine.fingerUp();
         }
     }
 
-    Mixxx.ControlProxy {
-        id: rollControl
-
-        group: root.group
-        key: "beatlooproll_0.5_activate"
-    }
-    Mixxx.ControlProxy {
-        id: quickFilter
-
-        group: `[QuickEffectRack1_${root.group}]`
-        key: "super1"
-    }
-    Mixxx.ControlProxy {
-        id: routing
-
-        group: root.unitGroup
-        key: `group_${root.group}_enable`
-    }
-    Mixxx.ControlProxy {
-        id: unitEnabled
-
-        group: root.unitGroup
-        key: "enabled"
-    }
-    Mixxx.ControlProxy {
-        id: unitMix
-
-        group: root.unitGroup
-        key: "mix"
-    }
-    Mixxx.ControlProxy {
-        id: unitSuper
-
-        group: root.unitGroup
-        key: "super1"
-    }
-    Mixxx.ControlProxy {
-        id: slotEnabled
-
-        group: root.slotGroup
-        key: "enabled"
-    }
-    Mixxx.ControlProxy {
-        id: meta
-
-        group: root.slotGroup
-        key: "meta"
-    }
-    Mixxx.ControlProxy {
-        id: parameter1
-
-        group: root.slotGroup
-        key: "parameter1"
-    }
-    Mixxx.ControlProxy {
-        id: parameter2
-
-        group: root.slotGroup
-        key: "parameter2"
-    }
     Mixxx.ControlProxy {
         id: beatActive
 
@@ -315,19 +98,12 @@ Item {
         key: "vinylcontrol_enabled"
     }
 
-    Component.onDestruction: root.stop()
-
-    // The finger left the surface: the lever keeps the effect on with the
-    // presets, HOLD keeps it where it was
-    function fingerUp() {
-        if (root.hold) {
-            return;
+    // The pad closed while the finger held an effect (HOLD) that no
+    // controller plays: it stops, as before
+    Component.onDestruction: {
+        if (root.engine && !root.engine.engaged) {
+            root.engine.stop();
         }
-        if (root.engaged) {
-            root.start(0.6, 0.5, true);
-            return;
-        }
-        root.stop();
     }
 
     // ---- Effects: RITMO and AMBIENTE, as in the design ----
@@ -432,7 +208,7 @@ Item {
                 text: root.fractionText(modelData)
                 fontSize: Math.max(10, Math.round(13 * root.u))
                 highlighted: root.fraction === modelData
-                onClicked: root.fraction = modelData
+                onClicked: root.setFraction(modelData)
             }
         }
         CLButton {
@@ -442,12 +218,7 @@ Item {
             text: qsTr("HOLD")
             fontSize: Math.max(10, Math.round(13 * root.u))
             highlighted: root.hold
-            onClicked: {
-                root.hold = !root.hold;
-                if (!root.hold) {
-                    root.stop();
-                }
-            }
+            onClicked: root.toggleHold()
         }
     }
 

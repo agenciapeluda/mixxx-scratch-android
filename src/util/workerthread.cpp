@@ -1,4 +1,5 @@
 #include "util/workerthread.h"
+#include "util/threadnice.h"
 
 #include "moc_workerthread.cpp"
 
@@ -65,6 +66,9 @@ void WorkerThread::run() {
     if (m_priority != QThread::InheritPriority) {
         m_logger.debug() << "Set priority to: " << m_priority;
         setPriority(m_priority);
+#ifdef __ANDROID__
+        mixxx::setCurrentThreadNice(mixxx::niceForPriority(m_priority));
+#endif
     }
 
     m_logger.debug() << "Running";

@@ -54,10 +54,11 @@ Item {
         group: "[Channel4]"
         key: "playposition"
     }
+    // 1.30: not while the app is in the background (nothing is drawn)
     Timer {
         interval: 66
         repeat: true
-        running: true
+        running: Qt.application.state === Qt.ApplicationActive
         triggeredOnStart: true
         onTriggered: {
             // Only a change wakes the bindings

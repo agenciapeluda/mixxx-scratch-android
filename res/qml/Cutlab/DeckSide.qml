@@ -220,6 +220,11 @@ Rectangle {
             isTouchMode: true
             showHud: false
         }
+        LiveOverlay {
+            anchors.fill: parent
+            group: root.group
+            u: root.u
+        }
         Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             y: 6

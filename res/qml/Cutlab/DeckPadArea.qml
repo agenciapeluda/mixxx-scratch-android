@@ -151,4 +151,9 @@ Item {
             }
         }
     }
+    // Live (passthrough): the pads would act on a track nobody hears
+    LiveBlock {
+        anchors.fill: parent
+        group: root.group
+    }
 }

@@ -7,6 +7,9 @@ import QtQuick
 QtObject {
     property var deck1: null
     property var deck2: null
+    // What the FX pad of each deck plays (FxEngine), alive all the session
+    property var engine1: null
+    property var engine2: null
     // The effect of the FX pad of each deck, picked on the screen or with
     // the FX SLOT buttons of a controller
     property string effect1: "echo"
@@ -23,6 +26,9 @@ QtObject {
 
     function forGroup(group) {
         return group === "[Channel2]" ? deck2 : deck1;
+    }
+    function engineFor(group) {
+        return group === "[Channel2]" ? engine2 : engine1;
     }
     function effectFor(group) {
         return group === "[Channel2]" ? effect2 : effect1;

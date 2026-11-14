@@ -411,3 +411,18 @@ La v1.4.0 fusiona `morpheasgr/android-stable` (ya incluía la v1.3.0, así que l
 - **Pendiente:** portar a Booth la cola, el aviso y la pestaña STEM de los stems (rama `stems`); `applySkinTheme` reasigna todas las propiedades de `Theme` y rompe sus bindings internos (una skin debe dar los colores derivados explícitamente).
 
 > _Fin de la sección escrita por IA._
+
+### 6.19. Cutlab 1.30.0 (versionCode 50)
+
+> _La siguiente sección la ha escrito un agente de IA (Claude Code)._
+
+- **Firma fija:** los secrets `ANDROID_SIGNING_KEYSTORE_BASE64` / `ANDROID_SIGNING_PASSWORD` (alias `mixxx`). En `scratch` y en los tags el workflow falla si faltan. Las notas de cada release salen de `docs/release-notes/vX.Y.Z.md`.
+- **Respaldo:** `util/androidbackup.cpp`. Raíz nueva `Music/Cutlab/backup`, se siguen leyendo `Mixxx/backup` (≤1.29) y la instantánea `files/cloud-backup` (Auto Backup de Android, `res/xml/data_extraction_rules.xml`). Solo se copian archivos de ajustes y `controllers`/`effects`/`keyboard` (la carpeta de ajustes es `files/`, donde también están los stems y los modelos). Automático (`QmlMobileLibraryProxy::autoBackup`) al terminar un análisis, al ir a segundo plano (si cambió la base) y al cerrar; nunca antes de `folders_done` ni con la biblioteca vacía; quedan los 3 últimos `_auto`.
+- **Primera apertura:** SQLite en WAL (`initDatabase`, solo Android); el escáner hace commit cada 100 temas o 1 s (`TrackDAO::addTracksCheckpoint`) y corre con nice 10; `Cutlab.findCandidateFolders()` en un hilo; barra "Escaneando N temas…" (`Cutlab.scanning/scannedTracks`, `libraryGrew`).
+- **Prioridades:** `util/threadnice.h`. En Android las prioridades de `QThread` no hacen nada (SCHED_OTHER); se usa el nice: audio −16/−19 (lectores de temas, EngineWorkerScheduler, vinilo, RubberBand, callback de Oboe sin FIFO), fondo 10 (escáner, análisis por lotes, stems/ONNX), 5 el análisis del tema cargado.
+- **Cortes:** `[App] cutlab_xruns` (cada buffer tarde) y `cutlab_input_xruns` (entrada USB corta); Diagnóstico los reparte (al cargar, DVS, stems) y da el peor cuadro por pantalla (`Cutlab.setScreen`). La entrada USB agranda su margen hasta un buffer cuando se queda corta y vuelve sola.
+- **FX:** `Cutlab/FxEngine.qml` (uno por deck, en DJView) toca el efecto del pad; `FxPad` es solo la interfaz. Los efectos ya no abren el pad.
+- **EN VIVO / Capturar:** `[ChannelN] passthrough`; `EngineDeck` guarda lo que pasa (36 s a 48 kHz, decks 1 y 2) y `Cutlab.captureInput()` lo escribe en `Music/Cutlab/Capturas` con grilla fija y BPM bloqueado. QML: `LiveCapture` (uno por deck), `Live` (singleton), `LiveOverlay`, `LiveBlock`, `PassthroughButton`. Samplers 15 y 16 para los loops capturados.
+- **Biblioteca:** `QmlLibraryTrackListModel::rowInfo()` + `revision` en lugar de `getTrack()` por fila; `reuseItems` en la lista.
+
+> _Fin de la sección escrita por IA._

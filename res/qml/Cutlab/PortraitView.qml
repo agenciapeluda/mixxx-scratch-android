@@ -337,6 +337,10 @@ Rectangle {
                         isTouchMode: true
                         showHud: false
                     }
+                    LiveOverlay {
+                        anchors.fill: parent
+                        group: parent.modelData
+                    }
                 }
             }
         }

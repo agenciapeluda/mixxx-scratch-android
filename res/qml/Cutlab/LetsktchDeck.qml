@@ -220,7 +220,7 @@ Item {
             root.startBeat(start, end, here);
         } else {
             root.beatPending = true;
-            root.preload();
+            root.preload(true);
         }
     }
     // The beat on the hidden deck: the same beats, same place, same tempo
@@ -322,13 +322,20 @@ Item {
     }
 
     // ---- The hidden deck: loaded and paused while the track has stems ----
-    function preload() {
+    // 1.30: loading it decodes the stems of the new track, a burst of CPU
+    // that could cut the deck that plays. So it waits: 4 s after the track
+    // is loaded, and then until the audio engine has room (under 60% of its
+    // time, at most 20 s more). A press of a Scratch pad loads it at once.
+    property int preloadWaits: 0
+    function preload(now) {
+        root.preloadWaits = 0;
+        preloadTimer.interval = now === true ? 50 : 4000;
         preloadTimer.restart();
     }
     Timer {
         id: preloadTimer
 
-        interval: 250
+        interval: 4000
         repeat: true
         onTriggered: {
             if (!root.hasStems) {
@@ -341,6 +348,12 @@ Item {
                 stop();
                 return;
             }
+            if (!root.beatPending && audioUsage.value > 60 && root.preloadWaits < 20) {
+                root.preloadWaits += 1;
+                interval = 1000;
+                return;
+            }
+            interval = 250;
             if (!root.helperPlayer) {
                 root.helperPlayer = Mixxx.PlayerManager.getPlayer(root.helper);
             }
@@ -355,6 +368,12 @@ Item {
             }
             stop();
         }
+    }
+    Mixxx.ControlProxy {
+        id: audioUsage
+
+        group: "[App]"
+        key: "audio_latency_usage"
     }
     function followTempo() {
         helperDeck.rateRange.value = main.rateRange.value;

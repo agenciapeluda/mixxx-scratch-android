@@ -2,6 +2,7 @@
 
 #include <gtest/gtest_prod.h>
 
+#include <QElapsedTimer>
 #include <QList>
 #include <QScopedPointer>
 #include <QSemaphore>
@@ -126,6 +127,9 @@ class LibraryScanner : public QThread {
 
     QSet<QString> m_previouslyMissingTracks;
     int m_numRelocatedTracks;
+    // Android: the tracks are committed in batches (TrackDAO::addTracksCheckpoint)
+    int m_tracksSinceCheckpoint = 0;
+    QElapsedTimer m_sinceCheckpoint;
 
     QList<mixxx::FileInfo> m_libraryRootDirs;
     std::unique_ptr<LibraryScannerDlg> m_pProgressDlg;

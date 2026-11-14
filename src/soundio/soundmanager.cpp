@@ -59,6 +59,8 @@ SoundManager::SoundManager(
           m_pErrorDevice(nullptr),
           m_underflowHappened(0),
           m_underflowUpdateCount(0),
+          m_xrunPending(0),
+          m_inputXrunPending(0),
           m_audioLatencyOverloadCount(
                   kAppGroup, QStringLiteral("audio_latency_overload_count")),
           m_audioLatencyOverload(
@@ -76,6 +78,9 @@ SoundManager::SoundManager(
 
     m_pControlObjectVinylControlGainCO = new ControlObject(
             ConfigKey(VINYL_PREF_KEY, "gain"));
+    m_pXrunCount = new ControlObject(ConfigKey(kAppGroup, QStringLiteral("cutlab_xruns")));
+    m_pInputXrunCount = new ControlObject(
+            ConfigKey(kAppGroup, QStringLiteral("cutlab_input_xruns")));
 
 #ifdef __PIPEWIRE__
     if (isPipewireSelected()) {
@@ -116,6 +121,8 @@ SoundManager::~SoundManager() {
     // by clearDeviceList -- bkgood
 
     delete m_pControlObjectSoundStatusCO;
+    delete m_pXrunCount;
+    delete m_pInputXrunCount;
     delete m_pControlObjectVinylControlGainCO;
 
     const QList<CSAMPLE*> buffers = m_inputBuffers.values();
@@ -672,6 +679,13 @@ int SoundManager::getConfiguredDeckCount() const {
 }
 
 void SoundManager::processUnderflowHappened(SINT framesPerBuffer) {
+    // Each late buffer once (several devices may flag the same one)
+    if (m_xrunPending.fetchAndStoreRelaxed(0)) {
+        m_pXrunCount->set(m_pXrunCount->get() + 1);
+    }
+    if (m_inputXrunPending.fetchAndStoreRelaxed(0)) {
+        m_pInputXrunCount->set(m_pInputXrunCount->get() + 1);
+    }
     if (m_underflowUpdateCount == 0) {
         if (atomicLoadRelaxed(m_underflowHappened)) {
             m_audioLatencyOverload.set(1.0);

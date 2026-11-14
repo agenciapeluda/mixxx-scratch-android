@@ -1,4 +1,5 @@
 #include "library/scanner/importfilestask.h"
+#include "util/threadnice.h"
 
 #include "moc_importfilestask.cpp"
 #include "util/timer.h"
@@ -21,6 +22,7 @@ ImportFilesTask::ImportFilesTask(LibraryScanner* pScanner,
 }
 
 void ImportFilesTask::run() {
+    mixxx::setCurrentThreadNice(mixxx::kNiceBackground);
     ScopedTimer timer(QStringLiteral("ImportFilesTask::run"));
     for (const QFileInfo& fileInfo: m_filesToImport) {
         // If a flag was raised telling us to cancel the library scan then stop.

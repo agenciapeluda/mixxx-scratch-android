@@ -7,6 +7,9 @@
 #include <QFileInfo>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QUuid>
 #include <QtDebug>
 #include <algorithm>
 
@@ -25,14 +28,40 @@ const QString kConfigFileName = QStringLiteral("mixxx.cfg");
 /// Secrets that must not be written to the shared storage
 const QString kStreamingGroup = QStringLiteral("[Streaming]");
 const QString kSubsonicPasswordKey = QStringLiteral("SubsonicPassword");
+/// The snapshot that Android's Auto Backup saves (see
+/// packaging/android/res/xml/data_extraction_rules.xml)
+const QString kCloudDirName = QStringLiteral("cloud-backup");
+/// When the last automatic backup was made, in the cloud folder
+const QString kLastAutoStamp = QStringLiteral(".last-auto");
+const QString kAutoSuffix = QStringLiteral("_auto");
+constexpr int kKeptAutoBackups = 3;
+/// Settings files bigger than this are not settings (a stray export...)
+constexpr qint64 kMaxFileSize = 8 * 1024 * 1024;
 
-/// Entries of the settings folder that are not backed up
-bool isExcluded(const QString& name) {
-    return name.startsWith(kDatabaseFileName) || // copied separately
+/// One backup at a time: the manual button, the automatic one in a worker
+/// thread and the one at closing could otherwise write the same folder
+QMutex s_backupMutex;
+
+/// Entries of the settings folder that are backed up. The settings folder is
+/// also where the stems of tracks in read-only folders and the stem models
+/// are (hundreds of MB), so only the settings files and a few small
+/// folders go in.
+bool isIncluded(const QFileInfo& entry) {
+    const QString name = entry.fileName();
+    if (name.startsWith(kDatabaseFileName) || // copied separately
             name.startsWith(QStringLiteral("mixxx.log")) ||
-            name == QStringLiteral("analysis") ||        // waveforms, regenerated
-            name == QStringLiteral("streaming_cache") || // downloaded tracks
-            name == kPendingDirName || name == kPreviousDirName;
+            name == kPendingDirName || name == kPreviousDirName || name == kCloudDirName) {
+        return false;
+    }
+    if (entry.isDir()) {
+        return name == QStringLiteral("controllers") || name == QStringLiteral("effects") ||
+                name == QStringLiteral("keyboard");
+    }
+    return entry.isFile() && entry.size() <= kMaxFileSize;
+}
+
+QString timestampName() {
+    return QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
 }
 
 bool copyRecursively(const QString& source, const QString& target) {
@@ -119,67 +148,213 @@ bool removePath(const QString& path) {
     return info.isDir() ? QDir(path).removeRecursively() : QFile::remove(path);
 }
 
+/// Copies the settings files into `backupDir` (which already has the
+/// database) and writes the info file
+bool copySettings(const QString& settingsPath, const QString& backupDir, QString* pError) {
+    const QFileInfoList entries = QDir(settingsPath).entryInfoList(
+            QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
+    for (const auto& entry : entries) {
+        if (!isIncluded(entry)) {
+            continue;
+        }
+        const QString name = entry.fileName();
+        const QString source = entry.absoluteFilePath();
+        const QString target = backupDir + QChar('/') + name;
+        const bool copied = name == kConfigFileName
+                ? copyConfigWithoutSecrets(source, target)
+                : copyRecursively(source, target);
+        if (!copied) {
+            *pError = QCoreApplication::translate("AndroidBackup", "Cannot copy %1").arg(name);
+            return false;
+        }
+    }
+    QFile info(backupDir + QChar('/') + kInfoFileName);
+    if (info.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        info.write(QStringLiteral("Cutlab %1 backup, created %2\n")
+                        .arg(QCoreApplication::applicationVersion(),
+                                QDateTime::currentDateTime().toString(Qt::ISODate))
+                        .toUtf8());
+    }
+    return true;
+}
+
+bool vacuumInto(QSqlDatabase& database, const QString& targetFile, QString* pError) {
+    QFile::remove(targetFile);
+    QSqlQuery query(database);
+    query.prepare(QStringLiteral("VACUUM INTO :path"));
+    query.bindValue(QStringLiteral(":path"), targetFile);
+    if (!query.exec()) {
+        *pError = QCoreApplication::translate("AndroidBackup", "Cannot copy the library database: %1")
+                          .arg(query.lastError().text());
+        return false;
+    }
+    return true;
+}
+
+/// Writes a complete backup into `finalDir`: first into a temporary folder
+/// next to it, renamed when complete, so a backup cut halfway (Android
+/// killing the app) never replaces a good one
+bool writeBackup(const QString& settingsPath,
+        QSqlDatabase& database,
+        const QString& finalDir,
+        QString* pError) {
+    const QString tempDir = finalDir + QStringLiteral(".tmp");
+    removePath(tempDir);
+    if (!QDir().mkpath(tempDir)) {
+        *pError = QCoreApplication::translate("AndroidBackup", "Cannot create %1").arg(finalDir);
+        return false;
+    }
+    if (!vacuumInto(database, tempDir + QChar('/') + kDatabaseFileName, pError) ||
+            !copySettings(settingsPath, tempDir, pError)) {
+        removePath(tempDir);
+        return false;
+    }
+    removePath(finalDir);
+    if (!QDir().rename(tempDir, finalDir)) {
+        *pError = QCoreApplication::translate("AndroidBackup", "Cannot create %1").arg(finalDir);
+        removePath(tempDir);
+        return false;
+    }
+    return true;
+}
+
+/// Deletes the automatic backups in `root` but the newest `keep`
+void pruneAutoBackups(const QString& root, int keep) {
+    QStringList autos = QDir(root).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    autos.erase(std::remove_if(autos.begin(),
+                        autos.end(),
+                        [](const QString& name) { return !name.endsWith(kAutoSuffix); }),
+            autos.end());
+    std::sort(autos.begin(), autos.end(), std::greater<>());
+    for (int i = keep; i < autos.size(); ++i) {
+        removePath(root + QChar('/') + autos[i]);
+    }
+}
+
+QString cloudRoot(const QString& settingsPath) {
+    return QDir(settingsPath).filePath(kCloudDirName);
+}
+
+/// The settings folder, saved by applyPendingRestore()'s caller for
+/// listBackups(), which has no settings path
+QString s_settingsPath;
+
+QDateTime lastChange(const QString& settingsPath) {
+    QDateTime newest;
+    // The library only: the settings are saved each time the app goes to
+    // the background, they alone are no reason for a new backup
+    for (const auto& name : {kDatabaseFileName, kDatabaseFileName + QStringLiteral("-wal")}) {
+        const QFileInfo info(QDir(settingsPath).filePath(name));
+        if (info.exists() && (!newest.isValid() || info.lastModified() > newest)) {
+            newest = info.lastModified();
+        }
+    }
+    return newest;
+}
+
 } // namespace
 
 QString backupRootDirectory() {
+    return QStringLiteral("/storage/emulated/0/Music/Cutlab/backup");
+}
+
+QString legacyBackupRootDirectory() {
     return QStringLiteral("/storage/emulated/0/Mixxx/backup");
 }
 
 QString createBackup(const QString& settingsPath, QSqlDatabase database, QString* pError) {
-    const QString name = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_HH-mm-ss"));
-    const QString backupDir = backupRootDirectory() + QChar('/') + name;
-    if (!QDir().mkpath(backupDir)) {
+    QMutexLocker lock(&s_backupMutex);
+    const QString backupDir = backupRootDirectory() + QChar('/') + timestampName();
+    if (!QDir().mkpath(backupRootDirectory())) {
         *pError = QCoreApplication::translate("AndroidBackup", "Cannot create %1").arg(backupDir);
         return {};
     }
-
-    QSqlQuery query(database);
-    query.prepare(QStringLiteral("VACUUM INTO :path"));
-    query.bindValue(QStringLiteral(":path"), QString(backupDir + QChar('/') + kDatabaseFileName));
-    if (!query.exec()) {
-        *pError = QCoreApplication::translate("AndroidBackup", "Cannot copy the library database: %1")
-                          .arg(query.lastError().text());
-        QDir(backupDir).removeRecursively();
+    if (!writeBackup(settingsPath, database, backupDir, pError)) {
         return {};
-    }
-
-    const QStringList entries =
-            QDir(settingsPath).entryList(QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
-    for (const auto& entry : entries) {
-        if (isExcluded(entry)) {
-            continue;
-        }
-        const QString source = settingsPath + QChar('/') + entry;
-        const QString target = backupDir + QChar('/') + entry;
-        const bool copied = entry == kConfigFileName
-                ? copyConfigWithoutSecrets(source, target)
-                : copyRecursively(source, target);
-        if (!copied) {
-            *pError = QCoreApplication::translate("AndroidBackup", "Cannot copy %1").arg(entry);
-            QDir(backupDir).removeRecursively();
-            return {};
-        }
-    }
-
-    QFile info(backupDir + QChar('/') + kInfoFileName);
-    if (info.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        info.write(QStringLiteral("Mixxx %1 backup, created %2\n")
-                        .arg(QCoreApplication::applicationVersion(),
-                                QDateTime::currentDateTime().toString(Qt::ISODate))
-                        .toUtf8());
     }
     qInfo() << "Created backup" << backupDir;
     return backupDir;
 }
 
+bool createAutoBackup(const QString& settingsPath,
+        const QString& connectionName,
+        bool sharedStorage) {
+    QMutexLocker lock(&s_backupMutex);
+    const QString cloneName = QStringLiteral("cutlab-backup-") +
+            QUuid::createUuid().toString(QUuid::WithoutBraces);
+    bool written = false;
+    {
+        QSqlDatabase database = QSqlDatabase::cloneDatabase(connectionName, cloneName);
+        if (!database.open()) {
+            qWarning() << "Automatic backup: cannot open the database" << database.lastError();
+        } else {
+            const QString name = timestampName() + kAutoSuffix;
+            QString error;
+            if (sharedStorage && QDir().mkpath(backupRootDirectory())) {
+                const QString dir = backupRootDirectory() + QChar('/') + name;
+                if (writeBackup(settingsPath, database, dir, &error)) {
+                    pruneAutoBackups(backupRootDirectory(), kKeptAutoBackups);
+                    written = true;
+                } else {
+                    qWarning() << "Automatic backup:" << error;
+                }
+            }
+            // The snapshot for Android's backup: only the newest one
+            const QString cloud = cloudRoot(settingsPath);
+            if (QDir().mkpath(cloud) &&
+                    writeBackup(settingsPath, database, cloud + QChar('/') + name, &error)) {
+                pruneAutoBackups(cloud, 1);
+                written = true;
+            } else {
+                qWarning() << "Automatic backup (Android backup):" << error;
+            }
+            database.close();
+        }
+    }
+    QSqlDatabase::removeDatabase(cloneName);
+    if (written) {
+        QFile stamp(QDir(cloudRoot(settingsPath)).filePath(kLastAutoStamp));
+        if (stamp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            stamp.write(QByteArray::number(QDateTime::currentMSecsSinceEpoch()));
+        }
+        qInfo() << "Automatic backup of the library done";
+    }
+    return written;
+}
+
+bool changedSinceAutoBackup(const QString& settingsPath) {
+    QFile stamp(QDir(cloudRoot(settingsPath)).filePath(kLastAutoStamp));
+    if (!stamp.open(QIODevice::ReadOnly)) {
+        return true;
+    }
+    const qint64 last = stamp.readAll().trimmed().toLongLong();
+    const QDateTime changed = lastChange(settingsPath);
+    return changed.isValid() && changed.toMSecsSinceEpoch() > last;
+}
+
+namespace {
+/// The folders that may hold backups, in the order they are looked in
+QStringList backupRoots() {
+    QStringList roots{backupRootDirectory(), legacyBackupRootDirectory()};
+    if (!s_settingsPath.isEmpty()) {
+        roots.append(cloudRoot(s_settingsPath));
+    }
+    return roots;
+}
+} // namespace
+
 QStringList listBackups() {
     QStringList names;
-    const QDir root(backupRootDirectory());
-    const QStringList dirs = root.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (const auto& dir : dirs) {
-        // Only folders that contain a database are usable backups
-        if (QFileInfo::exists(root.filePath(dir + QChar('/') + kDatabaseFileName))) {
-            names.append(dir);
+    for (const auto& rootPath : backupRoots()) {
+        const QDir root(rootPath);
+        const QStringList dirs = root.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const auto& dir : dirs) {
+            // Only folders that contain a database are usable backups (not
+            // one being written, ".tmp")
+            if (!dir.endsWith(QStringLiteral(".tmp")) && !names.contains(dir) &&
+                    QFileInfo::exists(root.filePath(dir + QChar('/') + kDatabaseFileName))) {
+                names.append(dir);
+            }
         }
     }
     // The names are timestamps, so they sort chronologically
@@ -187,10 +362,24 @@ QStringList listBackups() {
     return names;
 }
 
-bool stageRestore(const QString& settingsPath, const QString& backupName, QString* pError) {
-    const QString backupDir = backupRootDirectory() + QChar('/') + backupName;
+QString backupPath(const QString& backupName) {
     if (backupName.isEmpty() || backupName.contains(QChar('/')) ||
-            !QFileInfo::exists(backupDir + QChar('/') + kDatabaseFileName)) {
+            backupName.startsWith(QChar('.'))) {
+        return {};
+    }
+    for (const auto& root : backupRoots()) {
+        const QString dir = root + QChar('/') + backupName;
+        if (QFileInfo::exists(dir + QChar('/') + kDatabaseFileName)) {
+            return dir;
+        }
+    }
+    return {};
+}
+
+bool stageRestore(const QString& settingsPath, const QString& backupName, QString* pError) {
+    QMutexLocker lock(&s_backupMutex);
+    const QString backupDir = backupPath(backupName);
+    if (backupDir.isEmpty()) {
         *pError = QCoreApplication::translate("AndroidBackup", "Backup %1 not found").arg(backupName);
         return false;
     }
@@ -213,6 +402,7 @@ bool stageRestore(const QString& settingsPath, const QString& backupName, QStrin
 }
 
 void applyPendingRestore(const QString& settingsPath) {
+    s_settingsPath = settingsPath;
     const QDir settingsDir(settingsPath);
     const QString pendingDir = settingsDir.filePath(kPendingDirName);
     if (!QFileInfo::exists(pendingDir)) {
@@ -233,10 +423,12 @@ void applyPendingRestore(const QString& settingsPath) {
         return;
     }
 
-    // A journal left over from the replaced database must not be applied
-    // to the restored one
+    // A journal or write-ahead log left over from the replaced database must
+    // not be applied to the restored one
     QStringList names = QDir(pendingDir).entryList(QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot);
     names.append(kDatabaseFileName + QStringLiteral("-journal"));
+    names.append(kDatabaseFileName + QStringLiteral("-wal"));
+    names.append(kDatabaseFileName + QStringLiteral("-shm"));
 
     // First move the current files away. If one can't be moved, put back
     // the ones already moved and keep the current state: nothing is deleted.

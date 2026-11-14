@@ -59,6 +59,13 @@ class SoundDeviceAndroidUsb : public SoundDevice {
     std::array<CSAMPLE, 8> m_inputPeaks{};
     int m_framesSinceMeterUpdate = 0;
     std::vector<CSAMPLE> m_inputBuffer;
+    // Extra input margin after the input ran short (frames), and the
+    // buffers read since (see readProcess)
+    int m_extraInputMarginFrames = 0;
+    int m_buffersSinceInputShort = 0;
+    // The capture started (a whole buffer came in): only from then on a
+    // short input counts
+    bool m_inputStarted = false;
     void capture(const uint8_t* pData, int frames);
     SINT m_framesPerBuffer;
     bool m_isClkRef;

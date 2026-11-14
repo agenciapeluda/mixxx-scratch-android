@@ -41,6 +41,7 @@ FolderSetup 1.0 FolderSetup.qml
 OneShots 1.0 OneShots.qml
 FxVisuals 1.0 FxVisuals.qml
 FxPad 1.0 FxPad.qml
+FxEngine 1.0 FxEngine.qml
 Diagnostics 1.0 Diagnostics.qml
 singleton Shots 1.0 Shots.qml
 CutlabWave 1.0 CutlabWave.qml
@@ -71,3 +72,8 @@ ScratchPads 1.0 ScratchPads.qml
 StemPads 1.0 StemPads.qml
 StemsMissing 1.0 StemsMissing.qml
 WavePreview 1.0 WavePreview.qml
+LiveCapture 1.0 LiveCapture.qml
+LiveOverlay 1.0 LiveOverlay.qml
+LiveBlock 1.0 LiveBlock.qml
+PassthroughButton 1.0 PassthroughButton.qml
+singleton Live 1.0 Live.qml

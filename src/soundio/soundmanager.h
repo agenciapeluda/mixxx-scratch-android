@@ -98,6 +98,7 @@ class SoundManager : public QObject {
 
     void underflowHappened(int code) {
         m_underflowHappened = 1;
+        m_xrunPending = 1;
         // Disable the engine warnings by default, because printing a warning is a
         // locking function that will make the problem worse
         if (CmdlineArgs::Instance().getDeveloper()) {
@@ -106,6 +107,11 @@ class SoundManager : public QObject {
     }
 
     void processUnderflowHappened(SINT framesPerBuffer);
+    /// Cutlab: an input (the DVS on the USB driver) had less audio than a
+    /// buffer, the rest went as silence
+    void inputUnderflowHappened() {
+        m_inputXrunPending = 1;
+    }
 
     UserSettingsPointer userSettings() const {
         return m_pConfig;
@@ -204,6 +210,13 @@ class SoundManager : public QObject {
 
     QAtomicInt m_underflowHappened;
     int m_underflowUpdateCount;
+    // Cutlab: every late buffer counted, for the diagnostics ([App]
+    // cutlab_xruns, cutlab_input_xruns); audio_latency_overload_count only
+    // counts one each half second
+    QAtomicInt m_xrunPending;
+    QAtomicInt m_inputXrunPending;
+    ControlObject* m_pXrunCount;
+    ControlObject* m_pInputXrunCount;
     PollingControlProxy m_audioLatencyOverloadCount;
     PollingControlProxy m_audioLatencyOverload;
 

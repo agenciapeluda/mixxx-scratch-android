@@ -118,8 +118,58 @@ QVariantMap QmlMobileLibraryProxy::createBackup() {
     return result(true, tr("Backup saved to %1").arg(backupDir));
 }
 
+// static
+void QmlMobileLibraryProxy::autoBackup(bool wait) {
+#ifdef __ANDROID__
+    static QFuture<void> s_running;
+    if (s_running.isRunning()) {
+        if (wait) {
+            s_running.waitForFinished();
+        }
+        return;
+    }
+    TrackCollectionManager* pTrackCollectionManager = trackCollectionManager();
+    if (!pTrackCollectionManager) {
+        return;
+    }
+    const QString settingsPath = CmdlineArgs::Instance().getSettingsPath();
+    if (!mixxx::android::changedSinceAutoBackup(settingsPath)) {
+        return;
+    }
+    // Nothing worth keeping before the library is set up: a first start
+    // (a reinstall) must not put an empty backup over the good one it will
+    // offer to restore
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig ||
+            pConfig->getValueString(ConfigKey(QStringLiteral("[Cutlab]"),
+                    QStringLiteral("folders_done"))) != QStringLiteral("1")) {
+        return;
+    }
+    {
+        QSqlQuery count(pTrackCollectionManager->internalCollection()->database());
+        if (!count.exec(QStringLiteral("SELECT COUNT(*) FROM library")) || !count.next() ||
+                count.value(0).toInt() == 0) {
+            return;
+        }
+    }
+    const QString connectionName =
+            pTrackCollectionManager->internalCollection()->database().connectionName();
+    const bool sharedStorage = mixxx::android::hasFullExternalStorageAccess();
+    s_running = QtConcurrent::run([settingsPath, connectionName, sharedStorage]() {
+        mixxx::android::createAutoBackup(settingsPath, connectionName, sharedStorage);
+    });
+    if (wait) {
+        s_running.waitForFinished();
+    }
+#else
+    Q_UNUSED(wait);
+#endif
+}
+
 QVariantMap QmlMobileLibraryProxy::restoreBackup(const QString& name) {
-    if (!checkStorageAccess()) {
+    // The snapshot of Android's backup is in the settings folder: only the
+    // ones in the shared storage need "All files access"
+    if (mixxx::android::backupPath(name).isEmpty() && !checkStorageAccess()) {
         return result(false, tr("Restoring needs \"All files access\". Allow it, then try again."));
     }
     QString error;

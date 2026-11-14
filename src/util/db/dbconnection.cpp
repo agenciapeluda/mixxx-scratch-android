@@ -304,6 +304,28 @@ bool initDatabase(const QSqlDatabase& database, mixxx::StringCollator* pCollator
                 << "Failed to install custom 3-arg LIKE function for SQLite3:"
                 << result;
     }
+
+#ifdef Q_OS_ANDROID
+    // Cutlab: write-ahead log. With the default rollback journal the library
+    // scanner (one long write transaction) and the analysis lock the whole
+    // database, and every read of the interface thread waits up to the busy
+    // timeout (5 s): the first start froze for minutes while the music was
+    // scanned. With WAL readers never wait for the writer. The mode is
+    // stored in the database file, so later connections get it too.
+    if (!database.databaseName().contains(QStringLiteral("mode=memory"))) {
+        char* pError = nullptr;
+        result = sqlite3_exec(handle,
+                "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;",
+                nullptr,
+                nullptr,
+                &pError);
+        if (result != SQLITE_OK) {
+            kLogger.warning() << "Cannot switch the database to WAL:"
+                              << (pError ? pError : "") << result;
+        }
+        sqlite3_free(pError);
+    }
+#endif
 #else
     Q_UNUSED(database);
     Q_UNUSED(pCollator);

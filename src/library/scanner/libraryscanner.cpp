@@ -1,4 +1,5 @@
 #include "library/scanner/libraryscanner.h"
+#include "util/threadnice.h"
 
 #include "library/coverartutils.h"
 #include "library/library_decl.h"
@@ -117,6 +118,11 @@ LibraryScanner::LibraryScanner(
     setObjectName(QString("LibraryScanner %1").arg(instanceId));
 
     m_pool.setMaxThreadCount(kScannerThreadPoolSize);
+#ifdef Q_OS_ANDROID
+    // Reading the tags of a whole collection must not take the CPU from the
+    // interface or the audio
+    m_pool.setThreadPriority(QThread::LowPriority);
+#endif
 
     // Listen to signals from our public methods (invoked by other threads) and
     // connect them to our slots to run the command on the scanner thread.
@@ -168,6 +174,7 @@ LibraryScanner::~LibraryScanner() {
 
 void LibraryScanner::run() {
     kLogger.debug() << "Entering thread";
+    mixxx::setCurrentThreadNice(mixxx::kNiceBackground);
     {
         Trace trace("LibraryScanner");
 
@@ -259,6 +266,8 @@ void LibraryScanner::slotStartScan() {
     // Start scanning the library. This prepares insertion queries in TrackDAO
     // (must be called before calling addTracksAdd) and begins a transaction.
     m_trackDao.addTracksPrepare();
+    m_tracksSinceCheckpoint = 0;
+    m_sinceCheckpoint.start();
 
     // First Scan all known directories we have a hash for.
     // In a second stage, we scan all new directories. This guarantees,
@@ -716,6 +725,17 @@ void LibraryScanner::slotAddNewTrack(const QString& trackPath) {
     // a new track in the database.
     emit trackAdded(pTrack);
     emit progressLoading(trackLocation);
+#ifdef Q_OS_ANDROID
+    // Cutlab: the whole scan used to be one transaction, so the first scan
+    // of a collection showed nothing until it was over and held the write
+    // lock for minutes. Commit every 100 tracks or every second.
+    ++m_tracksSinceCheckpoint;
+    if (m_tracksSinceCheckpoint >= 100 || m_sinceCheckpoint.elapsed() >= 1000) {
+        m_trackDao.addTracksCheckpoint();
+        m_tracksSinceCheckpoint = 0;
+        m_sinceCheckpoint.restart();
+    }
+#endif
 }
 
 bool LibraryScanner::changeScannerState(ScannerState newState) {

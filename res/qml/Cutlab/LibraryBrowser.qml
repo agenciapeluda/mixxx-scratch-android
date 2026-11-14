@@ -623,6 +623,14 @@ Rectangle {
                 root.refreshQuery();
             }
         }
+        // While a scan runs the tracks show up as they are added, unless
+        // the list is being browsed (a refresh would move it)
+        function onLibraryGrew() {
+            if (root.visible && root.page && root.page.showTracks && root.selectedRow < 0 &&
+                    trackView.atYBeginning && !trackView.moving) {
+                root.refreshQuery();
+            }
+        }
     }
 
     LibraryComponent.SourceTree {
@@ -1454,19 +1462,48 @@ Rectangle {
             readonly property int total: Mixxx.Cutlab.analysisTotal
             readonly property bool running: total > 0
             readonly property int failed: root.failedAnalysis
+            readonly property bool scanning: Mixxx.Cutlab.scanning
 
             anchors.top: tableHeader.bottom
             x: trackView.x
             width: trackView.width
-            visible: running || root.missing > 0 || failed > 0
+            visible: scanning || running || root.missing > 0 || failed > 0
             height: visible ? Math.round(40 * root.u) : 0
             radius: Math.round(8 * root.u)
             color: Style.raised
             clip: true
 
+            // The scan has no total: a band that sweeps the bar
+            Rectangle {
+                id: scanSweep
+
+                visible: analysisBar.scanning
+                width: parent.width * 0.25
+                height: parent.height
+                radius: parent.radius
+                color: Style.accentDark
+
+                SequentialAnimation on x {
+                    running: scanSweep.visible && root.visible
+                    loops: Animation.Infinite
+
+                    NumberAnimation {
+                        from: 0
+                        to: analysisBar.width - scanSweep.width
+                        duration: 1100
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        from: analysisBar.width - scanSweep.width
+                        to: 0
+                        duration: 1100
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
             // Progress
             Rectangle {
-                visible: analysisBar.running
+                visible: analysisBar.running && !analysisBar.scanning
                 width: parent.width * (analysisBar.total > 0 ? analysisBar.done / analysisBar.total : 0)
                 height: parent.height
                 radius: parent.radius
@@ -1484,7 +1521,11 @@ Rectangle {
                 font.pixelSize: root.fs(13)
                 text: {
                     let main;
-                    if (analysisBar.running) {
+                    if (analysisBar.scanning) {
+                        main = Mixxx.Cutlab.scannedTracks > 0
+                            ? qsTr("Escaneando %1 temas…").arg(Mixxx.Cutlab.scannedTracks)
+                            : qsTr("Escaneando la música…");
+                    } else if (analysisBar.running) {
                         main = Mixxx.Cutlab.analysisHeld
                             ? qsTr("Análisis en pausa mientras suena un deck · %1 de %2").arg(analysisBar.done).arg(analysisBar.total)
                             : qsTr("Analizando %1 de %2").arg(analysisBar.done).arg(analysisBar.total);
@@ -1502,7 +1543,7 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.rightMargin: Math.round(4 * root.u)
                 anchors.verticalCenter: parent.verticalCenter
-                visible: !analysisBar.running && root.missing > 0
+                visible: !analysisBar.running && !analysisBar.scanning && root.missing > 0
                 width: visible ? Math.round(120 * root.u) : 0
                 height: parent.height - Math.round(8 * root.u)
                 text: qsTr("Analizar todo")
@@ -1538,6 +1579,10 @@ Rectangle {
             spacing: 2
             model: root.page && root.page.showTracks ? root.tracklist : null
             onModelChanged: root.selectedRow = -1
+            // 1.30: the rows that leave the screen are reused for the ones
+            // that come in, instead of built again on every scroll step
+            reuseItems: true
+            cacheBuffer: Math.round(240 * root.u)
             ScrollBar.vertical: ScrollBar {
             }
 
@@ -1700,7 +1745,7 @@ Rectangle {
                 onMenuRequested: {
                     root.selectedRow = index;
                     root.focusColumn = 1;
-                    trackMenu.track = track;
+                    trackMenu.track = trackView.model ? trackView.model.getTrack(index) : null;
                     root.openTrackMenu(index, false);
                 }
             }

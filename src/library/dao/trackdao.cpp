@@ -563,6 +563,27 @@ void TrackDAO::addTracksFinish(bool rollback) {
     m_tracksAddedSet.clear();
 }
 
+void TrackDAO::addTracksCheckpoint() {
+    if (!m_pTransaction) {
+        return;
+    }
+    // No statement may still be reading when the transaction ends
+    for (QSqlQuery* pQuery : {m_pQueryTrackLocationSelect.get(), m_pQueryLibrarySelect.get()}) {
+        if (pQuery) {
+            pQuery->finish();
+        }
+    }
+    if (!m_pTransaction->commit()) {
+        kLogger.warning() << "addTracksCheckpoint: commit failed, going on in the same transaction";
+        return;
+    }
+    m_pTransaction = std::make_unique<SqlTransaction>(m_database);
+    if (!m_tracksAddedSet.isEmpty()) {
+        emit tracksAdded(m_tracksAddedSet);
+        m_tracksAddedSet.clear();
+    }
+}
+
 namespace {
 
 bool insertTrackLocation(

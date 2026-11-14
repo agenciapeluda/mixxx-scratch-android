@@ -4007,7 +4007,7 @@ Aborting the operation to avoid library inconsistencies</source>
     </message>
     <message>
         <source>Mixxx closes now. Open it again to finish restoring %1.</source>
-        <translation>Cutlab se cierra ahora. Ábrelo de nuevo para terminar de restaurar %1.</translation>
+        <translation>Cutlab se cierra ahora. Volvé a abrirla para terminar de restaurar %1.</translation>
     </message>
     <message>
         <source>This list is not a Rekordbox playlist</source>

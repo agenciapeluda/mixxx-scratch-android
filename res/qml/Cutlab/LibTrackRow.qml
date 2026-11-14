@@ -18,10 +18,22 @@ Rectangle {
     property string versusKey: ""
     property string loadedUrlA: ""
     property string loadedUrlB: ""
-    readonly property var track: trackModel && row >= 0 ? trackModel.getTrack(row) : null
-    readonly property string url: track ? track.trackLocationUrl.toString() : ""
-    readonly property string camelot: track ? Mixxx.Cutlab.camelot(track.keyText) : ""
-    readonly property var match: Style.matchWith(track ? track.bpm : 0, camelot, versusBpm, versusKey)
+    // 1.30: what the row shows comes from the table in memory (rowInfo);
+    // only the folder browser, which has no table, loads the track
+    readonly property var info: {
+        const revision = trackModel && trackModel.revision !== undefined ? trackModel.revision : 0;
+        return trackModel && row >= 0 && trackModel.rowInfo ? trackModel.rowInfo(row) : null;
+    }
+    readonly property bool hasInfo: !!info && info.url !== undefined
+    readonly property var track: !hasInfo && trackModel && row >= 0 ? trackModel.getTrack(row) : null
+    readonly property string url: hasInfo ? info.url.toString() : (track ? track.trackLocationUrl.toString() : "")
+    readonly property string title: hasInfo ? info.title : (track ? track.title : "")
+    readonly property string artist: hasInfo ? info.artist : (track ? track.artist : "")
+    readonly property real bpm: hasInfo ? info.bpm : (track ? track.bpm : 0)
+    readonly property real duration: hasInfo ? info.duration : (track ? track.duration : 0)
+    readonly property url coverArtUrl: hasInfo ? info.coverArtUrl : (track ? track.coverArtUrl : "")
+    readonly property string camelot: Mixxx.Cutlab.camelot(hasInfo ? info.keyText : (track ? track.keyText : ""))
+    readonly property var match: Style.matchWith(root.bpm, camelot, versusBpm, versusKey)
 
     // Already split in stems: a mark next to the artist
     property bool stemmed: false
@@ -118,7 +130,7 @@ Rectangle {
             fillMode: Image.PreserveAspectCrop
             sourceSize.width: 96
             sourceSize.height: 96
-            source: root.track ? root.track.coverArtUrl : ""
+            source: root.coverArtUrl
             visible: status === Image.Ready
         }
         // The deck letter while it is dragged far enough
@@ -180,8 +192,8 @@ Rectangle {
             font.family: Style.mono
             font.weight: Font.Bold
             font.pixelSize: root.fs(15)
-            text: root.track && root.track.bpm > 0 ? root.track.bpm.toFixed(1) : "…"
-            opacity: root.track && root.track.bpm > 0 ? 1 : 0.4
+            text: root.bpm > 0 ? root.bpm.toFixed(1) : "…"
+            opacity: root.bpm > 0 ? 1 : 0.4
         }
         Item {
             width: Math.round(46 * root.u)
@@ -217,7 +229,7 @@ Rectangle {
             font.family: Style.mono
             font.weight: Font.Medium
             font.pixelSize: root.fs(13)
-            text: root.track && root.track.duration > 0 ? Style.formatTime(root.track.duration) : ""
+            text: root.duration > 0 ? Style.formatTime(root.duration) : ""
         }
         Text {
             width: Math.round(150 * root.u)
@@ -249,7 +261,7 @@ Rectangle {
             font.family: Style.mono
             font.weight: Font.Bold
             font.pixelSize: root.fs(14)
-            text: root.track && root.track.bpm > 0 ? root.track.bpm.toFixed(1) : "…"
+            text: root.bpm > 0 ? root.bpm.toFixed(1) : "…"
         }
         Rectangle {
             anchors.right: parent.right
@@ -287,7 +299,7 @@ Rectangle {
             font.family: Style.font
             font.weight: Font.DemiBold
             font.pixelSize: root.fs(root.selected ? 18 : 15)
-            text: root.track ? root.track.title : ""
+            text: root.title
         }
         Row {
             width: parent.width
@@ -320,7 +332,7 @@ Rectangle {
                 color: Style.textSecondary
                 font.family: Style.font
                 font.pixelSize: root.fs(root.compact ? 12 : 13)
-                text: root.track ? root.track.artist : ""
+                text: root.artist
             }
         }
     }

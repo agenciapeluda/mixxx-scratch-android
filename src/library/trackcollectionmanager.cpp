@@ -156,7 +156,11 @@ TrackCollectionManager::TrackCollectionManager(
                 &TrackDAO::slotDatabaseTracksRelocated);
 
         kLogger.info() << "Starting library scanner thread";
+#ifdef Q_OS_ANDROID
+        m_pScanner->start(QThread::LowPriority);
+#else
         m_pScanner->start();
+#endif
     }
 }
 

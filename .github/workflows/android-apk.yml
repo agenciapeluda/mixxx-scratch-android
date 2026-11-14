@@ -6,9 +6,10 @@
 #   lo que lee el actualizador de la app (src/qml/qmlappupdateproxy.cpp).
 #
 # Firma: si existen los secrets ANDROID_SIGNING_KEYSTORE_BASE64 y
-# ANDROID_SIGNING_PASSWORD se usa ese keystore (alias "mixxx"). Si no, se genera
-# uno temporal: el APK instala, pero cada build queda firmado distinto y no se
-# puede actualizar una sobre otra sin desinstalar.
+# ANDROID_SIGNING_PASSWORD se usa ese keystore (alias "mixxx"), la clave fija
+# de Cutlab desde la 1.30: cada versión se instala encima de la anterior. En la
+# rama scratch y en los tags el build falla si faltan; solo otras ramas, a mano,
+# pueden firmar con una clave temporal.
 
 name: Android APK
 
@@ -92,6 +93,13 @@ jobs:
       - name: Set up signing key
         run: |
           if [ -z "${ANDROID_SIGNING_KEYSTORE_BASE64}" ]; then
+            # Desde la 1.30 todas las builds de scratch y las releases van con la
+            # clave fija: una firmada distinto obliga a desinstalar y borra la
+            # biblioteca. Solo una ejecución manual de otra rama puede seguir sin ella.
+            if [ "${GITHUB_REF}" = "refs/heads/scratch" ] || [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+              echo "::error title=Firma::Faltan los secrets ANDROID_SIGNING_KEYSTORE_BASE64 y ANDROID_SIGNING_PASSWORD. Cargalos en Settings > Secrets and variables > Actions y volvé a correr el workflow."
+              exit 1
+            fi
             echo "::warning::Sin keystore en los secrets: se firma con una clave temporal."
             PASS=mixxxandroid
             keytool -genkey -keystore "$GITHUB_WORKSPACE/mixxx.keystore" -alias mixxx \
@@ -217,10 +225,18 @@ jobs:
         run: |
           VERSION=$(grep -oP 'android:versionName="\K[^"]+' packaging/android/AndroidManifest.xml)
           TAG="v${VERSION}-android"
+          # Las notas de la versión, si hay (docs/release-notes)
+          NOTES_FILE="docs/release-notes/v${VERSION}.md"
+          if [ -f "$NOTES_FILE" ]; then
+            { cat "$NOTES_FILE"; echo; echo "Build automática de ${{ github.sha }} (rama ${{ github.ref_name }})."; } > /tmp/notes.md
+          else
+            echo "Build automática de ${{ github.sha }} (rama ${{ github.ref_name }})." > /tmp/notes.md
+          fi
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "${{ steps.apk.outputs.file }}" --clobber
+            gh release edit "$TAG" --notes-file /tmp/notes.md
           else
             gh release create "$TAG" "${{ steps.apk.outputs.file }}" --target "${{ github.sha }}" \
-              --title "Mixxx Scratch Android ${VERSION}" \
-              --notes "Build automática de ${{ github.sha }} (rama ${{ github.ref_name }})."
+              --title "Cutlab ${VERSION}" \
+              --notes-file /tmp/notes.md
           fi

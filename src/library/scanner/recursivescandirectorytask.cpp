@@ -1,4 +1,5 @@
 #include "library/scanner/recursivescandirectorytask.h"
+#include "util/threadnice.h"
 
 #include <QCryptographicHash>
 #include <QDir>
@@ -21,6 +22,7 @@ RecursiveScanDirectoryTask::RecursiveScanDirectoryTask(
 }
 
 void RecursiveScanDirectoryTask::run() {
+    mixxx::setCurrentThreadNice(mixxx::kNiceBackground);
     ScopedTimer timer(QStringLiteral("RecursiveScanDirectoryTask::run"));
     if (m_scannerGlobal->shouldCancel()) {
         setSuccess(false);

@@ -1,5 +1,8 @@
 #include "engine/channels/enginedeck.h"
 
+#include <QHash>
+#include <algorithm>
+#include <QMutex>
 #include <QStringView>
 
 #include "control/controlpushbutton.h"
@@ -13,6 +16,17 @@
 #include "track/track.h"
 #include "util/assert.h"
 #include "util/sample.h"
+
+namespace {
+// Cutlab: the decks by group, for the capture of the input (see forGroup)
+QMutex s_decksMutex;
+QHash<QString, EngineDeck*> s_decks;
+// Room for a capture of kMaxCaptureSeconds at 48 kHz (half of it at 96),
+// and 4 s more so the engine never writes over what is being copied:
+// about 14 MB per deck
+constexpr std::size_t kCaptureRingFrames = 36 * 48000;
+constexpr std::size_t kCaptureSafetyFrames = 4 * 48000;
+} // namespace
 
 EngineDeck::EngineDeck(
         const ChannelHandleAndGroup& handleGroup,
@@ -31,6 +45,17 @@ EngineDeck::EngineDeck(
           m_pInputConfigured(new ControlObject(ConfigKey(getGroup(), "input_configured"))),
           m_pPassing(new ControlPushButton(ConfigKey(getGroup(), "passthrough"))) {
     m_pInputConfigured->setReadOnly();
+#ifdef Q_OS_ANDROID
+    // Cutlab: decks 1 and 2 keep what passthrough plays, for "Capturar"
+    // (allocated here: the engine thread can't)
+    if (getGroup() == QStringLiteral("[Channel1]") || getGroup() == QStringLiteral("[Channel2]")) {
+        m_captureRing.assign(kCaptureRingFrames * 2, 0.0f);
+    }
+#endif
+    {
+        const QMutexLocker lock(&s_decksMutex);
+        s_decks.insert(getGroup(), this);
+    }
     // Set up passthrough utilities and fields
     m_pPassing->setButtonMode(mixxx::control::ButtonMode::PowerWindow);
     m_bPassthroughIsActive = false;
@@ -113,6 +138,10 @@ void EngineDeck::slotTrackLoaded(TrackPointer pNewTrack,
 #endif
 
 EngineDeck::~EngineDeck() {
+    {
+        const QMutexLocker lock(&s_decksMutex);
+        s_decks.remove(getGroup());
+    }
     delete m_pPassing;
     delete m_pBuffer;
     delete m_pPregain;
@@ -231,6 +260,7 @@ void EngineDeck::process(CSAMPLE* pOut, const std::size_t bufferSize) {
     const CSAMPLE* sampleBuffer = m_sampleBuffer; // save pointer on stack
     if (isPassthroughActive() && sampleBuffer) {
         SampleUtil::copy(pOut, sampleBuffer, bufferSize);
+        keepCapturedInput(sampleBuffer, bufferSize);
         m_bPassthroughWasActive = true;
         m_sampleBuffer = nullptr;
         m_pPregain->setSpeedAndScratching(1, false);
@@ -348,6 +378,52 @@ void EngineDeck::onInputUnconfigured(const AudioInput& input) {
     }
     m_pInputConfigured->forceSet(0.0);
     m_sampleBuffer = nullptr;
+}
+
+void EngineDeck::keepCapturedInput(const CSAMPLE* pIn, std::size_t samples) {
+    if (m_captureRing.empty()) {
+        return;
+    }
+    const std::size_t ringFrames = m_captureRing.size() / 2;
+    const std::size_t frames = samples / 2;
+    const std::uint64_t written = m_capturedFrames.load(std::memory_order_relaxed);
+    std::size_t at = static_cast<std::size_t>(written % ringFrames);
+    std::size_t done = 0;
+    while (done < frames) {
+        const std::size_t chunk = std::min(frames - done, ringFrames - at);
+        std::copy(pIn + 2 * done, pIn + 2 * (done + chunk), m_captureRing.begin() + 2 * at);
+        done += chunk;
+        at = (at + chunk) % ringFrames;
+    }
+    m_capturedFrames.store(written + frames, std::memory_order_release);
+}
+
+std::size_t EngineDeck::copyCapturedInput(CSAMPLE* pDest, std::size_t frames) const {
+    if (m_captureRing.empty()) {
+        return 0;
+    }
+    const std::size_t ringFrames = m_captureRing.size() / 2;
+    const std::uint64_t written = m_capturedFrames.load(std::memory_order_acquire);
+    // Keep some of the ring between the copy and the engine's writing
+    const std::size_t safe = ringFrames - kCaptureSafetyFrames;
+    frames = std::min<std::size_t>({frames, static_cast<std::size_t>(written), safe});
+    std::size_t at = static_cast<std::size_t>((written - frames) % ringFrames);
+    std::size_t done = 0;
+    while (done < frames) {
+        const std::size_t chunk = std::min(frames - done, ringFrames - at);
+        std::copy(m_captureRing.begin() + 2 * at,
+                m_captureRing.begin() + 2 * (at + chunk),
+                pDest + 2 * done);
+        done += chunk;
+        at = (at + chunk) % ringFrames;
+    }
+    return frames;
+}
+
+// static
+EngineDeck* EngineDeck::forGroup(const QString& group) {
+    const QMutexLocker lock(&s_decksMutex);
+    return s_decks.value(group, nullptr);
 }
 
 bool EngineDeck::isPassthroughActive() const {

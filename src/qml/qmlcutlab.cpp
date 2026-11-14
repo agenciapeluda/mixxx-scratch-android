@@ -6,14 +6,18 @@
 #include <QSGRendererInterface>
 #include <QQuickWindow>
 #include <QScreen>
+#include <QFutureWatcher>
 #include <QTimer>
+#include <QtConcurrentRun>
 #include <atomic>
 #ifdef Q_OS_ANDROID
 #include <QJniObject>
 #endif
 #include <QDir>
 #include <QDirIterator>
+#include <QFile>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include <QHash>
 #include <QSet>
 #include <QSqlDatabase>
@@ -29,6 +33,8 @@
 #include <vector>
 
 #include "control/controlobject.h"
+#include "engine/channels/enginedeck.h"
+#include "track/trackref.h"
 #include "library/dao/playlistdao.h"
 #include "library/dao/trackdao.h"
 #include "library/library.h"
@@ -43,6 +49,7 @@
 #include "mixer/playerinfo.h"
 #include "moc_qmlcutlab.cpp"
 #include "qml/qmllibraryproxy.h"
+#include "qml/qmlmobilelibraryproxy.h"
 #include "analyzer/analyzerscheduledtrack.h"
 #include "track/beats.h"
 #include "track/keyutils.h"
@@ -53,6 +60,7 @@
 #ifdef Q_OS_ANDROID
 #include "library/androidscanorder.h"
 #include "library/analysis/analysisfeature.h"
+#include "util/androidpermissions.h"
 #endif
 
 namespace mixxx {
@@ -208,6 +216,10 @@ int s_analysisDone = 0;
 int s_analysisTotal = 0;
 // The tracks queued for analysis in this session (once each)
 QSet<int> s_queuedForAnalysis;
+// The library scan, as the scanner reports it
+bool s_scanning = false;
+int s_scannedTracks = 0;
+int s_scannedAtLastGrow = 0;
 
 // Tracks the analysis could not read (a damaged file, an odd format): kept,
 // so they are not queued again and again, and counted apart
@@ -222,6 +234,60 @@ void ensureFailedTable(QSqlDatabase& db) {
 QmlCutlab::QmlCutlab(QObject* pParent)
         : QObject(pParent) {
     Library* pLibrary = QmlLibraryProxy::get();
+    if (pLibrary && pLibrary->trackCollectionManager() &&
+            pLibrary->trackCollectionManager()->scanner()) {
+        // "Escaneando N temas…": the scanner runs in its own thread, its
+        // signals are queued to this one
+        LibraryScanner* pScanner = pLibrary->trackCollectionManager()->scanner();
+        connect(pScanner,
+                &LibraryScanner::scanStarted,
+                this,
+                [this]() {
+                    s_scanning = true;
+                    s_scannedTracks = 0;
+                    s_scannedAtLastGrow = 0;
+                    emit scanChanged();
+                },
+                Qt::QueuedConnection);
+        connect(pScanner,
+                &LibraryScanner::progressLoading,
+                this,
+                [this]() {
+                    ++s_scannedTracks;
+                    if (!s_scanning) {
+                        s_scanning = true;
+                    }
+                    // Batched by the timer: one track at a time would
+                    // redraw the bar hundreds of times a second
+                    if (!m_scanTick.isActive()) {
+                        m_scanTick.start();
+                    }
+                },
+                Qt::QueuedConnection);
+        connect(pScanner,
+                &LibraryScanner::scanFinished,
+                this,
+                [this]() {
+                    s_scanning = false;
+                    m_scanTick.stop();
+                    emit scanChanged();
+                },
+                Qt::QueuedConnection);
+        m_scanTick.setInterval(500);
+        m_scanTick.setSingleShot(true);
+        connect(&m_scanTick, &QTimer::timeout, this, [this]() {
+            emit scanChanged();
+            // The tracks are committed in batches during the scan (see
+            // LibraryScanner::slotAddNewTrack): every 2 s the lists can
+            // show the new ones
+            if (s_scannedTracks > s_scannedAtLastGrow &&
+                    (!m_sinceGrow.isValid() || m_sinceGrow.elapsed() >= 2000)) {
+                s_scannedAtLastGrow = s_scannedTracks;
+                m_sinceGrow.start();
+                emit libraryGrew();
+            }
+        });
+    }
     if (pLibrary && pLibrary->trackCollectionManager()) {
         // Emitted from the scanner thread: queued to this one
         connect(pLibrary->trackCollectionManager(),
@@ -249,6 +315,9 @@ QmlCutlab::QmlCutlab(QObject* pParent)
                     s_analysisTotal = total;
                     if (over) {
                         markFailedAnalysis();
+                        // BPM, key and cues are worth keeping: back up the
+                        // library to the Cutlab folder
+                        QmlMobileLibraryProxy::autoBackup(false);
                     }
                     emit analysisChanged();
                 });
@@ -284,6 +353,23 @@ void QmlCutlab::markFailedAnalysis() const {
     if (!failed.isEmpty()) {
         qInfo() << "Cutlab:" << failed.size() << "tracks could not be analyzed";
     }
+}
+
+bool QmlCutlab::scanning() const {
+    return s_scanning;
+}
+
+int QmlCutlab::scannedTracks() const {
+    return s_scannedTracks;
+}
+
+void QmlCutlab::findCandidateFolders() {
+    auto* pWatcher = new QFutureWatcher<QVariantList>(this);
+    connect(pWatcher, &QFutureWatcher<QVariantList>::finished, this, [this, pWatcher]() {
+        emit candidateFoldersFound(pWatcher->result());
+        pWatcher->deleteLater();
+    });
+    pWatcher->setFuture(QtConcurrent::run([this]() { return candidateFolders(); }));
 }
 
 int QmlCutlab::analysisDone() const {
@@ -1396,6 +1482,18 @@ struct FrameWatch {
 };
 FrameWatch* s_frameWatch = nullptr;
 
+// 1.30: which screen the frames were drawn for (set by the QML), and per
+// screen the worst frame and how many came late, since the diagnostics
+// opened: which screens go over a frame (16 ms at 60 Hz)
+QString s_screen = QStringLiteral("Onda");
+struct ScreenTally {
+    qint64 frames = 0;
+    qint64 late = 0;
+    double worstMs = 0;
+};
+QHash<QString, ScreenTally> s_screenTallies;
+QStringList s_screenOrder;
+
 void raiseMax(std::atomic<qint64>& max, qint64 value) {
     qint64 current = max.load(std::memory_order_relaxed);
     while (value > current &&
@@ -1419,6 +1517,8 @@ void QmlCutlab::watchFrames(QObject* windowObject, bool on) {
     s_frameWatch = pWatch;
     pWatch->window = pWindow;
     pWatch->context = new QObject(this);
+    s_screenTallies.clear();
+    s_screenOrder.clear();
     pWatch->clock.start();
     // Render thread (direct): sync, record, present
     connect(pWindow,
@@ -1509,11 +1609,40 @@ void QmlCutlab::watchFrames(QObject* windowObject, bool on) {
         pWatch->guiStallMax = 0;
         stats.insert(QStringLiteral("analyzing"), s_analysisTotal > 0);
         stats.insert(QStringLiteral("analysisHeld"), analysisHeld());
+        // This second goes to the screen on show
+        {
+            if (!s_screenTallies.contains(s_screen)) {
+                s_screenOrder.append(s_screen);
+            }
+            ScreenTally& tally = s_screenTallies[s_screen];
+            tally.frames += frames;
+            tally.late += stats.value(QStringLiteral("late")).toInt();
+            tally.worstMs = std::max(tally.worstMs, stats.value(QStringLiteral("worstMs")).toDouble());
+            QVariantList screens;
+            for (const auto& name : std::as_const(s_screenOrder)) {
+                const ScreenTally& t = s_screenTallies[name];
+                screens.append(QVariantMap{
+                        {QStringLiteral("name"), name},
+                        {QStringLiteral("worstMs"), t.worstMs},
+                        {QStringLiteral("latePct"),
+                                t.frames > 0 ? std::round(1000.0 * t.late / t.frames) / 10.0
+                                             : 0.0},
+                });
+            }
+            stats.insert(QStringLiteral("screen"), s_screen);
+            stats.insert(QStringLiteral("screens"), screens);
+        }
         const QSize size = pWatch->window ? pWatch->window->size() * pWatch->window->devicePixelRatio()
                                           : QSize();
         stats.insert(QStringLiteral("pixels"),
                 QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
         qInfo().noquote() << "Cutlab frames:"
+                          << QStringLiteral("screen=%1 xruns=%2 input_xruns=%3 ")
+                                     .arg(s_screen)
+                                     .arg(ControlObject::get(ConfigKey(QStringLiteral("[App]"),
+                                             QStringLiteral("cutlab_xruns"))))
+                                     .arg(ControlObject::get(ConfigKey(QStringLiteral("[App]"),
+                                             QStringLiteral("cutlab_input_xruns"))))
                           << QStringLiteral(
                                      "fps=%1 hz=%2 late=%3 worst=%4ms sync=%5/%6ms "
                                      "render=%7/%8ms present=%9/%10ms gui_stall=%11ms "
@@ -1539,6 +1668,136 @@ void QmlCutlab::watchFrames(QObject* windowObject, bool on) {
             << static_cast<int>(pWindow->rendererInterface()
                                ? pWindow->rendererInterface()->graphicsApi()
                                : QSGRendererInterface::Unknown);
+}
+
+namespace {
+
+/// The folder of the captures: Music/Cutlab/Capturas, or the app's own
+/// folder without "All files access"
+QString captureDirectory() {
+#ifdef Q_OS_ANDROID
+    if (mixxx::android::hasFullExternalStorageAccess()) {
+        return QStringLiteral("/storage/emulated/0/Music/Cutlab/Capturas");
+    }
+#endif
+    return QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation))
+            .filePath(QStringLiteral("captures"));
+}
+
+void appendLe(QByteArray* pOut, quint32 value, int bytes) {
+    for (int i = 0; i < bytes; ++i) {
+        pOut->append(static_cast<char>((value >> (8 * i)) & 0xff));
+    }
+}
+
+/// 16 bit stereo PCM WAV
+QString writeWav(const QString& path, const std::vector<CSAMPLE>& samples, int sampleRate) {
+    QByteArray data;
+    data.reserve(static_cast<int>(samples.size() * 2 + 44));
+    const quint32 dataBytes = static_cast<quint32>(samples.size() * 2);
+    data.append("RIFF");
+    appendLe(&data, 36 + dataBytes, 4);
+    data.append("WAVEfmt ");
+    appendLe(&data, 16, 4);
+    appendLe(&data, 1, 2); // PCM
+    appendLe(&data, 2, 2); // stereo
+    appendLe(&data, static_cast<quint32>(sampleRate), 4);
+    appendLe(&data, static_cast<quint32>(sampleRate) * 4, 4);
+    appendLe(&data, 4, 2);
+    appendLe(&data, 16, 2);
+    data.append("data");
+    appendLe(&data, dataBytes, 4);
+    for (const CSAMPLE sample : samples) {
+        const auto value = static_cast<qint16>(
+                std::lround(std::clamp(sample, -1.0f, 1.0f) * 32767.0f));
+        appendLe(&data, static_cast<quint16>(value), 2);
+    }
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate) || file.write(data) != data.size()) {
+        return QCoreApplication::translate("QmlCutlab", "No se pudo escribir %1").arg(path);
+    }
+    return {};
+}
+
+} // namespace
+
+void QmlCutlab::captureInput(const QString& group, double seconds, double bpm, int beats) {
+    EngineDeck* pDeck = EngineDeck::forGroup(group);
+    const int sampleRate = static_cast<int>(
+            ControlObject::get(ConfigKey(QStringLiteral("[App]"), QStringLiteral("samplerate"))));
+    if (!pDeck || sampleRate <= 0) {
+        emit captureFinished(group, {}, bpm, beats, seconds, tr("Este deck no puede capturar"));
+        return;
+    }
+    seconds = std::clamp(seconds, 0.25, EngineDeck::kMaxCaptureSeconds * 48000.0 / sampleRate);
+    const auto frames = static_cast<std::size_t>(std::llround(seconds * sampleRate));
+    std::vector<CSAMPLE> samples(frames * 2);
+    const std::size_t got = pDeck->copyCapturedInput(samples.data(), frames);
+    if (got < frames) {
+        emit captureFinished(group,
+                {},
+                bpm,
+                beats,
+                seconds,
+                tr("Todavía no sonó tanto del plato: dejá correr la música unos segundos"));
+        return;
+    }
+    float peak = 0.0f;
+    for (const CSAMPLE sample : samples) {
+        peak = std::max(peak, std::fabs(sample));
+    }
+    if (peak < 0.001f) {
+        emit captureFinished(group, {}, bpm, beats, seconds, tr("No llega sonido del plato"));
+        return;
+    }
+    const QString dir = captureDirectory();
+    QDir().mkpath(dir);
+    const QString name = QStringLiteral("captura-%1-%2-%3t.wav")
+                                 .arg(QDateTime::currentDateTime().toString(
+                                              QStringLiteral("yyyyMMdd-HHmmss")),
+                                         group == QStringLiteral("[Channel2]") ? QStringLiteral("B")
+                                                                               : QStringLiteral("A"))
+                                 .arg(beats);
+    const QString path = QDir(dir).filePath(name);
+    auto* pWatcher = new QFutureWatcher<QString>(this);
+    connect(pWatcher,
+            &QFutureWatcher<QString>::finished,
+            this,
+            [this, pWatcher, group, path, bpm, beats, seconds, sampleRate]() {
+                pWatcher->deleteLater();
+                const QString error = pWatcher->result();
+                if (!error.isEmpty()) {
+                    emit captureFinished(group, {}, bpm, beats, seconds, error);
+                    return;
+                }
+                // Into the library with its tempo, locked: the analysis
+                // doesn't move it and the loop stays in time
+                Library* pLibrary = QmlLibraryProxy::get();
+                if (pLibrary && pLibrary->trackCollectionManager()) {
+                    const TrackPointer pTrack =
+                            pLibrary->trackCollectionManager()->getOrAddTrack(
+                                    TrackRef::fromFilePath(path));
+                    if (pTrack && bpm > 0) {
+                        pTrack->trySetBeats(mixxx::Beats::fromConstTempo(
+                                mixxx::audio::SampleRate(sampleRate),
+                                mixxx::audio::kStartFramePos,
+                                mixxx::Bpm(bpm)));
+                        pTrack->setBpmLocked(true);
+                        pLibrary->trackCollectionManager()->saveTrack(pTrack);
+                    }
+                }
+                qInfo() << "Cutlab: captured" << seconds << "s of" << group << "to" << path;
+                emit captureFinished(group, path, bpm, beats, seconds, QString());
+            });
+    pWatcher->setFuture(QtConcurrent::run([path, samples = std::move(samples), sampleRate]() {
+        return writeWav(path, samples, sampleRate);
+    }));
+}
+
+void QmlCutlab::setScreen(const QString& name) {
+    if (!name.isEmpty()) {
+        s_screen = name;
+    }
 }
 
 bool QmlCutlab::shareLog() const {
