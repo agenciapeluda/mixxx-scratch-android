@@ -243,7 +243,7 @@ QDateTime lastChange(const QString& settingsPath) {
     QDateTime newest;
     // The library only: the settings are saved each time the app goes to
     // the background, they alone are no reason for a new backup
-    for (const auto& name : {kDatabaseFileName, kDatabaseFileName + QStringLiteral("-wal")}) {
+    for (const QString& name : {kDatabaseFileName, QString(kDatabaseFileName + QStringLiteral("-wal"))}) {
         const QFileInfo info(QDir(settingsPath).filePath(name));
         if (info.exists() && (!newest.isValid() || info.lastModified() > newest)) {
             newest = info.lastModified();
