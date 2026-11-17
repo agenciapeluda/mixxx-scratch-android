@@ -94,7 +94,7 @@ Popup {
         property string detail: ""
         property string icon: ""
         property bool on: false
-        property color onColor: Style.accent
+        property color onColor: Style.neutral
         readonly property real textRoom: width - (icon !== "" ? 48 : 16)
 
         radius: 12
@@ -205,7 +205,7 @@ Popup {
                         icon: modelData.icon
                         title: modelData.title
                         on: (modelData.key === "record" && root.recording) || (modelData.key === "quantize" && root.quantize)
-                        onColor: modelData.key === "record" ? Style.danger : Style.accent
+                        onColor: modelData.key === "record" ? Style.danger : Style.neutral
                     }
                 }
             }

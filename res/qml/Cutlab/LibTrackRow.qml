@@ -72,7 +72,7 @@ Rectangle {
     color: selected ? Style.track : (mouse.pressed ? Style.raised
         : (onDeck !== "" ? Qt.rgba(Style.deckColor(onDeck).r, Style.deckColor(onDeck).g, Style.deckColor(onDeck).b, 0.16) : "transparent"))
     border.width: 2
-    border.color: selected ? Style.accent : (onDeck !== "" ? Style.deckColor(onDeck) : "transparent")
+    border.color: selected ? Style.neutral : (onDeck !== "" ? Style.deckColor(onDeck) : "transparent")
 
     // The letter of the deck over the cover, big, while it is loaded
     Rectangle {

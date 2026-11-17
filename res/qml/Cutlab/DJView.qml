@@ -20,7 +20,7 @@ Rectangle {
     // The deck whose tools opened last (upright only one is shown)
     property string lastTools: ""
     // What the 8 pads of each deck do: 0 hot cues, 1 rolls, 2 samples,
-    // 3 Scratch (letsktch!), 4 Stems
+    // 3 Scratch (letsktch!), 4 Stems, 5 DVS (1.31)
     property int padMode1: 0
     property int padMode2: 0
     // The pads big, over the stage
@@ -153,6 +153,13 @@ Rectangle {
 
         group: "[Channel2]"
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.31: what the controllers ask of Cutlab, Key Shift / Pitch Play,
+    // Smart CFX and Smart Fader
+    CutlabBridge {
+        host: root
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     // A music record on the turntable: EN VIVO (passthrough) and Capturar
     LiveCapture {
         id: live1
@@ -337,6 +344,12 @@ Rectangle {
                 folderSetup.knobMove(offset);
             } else if (root.knobMayOpenLibrary()) {
                 root.openLibrary("");
+                // [AI-generated text, Claude (Anthropic) — start]
+                // 1.31: the same turn already moves the pick
+                if (library.visible) {
+                    library.knobMoveAfterOpen(offset);
+                }
+                // [AI-generated text, Claude (Anthropic) — end]
             }
         }
         onLoadSelectedTrack: (group, play) => {
@@ -344,6 +357,15 @@ Rectangle {
                 mainMenu.close();
             } else if (folderSetup.visible) {
                 folderSetup.apply();
+            } else if (group && group.startsWith("[Channel") && root.knobMayOpenLibrary()) {
+                // [AI-generated text, Claude (Anthropic) — start]
+                // 1.31: LOAD with the library closed loads the track picked
+                // in the library into that deck; with none picked it opens
+                // the library for that deck
+                if (!library.loadPicked(group)) {
+                    root.openLibrary(group);
+                }
+                // [AI-generated text, Claude (Anthropic) — end]
             }
         }
         onLoadSelectedTrackIntoNextAvailableDeck: play => {

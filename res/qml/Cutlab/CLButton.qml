@@ -10,7 +10,7 @@ Item {
     property real iconSize: Math.min(width, height) * 0.46
     property bool highlighted: false
     property bool lit: false
-    property color litColor: Style.accent
+    property color litColor: Style.neutral
     property color fillColor: Style.button
     property color textColor: Style.text
     property real radius: 8
@@ -36,7 +36,7 @@ Item {
 
         anchors.fill: parent
         radius: root.round ? Math.min(width, height) / 2 : root.radius
-        color: root.highlighted ? root.litColor : (touch.pressed ? Style.buttonPressed : root.fillColor)
+        color: root.highlighted ? (root.litColor === Style.neutral ? Style.neutralDark : root.litColor) : (touch.pressed ? Style.buttonPressed : root.fillColor)
         border.width: root.lit && root.litBorder ? 2 : (root.bordered ? 1 : 0)
         border.color: root.lit && root.litBorder ? root.litColor : Style.buttonBorder
     }
@@ -59,7 +59,7 @@ Item {
             id: label
 
             anchors.verticalCenter: parent.verticalCenter
-            color: root.lit && !root.highlighted ? (root.litColor === Style.accent ? Style.accentText : root.litColor) : root.textColor
+            color: root.lit && !root.highlighted ? root.litColor : root.textColor
             font.family: Style.font
             // Never wider than the button: a long label shrinks to fit
             // instead of spilling over its neighbours

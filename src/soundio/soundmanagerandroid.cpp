@@ -240,6 +240,22 @@ void SoundManagerAndroid::autoRouteToController() {
     if (!pController || isConfiguredOutput(config, pController)) {
         return;
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: with a Bluetooth speaker or headphones connected the
+    // sound goes there (e.g. a DDJ-FLX4 for the controls and a JBL for the
+    // sound): the sound card of the controller is not taken. Taking it
+    // also claimed the USB audio interface of the same device as its MIDI,
+    // and the two could fight (controls that stop answering for moments).
+    for (const auto& pDevice : m_pSoundManager->m_pEnumerator->queryDevices()) {
+        if (pDevice->getNumOutputChannels() > 0 &&
+                pDevice->getDisplayName().endsWith(QStringLiteral(": Bluetooth"))) {
+            qInfo() << "Bluetooth output" << pDevice->getDisplayName()
+                    << "connected: the sound card of"
+                    << pController->getDisplayName() << "is left alone";
+            return;
+        }
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
 
     qInfo() << "DJ controller sound card detected, routing Main to channels 1-2 "
                "and Headphones to channels 3-4 of"

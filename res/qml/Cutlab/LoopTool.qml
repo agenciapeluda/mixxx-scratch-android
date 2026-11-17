@@ -35,7 +35,7 @@ Item {
                 required property string modelData
 
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.mode === index ? Style.accentText : Style.textSecondary
+                color: root.mode === index ? Style.deckColor(root.group) : Style.textSecondary
                 font.family: Style.font
                 font.pixelSize: 15
                 text: modelData

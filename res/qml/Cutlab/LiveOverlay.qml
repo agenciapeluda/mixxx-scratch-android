@@ -100,7 +100,7 @@ Rectangle {
                 width: captureLabel.implicitWidth + root.px(32)
                 height: root.px(40)
                 radius: height / 2
-                color: captureMouse.pressed ? Style.danger : (root.engine && root.engine.busy ? Style.raised : Style.accent)
+                color: captureMouse.pressed ? Style.danger : (root.engine && root.engine.busy ? Style.raised : Style.deckColor(root.group))
 
                 Text {
                     id: captureLabel

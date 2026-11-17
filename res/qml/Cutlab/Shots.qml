@@ -17,6 +17,14 @@ QtObject {
     // The effect plays from a controller (the BEAT FX lever)
     property bool engaged1: false
     property bool engaged2: false
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: Key Shift / Pitch Play of each deck (KeyPlay)
+    property var keyPlay1: null
+    property var keyPlay2: null
+    function keyPlayFor(group) {
+        return group === "[Channel2]" ? keyPlay2 : keyPlay1;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
 
     readonly property var banks: [
         ["echo", "reverb", "flanger"],

@@ -454,7 +454,36 @@ void QmlCutlab::createControls() {
                 new ControlObject(ConfigKey(kCutlabGroup,
                         QStringLiteral("scratch_slot%1_%2").arg(deck).arg(slot)));
             }
+            // [AI-generated text, Claude (Anthropic) — start]
+            // Cutlab 1.31, set by the controllers and read by the app:
+            //  - pads_modeN: the pad mode of the deck on the screen, mode + 1
+            //    (the app sets it back to 0): 1 hot cues, 2 rolls, 3 samples,
+            //    4 Scratch, 5 Stems, 6 DVS
+            //  - sample_modeN: what the pads in samples mode play, 0 samples,
+            //    1 Key Shift, 2 Pitch Play (set by the app and the controllers)
+            //  - key_padN: a pad of a controller in Key Shift or Pitch Play,
+            //    counter * 100 + pad (1-8, 11-18 with SHIFT)
+            //  - pitch_play_cueN: the hot cue Pitch Play plays (1-8)
+            //  - loop_openN: counts up on each press, opens the loop tool
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("pads_mode%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("sample_mode%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("key_pad%1").arg(deck)));
+            new ControlObject(ConfigKey(kCutlabGroup,
+                                      QStringLiteral("pitch_play_cue%1").arg(deck)),
+                    true,
+                    false,
+                    false,
+                    1.0);
+            new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("loop_open%1").arg(deck)));
+            // [AI-generated text, Claude (Anthropic) — end]
         }
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.31: Smart CFX, the effect that goes with the filter of
+        // each deck (0 off, 1 echo, 2 reverb, 3 flanger), and Smart Fader
+        // (1 on). Both are kept in the settings by the app.
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("smart_cfx")));
+        new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("smart_fader")));
+        // [AI-generated text, Claude (Anthropic) — end]
         // 1 while the settings or a dialog cover the screen: the browse knob
         // moves in them instead of opening the library
         new ControlObject(ConfigKey(kCutlabGroup, QStringLiteral("modal_open")));

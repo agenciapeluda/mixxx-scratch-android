@@ -52,7 +52,7 @@ Rectangle {
         mode: "toggle"
         text: "SYNC"
         fontWeight: Font.Medium
-        litColor: Style.accent
+        litColor: Style.deckColor(root.group)
         highlighted: value > 0
         lit: false
         // Hold: sync off and back to the original tempo
@@ -146,7 +146,7 @@ Rectangle {
                 width: 14
                 height: 2
                 radius: 1
-                color: Style.accent
+                color: Style.deckColor(root.group)
                 visible: keylock.value > 0
             }
         }

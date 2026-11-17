@@ -870,6 +870,20 @@ PioneerDDJREV1.cutlabFxCodes = [6, 5, 7, 8, 1, 2, 3, 4];
 
 PioneerDDJREV1.cutlabFxPad = function(_channel, control, value, _status, group) {
     const deck = group === "[Channel2]" ? 2 : 1;
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: with Key Shift or Pitch Play picked on the screen (the
+    // selector of the samples pads of the deck), the SAMPLER pads play it
+    // instead (KeyPlay.qml): Key Shift top row +1 to +4 and bottom row -1
+    // to -4, Pitch Play the base hot cue at -3 to +4
+    const sampleMode = engine.getValue("[Cutlab]", `sample_mode${deck}`);
+    if (sampleMode === 1 || sampleMode === 2) {
+        if (value > 0) {
+            const counter = (Math.floor(engine.getValue("[Cutlab]", `key_pad${deck}`) / 100) + 1) % 1000;
+            engine.setValue("[Cutlab]", `key_pad${deck}`, counter * 100 + (control & 0x07) + 1);
+        }
+        return;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     const code = PioneerDDJREV1.cutlabFxCodes[control & 0x07];
     engine.setValue("[Cutlab]", `fx_deck${deck}`, value > 0 ? code : 0);
 };

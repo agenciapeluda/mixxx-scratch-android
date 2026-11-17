@@ -330,7 +330,7 @@ Item {
                 Skin.Button {
                     Layout.preferredHeight: 44
                     Layout.preferredWidth: 150
-                    activeColor: Theme.accentColor
+                    activeColor: "#e6e7ee"
                     backgroundColor: Theme.libraryConfirmBackground
                     normalColor: Theme.libraryActionText
                     font.weight: Font.DemiBold

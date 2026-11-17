@@ -97,6 +97,12 @@ Category {
         key: "xFaderCurve"
     }
     Mixxx.ControlProxy {
+        id: smartFaderControl
+
+        group: "[Cutlab]"
+        key: "smart_fader"
+    }
+    Mixxx.ControlProxy {
         id: xfaderReverse
 
         group: "[Mixer Profile]"
@@ -842,6 +848,46 @@ Category {
                         }
                     }
                 }
+                // [AI-generated text, Claude (Anthropic) — start]
+                // Cutlab 1.31: Smart Fader, at the bottom of the crossfader.
+                // On, the crossfader of the controller in use (or of the
+                // screen) mixes by itself: the incoming track moves its BPM
+                // to the outgoing one, the bass goes from one track to the
+                // other and the volume curve is linear. Kept by the app
+                // ([Cutlab] smart_fader, see CutlabBridge.qml).
+                FormRow {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    Text {
+                        elide: Text.ElideRight
+                        Layout.minimumWidth: 0
+                        Layout.preferredWidth: 90
+                        color: "#9ca1b8"
+                        font.pixelSize: 11
+                        text: qsTr("Smart Fader")
+                    }
+                    Setting.RatioChoice {
+                        options: [qsTr("off"), qsTr("on")]
+                        selected: smartFaderControl.value > 0 ? options[1] : options[0]
+
+                        onSelectedChanged: {
+                            const on = selected === options[1];
+                            if (on !== (smartFaderControl.value > 0)) {
+                                smartFaderControl.value = on ? 1 : 0;
+                            }
+                        }
+                    }
+                }
+                Text {
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    wrapMode: Text.WordWrap
+                    color: "#6e7390"
+                    font.pixelSize: 10
+                    text: qsTr("Smart Fader: al mover el crossfader, el tema que entra acerca su BPM al que sale, los bajos pasan de un tema al otro y el volumen va en línea recta. Funciona con el crossfader de cualquier controladora.")
+                }
+                // [AI-generated text, Claude (Anthropic) — end]
             }
         }
     }

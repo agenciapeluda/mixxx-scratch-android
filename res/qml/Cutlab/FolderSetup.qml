@@ -168,7 +168,7 @@ Rectangle {
                 radius: 14
                 color: Style.panel
                 border.width: 2
-                border.color: Style.accent
+                border.color: Style.neutral
 
                 Column {
                     id: restoreColumn
@@ -199,7 +199,7 @@ Rectangle {
                     Text {
                         visible: root.restoreMessage !== ""
                         width: parent.width
-                        color: Style.accentText
+                        color: Style.neutral
                         font.family: Style.font
                         font.pixelSize: 13
                         wrapMode: Text.WordWrap
@@ -235,7 +235,7 @@ Rectangle {
             }
             Text {
                 visible: root.searching
-                color: Style.accentText
+                color: Style.neutral
                 font.family: Style.font
                 font.pixelSize: 15
                 text: qsTr("Buscando música en el teléfono…")
@@ -255,7 +255,7 @@ Rectangle {
                     radius: 14
                     color: root.knobIndex === index ? Style.raised : Style.panel
                     border.width: 2
-                    border.color: on ? Style.accent : "transparent"
+                    border.color: on ? Style.neutral : "transparent"
 
                     Rectangle {
                         id: folderIcon
@@ -265,7 +265,7 @@ Rectangle {
                         width: 40
                         height: 40
                         radius: 10
-                        color: folderRow.on ? Style.accent : Style.buttonBorder
+                        color: folderRow.on ? Style.neutralDark : Style.buttonBorder
 
                         Image {
                             anchors.centerIn: parent
@@ -309,7 +309,7 @@ Rectangle {
                         width: 46
                         height: 28
                         radius: 14
-                        color: folderRow.on ? Style.accent : Style.buttonBorder
+                        color: folderRow.on ? Style.neutralDark : Style.buttonBorder
 
                         Rectangle {
                             y: 3

@@ -157,7 +157,7 @@ Item {
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            color: root.hold ? Style.accentText : Style.textSecondary
+            color: root.hold ? Style.deckColor(root.group) : Style.textSecondary
             font.family: Style.font
             font.pixelSize: 13
             font.weight: Font.Medium
@@ -183,7 +183,7 @@ Item {
                 required property string modelData
 
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.mode === index ? Style.accentText : Style.textSecondary
+                color: root.mode === index ? Style.deckColor(root.group) : Style.textSecondary
                 font.family: Style.font
                 font.pixelSize: 15
                 text: modelData
@@ -228,7 +228,7 @@ Item {
                 tag: "FX"
                 text: cell.presetDisplay
                 active: root.activePreset === cell.index
-                padColor: Style.accent
+                padColor: Style.deckColor(root.group)
 
                 onPressedDown: {
                     if (root.hold && root.activePreset === cell.index) {

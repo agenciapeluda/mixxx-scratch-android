@@ -182,7 +182,7 @@ Item {
                     height: parent.height / 2 - 4 * root.k
                     radius: width / 2
                     antialiasing: true
-                    color: root.group === "[Channel2]" ? "#0098aa" : Style.accent
+                    color: Style.deckColor(root.group)
                 }
             }
             Rectangle {

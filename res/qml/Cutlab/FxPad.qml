@@ -159,9 +159,9 @@ Item {
                     anchors.fill: parent
                     visible: !chip.isHeader
                     radius: height / 2
-                    color: chip.picked ? Style.accent : (chipMouse.pressed ? Style.buttonPressed : "transparent")
+                    color: chip.picked ? Style.deckColor(root.group) : (chipMouse.pressed ? Style.buttonPressed : "transparent")
                     border.width: 1
-                    border.color: chip.picked ? Style.accent : Qt.rgba(1, 1, 1, 0.14)
+                    border.color: chip.picked ? Style.deckColor(root.group) : Qt.rgba(1, 1, 1, 0.14)
 
                     Text {
                         id: chipText
@@ -458,7 +458,7 @@ Item {
             width: Math.round(44 * root.u)
             height: width
             radius: width / 2
-            color: Style.accent
+            color: Style.deckColor(root.group)
             border.width: 3
             border.color: "#ffffff"
         }

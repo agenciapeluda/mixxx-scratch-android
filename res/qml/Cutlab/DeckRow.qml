@@ -141,7 +141,7 @@ Row {
         radius: height / 2
         icon: root.playing ? "pause" : "play"
         iconSize: Math.min(22, height * 0.46)
-        fillColor: root.playing ? Style.accent : "#1d1b33"
+        fillColor: root.playing ? Style.deckColor(root.group) : "#1d1b33"
         highlighted: root.playing
         onClicked: play.value = root.playing ? 0 : 1
     }

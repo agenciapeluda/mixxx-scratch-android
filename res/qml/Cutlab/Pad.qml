@@ -19,8 +19,8 @@ Rectangle {
     signal pressAndHold
 
     radius: 4
-    color: active ? Qt.darker(padColor.a > 0 ? padColor : Style.accent, 1.6) : (touch.pressed ? Style.buttonPressed : "#454548")
-    border.color: active ? (padColor.a > 0 ? padColor : Style.accent) : "#2c2c2e"
+    color: active ? Qt.darker(padColor.a > 0 ? padColor : Style.neutral, 1.6) : (touch.pressed ? Style.buttonPressed : "#454548")
+    border.color: active ? (padColor.a > 0 ? padColor : Style.neutral) : "#2c2c2e"
     border.width: active ? 2 : 1
 
     Rectangle {

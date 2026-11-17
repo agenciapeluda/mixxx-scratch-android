@@ -13,7 +13,7 @@ Item {
     property real fingerX: width / 2
     property real fingerY: height / 2
     property bool beat: false
-    property color color: Style.accentText
+    property color color: Style.neutral
     property bool lite: false
     readonly property int trailLength: lite ? 6 : 16
     property var trail: []

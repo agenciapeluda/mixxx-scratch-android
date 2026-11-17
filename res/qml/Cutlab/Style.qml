@@ -32,6 +32,17 @@ QtObject {
     // The accent for text and icons on dark grounds, easier to read
     readonly property color accentText: "#8b85ff"
     readonly property color accentDark: "#2b2766"
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: what belongs to no deck (menus, settings, the pick of
+    // the library, buttons that are on) is a neutral white / light grey,
+    // like Serato and djay. The indigo stays for the logo and the main
+    // buttons of the app; what belongs to a deck uses deckColor(group).
+    readonly property color neutral: "#e6e7ee"
+    // Text on a neutral ground
+    readonly property color onNeutral: "#0b0a16"
+    // A neutral ground that is on, behind white text
+    readonly property color neutralDark: "#3a3c4e"
+    // [AI-generated text, Claude (Anthropic) — end]
     readonly property color play: "#2bd67b"
     readonly property color ok: "#2bd67b"
     readonly property color cue: "#ffb547"
@@ -45,6 +56,20 @@ QtObject {
     function deckColor(group) {
         return group === "[Channel2]" || group === "[Channel4]" ? deck2 : deck1;
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // The color of any group of a deck (its EQ, its Quick Effect...), or
+    // the neutral one for groups of no deck ([Master], samplers)
+    function groupColor(group) {
+        const text = group || "";
+        if (text.indexOf("[Channel2]") >= 0 || text.indexOf("[Channel4]") >= 0) {
+            return deck2;
+        }
+        if (text.indexOf("[Channel1]") >= 0 || text.indexOf("[Channel3]") >= 0) {
+            return deck1;
+        }
+        return neutral;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     // The waveform of each deck: dark body, light peaks
     readonly property color deck1Dark: "#5a52d6"
     readonly property color deck1Light: "#b3aeff"

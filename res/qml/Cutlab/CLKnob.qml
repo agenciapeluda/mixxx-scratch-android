@@ -11,7 +11,7 @@ Item {
     required property string key
     property string label: ""
     property bool bipolar: true
-    property color arcColor: Style.accent
+    property color arcColor: Style.groupColor(root.group)
     readonly property real parameter: control.parameter
     readonly property real knobSize: Math.min(width, height - (label !== "" ? labelText.height + 2 : 0))
 

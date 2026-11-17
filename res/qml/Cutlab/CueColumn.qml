@@ -130,9 +130,9 @@ Column {
                     width: Math.max(Math.round(44 * root.u), label.implicitWidth + Math.round(20 * root.u))
                     height: parent.height
                     radius: Math.round(8 * root.u)
-                    color: on ? Style.accent : "transparent"
+                    color: on ? Style.deckColor(root.group) : "transparent"
                     border.width: 1
-                    border.color: on ? Style.accent : Qt.rgba(1, 1, 1, 0.12)
+                    border.color: on ? Style.deckColor(root.group) : Qt.rgba(1, 1, 1, 0.12)
 
                     Text {
                         id: label

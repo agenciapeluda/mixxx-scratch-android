@@ -348,6 +348,44 @@ Rectangle {
             }
         }
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.31: LOAD of a controller with the library closed loads the track
+    // picked last in the library into its deck. False when none is picked.
+    function loadPicked(group) {
+        if (!root.page || !root.page.showTracks || !root.tracklist || root.selectedRow < 0 ||
+                root.selectedRow >= trackView.count) {
+            return false;
+        }
+        if (root.urlAt(root.selectedRow).toString() === "") {
+            return false;
+        }
+        root.load(root.selectedRow, group);
+        return true;
+    }
+    // 1.31: the browse knob opened the library: the same turn moves the
+    // pick, once the list is up (opening refreshes it)
+    property int pendingMove: 0
+    function knobMoveAfterOpen(offset) {
+        root.pendingMove += offset;
+        pendingMoveTimer.restart();
+    }
+    Timer {
+        id: pendingMoveTimer
+
+        interval: 250
+        onTriggered: {
+            const offset = root.pendingMove;
+            root.pendingMove = 0;
+            if (!root.visible || offset === 0 || !root.page || !root.page.showTracks || trackView.count <= 0) {
+                return;
+            }
+            // From the pick, or from the top when there is none
+            const from = root.selectedRow < 0 ? (offset > 0 ? -1 : trackView.count) : root.selectedRow;
+            root.selectedRow = Math.max(0, Math.min(trackView.count - 1, from + offset));
+            trackView.positionViewAtIndex(root.selectedRow, ListView.Contain);
+        }
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     function load(row, group) {
         const url = root.urlAt(row);
         if (url.toString() === "") {
@@ -916,9 +954,9 @@ Rectangle {
                 width: sourceList.width
                 height: Math.round(38 * root.u)
                 radius: Math.round(8 * root.u)
-                color: current ? Style.accent : (sourceMouse.pressed ? Style.raised : "transparent")
+                color: current ? Style.neutralDark : (sourceMouse.pressed ? Style.raised : "transparent")
                 border.width: knob ? 2 : 0
-                border.color: current ? "#ffffff" : Style.accent
+                border.color: current ? "#ffffff" : Style.neutral
 
                 Row {
                     x: Math.round(10 * root.u)
@@ -1039,9 +1077,9 @@ Rectangle {
                         width: chipLabel.implicitWidth + 24
                         height: 34
                         radius: 17
-                        color: on ? Style.accent : "transparent"
+                        color: on ? Style.neutralDark : "transparent"
                         border.width: 1
-                        border.color: on ? Style.accent : Qt.rgba(1, 1, 1, 0.14)
+                        border.color: on ? Style.neutral : Qt.rgba(1, 1, 1, 0.14)
 
                         Text {
                             id: chipLabel
@@ -1162,14 +1200,14 @@ Rectangle {
                     : Math.max(Math.round(90 * root.u), Math.min(compatText.implicitWidth + Math.round(28 * root.u), orderButton.x - x - 8))
                 height: Math.round((root.wide ? 40 : 32) * root.u)
                 radius: height / 2
-                fillColor: root.compatible ? Style.accent : "transparent"
+                fillColor: root.compatible ? Style.neutralDark : "transparent"
                 bordered: true
 
                 Text {
                     id: compatText
 
                     anchors.centerIn: parent
-                    color: root.compatible ? "#ffffff" : (root.wide ? Style.text : Style.accentText)
+                    color: root.compatible ? "#ffffff" : (root.wide ? Style.text : Style.neutral)
                     font.family: Style.font
                     font.weight: Font.DemiBold
                     font.pixelSize: root.fs(root.wide ? 13 : 12)
@@ -1288,7 +1326,7 @@ Rectangle {
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: root.focusSuggestions ? Style.accentText : Style.text
+                    color: root.focusSuggestions ? Style.neutral : Style.text
                     font.family: Style.font
                     font.weight: Font.Bold
                     font.pixelSize: root.fs(13)
@@ -1341,7 +1379,7 @@ Rectangle {
                     radius: Math.round(10 * root.u)
                     color: picked ? Style.track : Style.panel
                     border.width: picked ? 2 : 1
-                    border.color: picked ? Style.accent : Qt.rgba(0.55, 0.52, 1, 0.25)
+                    border.color: picked ? Style.neutral : Qt.rgba(0.55, 0.52, 1, 0.25)
 
                     Rectangle {
                         id: sugCover
@@ -1481,7 +1519,7 @@ Rectangle {
                 width: parent.width * 0.25
                 height: parent.height
                 radius: parent.radius
-                color: Style.accentDark
+                color: Style.neutralDark
 
                 SequentialAnimation on x {
                     running: scanSweep.visible && root.visible
@@ -1507,7 +1545,7 @@ Rectangle {
                 width: parent.width * (analysisBar.total > 0 ? analysisBar.done / analysisBar.total : 0)
                 height: parent.height
                 radius: parent.radius
-                color: Style.accentDark
+                color: Style.neutralDark
             }
             Text {
                 anchors.left: parent.left
@@ -2078,7 +2116,7 @@ Rectangle {
         radius: height / 2
         color: Style.raised
         border.width: 1
-        border.color: Style.accent
+        border.color: Style.neutral
         visible: false
         z: 50
 

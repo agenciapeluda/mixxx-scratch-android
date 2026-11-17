@@ -231,8 +231,70 @@ PioneerDDJFLX4.quickJumpSize = 32;
 // rekordbox behaviour (mapping settings, see Pioneer-DDJ-FLX4.midi.xml). The
 // defaults keep the Mixxx behaviour of this mapping.
 PioneerDDJFLX4.option = function(name) {
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: KEYBOARD is always Pitch Play and KEY SHIFT always Key
+    // Shift of Cutlab, whatever an older copy of this mapping says
+    if (name === "keyboardMode") {
+        return "keyboard";
+    }
+    if (name === "keyShiftLayout") {
+        return "cutlab";
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     return engine.getSetting(name);
 };
+
+// [AI-generated text, Claude (Anthropic) — start]
+//
+// Cutlab 1.31: the FLX4 asks Cutlab for everything (the FX pad of each
+// deck, Smart CFX, the pad modes of the screen, Key Shift / Pitch Play).
+//
+
+// Counts up by one, never 0 (the app acts on a change to a value above 0)
+PioneerDDJFLX4.cutlabCount = function(key) {
+    const value = engine.getValue("[Cutlab]", key);
+    engine.setValue("[Cutlab]", key, (Math.max(0, Math.round(value)) % 999) + 1);
+};
+
+// BEAT FX CH SELECT: 1, 2, or both (MASTER)
+PioneerDDJFLX4.beatFxCh1 = false;
+PioneerDDJFLX4.beatFxCh2 = false;
+PioneerDDJFLX4.beatFxDecks = function() {
+    if (PioneerDDJFLX4.beatFxCh1 && !PioneerDDJFLX4.beatFxCh2) {
+        return [1];
+    }
+    if (PioneerDDJFLX4.beatFxCh2 && !PioneerDDJFLX4.beatFxCh1) {
+        return [2];
+    }
+    return [1, 2];
+};
+PioneerDDJFLX4.beatFxLED = function() {
+    const on = PioneerDDJFLX4.beatFxDecks().some(
+        deck => engine.getValue("[Cutlab]", `fx_on${deck}`) > 0);
+    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.beatFx, on);
+    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.shiftBeatFx, on);
+};
+
+// SMART CFX: the effect last picked (1 echo, 2 reverb, 3 flanger)
+PioneerDDJFLX4.smartCfxChoice = 1;
+
+// A pad of the KEY SHIFT or KEYBOARD mode: Cutlab plays it (KeyPlay.qml).
+// mode 1 Key Shift, 2 Pitch Play; pad 0-7, top row first
+PioneerDDJFLX4.cutlabKeyPad = function(group, mode, pad, shift) {
+    const deck = group === "[Channel2]" ? 2 : 1;
+    if (engine.getValue("[Cutlab]", `sample_mode${deck}`) !== mode) {
+        engine.setValue("[Cutlab]", `sample_mode${deck}`, mode);
+    }
+    const counter = (Math.floor(engine.getValue("[Cutlab]", `key_pad${deck}`) / 100) + 1) % 1000;
+    engine.setValue("[Cutlab]", `key_pad${deck}`, counter * 100 + pad + 1 + (shift ? 10 : 0));
+};
+
+// PAD FX2: the one shot effects of the Cutlab FX pad, while a pad is held
+// (as the SAMPLER pads of the REV1). Codes, see OneShots.qml: 1 backspin,
+// 2 brake, 3 censor, 4 echo out, 5 trans 1/8, 6 trans 1/16, 7 gater,
+// 8 glitch.
+PioneerDDJFLX4.cutlabFxCodes = [6, 5, 7, 8, 1, 2, 3, 4];
+// [AI-generated text, Claude (Anthropic) — end]
 
 // Memory cues of CUE/LOOP CALL use the hot cues beyond the 8 pads
 PioneerDDJFLX4.firstMemoryCue = 9;
@@ -314,8 +376,10 @@ PioneerDDJFLX4.init = function() {
 
     engine.makeConnection("[QuickEffectRack1_[Channel1]]", "super1", PioneerDDJFLX4.cfxMoved);
     engine.makeConnection("[QuickEffectRack1_[Channel2]]", "super1", PioneerDDJFLX4.cfxMoved);
-    PioneerDDJFLX4.smartCfxGroups.forEach(group =>
-        engine.makeConnection(group, "enabled", PioneerDDJFLX4.smartCfxLED));
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: the SMART CFX LED shows Smart CFX of Cutlab
+    engine.makeConnection("[Cutlab]", "smart_cfx", PioneerDDJFLX4.smartCfxLED);
+    // [AI-generated text, Claude (Anthropic) — end]
     PioneerDDJFLX4.smartCfxLED();
     engine.makeConnection("[Channel1]", "track_loaded", PioneerDDJFLX4.trackLoadedLED);
     engine.makeConnection("[Channel2]", "track_loaded", PioneerDDJFLX4.trackLoadedLED);
@@ -330,12 +394,25 @@ PioneerDDJFLX4.init = function() {
     engine.makeConnection("[Channel1]", "loop_enabled", PioneerDDJFLX4.loopToggle);
     engine.makeConnection("[Channel2]", "loop_enabled", PioneerDDJFLX4.loopToggle);
 
-    for (i = 1; i <= 3; i++) {
-        engine.makeConnection("[EffectRack1_EffectUnit1_Effect" + i +"]", "enabled", PioneerDDJFLX4.toggleFxLight);
-    }
-    engine.makeConnection("[EffectRack1_EffectUnit1]", "focused_effect", PioneerDDJFLX4.toggleFxLight);
-    // Show the state of effects restored from the previous session
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: BEAT FX plays the FX pad of the decks; its LED follows
+    // [Cutlab] fx_on of the decks picked with CH SELECT
+    engine.makeConnection("[Cutlab]", "fx_on1", PioneerDDJFLX4.toggleFxLight);
+    engine.makeConnection("[Cutlab]", "fx_on2", PioneerDDJFLX4.toggleFxLight);
     PioneerDDJFLX4.toggleFxLight();
+    // CFX is always the filter of Cutlab: the Filter preset, on
+    for (let deck = 1; deck <= 2; deck++) {
+        const rack = `[QuickEffectRack1_[Channel${deck}]]`;
+        if (engine.getValue(rack, "loaded_chain_preset") !== 1) {
+            engine.setValue(rack, "loaded_chain_preset", 1);
+        }
+        engine.setValue(rack, "enabled", 1);
+    }
+    const smartCfx = engine.getValue("[Cutlab]", "smart_cfx");
+    if (smartCfx > 0) {
+        PioneerDDJFLX4.smartCfxChoice = smartCfx;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
 
     // Register callbacks for each deck, when a file is loaded and the number of stems is available
     engine.makeConnection("[Channel1]", "stem_count", PioneerDDJFLX4.stemCountChanged);
@@ -397,108 +474,72 @@ PioneerDDJFLX4.vuMeterUpdate = function(value, group) {
 // Effects
 //
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.31: BEAT FX plays the effect of the FX pad of Cutlab on the
+// decks picked with CH SELECT (1, 2, or both on MASTER), like the BEAT FX
+// lever of the REV1 and the FX button of the Mixtour:
+//  - SELECT and RIGHT: next effect; SHIFT + SELECT and LEFT: previous one
+//  - ON/OFF: on or off at once; SHIFT + ON/OFF: off
+//  - LEVEL/DEPTH: how much of the effect ([Cutlab] fx_amountN)
+// The LED shows whether it plays.
 PioneerDDJFLX4.toggleFxLight = function(_value, _group, _control) {
-    const enabled = engine.getValue(PioneerDDJFLX4.focusedFxGroup(), "enabled");
-
-    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.beatFx, enabled);
-    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.shiftBeatFx, enabled);
+    PioneerDDJFLX4.beatFxLED();
 };
 
-PioneerDDJFLX4.focusedFxGroup = function() {
-    // The skin can remove the focus (0); fall back to the first slot
-    const focusedFx = Math.min(3, Math.max(1,
-        engine.getValue("[EffectRack1_EffectUnit1]", "focused_effect")));
-    return "[EffectRack1_EffectUnit1_Effect" + focusedFx + "]";
-};
-
-// LEVEL/DEPTH changes the dry/wet of the unit and, with SHIFT, the amount
-// of the selected effect, or the other way round (mapping setting)
 PioneerDDJFLX4.beatFxLevelDepthRotate = function(_channel, _control, value) {
-    const shifted = PioneerDDJFLX4.shiftButtonDown[0] || PioneerDDJFLX4.shiftButtonDown[1];
-    if (shifted !== (engine.getSetting("levelDepthMode") === "meta")) {
-        engine.softTakeoverIgnoreNextValue("[EffectRack1_EffectUnit1]", "mix");
-        engine.setParameter(PioneerDDJFLX4.focusedFxGroup(), "meta", value / 0x7F);
-    } else {
-        engine.softTakeoverIgnoreNextValue(PioneerDDJFLX4.focusedFxGroup(), "meta");
-        engine.setParameter("[EffectRack1_EffectUnit1]", "mix", value / 0x7F);
-    }
+    PioneerDDJFLX4.beatFxDecks().forEach(
+        deck => engine.setValue("[Cutlab]", `fx_amount${deck}`, value / 0x7F));
 };
 
-PioneerDDJFLX4.changeFocusedEffectBy = function(numberOfSteps) {
-    let focusedEffect = engine.getValue("[EffectRack1_EffectUnit1]", "focused_effect");
-
-    // Convert to zero-based index
-    focusedEffect -= 1;
-
-    // Standard Euclidean modulo by use of two plain modulos
-    const numberOfEffectsPerEffectUnit = 3;
-    focusedEffect = (((focusedEffect + numberOfSteps) % numberOfEffectsPerEffectUnit) + numberOfEffectsPerEffectUnit) % numberOfEffectsPerEffectUnit;
-
-    // Convert back to one-based index
-    focusedEffect += 1;
-
-    engine.setValue("[EffectRack1_EffectUnit1]", "focused_effect", focusedEffect);
+PioneerDDJFLX4.beatFxNext = function(by) {
+    PioneerDDJFLX4.beatFxDecks().forEach(
+        deck => PioneerDDJFLX4.cutlabCount(by > 0 ? `fx_next${deck}` : `fx_prev${deck}`));
 };
 
 PioneerDDJFLX4.beatFxSelectPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    engine.setValue(PioneerDDJFLX4.focusedFxGroup(), "next_effect", value);
+    PioneerDDJFLX4.beatFxNext(1);
 };
 
 PioneerDDJFLX4.beatFxSelectShiftPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    engine.setValue(PioneerDDJFLX4.focusedFxGroup(), "prev_effect", value);
+    PioneerDDJFLX4.beatFxNext(-1);
 };
 
 PioneerDDJFLX4.beatFxLeftPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    PioneerDDJFLX4.changeFocusedEffectBy(-1);
+    PioneerDDJFLX4.beatFxNext(-1);
 };
 
 PioneerDDJFLX4.beatFxRightPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    PioneerDDJFLX4.changeFocusedEffectBy(1);
+    PioneerDDJFLX4.beatFxNext(1);
 };
 
 PioneerDDJFLX4.beatFxOnOffPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    const toggleEnabled = !engine.getValue(PioneerDDJFLX4.focusedFxGroup(), "enabled");
-    engine.setValue(PioneerDDJFLX4.focusedFxGroup(), "enabled", toggleEnabled);
+    const decks = PioneerDDJFLX4.beatFxDecks();
+    const on = decks.some(deck => engine.getValue("[Cutlab]", `fx_on${deck}`) > 0);
+    decks.forEach(deck => engine.setValue("[Cutlab]", `fx_on${deck}`, on ? 0 : 1));
+    PioneerDDJFLX4.beatFxLED();
 };
 
 PioneerDDJFLX4.beatFxOnOffShiftPressed = function(_channel, _control, value) {
     if (value === 0) { return; }
-
-    engine.setParameter("[EffectRack1_EffectUnit1]", "mix", 0);
-    engine.softTakeoverIgnoreNextValue("[EffectRack1_EffectUnit1]", "mix");
-
-    for (let i = 1; i <= 3; i++) {
-        engine.setValue("[EffectRack1_EffectUnit1_Effect" + i + "]", "enabled", 0);
-    }
-    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.beatFx, false);
-    PioneerDDJFLX4.toggleLight(PioneerDDJFLX4.lights.shiftBeatFx, false);
+    [1, 2].forEach(deck => engine.setValue("[Cutlab]", `fx_on${deck}`, 0));
+    PioneerDDJFLX4.beatFxLED();
 };
 
-PioneerDDJFLX4.beatFxChannel1 = function(_channel, control, value, _status, group) {
-    let enableChannel = 0;
-
-    if (value === 0x7f) { enableChannel = 1; }
-
-    engine.setValue(group, "group_[Channel1]_enable", enableChannel);
+PioneerDDJFLX4.beatFxChannel1 = function(_channel, _control, value, _status, _group) {
+    PioneerDDJFLX4.beatFxCh1 = value === 0x7f;
+    PioneerDDJFLX4.beatFxLED();
 };
 
-PioneerDDJFLX4.beatFxChannel2 = function(_channel, control, value, _status, group) {
-    let enableChannel = 0;
-
-    if (value === 0x7f) { enableChannel = 1; }
-
-    engine.setValue(group, "group_[Channel2]_enable", enableChannel);
+PioneerDDJFLX4.beatFxChannel2 = function(_channel, _control, value, _status, _group) {
+    PioneerDDJFLX4.beatFxCh2 = value === 0x7f;
+    PioneerDDJFLX4.beatFxLED();
 };
+// [AI-generated text, Claude (Anthropic) — end]
 
 //
 // Loop IN/OUT ADJUST
@@ -833,21 +874,32 @@ PioneerDDJFLX4.cfxMoved = function(_value, group, _control) {
 
 PioneerDDJFLX4.smartCfxGroups = ["[QuickEffectRack1_[Channel1]]", "[QuickEffectRack1_[Channel2]]"];
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.31: SMART CFX turns Smart CFX of Cutlab on or off (the CFX knob
+// stays the filter, an effect goes with it); SHIFT + SMART CFX picks the
+// next effect (echo, reverb, flanger) and turns it on. The effect is also
+// picked in the Mezcla tool.
 PioneerDDJFLX4.smartCfxPressed = function(_channel, control, value) {
     if (value === 0) { return; } // ignore release
-    const groups = PioneerDDJFLX4.smartCfxGroups;
+    const current = engine.getValue("[Cutlab]", "smart_cfx");
     if (control === 0x08) {
-        groups.forEach(group => engine.setValue(group, "next_chain_preset", 1));
+        PioneerDDJFLX4.smartCfxChoice = current > 0 ? (current % 3) + 1 : PioneerDDJFLX4.smartCfxChoice;
+        engine.setValue("[Cutlab]", "smart_cfx", PioneerDDJFLX4.smartCfxChoice);
         return;
     }
-    const on = groups.some(group => engine.getValue(group, "enabled") > 0);
-    groups.forEach(group => engine.setValue(group, "enabled", on ? 0 : 1));
+    if (current > 0) {
+        PioneerDDJFLX4.smartCfxChoice = current;
+        engine.setValue("[Cutlab]", "smart_cfx", 0);
+    } else {
+        engine.setValue("[Cutlab]", "smart_cfx", PioneerDDJFLX4.smartCfxChoice);
+    }
 };
 
 PioneerDDJFLX4.smartCfxLED = function() {
-    const on = PioneerDDJFLX4.smartCfxGroups.some(group => engine.getValue(group, "enabled") > 0);
+    const on = engine.getValue("[Cutlab]", "smart_cfx") > 0;
     midi.sendShortMsg(0x96, 0x00, on ? 0x7F : 0x00);
 };
+// [AI-generated text, Claude (Anthropic) — end]
 
 //
 // Jog wheels
@@ -977,39 +1029,19 @@ PioneerDDJFLX4.decreaseBeatjumpSizes = function(_channel, control, value, _statu
 // SHIFT + HOT CUE again picks another hot cue.
 //
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.31: the KEYBOARD pads play Pitch Play of Cutlab: the base hot
+// cue at -3 to +4 semitones (top row +1 to +4, bottom row -3 to 0);
+// SHIFT + pad picks the base hot cue (pad 1-8 = hot cue 1-8)
 PioneerDDJFLX4.keyboardPadPressed = function(group, pad, value, shift) {
     if (value !== 0x7f) {
         return;
     }
-    if (shift) {
-        if (pad === 6) {
-            PioneerDDJFLX4.keyboardOffset[group] = Math.min(PioneerDDJFLX4.keyboardOffset[group] + 4, 5);
-        } else if (pad === 7) {
-            PioneerDDJFLX4.keyboardOffset[group] = Math.max(PioneerDDJFLX4.keyboardOffset[group] - 4, -12);
-        } else {
-            const cue = PioneerDDJFLX4.keyboardCue[group];
-            if (cue > 0 && engine.getValue(group, `hotcue_${cue}_status`) > 0) {
-                script.triggerControl(group, `hotcue_${cue}_clear`);
-            }
-            PioneerDDJFLX4.keyboardCue[group] = 0;
-            PioneerDDJFLX4.keyboardLights(group);
-        }
-        return;
-    }
-    const cue = PioneerDDJFLX4.keyboardCue[group];
-    if (cue === 0) {
-        const picked = pad + 1;
-        if (engine.getValue(group, `hotcue_${picked}_status`) <= 0) {
-            script.triggerControl(group, `hotcue_${picked}_set`);
-        }
-        PioneerDDJFLX4.keyboardCue[group] = picked;
-        PioneerDDJFLX4.keyboardLights(group);
-        return;
-    }
-    engine.setValue(group, "pitch_adjust",
-        PioneerDDJFLX4.rekordboxPitchPads[pad] + PioneerDDJFLX4.keyboardOffset[group]);
-    script.triggerControl(group, `hotcue_${cue}_gotoandplay`);
+    PioneerDDJFLX4.cutlabKeyPad(group, 2, pad, shift);
+    PioneerDDJFLX4.keyboardCue[group] = 1;
+    PioneerDDJFLX4.keyboardLights(group);
 };
+// [AI-generated text, Claude (Anthropic) — end]
 
 // All pads lit once a hot cue is picked
 PioneerDDJFLX4.keyboardLights = function(group) {
@@ -1058,6 +1090,46 @@ PioneerDDJFLX4.samplerPlayOutputCallbackFunction = function(value, group, _contr
 };
 
 PioneerDDJFLX4.padModeKeyPressed = function(_channel, _control, value, _status, _group) {
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: the screen follows the pad mode of the FLX4. HOT CUE →
+    // hot cues, SAMPLER → samples, KEY SHIFT → Key Shift and KEYBOARD →
+    // Pitch Play (samples mode with its selector), PAD FX1 → loop rolls,
+    // PAD FX2 → the FX pad, BEAT LOOP → the loop tool. BEAT JUMP has no
+    // pad mode in Cutlab: the screen stays as it is.
+    if (value) {
+        const deck = _status === 0x90 ? 1 : 2;
+        const setPads = (mode, sampleMode) => {
+            if (sampleMode !== undefined) {
+                engine.setValue("[Cutlab]", `sample_mode${deck}`, sampleMode);
+            }
+            engine.setValue("[Cutlab]", `pads_mode${deck}`, mode + 1);
+        };
+        switch (_control) {
+        case 0x1B:
+            setPads(0);
+            break;
+        case 0x22:
+            setPads(2, 0);
+            break;
+        case 0x6F:
+            setPads(2, 1);
+            PioneerDDJFLX4.pitchAdjusted(0, `[Channel${deck}]`);
+            break;
+        case 0x69:
+            setPads(2, 2);
+            break;
+        case 0x1E:
+            setPads(1);
+            break;
+        case 0x6B:
+            PioneerDDJFLX4.cutlabCount(`fx_open${deck}`);
+            break;
+        case 0x6D:
+            PioneerDDJFLX4.cutlabCount(`loop_open${deck}`);
+            break;
+        }
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     // SHIFT + HOT CUE (Keyboard mode) picks a new hot cue
     if (value && _control === 0x69 && PioneerDDJFLX4.option("keyboardMode") === "keyboard") {
         const group = _status === 0x90 ? "[Channel1]" : "[Channel2]";
@@ -1355,6 +1427,19 @@ PioneerDDJFLX4.stemFxChanged = function(value, group, _control) {
 //
 
 PioneerDDJFLX4.pitchAdjusted = function(_value, group, _control) {
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: the pad of the current key is lit (top row +1 to +4,
+    // bottom row -1 to -4); at 0 none
+    if (PioneerDDJFLX4.option("keyShiftLayout") === "cutlab") {
+        const pitch = Math.round(engine.getValue(group, "pitch_adjust"));
+        const steps = [1, 2, 3, 4, -1, -2, -3, -4];
+        for (let i = 0; i < 8; i++) {
+            PioneerDDJFLX4.pitchPadsModesStatus[group].forEach(
+                (padMode) => midi.sendShortMsg(padMode, PioneerDDJFLX4.pitchPadsFirstControl + i, steps[i] === pitch ? 0x7F : 0x00));
+        }
+        return;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     // rekordbox layout: the pad of the current key is lit
     if (PioneerDDJFLX4.option("keyShiftLayout") === "rekordbox") {
         const pitch = Math.round(engine.getValue(group, "pitch_adjust"));
@@ -1431,6 +1516,15 @@ PioneerDDJFLX4.pitchAdjusted = function(_value, group, _control) {
 };
 
 PioneerDDJFLX4.pitchPadPressed = function(_channel, control, value, _status, group) {
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: Key Shift of Cutlab; the pad already on goes back to 0
+    if (PioneerDDJFLX4.option("keyShiftLayout") === "cutlab") {
+        if (value === 0x7f) {
+            PioneerDDJFLX4.cutlabKeyPad(group, 1, control - PioneerDDJFLX4.pitchPadsFirstControl, false);
+        }
+        return;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     if (PioneerDDJFLX4.option("keyShiftLayout") === "rekordbox") {
         if (value === 0x7f) {
             engine.setValue(group, "pitch_adjust",
@@ -1468,6 +1562,15 @@ PioneerDDJFLX4.pitchPadPressed = function(_channel, control, value, _status, gro
 };
 
 PioneerDDJFLX4.pitchPadShiftPressed = function(_channel, control, value, _status, group) {
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31: with SHIFT the same as without
+    if (PioneerDDJFLX4.option("keyShiftLayout") === "cutlab") {
+        if (value === 0x7f) {
+            PioneerDDJFLX4.cutlabKeyPad(group, 1, control - PioneerDDJFLX4.pitchPadsFirstControl, true);
+        }
+        return;
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     // rekordbox: SHIFT + pad 7/8 moves the range of the pads up or down
     if (PioneerDDJFLX4.option("keyShiftLayout") === "rekordbox") {
         const pad = control - this.pitchPadsFirstControl;
@@ -1550,6 +1653,13 @@ PioneerDDJFLX4.padFxPressed = function(_channel, control, value, status, group) 
     if (control < 0x50) {
         const key = `beatlooproll_${shift ? "r" : ""}${PioneerDDJFLX4.padFxRolls[pad]}_activate`;
         hold = (held) => engine.setValue(group, key, held ? 1 : 0);
+    } else if (PioneerDDJFLX4.cutlabFxCodes) {
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.31: PAD FX2 plays the one shot effects of the Cutlab FX
+        // pad of the deck while the pad is held (with or without SHIFT)
+        const code = PioneerDDJFLX4.cutlabFxCodes[pad];
+        hold = (held) => engine.setValue("[Cutlab]", `fx_deck${deck}`, held ? code : 0);
+        // [AI-generated text, Claude (Anthropic) — end]
     } else if (!shift && pad === 6) {
         hold = (held) => engine.brake(deck, held);
     } else if (!shift && pad === 7) {

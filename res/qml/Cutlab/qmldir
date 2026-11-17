@@ -77,3 +77,9 @@ LiveOverlay 1.0 LiveOverlay.qml
 LiveBlock 1.0 LiveBlock.qml
 PassthroughButton 1.0 PassthroughButton.qml
 singleton Live 1.0 Live.qml
+DvsPads 1.0 DvsPads.qml
+KeyPlay 1.0 KeyPlay.qml
+SampleModePads 1.0 SampleModePads.qml
+SmartCfx 1.0 SmartCfx.qml
+SmartFader 1.0 SmartFader.qml
+CutlabBridge 1.0 CutlabBridge.qml

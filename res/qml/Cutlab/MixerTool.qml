@@ -62,7 +62,78 @@ Item {
     EqTool {
         anchors.left: faderArea.right
         anchors.right: parent.right
-        height: parent.height
+        anchors.top: parent.top
+        anchors.bottom: smartCfxRow.top
         group: root.group
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.31: Smart CFX, the effect that goes with the filter knob of both
+    // decks (from the screen, the FILTER of the REV1 and the Mixtour, the
+    // CFX of the FLX4, whose SMART CFX button turns it on and off)
+    Mixxx.ControlProxy {
+        id: smartCfx
+
+        group: "[Cutlab]"
+        key: "smart_cfx"
+    }
+    Row {
+        id: smartCfxRow
+
+        anchors.left: faderArea.right
+        anchors.leftMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 6
+        height: 30
+        spacing: 4
+
+        Text {
+            id: smartLabel
+
+            anchors.verticalCenter: parent.verticalCenter
+            color: Style.textDim
+            font.family: Style.font
+            font.pixelSize: 10
+            font.weight: Font.DemiBold
+            font.letterSpacing: 0.5
+            text: qsTr("SMART CFX")
+        }
+        Repeater {
+            model: [qsTr("Off"), qsTr("Echo"), qsTr("Reverb"), qsTr("Flanger")]
+
+            Rectangle {
+                required property int index
+                required property string modelData
+                readonly property bool on: Math.round(smartCfx.value) === index
+
+                anchors.verticalCenter: parent.verticalCenter
+                width: (smartCfxRow.width - smartLabel.width - 4 * smartCfxRow.spacing) / 4
+                height: 26
+                radius: 13
+                color: on ? Style.neutralDark : "transparent"
+                border.width: 1
+                border.color: on ? Style.neutral : Qt.rgba(1, 1, 1, 0.14)
+
+                Text {
+                    anchors.centerIn: parent
+                    width: parent.width - 6
+                    horizontalAlignment: Text.AlignHCenter
+                    fontSizeMode: Text.HorizontalFit
+                    minimumPixelSize: 8
+                    color: parent.on ? Style.text : Style.textSecondary
+                    font.family: Style.font
+                    font.pixelSize: 11
+                    font.weight: Font.DemiBold
+                    text: parent.modelData
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    anchors.margins: -3
+                    onClicked: smartCfx.value = parent.index
+                }
+            }
+        }
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
 }

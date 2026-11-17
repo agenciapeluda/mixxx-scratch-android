@@ -40,7 +40,7 @@ ComboBox {
     background: Rectangle {
         anchors.fill: parent
         anchors.margins: 3
-        border.color: root.popup.visible ? "#635bff" : "#4a4a4d"
+        border.color: root.popup.visible ? "#e6e7ee" : "#4a4a4d"
         border.width: 1
         color: root.down ? "#333336" : "#262628"
         radius: 9
@@ -81,7 +81,7 @@ ComboBox {
                 anchors.left: parent.left
                 anchors.right: tick.left
                 anchors.verticalCenter: parent.verticalCenter
-                color: itemDlgt.selected ? "#8b85ff" : "#e5e5ea"
+                color: itemDlgt.selected ? "#ffffff" : "#e5e5ea"
                 elide: Text.ElideRight
                 font.pixelSize: Math.max(12, root.font.pixelSize)
                 font.weight: itemDlgt.selected ? Font.Medium : Font.Normal
@@ -178,7 +178,7 @@ ComboBox {
                     policy: popupListView.contentHeight > popupListView.height ? ScrollBar.AlwaysOn : ScrollBar.AsNeeded
                     width: 8
                     contentItem: Rectangle {
-                        color: popupScrollBar.pressed ? "#8b85ff" : "#5a5f75"
+                        color: popupScrollBar.pressed ? "#e6e7ee" : "#5a5f75"
                         radius: 4
                     }
                 }

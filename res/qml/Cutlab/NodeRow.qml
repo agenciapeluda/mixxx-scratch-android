@@ -18,7 +18,7 @@ Rectangle {
         anchors.left: parent.left
         width: 3
         height: parent.height
-        color: Style.accent
+        color: Style.neutral
         visible: root.selected
     }
 

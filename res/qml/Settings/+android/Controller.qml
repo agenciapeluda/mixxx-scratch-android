@@ -484,7 +484,7 @@ Category {
                                 width: 24
                                 height: 24
                                 radius: 12
-                                color: "#8b85ff"
+                                color: "#e6e7ee"
                                 Text {
                                     elide: Text.ElideRight
                                     anchors.centerIn: parent
@@ -689,7 +689,7 @@ Category {
                         Layout.preferredHeight: 32
                         radius: 6
                         color: audioNavMouse.pressed ? "#1a148c" : (audioNavMouse.containsMouse ? "#261fa2" : "#211b9a")
-                        border.color: "#8b85ff"
+                        border.color: "#e6e7ee"
                         border.width: 1
 
                         Text {
@@ -860,7 +860,7 @@ Category {
                             text: modelData.name
                         }
                         Skin.FormButton {
-                            activeColor: "#635bff"
+                            activeColor: "#e6e7ee"
                             text: qsTr("Configure mapping")
                             visible: true
 
@@ -935,7 +935,7 @@ Category {
                         text: root.dirty ? "●" : (root.activeDevices.length > 0 ? "✓" : "")
                         font.weight: Font.DemiBold
                         font.pixelSize: 12
-                        color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#908aff")
+                        color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#9ca1b8")
                     }
                     Text {
                         elide: Text.ElideRight

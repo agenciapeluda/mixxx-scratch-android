@@ -30,6 +30,15 @@ Rectangle {
         group: "[Master]"
         key: "crossfader"
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.31: Smart Fader (turned on in the settings, next to the crossfader)
+    // [AI-generated text, Claude (Anthropic) — end]
+    Mixxx.ControlProxy {
+        id: smartFader
+
+        group: "[Cutlab]"
+        key: "smart_fader"
+    }
     Mixxx.ControlProxy {
         id: curve
 
@@ -156,7 +165,7 @@ Rectangle {
                     font.weight: Font.DemiBold
                     font.pixelSize: root.fs(10)
                     font.letterSpacing: 0.5
-                    text: qsTr("CROSSFADER · %1").arg(curve.value > 0.75 ? qsTr("CORTE FILOSO") : (curve.value > 0.35 ? qsTr("CORTE") : qsTr("MEZCLA")))
+                    text: smartFader.value > 0 ? qsTr("CROSSFADER · SMART") : qsTr("CROSSFADER · %1").arg(curve.value > 0.75 ? qsTr("CORTE FILOSO") : (curve.value > 0.35 ? qsTr("CORTE") : qsTr("MEZCLA")))
                 }
                 Text {
                     anchors.right: parent.right

@@ -442,7 +442,7 @@ Category {
 
                                         implicitWidth: 72
                                         implicitHeight: 34
-                                        activeColor: Theme.accentColor
+                                        activeColor: "#e6e7ee"
                                         backgroundColor: shown ? "#1e3a5f" : "#262628"
                                         normalColor: shown ? "#ffffff" : "#607d8b"
                                         font.weight: Font.DemiBold

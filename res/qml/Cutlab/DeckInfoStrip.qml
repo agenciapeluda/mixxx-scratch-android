@@ -136,7 +136,7 @@ Rectangle {
             Text {
                 anchors.left: root.mirrored ? undefined : parent.left
                 anchors.right: root.mirrored ? parent.right : undefined
-                color: Math.abs(root.pitch) >= 0.05 ? Style.accentText : Style.textSecondary
+                color: Math.abs(root.pitch) >= 0.05 ? Style.deckColor(root.group) : Style.textSecondary
                 font.family: Style.mono
                 font.pixelSize: Math.round(12 * root.u)
                 text: root.loaded && root.bpmFile > 0
@@ -189,7 +189,7 @@ Rectangle {
             Repeater {
                 model: [
                     {text: qsTr("LOOP"), on: loopEnabled.value > 0, color: Style.loop},
-                    {text: qsTr("SYNC"), on: syncEnabled.value > 0, color: Style.accent}
+                    {text: qsTr("SYNC"), on: syncEnabled.value > 0, color: Style.deckColor(root.group)}
                 ]
 
                 Rectangle {

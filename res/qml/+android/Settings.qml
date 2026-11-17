@@ -263,7 +263,7 @@ Popup {
                                 width: 3
                                 height: 22
                                 radius: 1.5
-                                color: Theme.accentColor
+                                color: "#e6e7ee"
                                 visible: categoryDelegate.isSelected && !root.narrow
                             }
 
@@ -275,7 +275,7 @@ Popup {
 
                                 Text {
                                     visible: iconGlyph !== ""
-                                    color: categoryDelegate.isSelected ? "#ffffff" : Theme.accentColor
+                                    color: categoryDelegate.isSelected ? "#ffffff" : "#9ca1b8"
                                     font.pixelSize: 18
                                     text: iconGlyph
                                 }
@@ -421,7 +421,7 @@ Popup {
                                 Layout.minimumWidth: 0
                                 Layout.preferredHeight: 28
                                 Layout.preferredWidth: Math.floor(parent.width / tabBar.tabs.length)
-                                activeColor: Theme.accentColor
+                                activeColor: "#e6e7ee"
                                 checked: tabBar.selectedIndex === index
                                 text: modelData
 

@@ -24,6 +24,37 @@ Rectangle {
     border.width: 1
     border.color: Style.buttonBorder
 
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.31: the device of the main output, and whether it is Bluetooth:
+    // 150-250 ms late, the jog wheel and the pads feel detached
+    property string mainOutput: ""
+    readonly property bool bluetooth: root.mainOutput.endsWith(": Bluetooth")
+    function readMainOutput() {
+        const manager = Mixxx.SoundManager;
+        if (!manager) {
+            return;
+        }
+        const devices = manager.availableOutputDevices(manager.getAPI()) || [];
+        for (const device of devices) {
+            const connections = device.connections(manager) || [];
+            for (const connection of connections) {
+                // 0: Main
+                if (connection.type === 0) {
+                    root.mainOutput = device.displayName;
+                    return;
+                }
+            }
+        }
+        root.mainOutput = "";
+    }
+    Timer {
+        interval: 3000
+        running: root.visible
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: root.readMainOutput()
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
     onVisibleChanged: Mixxx.Cutlab.watchFrames(root.Window.window, root.visible)
     Component.onCompleted: if (root.visible) Mixxx.Cutlab.watchFrames(root.Window.window, true)
     Connections {
@@ -164,6 +195,7 @@ Rectangle {
                 {label: qsTr("Presentar (GPU)"), value: root.n("presentMs").toFixed(1) + " / " + root.n("presentMaxMs").toFixed(1) + " ms", good: root.n("presentMs") <= root.frameMs},
                 {label: qsTr("Resolución"), value: root.stats.pixels || "", good: true},
                 {label: qsTr("Análisis"), value: root.stats.analyzing ? (root.stats.analysisHeld ? qsTr("en pausa") : qsTr("corriendo")) : qsTr("no"), good: !root.stats.analyzing || root.stats.analysisHeld},
+                {label: qsTr("Salida"), value: root.bluetooth ? qsTr("Bluetooth: +150-250 ms, la rueda se siente despegada") : (root.mainOutput !== "" ? root.mainOutput : "—"), good: !root.bluetooth},
                 {label: qsTr("Latencia del audio"), value: Math.round(latency.value) + " ms", good: latency.value <= 25},
                 {label: qsTr("Carga del audio"), value: Math.round(usage.value) + " %", good: usage.value < 70},
                 {label: qsTr("Cortes de audio"), value: String(root.xruns) + (root.inputXruns > 0 ? " · " + qsTr("entrada %1").arg(root.inputXruns) : ""), good: root.xruns + root.inputXruns < 1},

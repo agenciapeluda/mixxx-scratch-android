@@ -472,7 +472,7 @@ Category {
                                 text: qsTr("Quick audio output profiles")
                                 font.pixelSize: 14
                                 font.weight: Font.DemiBold
-                                color: "#908aff"
+                                color: "#c9ccd8"
                             }
                             Item { Layout.fillWidth: true }
                             Text {
@@ -525,7 +525,7 @@ Category {
                                             text: root.activePreset === "single" ? qsTr("✓ ACTIVE") : ""
                                             font.pixelSize: 10
                                             font.weight: Font.DemiBold
-                                            color: "#908aff"
+                                            color: "#c9ccd8"
                                         }
                                     }
                                     Text {
@@ -536,6 +536,18 @@ Category {
                                         wrapMode: Text.WordWrap
                                         Layout.fillWidth: true
                                     }
+                                    // [AI-generated text, Claude (Anthropic) — start]
+                                    // Cutlab 1.31: Bluetooth plays 150-250 ms late
+                                    Text {
+                                        Layout.minimumWidth: 0
+                                        Layout.fillWidth: true
+                                        visible: !!root.outputDeviceKinds().bluetooth
+                                        text: qsTr("Bluetooth conectado: el sonido llega 150-250 ms tarde, así que la rueda y los pads se sienten despegados. Para scratchear o pinchar en vivo usá la salida de la controladora o auriculares con cable.")
+                                        font.pixelSize: 11
+                                        color: "#ffb547"
+                                        wrapMode: Text.WordWrap
+                                    }
+                                    // [AI-generated text, Claude (Anthropic) — end]
                                 }
 
                                 MouseArea {
@@ -949,7 +961,7 @@ Category {
                                         return qsTr("Safe mode: maximum stability if you hear crackles or the phone is slow.");
                                     }
                                     font.pixelSize: 11
-                                    color: audioBuffer.currentIndex <= 1 ? "#908aff" : (audioBuffer.currentIndex <= 3 ? "#2bd67b" : "#ffb547")
+                                    color: audioBuffer.currentIndex <= 1 ? "#c9ccd8" : (audioBuffer.currentIndex <= 3 ? "#2bd67b" : "#ffb547")
                                 }
                             }
 

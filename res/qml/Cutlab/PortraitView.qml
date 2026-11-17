@@ -413,12 +413,12 @@ Rectangle {
 
                         required property string modelData
                         readonly property bool on: modelData === "sync" ? sync.value > 0 : modelData === "dvs" ? dvsOn.value > 0 : false
-                        readonly property color onColor: modelData === "dvs" ? Style.ok : Style.accent
+                        readonly property color onColor: modelData === "dvs" ? Style.ok : Style.deckColor(deckButtons.modelData)
 
                         width: (deckButtons.width - 2 * deckButtons.spacing) / 3
                         height: root.px(44)
                         radius: root.px(10)
-                        color: on && modelData === "sync" ? Style.accent : (buttonMouse.pressed ? Style.raised : "transparent")
+                        color: on && modelData === "sync" ? Style.deckColor(deckButtons.modelData) : (buttonMouse.pressed ? Style.raised : "transparent")
                         border.width: 1
                         border.color: on ? onColor : Qt.rgba(1, 1, 1, 0.12)
 

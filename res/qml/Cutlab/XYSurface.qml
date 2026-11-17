@@ -74,7 +74,7 @@ Rectangle {
         height: 56
         radius: 28
         color: Qt.rgba(0.39, 0.36, 1.0, 0.35)
-        border.color: Style.accentText
+        border.color: Style.neutral
         border.width: 2
         visible: root.active
         x: Math.max(0, Math.min(root.width, touch.mouseX)) - width / 2

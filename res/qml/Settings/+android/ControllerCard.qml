@@ -870,7 +870,7 @@ Item {
                     color: "#0e0d1a"
                     radius: 8
                     border.width: 1
-                    border.color: searchField.activeFocus ? "#635bff" : "#2a2940"
+                    border.color: searchField.activeFocus ? "#e6e7ee" : "#2a2940"
                 }
             }
             ListView {

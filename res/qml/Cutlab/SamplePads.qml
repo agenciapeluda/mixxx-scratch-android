@@ -32,7 +32,7 @@ Grid {
             text: loaded && track ? (track.title !== "" ? track.title : qsTr("Sample %1").arg(index + 1)) : "+"
             dimmed: !loaded
             active: play.value > 0
-            padColor: loaded ? Style.accent : "transparent"
+            padColor: loaded ? Style.neutral : "transparent"
 
             onClicked: {
                 if (!loaded) {

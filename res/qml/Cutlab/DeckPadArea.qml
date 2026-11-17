@@ -12,9 +12,12 @@ Item {
     property bool compact: false
     // letsktch! of the main screen (Letsktch)
     property var letsktch: null
-    // 0 hot cues, 1 loop rolls, 2 samples, 3 Scratch, 4 Stems
+    // 0 hot cues, 1 loop rolls, 2 samples, 3 Scratch, 4 Stems, 5 DVS
+    // [AI-generated text, Claude (Anthropic) — start]
+    // (1.31: DVS added; samples have Key Shift and Pitch Play)
+    // [AI-generated text, Claude (Anthropic) — end]
     property int mode: 0
-    readonly property var modes: [qsTr("HOT CUE"), qsTr("ROLL"), qsTr("SAMPLE"), qsTr("SCRATCH"), qsTr("STEMS")]
+    readonly property var modes: [qsTr("HOT CUE"), qsTr("ROLL"), qsTr("SAMPLE"), qsTr("SCRATCH"), qsTr("STEMS"), qsTr("DVS")]
 
     signal loadSampleRequested(string group)
 
@@ -107,7 +110,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            sourceComponent: [cues, rolls, samples, scratch, stems][root.mode]
+            sourceComponent: [cues, rolls, samples, scratch, stems, dvs][Math.max(0, Math.min(5, root.mode))]
         }
         Component {
             id: cues
@@ -128,7 +131,8 @@ Item {
         Component {
             id: samples
 
-            SamplePads {
+            SampleModePads {
+                group: root.group
                 spacing: 4
                 onLoadRequested: group => root.loadSampleRequested(group)
             }
@@ -143,6 +147,14 @@ Item {
             }
         }
         Component {
+            id: dvs
+
+            DvsPads {
+                group: root.group
+                spacing: 4
+            }
+        }
+        Component {
             id: stems
 
             StemPads {
@@ -152,8 +164,13 @@ Item {
         }
     }
     // Live (passthrough): the pads would act on a track nobody hears
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Only over the pads, never over the mode picker, and not in DVS mode:
+    // THRU is turned off there
+    // [AI-generated text, Claude (Anthropic) — end]
     LiveBlock {
-        anchors.fill: parent
+        anchors.fill: pads
         group: root.group
+        visible: live && root.mode !== 5
     }
 }
