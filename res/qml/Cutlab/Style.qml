@@ -39,7 +39,7 @@ QtObject {
     // buttons of the app; what belongs to a deck uses deckColor(group).
     readonly property color neutral: "#e6e7ee"
     // Text on a neutral ground
-    readonly property color onNeutral: "#0b0a16"
+    readonly property color textOnNeutral: "#0b0a16"
     // A neutral ground that is on, behind white text
     readonly property color neutralDark: "#3a3c4e"
     // [AI-generated text, Claude (Anthropic) — end]
