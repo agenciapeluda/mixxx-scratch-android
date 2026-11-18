@@ -97,6 +97,13 @@ class VisualPlayPosition : public QObject {
     DelayRing<VisualPlayPositionData, 16> m_data;
     QString m_key;
     bool m_noTransport;
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: how many times the position went out of range. On a
+    // phone it flips nearly every frame, and logging each flip (two lines
+    // per deck and frame from the render thread, also to logcat) filled the
+    // log with ~70 lines a second: only the first ones and every 1000th.
+    unsigned int m_outOfRange = 0;
+    // [AI-generated text, Claude (Anthropic) — end]
 
     static QMap<QString, QWeakPointer<VisualPlayPosition>> m_listVisualPlayPosition;
     // Time info from the Sound device, updated just after audio callback is called

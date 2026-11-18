@@ -400,13 +400,10 @@ PioneerDDJFLX4.init = function() {
     engine.makeConnection("[Cutlab]", "fx_on1", PioneerDDJFLX4.toggleFxLight);
     engine.makeConnection("[Cutlab]", "fx_on2", PioneerDDJFLX4.toggleFxLight);
     PioneerDDJFLX4.toggleFxLight();
-    // CFX is always the filter of Cutlab: the Filter preset, on
+    // CFX is always the filter of Cutlab: the app loads the Filter preset
+    // (CutlabBridge.qml finds its row; 1.31.1: no fixed row here), on
     for (let deck = 1; deck <= 2; deck++) {
-        const rack = `[QuickEffectRack1_[Channel${deck}]]`;
-        if (engine.getValue(rack, "loaded_chain_preset") !== 1) {
-            engine.setValue(rack, "loaded_chain_preset", 1);
-        }
-        engine.setValue(rack, "enabled", 1);
+        engine.setValue(`[QuickEffectRack1_[Channel${deck}]]`, "enabled", 1);
     }
     const smartCfx = engine.getValue("[Cutlab]", "smart_cfx");
     if (smartCfx > 0) {

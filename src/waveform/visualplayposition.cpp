@@ -77,29 +77,32 @@ double VisualPlayPosition::calcOffsetAtNextVSync(
         if (offsetMicros < minOffsetMicros) {
             offsetMicros = minOffsetMicros;
             if (!m_noTransport) {
-                qWarning() << "VisualPlayPosition::calcOffsetAtNextVSync"
-                           << m_key << "outdated position request (offset < minOffset)";
-                qDebug() << m_key << "refToVSync:" << refToVSync
-                         << "data.m_callbackEntrytoDac:"
-                         << data.m_callbackEntrytoDac;
+                if (m_outOfRange < 5 || m_outOfRange % 1000 == 0) {
+                    qWarning() << "VisualPlayPosition::calcOffsetAtNextVSync"
+                               << m_key << "outdated position request (offset < minOffset)"
+                               << "refToVSync:" << refToVSync
+                               << "data.m_callbackEntrytoDac:"
+                               << data.m_callbackEntrytoDac
+                               << "times:" << m_outOfRange;
+                }
+                ++m_outOfRange;
                 m_noTransport = true;
             }
         } else if (offsetMicros > maxOffsetMicros) {
             offsetMicros = maxOffsetMicros;
             if (!m_noTransport) {
-                qWarning() << "VisualPlayPosition::calcOffsetAtNextVSync"
-                           << m_key << "no transport (offsetMicros > maxOffsetMicros)";
-                qDebug() << m_key << "refToVSync:" << refToVSync
-                         << "data.m_callbackEntrytoDac:"
-                         << data.m_callbackEntrytoDac;
+                if (m_outOfRange < 5 || m_outOfRange % 1000 == 0) {
+                    qWarning() << "VisualPlayPosition::calcOffsetAtNextVSync"
+                               << m_key << "no transport (offsetMicros > maxOffsetMicros)"
+                               << "refToVSync:" << refToVSync
+                               << "data.m_callbackEntrytoDac:"
+                               << data.m_callbackEntrytoDac
+                               << "times:" << m_outOfRange;
+                }
+                ++m_outOfRange;
                 m_noTransport = true;
             }
         } else {
-            if (m_noTransport) {
-                qDebug() << m_key << "refToVSync:" << refToVSync
-                         << "data.m_callbackEntrytoDac:"
-                         << data.m_callbackEntrytoDac;
-            }
             m_noTransport = false;
         }
         // Apply the offset proportional to m_positionStep

@@ -121,5 +121,30 @@ QVariant QmlChainPresetModel::get(int row) const {
     return dataMap;
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.31.1: see the header
+// [AI-generated text, Claude (Anthropic) — end]
+int QmlChainPresetModel::indexOfEffect(const QString& effectId) const {
+    for (int row = 0; row < m_effectChainPresets.size(); ++row) {
+        const EffectChainPresetPointer& pPreset = m_effectChainPresets.at(row);
+        if (!pPreset) {
+            continue;
+        }
+        int effects = 0;
+        bool matches = false;
+        for (const auto& pEffectPreset : pPreset->effectPresets()) {
+            if (!pEffectPreset || pEffectPreset->isEmpty()) {
+                continue;
+            }
+            ++effects;
+            matches = pEffectPreset->id() == effectId;
+        }
+        if (effects == 1 && matches) {
+            return row;
+        }
+    }
+    return -1;
+}
+
 } // namespace qml
 } // namespace mixxx

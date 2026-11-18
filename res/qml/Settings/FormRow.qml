@@ -38,7 +38,15 @@ GridLayout {
         if (kids.length < 2) {
             return 0;
         }
-        let total = row.labelMinimum;
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.31.1: the first child keeps labelMinimum only if it is
+        // that wide. When it is an icon or a small button, counting 120 made
+        // rows that fit (the scan button, the DVS gain) stack, with the icon
+        // or the "−" alone on top.
+        const first = kids[0];
+        const firstWidth = first.Layout.preferredWidth > 0 ? first.Layout.preferredWidth : first.implicitWidth;
+        let total = Math.min(row.labelMinimum, Math.max(firstWidth, first.Layout.minimumWidth));
+        // [AI-generated text, Claude (Anthropic) — end]
         for (let i = 1; i < kids.length; ++i) {
             const kid = kids[i];
             const layout = kid.Layout;
@@ -56,7 +64,18 @@ GridLayout {
     // A little slack before going back to one row, so it never flickers
     property bool stacked: false
     readonly property bool wantStacked: row.width > 0 && row.needed > 0 && (row.stacked ? row.width < row.needed + 8 : row.width < row.needed)
-    onWantStackedChanged: row.stacked = row.wantStacked
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: stacking changes the width of the row, which changes
+    // wantStacked while it is being worked out: the log was full of "Binding
+    // loop detected for property wantStacked" and "recursive rearrange".
+    // Applied right after, outside the binding.
+    function syncStacked() {
+        if (row.stacked !== row.wantStacked) {
+            row.stacked = row.wantStacked;
+        }
+    }
+    onWantStackedChanged: Qt.callLater(row.syncStacked)
+    // [AI-generated text, Claude (Anthropic) — end]
 
     // What it changed on the children, to give it back
     property var saved: []

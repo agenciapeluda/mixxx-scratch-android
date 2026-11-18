@@ -324,11 +324,9 @@ ReloopMixtour.Mixer = class extends components.Deck {
         for (const n of [].concat(deckNumbers)) {
             const rack = `[QuickEffectRack1_[Channel${n}]]`;
             engine.softTakeover(rack, "super1", false);
-            // An older mapping could leave an effect in the Quick Effect:
-            // back to the Filter, on
-            if (engine.getValue(rack, "loaded_chain_preset") !== 1) {
-                engine.setValue(rack, "loaded_chain_preset", 1);
-            }
+            // The app keeps the Filter preset in the Quick Effect
+            // (CutlabBridge.qml finds its row; 1.31.1: no fixed row here),
+            // on
             engine.setValue(rack, "enabled", 1);
             // 1.25-1.28 dosed the effect from the knob: not any more
             if (n <= 2) {

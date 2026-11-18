@@ -554,8 +554,14 @@ Category {
                             font.pixelSize: 11
                             text: qsTr("Input gain")
                         }
-                        FormRow {
+                        // [AI-generated text, Claude (Anthropic) — start]
+                        // Cutlab 1.31.1: a plain row (a FormRow took the "−"
+                        // for a label, put it alone on top and squeezed the
+                        // slider to a dot)
+                        // [AI-generated text, Claude (Anthropic) — end]
+                        RowLayout {
                             Layout.columnSpan: 3
+                            Layout.fillWidth: true
                             spacing: 8
 
                             Mixxx.ControlProxy {
@@ -574,7 +580,7 @@ Category {
                                 id: gainSlider
 
                                 Layout.fillWidth: true
-                                Layout.minimumWidth: 120
+                                Layout.minimumWidth: 60
                                 from: -12
                                 to: 40
                                 stepSize: 1

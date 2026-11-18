@@ -22,8 +22,23 @@ Item {
     property real spacing: 9
     property list<var> tooltips: []
 
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: the width the options want. When the row gives less
+    // (a FormRow that stacked, a narrow pane) the options shrink to fit
+    // instead of drawing over each other and out of the control: the curve
+    // of the crossfader showed "Scratch" on top of "Corte seco" and a stray
+    // "Suave" outside, and could not be touched.
+    readonly property real naturalWidth: {
+        if (root.normalizedWidth) {
+            return root.cellSize * root.options.length + root.spacing;
+        }
+        return options.reduce((acc, option) => acc + fontMetrics.advanceWidth(option) + root.spacing * 2, 0) + root.spacing;
+    }
+    readonly property real fit: root.width > 0 ? Math.min(1, Math.max(0.3, (root.width - dropRatio.radius * 2) / root.naturalWidth)) : 1
+    // [AI-generated text, Claude (Anthropic) — end]
+
     implicitHeight: (contentList.visible ? contentList.height : contentSpin.height) + dropRatio.radius * 2
-    implicitWidth: (contentList.visible ? contentList.width : contentSpin.width) + dropRatio.radius * 2
+    implicitWidth: (contentList.visible ? root.naturalWidth : contentSpin.width) + dropRatio.radius * 2
 
     onTooltipsChanged: {
         popup.close();
@@ -43,16 +58,11 @@ Item {
         height: 24
         radius: height / 2
         visible: root.maxWidth == 0 || root.maxWidth > root.cellSize * root.options.length
-        width: {
-            if (root.normalizedWidth) {
-                root.cellSize * root.options.length + root.spacing;
-            } else {
-                options.reduce((acc, option) => acc + fontMetrics.advanceWidth(option) + root.spacing * 2, 0) + root.spacing;
-            }
-        }
+        width: root.naturalWidth * root.fit
 
         RowLayout {
             anchors.centerIn: parent
+            spacing: 0
 
             Repeater {
                 model: options
@@ -62,7 +72,7 @@ Item {
                     required property var modelData
 
                     height: contentList.height
-                    implicitWidth: root.normalizedWidth ? root.cellSize : fontMetrics.advanceWidth(modelData) + root.spacing * 2
+                    implicitWidth: (root.normalizedWidth ? root.cellSize : fontMetrics.advanceWidth(modelData) + root.spacing * 2) * root.fit
 
                     Rectangle {
                         id: contentOption
@@ -74,8 +84,11 @@ Item {
                         Text {
                             anchors.fill: parent
                             color: Theme.white
+                            elide: Text.ElideRight
                             font: fontMetrics.font
+                            fontSizeMode: Text.HorizontalFit
                             horizontalAlignment: Text.AlignHCenter
+                            minimumPixelSize: 9
                             text: modelData
                             verticalAlignment: Text.AlignVCenter
                         }

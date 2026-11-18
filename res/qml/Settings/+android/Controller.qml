@@ -122,10 +122,14 @@ Category {
 
                         ColumnLayout {
                             Layout.fillWidth: true
+                            Layout.minimumWidth: 0
                             spacing: 2
 
+                            // Cutlab 1.31.1: the texts fill the column so they
+                            // elide instead of running under the scan button
                             Text {
                                 elide: Text.ElideRight
+                                Layout.fillWidth: true
                                 Layout.minimumWidth: 0
                                 text: qsTr("DJ controllers & USB / MIDI devices")
                                 font.pixelSize: 14
@@ -134,6 +138,7 @@ Category {
                             }
                             Text {
                                 elide: Text.ElideRight
+                                Layout.fillWidth: true
                                 Layout.minimumWidth: 0
                                 text: root.activeDevices.length > 0
                                       ? qsTr("✓ %1 controller(s) with a mapping").arg(root.activeDevices.length)
@@ -155,7 +160,7 @@ Category {
                             border.color: "#908aff"
                             border.width: 1
 
-                            FormRow {
+                            RowLayout {
                                 anchors.centerIn: parent
                                 spacing: 8
 

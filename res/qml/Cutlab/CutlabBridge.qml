@@ -106,7 +106,25 @@ Item {
         }
     }
 
-    // The Quick Effect of each deck: the Filter preset (1), on
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: the row of the Filter in the list of Quick Effect
+    // presets. 1.31 forced row 1, which is another preset (the Cutlab chains
+    // come first): the filter knobs were zero all the way left. The row is
+    // looked up by the effect, never fixed.
+    property int filterPreset: -1
+    function findFilterPreset() {
+        const model = Mixxx.EffectsManager.quickChainPresetModel;
+        root.filterPreset = model ? model.indexOfEffect("org.mixxx.effects.filter") : -1;
+    }
+    Connections {
+        target: Mixxx.EffectsManager.quickChainPresetModel
+        function onModelReset() {
+            root.findFilterPreset();
+        }
+    }
+    // [AI-generated text, Claude (Anthropic) — end]
+
+    // The Quick Effect of each deck: the Filter preset, on
     Repeater {
         model: 4
 
@@ -117,8 +135,11 @@ Item {
             readonly property string rack: `[QuickEffectRack1_[Channel${index + 1}]]`
 
             function enforce() {
-                if (Math.round(preset.value) !== 1) {
-                    preset.value = 1;
+                if (root.filterPreset < 0) {
+                    root.findFilterPreset();
+                }
+                if (root.filterPreset >= 0 && Math.round(preset.value) !== root.filterPreset) {
+                    preset.value = root.filterPreset;
                 }
                 if (fxEnabled.value <= 0) {
                     fxEnabled.value = 1;

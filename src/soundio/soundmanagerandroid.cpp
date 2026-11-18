@@ -1,5 +1,7 @@
 #include "soundio/soundmanagerandroid.h"
 
+#include <algorithm>
+
 #include <QCoreApplication>
 #include <QJniObject>
 #include <QTimer>
@@ -423,7 +425,23 @@ void SoundManagerAndroid::openFallbackOutput(const std::vector<SoundDevicePointe
     AudioOutputBuffer aob(forcedOut, pBuffer);
     targetDevice->addOutput(aob);
     targetDevice->setSampleRate(config.getSampleRate());
-    targetDevice->setConfigFramesPerBuffer(config.getFramesPerBuffer());
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: the buffer of the configuration is the one of the
+    // device that went away. A DJ controller driven directly over USB runs
+    // with 128 frames (2.7 ms); the phone speaker or Bluetooth through Oboe
+    // with that cuts all the time (thousands of audio cuts in Diagnostics
+    // after unplugging the DDJ-REV1). The fallback output gets at least 512
+    // frames (10.7 ms at 48 kHz), what the speaker opens with at the start.
+    constexpr unsigned int kFallbackMinFrames = 512;
+    const unsigned int framesPerBuffer =
+            std::max(config.getFramesPerBuffer(), kFallbackMinFrames);
+    if (framesPerBuffer != config.getFramesPerBuffer()) {
+        qInfo() << "Fallback output" << targetDevice->getDisplayName()
+                << "opened with" << framesPerBuffer << "frames instead of"
+                << config.getFramesPerBuffer();
+    }
+    targetDevice->setConfigFramesPerBuffer(framesPerBuffer);
+    // [AI-generated text, Claude (Anthropic) — end]
     if (targetDevice->open(true, config.getSyncBuffers()) == SoundDeviceStatus::Ok) {
         *pMainClockRef = targetDevice;
         ++*pOutputDevicesOpened;

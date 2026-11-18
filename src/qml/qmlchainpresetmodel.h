@@ -36,6 +36,13 @@ class QmlChainPresetModel : public QAbstractListModel {
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QVariant get(int row) const;
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.1: the row of the first preset made of only the effect
+    // with that id (e.g. "org.mixxx.effects.filter"), -1 if there is none.
+    // The row is the value of loaded_chain_preset; the order of the list
+    // depends on the presets of each install, so a fixed number is wrong.
+    // [AI-generated text, Claude (Anthropic) — end]
+    Q_INVOKABLE int indexOfEffect(const QString& effectId) const;
 
   private slots:
     void slotUpdated();
