@@ -1,5 +1,7 @@
 #include "soundio/soundmanager.h"
 
+#include <QTimer>
+
 #include <qlogging.h>
 
 #include <QLibrary>
@@ -81,6 +83,12 @@ SoundManager::SoundManager(
     m_pXrunCount = new ControlObject(ConfigKey(kAppGroup, QStringLiteral("cutlab_xruns")));
     m_pInputXrunCount = new ControlObject(
             ConfigKey(kAppGroup, QStringLiteral("cutlab_input_xruns")));
+
+    // Cutlab 1.31.3: see logUnderflows()
+    auto* pUnderflowLogTimer = new QTimer(this);
+    pUnderflowLogTimer->setInterval(5000);
+    connect(pUnderflowLogTimer, &QTimer::timeout, this, &SoundManager::logUnderflows);
+    pUnderflowLogTimer->start();
 
 #ifdef __PIPEWIRE__
     if (isPipewireSelected()) {
@@ -676,6 +684,67 @@ void SoundManager::setConfiguredDeckCount(int count) {
 
 int SoundManager::getConfiguredDeckCount() const {
     return m_config.getDeckCount();
+}
+
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.31.3: one line every 5 s while audio comes late, saying which
+// part was late, e.g. "Audio late in the last 5 s: output callback late
+// (7) x12, side stream (network/recording) behind (22) x40". Runs on the
+// main thread; the audio thread only adds to atomic counters.
+// [AI-generated text, Claude (Anthropic) — end]
+void SoundManager::logUnderflows() {
+    static const auto describe = [](int code) -> QString {
+        switch (code) {
+        case 7:
+            return QStringLiteral("output callback late, PortAudio/Oboe underflow");
+        case 8:
+        case 9:
+            return QStringLiteral("input FIFO full");
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+            return QStringLiteral("input read short");
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+            return QStringLiteral("output write short");
+        case 21:
+        case 22:
+        case 23:
+        case 24:
+        case 25:
+            return QStringLiteral("side stream (network/recording) behind, not heard");
+        case 27:
+        case 28:
+            return QStringLiteral("direct USB audio");
+        default:
+            return QStringLiteral("code");
+        }
+    };
+    QStringList parts;
+    for (int code = 0; code < kUnderflowCodes; ++code) {
+        const int count = m_underflowCodes[code].loadRelaxed();
+        const int delta = count - m_underflowCodesLogged[code];
+        if (delta > 0) {
+            parts << QStringLiteral("%1 (%2) x%3").arg(describe(code)).arg(code).arg(delta);
+            m_underflowCodesLogged[code] = count;
+        }
+    }
+    if (parts.isEmpty()) {
+        return;
+    }
+    QStringList outputs;
+    for (const auto& pDevice : std::as_const(m_devices)) {
+        if (pDevice && pDevice->isOpen() && pDevice->getNumOutputChannels() > 0) {
+            outputs << pDevice->getDisplayName();
+        }
+    }
+    qInfo() << "Audio late in the last 5 s:" << parts.join(QStringLiteral(", "))
+            << "| frames per buffer" << m_config.getFramesPerBuffer()
+            << "| outputs" << outputs.join(QStringLiteral(", "));
 }
 
 void SoundManager::processUnderflowHappened(SINT framesPerBuffer) {

@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
+#include <array>
 #include <memory>
 
 #include "audio/types.h"
@@ -98,7 +99,16 @@ class SoundManager : public QObject {
 
     void underflowHappened(int code) {
         m_underflowHappened = 1;
-        m_xrunPending = 1;
+        // Cutlab 1.31.3: the side stream for network/recording (codes
+        // 21-25) is not heard, its delays are not cuts of the audio
+        if (code < 21 || code > 25) {
+            m_xrunPending = 1;
+        }
+        // Cutlab 1.31.3: counted per code (lock-free, safe on the audio
+        // thread) and summed up in the log every few seconds
+        if (code >= 0 && code < kUnderflowCodes) {
+            m_underflowCodes[code].fetchAndAddRelaxed(1);
+        }
         // Disable the engine warnings by default, because printing a warning is a
         // locking function that will make the problem worse
         if (CmdlineArgs::Instance().getDeveloper()) {
@@ -215,6 +225,16 @@ class SoundManager : public QObject {
     // counts one each half second
     QAtomicInt m_xrunPending;
     QAtomicInt m_inputXrunPending;
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.31.3: what made each late buffer, by the code of
+    // underflowHappened(). The diagnostics only had a total, which also
+    // counts the network/recording side stream (codes 21-25), not heard.
+    // logUnderflows() writes what changed to the log every 5 s.
+    static constexpr int kUnderflowCodes = 32;
+    std::array<QAtomicInt, kUnderflowCodes> m_underflowCodes{};
+    std::array<int, kUnderflowCodes> m_underflowCodesLogged{};
+    void logUnderflows();
+    // [AI-generated text, Claude (Anthropic) — end]
     ControlObject* m_pXrunCount;
     ControlObject* m_pInputXrunCount;
     PollingControlProxy m_audioLatencyOverloadCount;
