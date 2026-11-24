@@ -19,6 +19,9 @@
 #include "controllers/keyboard/keyboardeventfilter.h"
 #include "mixer/playermanager.h"
 #include "moc_qmlapplication.cpp"
+#ifdef Q_OS_ANDROID
+#include "util/androidstorage.h"
+#endif
 #include "preferences/configobject.h"
 #include "qml/asyncimageprovider.h"
 #include "qml/qmlapplicationproxy.h"
@@ -94,12 +97,6 @@ static PFN_APerformanceHint_reportActualWorkDuration s_pfnReportActualWorkDurati
 const QStringList kSkipQmlDirs = {
         QStringLiteral("Mixxx"),
 };
-
-bool canWriteToExternalStorage() {
-    // API 30+ (Android 11+) requires MANAGE_EXTERNAL_STORAGE, below that
-    // WRITE_EXTERNAL_STORAGE, which is a runtime permission since API 23.
-    return mixxx::android::hasFullExternalStorageAccess();
-}
 
 void copyAssetDir(const QString& src, const QString& dst) {
     QDir().mkpath(dst);
@@ -219,13 +216,19 @@ QmlApplication::QmlApplication(
     QQuickStyle::setStyle("Basic");
 
 #if defined(Q_OS_ANDROID)
-    if (canWriteToExternalStorage()) {
-        const QString externalQmlDir = QStringLiteral("/storage/emulated/0/Mixxx/qml");
+    {
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.32.0: the copy of the interface goes to the private
+        // folder of the app. In /storage/emulated/0/Mixxx/qml its images
+        // (a Qt logo, a Traktor S4...) showed up in the gallery and in the
+        // share sheets of other apps, and stayed after uninstalling.
+        // [AI-generated text, Claude (Anthropic) — end]
+        const QString qmlDir = mixxx::android::privateQmlDirectory();
         // Files of other versions would still be loaded (e.g. +android file
         // selector folders), so start from an empty folder
-        QDir(externalQmlDir).removeRecursively();
-        copyAssetDir(QStringLiteral("assets:/qml"), externalQmlDir);
-        m_mainFilePath = externalQmlDir + QStringLiteral("/main.qml");
+        QDir(qmlDir).removeRecursively();
+        copyAssetDir(QStringLiteral("assets:/qml"), qmlDir);
+        m_mainFilePath = qmlDir + QStringLiteral("/main.qml");
     }
 #endif
 

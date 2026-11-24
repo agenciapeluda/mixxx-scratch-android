@@ -76,6 +76,7 @@
 #endif
 #if defined(Q_OS_ANDROID)
 #include "util/androidcrashreport.h"
+#include "util/androidstorage.h"
 #include "util/androidpermissions.h"
 #include "soundio/sounddeviceandroidusb.h"
 #include "qml/qmlcutlab.h"
@@ -504,6 +505,8 @@ void CoreServices::initializeLogging() {
             logFlushLevel,
             logFlags);
 #ifdef Q_OS_ANDROID
+    // Cutlab 1.32.0: out of /storage/emulated/0/Mixxx before anything writes
+    mixxx::android::migrateLegacyPublicDirectory(m_pSettingsManager->settings());
     mixxx::android::installCrashReporter();
     mixxx::android::exportPreviousLog(m_pSettingsManager->settings()->getSettingsPath());
 #endif

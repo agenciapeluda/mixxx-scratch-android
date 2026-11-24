@@ -48,6 +48,9 @@
 #include "util/sandbox.h"
 #include "mixer/playerinfo.h"
 #include "moc_qmlcutlab.cpp"
+#ifdef Q_OS_ANDROID
+#include "util/androidstorage.h"
+#endif
 #include "qml/qmllibraryproxy.h"
 #include "qml/qmlmobilelibraryproxy.h"
 #include "analyzer/analyzerscheduledtrack.h"
@@ -1840,7 +1843,7 @@ bool QmlCutlab::shareLog() const {
         }
     }
     // The crash reports
-    const QDir crashes(QStringLiteral("/storage/emulated/0/Mixxx/logs"));
+    const QDir crashes(mixxx::android::logsDirectory());
     for (const QFileInfo& info : crashes.entryInfoList(QDir::Files, QDir::Time)) {
         if (files.size() >= 8) {
             break;

@@ -9,7 +9,7 @@ namespace android {
 /// folder can't be reached without a computer.
 
 /// The folder the crash reports and the previous log are written to,
-/// /storage/emulated/0/Mixxx/logs
+/// logsDirectory() of androidstorage.h (Android/data/<package>/files/logs)
 QString crashReportDirectory();
 
 /// Writes a short report with the call stack of the crashing thread to

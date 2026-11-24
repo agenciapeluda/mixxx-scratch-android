@@ -4,6 +4,9 @@
 #include <QStandardPaths>
 #include <QThread>
 
+#ifdef Q_OS_ANDROID
+#include "util/androidstorage.h"
+#endif
 #include "controllers/controller.h"
 #include "controllers/controllerlearningeventfilter.h"
 #include "controllers/controllermappinginfoenumerator.h"
@@ -177,9 +180,12 @@ void ControllerManager::slotInitialize() {
     QStringList userPaths;
     userPaths.append(userMappingsPath(m_pConfig));
 #if defined(Q_OS_ANDROID)
-    userPaths.append(QStringLiteral("/storage/emulated/0/Mixxx/controllers/"));
-    userPaths.append(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + QStringLiteral("/Mixxx/controllers/"));
-    QDir().mkpath(QStringLiteral("/storage/emulated/0/Mixxx/controllers/"));
+    // Cutlab 1.32.0: the folder of the app; the old public folders are still
+    // read for what could not be moved
+    userPaths.append(mixxx::android::userMappingsDirectory());
+    userPaths.append(mixxx::android::legacyUserMappingsDirectory());
+    userPaths.append(mixxx::android::legacyMusicMappingsDirectory());
+    QDir().mkpath(mixxx::android::userMappingsDirectory());
 #endif
     m_pMainThreadUserMappingEnumerator =
             QSharedPointer<MappingInfoEnumerator>::create(userPaths);
@@ -590,8 +596,9 @@ QList<QString> ControllerManager::getMappingPaths(UserSettingsPointer pConfig) {
     QList<QString> scriptPaths;
     scriptPaths.append(userMappingsPath(pConfig));
 #if defined(Q_OS_ANDROID)
-    scriptPaths.append(QStringLiteral("/storage/emulated/0/Mixxx/controllers/"));
-    scriptPaths.append(QStandardPaths::writableLocation(QStandardPaths::MusicLocation) + QStringLiteral("/Mixxx/controllers/"));
+    scriptPaths.append(mixxx::android::userMappingsDirectory());
+    scriptPaths.append(mixxx::android::legacyUserMappingsDirectory());
+    scriptPaths.append(mixxx::android::legacyMusicMappingsDirectory());
 #endif
     scriptPaths.append(resourceMappingsPath(pConfig));
     return scriptPaths;

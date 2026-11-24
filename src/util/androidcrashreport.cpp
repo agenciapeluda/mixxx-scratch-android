@@ -1,4 +1,5 @@
 #include "util/androidcrashreport.h"
+#include "util/androidstorage.h"
 
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -159,7 +160,8 @@ namespace mixxx {
 namespace android {
 
 QString crashReportDirectory() {
-    return QStringLiteral("/storage/emulated/0/Mixxx/logs");
+    // Cutlab 1.32.0: in the folder of the app, not in shared storage
+    return logsDirectory();
 }
 
 void installCrashReporter() {

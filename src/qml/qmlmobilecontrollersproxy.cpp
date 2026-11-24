@@ -7,6 +7,9 @@
 #include "controllers/controller.h"
 #include "controllers/mappingmatcher.h"
 #include "moc_qmlmobilecontrollersproxy.cpp"
+#ifdef Q_OS_ANDROID
+#include "util/androidstorage.h"
+#endif
 
 namespace mixxx {
 namespace qml {
@@ -22,7 +25,7 @@ QmlMobileControllersProxy* QmlMobileControllersProxy::create(QQmlEngine* pQmlEng
 
 QString QmlMobileControllersProxy::mappingsDirectory() const {
 #if defined(Q_OS_ANDROID)
-    return QStringLiteral("/storage/emulated/0/Mixxx/controllers/");
+    return mixxx::android::userMappingsDirectory();
 #else
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
             QStringLiteral("/controllers/");

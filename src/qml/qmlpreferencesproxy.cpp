@@ -35,6 +35,9 @@
 #include "controllers/midi/midicontroller.h"
 #include "controllers/scripting/legacy/controllerscriptenginelegacy.h"
 #include "moc_qmlpreferencesproxy.cpp"
+#ifdef Q_OS_ANDROID
+#include "util/androidstorage.h"
+#endif
 #include "qmlconfigproxy.h"
 #include "util/assert.h"
 
@@ -317,7 +320,8 @@ bool QmlControllerMappingProxy::isUserMapping(const QmlConfigProxy* pConfig) con
     const QString path = m_mappingDefinition.getPath();
     return path.startsWith(userMappingsPath(pConfig->get()))
 #if defined(Q_OS_ANDROID)
-            || path.startsWith(QStringLiteral("/storage/emulated/0/Mixxx/controllers/"))
+            || path.startsWith(mixxx::android::userMappingsDirectory())
+            || path.startsWith(mixxx::android::legacyUserMappingsDirectory())
 #endif
             ;
 }
