@@ -2093,6 +2093,46 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Re-analyze the whole collection</source>
         <translation>Re-analizar Toda la Colección</translation>
     </message>
+    <message>
+        <source>Lyrics</source>
+        <translation>Letras</translation>
+    </message>
+    <message>
+        <source>Download the lyrics of the whole library</source>
+        <translation>Bajar las letras de toda la biblioteca</translation>
+    </message>
+    <message>
+        <source>Only on Wi-Fi</source>
+        <translation>Solo con Wi-Fi</translation>
+    </message>
+    <message>
+        <source>%1 of %2 · %3 found</source>
+        <translation>%1 de %2 · %3 encontradas</translation>
+    </message>
+    <message>
+        <source>One per second from LRCLIB, only while no track plays and the show mode is off. The tracks without lyrics are tried again after a month. They are kept inside the app.</source>
+        <translation>Una por segundo desde LRCLIB, solo mientras no suena ningún tema y el modo show está apagado. Los temas sin letra se vuelven a buscar al mes. Se guardan dentro de la app.</translation>
+    </message>
+    <message>
+        <source>Done: %1</source>
+        <translation>Listo: %1</translation>
+    </message>
+    <message>
+        <source>Paused while a track plays · %1</source>
+        <translation>En pausa mientras suena un tema · %1</translation>
+    </message>
+    <message>
+        <source>Paused by the show mode · %1</source>
+        <translation>En pausa por el modo show · %1</translation>
+    </message>
+    <message>
+        <source>Waiting for Wi-Fi · %1</source>
+        <translation>Esperando Wi-Fi · %1</translation>
+    </message>
+    <message>
+        <source>Downloading · %1</source>
+        <translation>Bajando · %1</translation>
+    </message>
         <message>
         <source>Genres and suggestions</source>
         <translation>Géneros y sugerencias</translation>

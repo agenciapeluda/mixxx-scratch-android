@@ -46,9 +46,36 @@ class QmlCutlab : public QObject {
     // Cutlab 1.32.0: "Modo show" (org.mixxx.ShowMode): Do Not Disturb,
     // audio focus, screen on, no background work of the app, no internet
     Q_PROPERTY(bool showMode READ showMode WRITE setShowMode NOTIFY showModeChanged)
+    // Cutlab 1.32.4: the lyrics of the whole library, fetched in the
+    // background one per second while nothing plays and the show mode is
+    // off; `lyricsBatchState`: "off", "running", "playing", "show",
+    // "wifi" (waiting for Wi-Fi), "done"
+    Q_PROPERTY(bool lyricsBatch READ lyricsBatch WRITE setLyricsBatch NOTIFY lyricsBatchChanged)
+    Q_PROPERTY(bool lyricsWifiOnly READ lyricsWifiOnly WRITE setLyricsWifiOnly NOTIFY lyricsBatchChanged)
+    Q_PROPERTY(QString lyricsBatchState READ lyricsBatchState NOTIFY lyricsBatchChanged)
+    Q_PROPERTY(int lyricsBatchDone READ lyricsBatchDone NOTIFY lyricsBatchChanged)
+    Q_PROPERTY(int lyricsBatchTotal READ lyricsBatchTotal NOTIFY lyricsBatchChanged)
+    Q_PROPERTY(int lyricsBatchFound READ lyricsBatchFound NOTIFY lyricsBatchChanged)
 
   public:
     explicit QmlCutlab(QObject* pParent = nullptr);
+
+    bool lyricsBatch() const;
+    void setLyricsBatch(bool on);
+    bool lyricsWifiOnly() const;
+    void setLyricsWifiOnly(bool on);
+    QString lyricsBatchState() const {
+        return m_lyricsState;
+    }
+    int lyricsBatchDone() const {
+        return m_lyricsDone;
+    }
+    int lyricsBatchTotal() const {
+        return m_lyricsTotal;
+    }
+    int lyricsBatchFound() const {
+        return m_lyricsFound;
+    }
 
     int analysisDone() const;
     int analysisTotal() const;
@@ -182,6 +209,13 @@ class QmlCutlab : public QObject {
     /// from the track on `group`): tempo within 8%, a key that mixes, no
     /// artist twice, nothing played in the last hours. Returns how many
     Q_INVOKABLE int fillQueue(const QString& group, int count) const;
+    /// Cutlab 1.32.4: puts the tracks of `folder` (also its subfolders) in
+    /// the Auto DJ queue, from the slowest BPM to the fastest, the tracks
+    /// without a BPM last and the same artist never twice in a row. Skips
+    /// what is queued or loaded. `replace` empties the queue first; without
+    /// it, the tracks go after the queue, the ones from the BPM of its last
+    /// track up first. Returns how many were added.
+    Q_INVOKABLE int fillQueueFromFolder(const QString& folder, bool replace) const;
 
     /// Playlists and crates
     /// All of them, the newest playlists first: {kind: "playlist"|"crate",
@@ -210,6 +244,7 @@ class QmlCutlab : public QObject {
             const QString& source,
             const QString& status);
     void suggestFromChanged();
+    void lyricsBatchChanged();
     /// A library scan is over: the folders and the tracks may have changed
     void libraryScanned();
     void analysisChanged();
@@ -227,6 +262,22 @@ class QmlCutlab : public QObject {
 
   private:
     QNetworkAccessManager* m_pNetwork = nullptr;
+    struct LyricsJob {
+        QString location;
+        QString artist;
+        QString title;
+        double duration;
+    };
+    QList<LyricsJob> m_lyricsJobs;
+    QTimer m_lyricsTick;
+    bool m_lyricsBusy = false;
+    QString m_lyricsState = QStringLiteral("off");
+    int m_lyricsDone = 0;
+    int m_lyricsTotal = 0;
+    int m_lyricsFound = 0;
+    void startLyricsBatch();
+    void lyricsTick();
+    void setLyricsState(const QString& state);
     QTimer m_scanTick;
     QElapsedTimer m_sinceGrow;
     /// The batch is over: marks the tracks it could not analyze

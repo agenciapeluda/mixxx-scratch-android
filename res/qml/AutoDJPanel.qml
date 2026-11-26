@@ -58,6 +58,28 @@ Popup {
         }
         return qsTr("Auto DJ no arrancó: revisá que el tema siguiente de la cola no sea el que está sonando.");
     }
+    // 1.32.4: the folder Auto DJ plays, "" for the whole library
+    property string folder: Mixxx.Application.configValue("[Cutlab]", "autodj_folder", "")
+    readonly property string folderName: root.folder.length > 0 ? root.folder.substring(root.folder.lastIndexOf("/") + 1) : ""
+
+    function setFolder(path) {
+        root.folder = path;
+        Mixxx.Application.setConfigValue("[Cutlab]", "autodj_folder", path);
+    }
+    function fillFromFolder() {
+        if (root.folder.length === 0) {
+            folderPicker.open();
+            return;
+        }
+        const replace = enabledControl.value <= 0;
+        const added = Mixxx.Cutlab.fillQueueFromFolder(root.folder, replace);
+        root.queued = Mixxx.Cutlab.queueCount();
+        autoDJHint.text = added > 0
+            ? qsTr("Cola armada con %1 temas de «%2», del BPM más lento al más rápido.").arg(added).arg(root.folderName)
+            : qsTr("No quedan temas de «%1» fuera de la cola.").arg(root.folderName);
+        autoDJHint.color = added > 0 ? Cutlab.Style.ok : Cutlab.Style.cue;
+        autoDJHint.visible = true;
+    }
     function fill() {
         const group = play2.value > 0 && play1.value <= 0 ? "[Channel2]" : "[Channel1]";
         const added = Mixxx.Cutlab.fillQueue(group, 10);
@@ -149,6 +171,138 @@ Popup {
         key: "transition_mode"
     }
 
+    // 1.32.4: picks the folder of Auto DJ, going down the folders of the
+    // library
+    Popup {
+        id: folderPicker
+
+        // [{name, path}] from the music folders down to the one shown
+        property var trail: []
+        property var entries: []
+
+        function load() {
+            const here = trail.length > 0 ? trail[trail.length - 1].path : "";
+            entries = here.length > 0 ? Mixxx.Cutlab.subFolders(here) : Mixxx.Cutlab.musicFolders();
+        }
+
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        width: Math.min(parent ? parent.width - 40 : 520, 520)
+        height: Math.min(parent ? parent.height - 40 : 560, 560)
+        modal: true
+        padding: 14
+        onOpened: {
+            trail = [];
+            load();
+        }
+
+        background: Rectangle {
+            border.color: "#3e3e41"
+            border.width: 1
+            color: Cutlab.Style.panelDark
+            radius: 16
+        }
+        contentItem: ColumnLayout {
+            spacing: 8
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Cutlab.CLButton {
+                    visible: folderPicker.trail.length > 0
+                    Layout.preferredWidth: 40
+                    Layout.preferredHeight: 40
+                    text: "‹"
+                    fontSize: 18
+                    onClicked: {
+                        const t = folderPicker.trail.slice();
+                        t.pop();
+                        folderPicker.trail = t;
+                        folderPicker.load();
+                    }
+                }
+                Text {
+                    Layout.fillWidth: true
+                    color: Cutlab.Style.text
+                    font.family: Cutlab.Style.font
+                    font.pixelSize: 16
+                    font.weight: Font.Medium
+                    elide: Text.ElideMiddle
+                    text: folderPicker.trail.length > 0 ? folderPicker.trail[folderPicker.trail.length - 1].name : qsTr("Carpeta para Auto DJ")
+                }
+                Cutlab.CLButton {
+                    visible: folderPicker.trail.length > 0
+                    Layout.preferredHeight: 40
+                    Layout.preferredWidth: 110
+                    text: qsTr("Usar esta")
+                    fontSize: 14
+                    highlighted: true
+                    onClicked: {
+                        root.setFolder(folderPicker.trail[folderPicker.trail.length - 1].path);
+                        folderPicker.close();
+                    }
+                }
+            }
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 4
+                model: folderPicker.entries
+
+                delegate: Rectangle {
+                    required property var modelData
+
+                    width: ListView.view.width
+                    height: 48
+                    radius: 10
+                    color: rowArea.pressed ? Qt.rgba(1, 1, 1, 0.10) : Qt.rgba(1, 1, 1, 0.04)
+
+                    Text {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 12
+                        anchors.right: countText.left
+                        anchors.rightMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Cutlab.Style.text
+                        font.family: Cutlab.Style.font
+                        font.pixelSize: 14
+                        elide: Text.ElideRight
+                        text: parent.modelData.name
+                    }
+                    Text {
+                        id: countText
+
+                        anchors.right: parent.right
+                        anchors.rightMargin: 12
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Cutlab.Style.textSecondary
+                        font.family: Cutlab.Style.font
+                        font.pixelSize: 13
+                        text: qsTr("%1 temas ›").arg(parent.modelData.count)
+                    }
+                    MouseArea {
+                        id: rowArea
+
+                        anchors.fill: parent
+                        onClicked: {
+                            const entry = parent.modelData;
+                            const below = Mixxx.Cutlab.subFolders(entry.path);
+                            if (below.length === 0) {
+                                root.setFolder(entry.path);
+                                folderPicker.close();
+                                return;
+                            }
+                            folderPicker.trail = folderPicker.trail.concat([{name: entry.name, path: entry.path}]);
+                            folderPicker.entries = below;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     contentItem: Flickable {
         implicitHeight: panelLayout.implicitHeight
         contentHeight: panelLayout.implicitHeight
@@ -210,6 +364,12 @@ Popup {
                     anchors.margins: -6
                     onClicked: {
                         const turningOn = !autoSwitch.on;
+                        // With a folder and nothing queued, the folder
+                        // fills the queue first
+                        if (turningOn && root.folder.length > 0 && Mixxx.Cutlab.queueCount() === 0) {
+                            Mixxx.Cutlab.fillQueueFromFolder(root.folder, true);
+                            root.queued = Mixxx.Cutlab.queueCount();
+                        }
                         enabledControl.value = turningOn ? 1 : 0;
                         autoDJHint.visible = false;
                         if (turningOn) {
@@ -251,7 +411,48 @@ Popup {
             text: (root.queued > 0 ? qsTr("Cola: %1 temas. ").arg(root.queued) : qsTr("La cola está vacía. ")) + qsTr("Auto DJ pasa la cola mezclando entre el deck A y el B. Sumá temas con «Llenar la cola», manteniendo un tema en la biblioteca o con la controladora (mantené BROWSE).")
             wrapMode: Text.WordWrap
         }
+        // 1.32.4: the folder of Auto DJ
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Text {
+                Layout.fillWidth: true
+                color: Cutlab.Style.text
+                font.family: Cutlab.Style.font
+                font.pixelSize: 14
+                elide: Text.ElideMiddle
+                text: root.folder.length > 0 ? qsTr("Carpeta: %1").arg(root.folderName) : qsTr("Carpeta: toda la biblioteca")
+            }
+            Cutlab.CLButton {
+                Layout.preferredWidth: 96
+                Layout.preferredHeight: 40
+                text: qsTr("Elegir")
+                fontSize: 14
+                onClicked: folderPicker.open()
+            }
+            Cutlab.CLButton {
+                visible: root.folder.length > 0
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
+                text: "✕"
+                fontSize: 14
+                onClicked: root.setFolder("")
+            }
+        }
         Cutlab.CLButton {
+            visible: root.folder.length > 0
+            Layout.fillWidth: true
+            Layout.preferredHeight: 48
+            icon: "queue"
+            text: enabledControl.value > 0 ? qsTr("Sumar los temas de la carpeta") : qsTr("Armar la cola con la carpeta (por BPM)")
+            fontSize: 15
+            highlighted: true
+            textColor: "#ffffff"
+            onClicked: root.fillFromFolder()
+        }
+        Cutlab.CLButton {
+            visible: root.folder.length === 0
             Layout.fillWidth: true
             Layout.preferredHeight: 48
             icon: "queue"

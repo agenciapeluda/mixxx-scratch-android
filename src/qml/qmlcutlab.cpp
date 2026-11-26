@@ -275,6 +275,18 @@ void applyShowMode(bool on) {
 
 QmlCutlab::QmlCutlab(QObject* pParent)
         : QObject(pParent) {
+    // Cutlab 1.32.4: the lyrics batch goes on where it was left, once the
+    // library is up
+    QTimer::singleShot(15000, this, [this]() {
+        if (lyricsBatch()) {
+            startLyricsBatch();
+        }
+    });
+    connect(this, &QmlCutlab::libraryScanned, this, [this]() {
+        if (lyricsBatch() && !m_lyricsBusy) {
+            startLyricsBatch();
+        }
+    });
 #ifdef Q_OS_ANDROID
     // Cutlab 1.32.0: the show mode as it was left; off, Do Not Disturb
     // back as it was if a crash left it changed
@@ -1196,7 +1208,248 @@ QString plainTitle(const QString& title) {
     return cleaned.trimmed();
 }
 
+/// The best of a LRCLIB search: synced first, the closest duration
+QString pickLyrics(const QJsonArray& items, double duration) {
+    QString best;
+    double bestScore = -1;
+    for (const QJsonValue& value : items) {
+        const QJsonObject item = value.toObject();
+        const QString synced = item.value(QStringLiteral("syncedLyrics")).toString();
+        const QString plain = item.value(QStringLiteral("plainLyrics")).toString();
+        if (synced.isEmpty() && plain.isEmpty()) {
+            continue;
+        }
+        const double gap = duration > 0 ? std::abs(item.value(QStringLiteral("duration")).toDouble() - duration) : 0;
+        if (duration > 0 && gap > 8) {
+            continue;
+        }
+        const double score = (synced.isEmpty() ? 0 : 100) - gap;
+        if (score > bestScore) {
+            bestScore = score;
+            best = synced.isEmpty() ? plain : synced;
+        }
+    }
+    return best;
+}
+
+/// A LRCLIB search had nothing for the track: an empty "<sha1>.miss" next
+/// to where its lyrics would be saved, dated, so it is asked again a month
+/// later and not before
+QString lyricsMissFile(const QString& location) {
+    QString file = lyricsCacheFile(location);
+    file.chop(4);
+    return file + QStringLiteral(".miss");
+}
+
+bool hasLyricsFor(const QString& location) {
+    const QFileInfo info(location);
+    return QFileInfo::exists(info.absolutePath() + QChar('/') + info.completeBaseName() + QStringLiteral(".lrc")) ||
+            QFileInfo::exists(lyricsCacheFile(location));
+}
+
+bool recentLyricsMiss(const QString& location) {
+    const QFileInfo miss(lyricsMissFile(location));
+    return miss.exists() && miss.lastModified().daysTo(QDateTime::currentDateTime()) < 30;
+}
+
+bool onWifi() {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jboolean>("org/mixxx/AudioHelper",
+                   "onUnmeteredNetwork",
+                   "(Landroid/content/Context;)Z",
+                   QNativeInterface::QAndroidApplication::context().object()) != 0;
+#else
+    return true;
+#endif
+}
+
+bool anyDeckPlaying() {
+    for (int deck = 1; deck <= 4; ++deck) {
+        const ControlObject* pPlay = ControlObject::getControl(
+                ConfigKey(QStringLiteral("[Channel%1]").arg(deck), QStringLiteral("play")),
+                ControlFlag::NoWarnIfMissing);
+        if (pPlay && pPlay->get() > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const ConfigKey kLyricsBatchKey(QStringLiteral("[Cutlab]"), QStringLiteral("lyrics_batch"));
+const ConfigKey kLyricsWifiOnlyKey(QStringLiteral("[Cutlab]"), QStringLiteral("lyrics_wifi_only"));
+
 } // namespace
+
+bool QmlCutlab::lyricsBatch() const {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    return pConfig && pConfig->getValue(kLyricsBatchKey, 0) != 0;
+}
+
+void QmlCutlab::setLyricsBatch(bool on) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig) {
+        return;
+    }
+    if (on != lyricsBatch()) {
+        pConfig->setValue(kLyricsBatchKey, on ? 1 : 0);
+    }
+    if (on) {
+        startLyricsBatch();
+    } else {
+        m_lyricsTick.stop();
+        m_lyricsJobs.clear();
+        setLyricsState(QStringLiteral("off"));
+    }
+}
+
+bool QmlCutlab::lyricsWifiOnly() const {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    return !pConfig || pConfig->getValue(kLyricsWifiOnlyKey, 1) != 0;
+}
+
+void QmlCutlab::setLyricsWifiOnly(bool on) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig || on == lyricsWifiOnly()) {
+        return;
+    }
+    pConfig->setValue(kLyricsWifiOnlyKey, on ? 1 : 0);
+    emit lyricsBatchChanged();
+}
+
+void QmlCutlab::setLyricsState(const QString& state) {
+    if (m_lyricsState != state) {
+        m_lyricsState = state;
+    }
+    emit lyricsBatchChanged();
+}
+
+void QmlCutlab::startLyricsBatch() {
+    QSqlDatabase db = database();
+    if (!db.isOpen()) {
+        return;
+    }
+    QSqlQuery query(db);
+    if (!query.exec(QStringLiteral(
+                "SELECT track_locations.location, library.artist, library.title, "
+                "library.duration FROM library INNER JOIN track_locations "
+                "ON library.location = track_locations.id "
+                "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0"))) {
+        qWarning() << "Cutlab lyrics batch:" << query.lastError();
+        return;
+    }
+    m_lyricsJobs.clear();
+    m_lyricsTotal = 0;
+    m_lyricsDone = 0;
+    m_lyricsFound = 0;
+    while (query.next()) {
+        const QString location = query.value(0).toString();
+        const QString artist = mainArtist(query.value(1).toString());
+        const QString title = plainTitle(query.value(2).toString());
+        if (artist.isEmpty() || title.isEmpty()) {
+            continue;
+        }
+        ++m_lyricsTotal;
+        if (hasLyricsFor(location)) {
+            ++m_lyricsDone;
+            ++m_lyricsFound;
+        } else if (recentLyricsMiss(location)) {
+            ++m_lyricsDone;
+        } else {
+            m_lyricsJobs.append(LyricsJob{location, artist, title, query.value(3).toDouble()});
+        }
+    }
+    if (!m_lyricsTick.isActive()) {
+        m_lyricsTick.setInterval(1000);
+        m_lyricsTick.disconnect(this);
+        connect(&m_lyricsTick, &QTimer::timeout, this, &QmlCutlab::lyricsTick);
+        m_lyricsTick.start();
+    }
+    setLyricsState(m_lyricsJobs.isEmpty() ? QStringLiteral("done") : QStringLiteral("running"));
+}
+
+void QmlCutlab::lyricsTick() {
+    if (m_lyricsBusy) {
+        return;
+    }
+    if (m_lyricsJobs.isEmpty()) {
+        setLyricsState(QStringLiteral("done"));
+        return;
+    }
+    if (showMode()) {
+        if (m_lyricsState != QStringLiteral("show")) {
+            setLyricsState(QStringLiteral("show"));
+        }
+        return;
+    }
+    if (anyDeckPlaying()) {
+        if (m_lyricsState != QStringLiteral("playing")) {
+            setLyricsState(QStringLiteral("playing"));
+        }
+        return;
+    }
+    if (lyricsWifiOnly() && !onWifi()) {
+        if (m_lyricsState != QStringLiteral("wifi")) {
+            setLyricsState(QStringLiteral("wifi"));
+        }
+        return;
+    }
+    if (m_lyricsState != QStringLiteral("running")) {
+        setLyricsState(QStringLiteral("running"));
+    }
+    const LyricsJob job = m_lyricsJobs.takeFirst();
+    if (hasLyricsFor(job.location)) {
+        // The deck found them meanwhile
+        ++m_lyricsDone;
+        ++m_lyricsFound;
+        emit lyricsBatchChanged();
+        return;
+    }
+    if (!m_pNetwork) {
+        m_pNetwork = new QNetworkAccessManager(this);
+        m_pNetwork->setTransferTimeout(10000);
+    }
+    QUrl url(QStringLiteral("https://lrclib.net/api/search"));
+    QUrlQuery search;
+    search.addQueryItem(QStringLiteral("track_name"), job.title);
+    search.addQueryItem(QStringLiteral("artist_name"), job.artist);
+    url.setQuery(search);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("Cutlab/1.32 (Android DJ app)"));
+    m_lyricsBusy = true;
+    QNetworkReply* pReply = m_pNetwork->get(request);
+    connect(pReply, &QNetworkReply::finished, this, [this, pReply, job]() {
+        pReply->deleteLater();
+        m_lyricsBusy = false;
+        if (pReply->error() != QNetworkReply::NoError) {
+            // No internet or LRCLIB down: the track waits at the end, and
+            // the batch slows down for a minute
+            m_lyricsJobs.append(job);
+            m_lyricsTick.stop();
+            QTimer::singleShot(60000, this, [this]() {
+                if (lyricsBatch()) {
+                    m_lyricsTick.start();
+                }
+            });
+            return;
+        }
+        const QString text = pickLyrics(QJsonDocument::fromJson(pReply->readAll()).array(), job.duration);
+        ++m_lyricsDone;
+        if (text.isEmpty()) {
+            QFile miss(lyricsMissFile(job.location));
+            if (miss.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                miss.close();
+            }
+        } else {
+            QFile file(lyricsCacheFile(job.location));
+            if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+                file.write(text.toUtf8());
+            }
+            QFile::remove(lyricsMissFile(job.location));
+            ++m_lyricsFound;
+        }
+        emit lyricsBatchChanged();
+    });
+}
 
 void QmlCutlab::fetchLyrics(const QString& group) {
     const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
@@ -1247,28 +1500,8 @@ void QmlCutlab::fetchLyrics(const QString& group) {
         networkRequest.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("Cutlab/1.32 (Android DJ app)"));
         return networkRequest;
     };
-    // The best of a search: synced first, the closest duration
     const auto pick = [duration](const QJsonArray& items) -> QString {
-        QString best;
-        double bestScore = -1;
-        for (const QJsonValue& value : items) {
-            const QJsonObject item = value.toObject();
-            const QString synced = item.value(QStringLiteral("syncedLyrics")).toString();
-            const QString plain = item.value(QStringLiteral("plainLyrics")).toString();
-            if (synced.isEmpty() && plain.isEmpty()) {
-                continue;
-            }
-            const double gap = duration > 0 ? std::abs(item.value(QStringLiteral("duration")).toDouble() - duration) : 0;
-            if (duration > 0 && gap > 8) {
-                continue;
-            }
-            const double score = (synced.isEmpty() ? 0 : 100) - gap;
-            if (score > bestScore) {
-                bestScore = score;
-                best = synced.isEmpty() ? plain : synced;
-            }
-        }
-        return best;
+        return pickLyrics(items, duration);
     };
     const auto save = [cached](const QString& text) {
         QFile file(cached);
@@ -2011,6 +2244,110 @@ int QmlCutlab::fillQueue(const QString& group, int count) const {
     return static_cast<int>(picked.size());
 }
 
+int QmlCutlab::fillQueueFromFolder(const QString& folder, bool replace) const {
+    TrackCollection* pCollection = internalCollection();
+    QSqlDatabase db = database();
+    if (!pCollection || !db.isOpen() || folder.isEmpty()) {
+        return 0;
+    }
+    PlaylistDAO& playlists = pCollection->getPlaylistDAO();
+    if (replace) {
+        playlists.clearAutoDJQueue();
+    }
+    struct Row {
+        int id;
+        QString artist;
+        double bpm;
+    };
+    QHash<int, Row> rowOfId;
+    std::vector<Row> rows;
+    {
+        const QString prefix = QDir::cleanPath(folder) + QChar('/');
+        QSqlQuery query(db);
+        query.prepare(QStringLiteral(
+                "SELECT library.id, library.artist, library.bpm FROM library "
+                "INNER JOIN track_locations ON library.location = track_locations.id "
+                "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0 "
+                "AND substr(track_locations.location, 1, :length) = :prefix"));
+        query.bindValue(QStringLiteral(":length"), static_cast<int>(prefix.size()));
+        query.bindValue(QStringLiteral(":prefix"), prefix);
+        if (!query.exec()) {
+            qWarning() << "Cutlab fill queue from folder:" << query.lastError();
+            return 0;
+        }
+        while (query.next()) {
+            const Row row{query.value(0).toInt(),
+                    query.value(1).toString().trimmed().toLower(),
+                    query.value(2).toDouble()};
+            rowOfId.insert(row.id, row);
+            rows.push_back(row);
+        }
+    }
+    QSet<int> skip;
+    const auto loadedTracks = PlayerInfo::instance().getLoadedTracks();
+    for (const auto& pLoaded : loadedTracks) {
+        if (pLoaded && pLoaded->getId().isValid()) {
+            skip.insert(pLoaded->getId().toVariant().toInt());
+        }
+    }
+    const QList<TrackId> queued = playlists.getAutoDJTrackIds();
+    double fromBpm = 0;
+    QString lastArtist;
+    for (const TrackId& trackId : queued) {
+        skip.insert(trackId.toVariant().toInt());
+    }
+    if (!queued.isEmpty()) {
+        const auto it = rowOfId.constFind(queued.last().toVariant().toInt());
+        if (it != rowOfId.constEnd()) {
+            fromBpm = it->bpm;
+            lastArtist = it->artist;
+        }
+    }
+    std::vector<Row> pending;
+    for (const Row& row : rows) {
+        if (!skip.contains(row.id)) {
+            pending.push_back(row);
+        }
+    }
+    // Slowest first, no BPM last; after a queue, from its last BPM up and
+    // then the slower ones
+    const auto rank = [fromBpm](const Row& row) {
+        if (row.bpm <= 0) {
+            return 2;
+        }
+        return fromBpm > 0 && row.bpm < fromBpm - 0.5 ? 1 : 0;
+    };
+    std::stable_sort(pending.begin(), pending.end(), [&rank](const Row& a, const Row& b) {
+        const int ra = rank(a);
+        const int rb = rank(b);
+        if (ra != rb) {
+            return ra < rb;
+        }
+        return a.bpm < b.bpm;
+    });
+    // The same artist twice in a row: the next track of another artist
+    // takes its place (it is the closest BPM that keeps them apart)
+    QList<TrackId> picked;
+    while (!pending.empty()) {
+        size_t take = 0;
+        if (!lastArtist.isEmpty()) {
+            for (size_t i = 0; i < pending.size() && i < 12; ++i) {
+                if (pending[i].artist != lastArtist) {
+                    take = i;
+                    break;
+                }
+            }
+        }
+        picked.append(TrackId(QVariant(pending[take].id)));
+        lastArtist = pending[take].artist;
+        pending.erase(pending.begin() + static_cast<std::ptrdiff_t>(take));
+    }
+    if (!picked.isEmpty()) {
+        playlists.addTracksToAutoDJQueue(picked, PlaylistDAO::AutoDJSendLoc::BOTTOM);
+    }
+    return static_cast<int>(picked.size());
+}
+
 QVariantList QmlCutlab::lists() const {
     QVariantList result;
     QSqlDatabase db = database();
@@ -2535,6 +2872,7 @@ QString QmlCutlab::deleteTrackFile(const QUrl& url) const {
     const QFileInfo info(location);
     QFile::remove(info.absolutePath() + QChar('/') + info.completeBaseName() + QStringLiteral(".lrc"));
     QFile::remove(lyricsCacheFile(location));
+    QFile::remove(lyricsMissFile(location));
     pLibrary->trackCollectionManager()->purgeTracks({TrackRef::fromFilePath(location, trackId)});
     qInfo() << "Cutlab: deleted" << location;
     return QString();

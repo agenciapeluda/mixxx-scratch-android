@@ -8,6 +8,9 @@
 //    in a straight line along the crossfader;
 //  - the volume follows a linear curve (constant power mode with a straight
 //    transform: the gains are a straight line).
+//  - 1.32.4: with an effect chosen in Smart CFX (echo, reverb, flanger),
+//    the track that goes out takes it, more and more as it leaves, all of
+//    it from three quarters of the way on;
 // Which track comes in is decided by the way the crossfader moves. Turning
 // it off brings the bass and the crossfader curve back as they were; the
 // tempo stays where it is.
@@ -32,6 +35,16 @@ Item {
     property real savedCurve: 0
     property real savedCalibration: 0
     property bool engaged: false
+    // The Smart CFX of each deck (SmartCfx items), for the transition effect
+    property var cfx1: null
+    property var cfx2: null
+
+    function setFx(deck, amount) {
+        const cfx = deck === 1 ? root.cfx1 : root.cfx2;
+        if (cfx) {
+            cfx.faderAmount = amount;
+        }
+    }
 
     function engage() {
         if (root.engaged) {
@@ -59,6 +72,8 @@ Item {
         xCalibration.value = root.savedCalibration;
         low1Control.value = root.low1;
         low2Control.value = root.low2;
+        root.setFx(1, 0);
+        root.setFx(2, 0);
         root.incoming = 0;
     }
     function moved(position) {
@@ -90,6 +105,13 @@ Item {
             low2Control.value = lowIn;
             low1Control.value = lowOut;
         }
+
+        // Effect: on the outgoing track, growing as it leaves; none on the
+        // incoming one. At either end of the crossfader nothing is left on.
+        const outDeck = comingIn === 1 ? 2 : 1;
+        const fx = p >= 0.999 || p <= 0.001 ? 0 : Math.min(1, p / 0.75);
+        root.setFx(outDeck, fx);
+        root.setFx(comingIn, 0);
 
         // Tempo: the incoming track reaches the BPM of the outgoing one at
         // the middle of the crossfader

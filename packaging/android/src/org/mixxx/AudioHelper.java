@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.util.Log;
 
@@ -88,5 +90,25 @@ public class AudioHelper {
         }
         java.util.Collections.sort(found);
         return String.join(";", found);
+    }
+
+    /// Cutlab 1.32.4: Wi-Fi, Ethernet or any connection that is not metered
+    /// (the lyrics of the whole library are fetched only on one of them)
+    public static boolean onUnmeteredNetwork(Context context) {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm == null) {
+                return false;
+            }
+            NetworkCapabilities caps = cm.getNetworkCapabilities(cm.getActiveNetwork());
+            if (caps == null || !caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                return false;
+            }
+            return caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                    || caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED);
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 }

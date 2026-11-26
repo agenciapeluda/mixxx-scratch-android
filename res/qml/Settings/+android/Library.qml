@@ -628,6 +628,84 @@ Category {
                 }
             }
 
+            // [AI-generated text, Claude (Anthropic) — start]
+            // Cutlab 1.32.4: the lyrics of the whole library, in the background
+            // [AI-generated text, Claude (Anthropic) — end]
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: lyricsCol.implicitHeight + 24
+                color: Theme.darkGray3
+                radius: 0
+                border.color: "#1d1b33"
+                border.width: 1
+
+                ColumnLayout {
+                    id: lyricsCol
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    spacing: 10
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        elide: Text.ElideRight
+                        text: qsTr("Lyrics")
+                        font.weight: Font.DemiBold
+                        font.pixelSize: 13
+                        color: "#e6e7ee"
+                    }
+                    FormRow {
+                        Layout.fillWidth: true
+                        spacing: 12
+
+                        Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
+                            text: qsTr("Download the lyrics of the whole library")
+                            font.pixelSize: 11
+                            color: Theme.white
+                            Layout.fillWidth: true
+                        }
+                        Switch {
+                            checked: Mixxx.Cutlab.lyricsBatch
+                            onToggled: Mixxx.Cutlab.lyricsBatch = checked
+                        }
+                    }
+                    FormRow {
+                        Layout.fillWidth: true
+                        spacing: 12
+
+                        Text {
+                            elide: Text.ElideRight
+                            Layout.minimumWidth: 0
+                            text: qsTr("Only on Wi-Fi")
+                            font.pixelSize: 11
+                            color: Theme.white
+                            Layout.fillWidth: true
+                        }
+                        Switch {
+                            checked: Mixxx.Cutlab.lyricsWifiOnly
+                            onToggled: Mixxx.Cutlab.lyricsWifiOnly = checked
+                        }
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        readonly property string state: Mixxx.Cutlab.lyricsBatchState
+                        readonly property string progress: qsTr("%1 of %2 · %3 found").arg(Mixxx.Cutlab.lyricsBatchDone).arg(Mixxx.Cutlab.lyricsBatchTotal).arg(Mixxx.Cutlab.lyricsBatchFound)
+                        text: state === "off" ? qsTr("One per second from LRCLIB, only while no track plays and the show mode is off. The tracks without lyrics are tried again after a month. They are kept inside the app.")
+                            : state === "done" ? qsTr("Done: %1").arg(progress)
+                            : state === "playing" ? qsTr("Paused while a track plays · %1").arg(progress)
+                            : state === "show" ? qsTr("Paused by the show mode · %1").arg(progress)
+                            : state === "wifi" ? qsTr("Waiting for Wi-Fi · %1").arg(progress)
+                            : qsTr("Downloading · %1").arg(progress)
+                        font.pixelSize: 11
+                        color: "#9ca1b8"
+                        wrapMode: Text.WordWrap
+                    }
+                }
+            }
+
             // ================= 2. CACHÉ DE STREAMING (NAVIDROME / AUDIUS / TIDAL) =================
             Rectangle {
                 Layout.fillWidth: true

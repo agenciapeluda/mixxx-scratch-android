@@ -40,12 +40,42 @@ Item {
         group: "[Channel2]"
     }
     SmartCfx {
+        id: smartCfx1
+
         group: "[Channel1]"
     }
     SmartCfx {
+        id: smartCfx2
+
         group: "[Channel2]"
     }
     SmartFader {
+        cfx1: smartCfx1
+        cfx2: smartCfx2
+    }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // 1.32.4: with a folder for Auto DJ, while it plays, the queue never
+    // runs dry: when three tracks or fewer are left, the rest of the
+    // folder goes after them, from the BPM of the last one up. Tracks added
+    // to the folder come in once the library has scanned them.
+    // [AI-generated text, Claude (Anthropic) — end]
+    Timer {
+        interval: 20000
+        repeat: true
+        running: autoDjEnabled.value > 0
+        triggeredOnStart: true
+        onTriggered: {
+            const folder = Mixxx.Application.configValue("[Cutlab]", "autodj_folder", "");
+            if (folder.length > 0 && Mixxx.Cutlab.queueCount() <= 3) {
+                Mixxx.Cutlab.fillQueueFromFolder(folder, false);
+            }
+        }
+    }
+    Mixxx.ControlProxy {
+        id: autoDjEnabled
+
+        group: "[AutoDJ]"
+        key: "enabled"
     }
 
     Mixxx.ControlProxy {

@@ -24,6 +24,9 @@ Item {
     // How far the filter knob is from the centre, 0 to 1
     readonly property real amount: Math.min(1, Math.abs(filterKnob.value - 0.5) * 2)
     property bool ready: false
+    // 1.32.4: the effect the Smart Fader asks for while this deck goes out
+    // in a transition, 0 to 1; the larger of it and the knob plays
+    property real faderAmount: 0
 
     function apply() {
         if (!root.ready) {
@@ -50,13 +53,15 @@ Item {
             return;
         }
         // A little dead zone at the centre, then up to the full effect
-        const a = Math.max(0, (root.amount - 0.06) / 0.94);
+        const knob = Math.max(0, (root.amount - 0.06) / 0.94);
+        const a = Math.max(knob, root.faderAmount);
         unitSuper.value = a;
         meta.value = a;
     }
 
     onChoiceChanged: root.apply()
     onAmountChanged: root.dose()
+    onFaderAmountChanged: root.dose()
     // Once the effects are up (they are read after the QML is loaded)
     Timer {
         interval: 1500
