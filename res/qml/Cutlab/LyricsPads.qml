@@ -53,7 +53,8 @@ Item {
             return;
         }
         root.status = "loading";
-        Mixxx.Cutlab.fetchLyrics(root.group);
+        const track = root.player.currentTrack;
+        Mixxx.Cutlab.fetchLyricsFor(root.group, root.location, track.artist, track.title, track.duration);
     }
     onLocationChanged: root.load()
     Component.onCompleted: root.load()
@@ -62,7 +63,8 @@ Item {
         target: Mixxx.Cutlab
 
         function onLyricsReady(group, location, lines, synced, source, status) {
-            if (group !== root.group) {
+            // An answer for a track this deck no longer shows
+            if (group !== root.group || location !== root.location) {
                 return;
             }
             root.lines = lines;

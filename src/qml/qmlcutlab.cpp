@@ -287,6 +287,15 @@ QmlCutlab::QmlCutlab(QObject* pParent)
             startLyricsBatch();
         }
     });
+    // Cutlab 1.32.5: the tracks added to the music folders since the last
+    // time come in on their own, a while after the app opens (the scan only
+    // reads the folders that changed)
+    QTimer::singleShot(8000, this, []() {
+        Library* pLibrary = QmlLibraryProxy::get();
+        if (pLibrary && pLibrary->trackCollectionManager()) {
+            pLibrary->trackCollectionManager()->scanner()->scan();
+        }
+    });
 #ifdef Q_OS_ANDROID
     // Cutlab 1.32.0: the show mode as it was left; off, Do Not Disturb
     // back as it was if a crash left it changed
@@ -1457,14 +1466,38 @@ void QmlCutlab::fetchLyrics(const QString& group) {
         emit lyricsReady(group, QString(), {}, false, QString(), QStringLiteral("none"));
         return;
     }
-    const QString location = pTrack->getLocation();
-    const auto answer = [this, group, location](const QString& text, const QString& source) {
+    fetchLyricsFor(group,
+            QUrl::fromLocalFile(pTrack->getLocation()).toString(),
+            pTrack->getArtist(),
+            pTrack->getTitle(),
+            pTrack->getDuration());
+}
+
+// [AI-generated text, Claude (Anthropic) — start]
+// 1.32.5: the deck used to ask with only its group, and the player info
+// behind it still had the previous track for a moment after a load, so the
+// answer was for the wrong track and the new one never came until the pads
+// were opened again. Now the deck passes the track it shows. LRCLIB is asked
+// first in its cache (/api/get-cached, answers at once) and only then with
+// the slower search.
+// [AI-generated text, Claude (Anthropic) — end]
+void QmlCutlab::fetchLyricsFor(const QString& group,
+        const QString& url,
+        const QString& rawArtist,
+        const QString& rawTitle,
+        double duration) {
+    const QString location = QUrl(url).isLocalFile() ? QUrl(url).toLocalFile() : url;
+    if (location.isEmpty()) {
+        emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("none"));
+        return;
+    }
+    const auto answer = [this, group, url](const QString& text, const QString& source) {
         const ParsedLyrics parsed = parseLyrics(text);
         if (parsed.lines.isEmpty()) {
-            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
+            emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("none"));
             return;
         }
-        emit lyricsReady(group, location, parsed.lines, parsed.synced, source, QString());
+        emit lyricsReady(group, url, parsed.lines, parsed.synced, source, QString());
     };
     // Next to the file: "Track.mp3" -> "Track.lrc"
     const QFileInfo info(location);
@@ -1479,54 +1512,76 @@ void QmlCutlab::fetchLyrics(const QString& group) {
         return;
     }
     if (showMode()) {
-        emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("offline"));
+        emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("offline"));
+        return;
+    }
+    const QString artist = mainArtist(rawArtist);
+    const QString title = plainTitle(rawTitle);
+    if (artist.isEmpty() || title.isEmpty()) {
+        emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("none"));
         return;
     }
     if (!m_pNetwork) {
         m_pNetwork = new QNetworkAccessManager(this);
         m_pNetwork->setTransferTimeout(10000);
     }
-    const QString artist = mainArtist(pTrack->getArtist());
-    const QString title = plainTitle(pTrack->getTitle());
-    const double duration = pTrack->getDuration();
-    if (artist.isEmpty() || title.isEmpty()) {
-        emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
-        return;
-    }
     const auto request = [](const QString& path, const QUrlQuery& query) {
-        QUrl url(QStringLiteral("https://lrclib.net") + path);
-        url.setQuery(query);
-        QNetworkRequest networkRequest(url);
+        QUrl lrclib(QStringLiteral("https://lrclib.net") + path);
+        lrclib.setQuery(query);
+        QNetworkRequest networkRequest(lrclib);
         networkRequest.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("Cutlab/1.32 (Android DJ app)"));
+        networkRequest.setTransferTimeout(8000);
         return networkRequest;
     };
-    const auto pick = [duration](const QJsonArray& items) -> QString {
-        return pickLyrics(items, duration);
-    };
-    const auto save = [cached](const QString& text) {
+    const auto save = [cached, location](const QString& text) {
         QFile file(cached);
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             file.write(text.toUtf8());
         }
+        QFile::remove(lyricsMissFile(location));
     };
     QUrlQuery search;
     search.addQueryItem(QStringLiteral("track_name"), title);
     search.addQueryItem(QStringLiteral("artist_name"), artist);
-    QNetworkReply* pReply = m_pNetwork->get(request(QStringLiteral("/api/search"), search));
-    connect(pReply, &QNetworkReply::finished, this, [this, pReply, group, location, answer, pick, save]() {
+    const auto runSearch = [this, request, search, group, url, answer, save, duration]() {
+        QNetworkReply* pReply = m_pNetwork->get(request(QStringLiteral("/api/search"), search));
+        connect(pReply, &QNetworkReply::finished, this, [this, pReply, group, url, answer, save, duration]() {
+            pReply->deleteLater();
+            if (pReply->error() != QNetworkReply::NoError) {
+                qInfo() << "Cutlab lyrics:" << pReply->errorString();
+                emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("error"));
+                return;
+            }
+            const QString text = pickLyrics(QJsonDocument::fromJson(pReply->readAll()).array(), duration);
+            if (text.isEmpty()) {
+                emit lyricsReady(group, url, {}, false, QString(), QStringLiteral("none"));
+                return;
+            }
+            save(text);
+            answer(text, QStringLiteral("lrclib"));
+        });
+    };
+    if (duration <= 0) {
+        runSearch();
+        return;
+    }
+    // The exact track in the LRCLIB cache: one record, at once
+    QUrlQuery exact = search;
+    exact.addQueryItem(QStringLiteral("duration"), QString::number(qRound(duration)));
+    QNetworkReply* pReply = m_pNetwork->get(request(QStringLiteral("/api/get-cached"), exact));
+    connect(pReply, &QNetworkReply::finished, this, [pReply, answer, save, runSearch]() {
         pReply->deleteLater();
-        if (pReply->error() != QNetworkReply::NoError) {
-            qInfo() << "Cutlab lyrics:" << pReply->errorString();
-            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("error"));
-            return;
+        if (pReply->error() == QNetworkReply::NoError) {
+            const QJsonObject item = QJsonDocument::fromJson(pReply->readAll()).object();
+            const QString synced = item.value(QStringLiteral("syncedLyrics")).toString();
+            const QString text = synced.isEmpty() ? item.value(QStringLiteral("plainLyrics")).toString() : synced;
+            if (!text.isEmpty()) {
+                save(text);
+                answer(text, QStringLiteral("lrclib"));
+                return;
+            }
         }
-        const QString text = pick(QJsonDocument::fromJson(pReply->readAll()).array());
-        if (text.isEmpty()) {
-            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
-            return;
-        }
-        save(text);
-        answer(text, QStringLiteral("lrclib"));
+        runSearch();
     });
 }
 

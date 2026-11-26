@@ -159,6 +159,15 @@ class QmlCutlab : public QObject {
     /// lyricsReady(): an .lrc next to the file, the ones saved before, else
     /// LRCLIB (lrclib.net) when there is internet and the show mode is off
     Q_INVOKABLE void fetchLyrics(const QString& group);
+    /// Cutlab 1.32.5: the lyrics of the track the deck shows right now, with
+    /// its data from QML. `url` (the track's file URL) comes back as the
+    /// location of lyricsReady, so the deck can drop answers that arrive
+    /// after it loaded another track.
+    Q_INVOKABLE void fetchLyricsFor(const QString& group,
+            const QString& url,
+            const QString& artist,
+            const QString& title,
+            double duration);
     /// Tracks that suit the one loaded on `group`, best first:
     /// {url, title, artist, bpm, key, why}
     Q_INVOKABLE QVariantList suggestions(const QString& group, int limit) const;
