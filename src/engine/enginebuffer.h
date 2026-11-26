@@ -217,7 +217,11 @@ class EngineBuffer : public EngineObject {
     }
 
     constexpr static KeylockEngine defaultKeylockEngine() {
-#ifdef __RUBBERBAND__
+#if defined(__ANDROID__)
+        // Cutlab 1.32.2: on phones SoundTouch sounds clean and is light;
+        // Rubber Band is still there to pick in the settings
+        return KeylockEngine::SoundTouch;
+#elif defined(__RUBBERBAND__)
         return KeylockEngine::RubberBandFaster;
 #else
         return KeylockEngine::SoundTouch;
@@ -485,6 +489,10 @@ class EngineBuffer : public EngineObject {
     bool m_previousBufferSeek = false;
 
     QAtomicInt m_slipQuitAndAdopt;
+    // Cutlab 1.32.2: the keylock engine asked for from the UI (-1 none),
+    // applied by process() on the engine thread
+    QAtomicInt m_keylockEngineQueued{-1};
+    void applyKeylockEngine(int index);
     /// Indicates that no seek is queued
     static constexpr QueuedSeek kNoQueuedSeek = {mixxx::audio::kInvalidFramePos, SEEK_NONE};
     /// indicates a clone seek on a bosition from another deck

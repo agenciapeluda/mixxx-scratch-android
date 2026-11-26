@@ -932,12 +932,88 @@ Rectangle {
                 Mixxx.Application.setConfigValue("[Cutlab]", "diagnostics", root.showDiagnostics ? "1" : "0");
             } else if (key === "settings") {
                 root.settingsRequested();
+            } else if (key === "sharelog") {
+                // Cutlab 1.32.2: the logs from the menu too
+                if (!Mixxx.Cutlab.shareLog()) {
+                    crashBanner.message = qsTr("No hay log para compartir");
+                    crashBanner.visible = true;
+                }
             } else if (key === "showmode") {
                 // Cutlab 1.32.0: on at once, the panel shows what else to do
                 if (!Mixxx.Cutlab.showMode) {
                     Mixxx.Cutlab.showMode = true;
                 }
                 showModePanel.visible = true;
+            }
+        }
+    }
+
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.2: the app closed by itself last time: offer the log
+    // (the folder of the logs can't be opened from the phone)
+    // [AI-generated text, Claude (Anthropic) — end]
+    Rectangle {
+        id: crashBanner
+
+        property string message: qsTr("Cutlab se cerró sola la última vez. Mandá el log para encontrar por qué.")
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: 12
+        width: Math.min(parent.width - 24, 640)
+        height: 56
+        radius: 12
+        z: 45
+        visible: false
+        color: Style.panel
+        border.width: 1
+        border.color: Style.danger
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: 14
+            anchors.right: bannerButtons.left
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            wrapMode: Text.WordWrap
+            maximumLineCount: 2
+            elide: Text.ElideRight
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 13
+            text: crashBanner.message
+        }
+        Row {
+            id: bannerButtons
+
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
+
+            CLButton {
+                width: 130
+                height: 40
+                text: qsTr("Compartir log")
+                onClicked: {
+                    Mixxx.Cutlab.shareLog();
+                    Mixxx.Cutlab.markCrashSeen();
+                    crashBanner.visible = false;
+                }
+            }
+            CLButton {
+                width: 40
+                height: 40
+                icon: "close"
+                onClicked: {
+                    Mixxx.Cutlab.markCrashSeen();
+                    crashBanner.visible = false;
+                }
+            }
+        }
+        Component.onCompleted: {
+            if (Mixxx.Cutlab.hasNewCrash()) {
+                crashBanner.visible = true;
             }
         }
     }

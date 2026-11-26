@@ -24,7 +24,7 @@ Popup {
     // Every item in the order the knob walks them
     // Cutlab 1.32.1: the show mode in the quick row, the rest in the order
     // they are on screen
-    readonly property var order: ["record", "autodj", "quantize", "showmode", "wave_vertical", "wave_horizontal"].concat(root.portrait ? [] : ["wave_extended"]).concat(["look_dial", "look_platter", "zoom_out", "zoom_in", "library", "folders", "pads", "stems", "diagnostics", "settings"])
+    readonly property var order: ["record", "autodj", "quantize", "showmode", "wave_vertical", "wave_horizontal"].concat(root.portrait ? [] : ["wave_extended"]).concat(["look_dial", "look_platter", "zoom_out", "zoom_in", "library", "folders", "pads", "stems", "diagnostics", "sharelog", "settings"])
     readonly property string currentKey: current >= 0 ? order[current] : ""
     // These stay open after a tap: they are toggles or looks
     readonly property var stays: ["quantize", "wave_vertical", "wave_horizontal", "wave_extended", "look_dial", "look_platter", "zoom_out", "zoom_in", "stems", "diagnostics"]
@@ -295,7 +295,7 @@ Popup {
                 }
             }
 
-            // The rest: two rows of three
+            // The rest
             Row {
                 spacing: root.gap
 
@@ -304,9 +304,12 @@ Popup {
                     topPadding: 18
                     text: qsTr("APP")
                 }
-                Grid {
+                // Cutlab 1.32.2: 4 columns (2 upright), Ajustes takes two
+                // places so no row is left with a hole
+                Flow {
+                    readonly property int columns: content.width > 520 ? 4 : 2
+
                     width: root.area
-                    columns: 3
                     spacing: root.gap
 
                     Repeater {
@@ -316,13 +319,14 @@ Popup {
                             root.waveMode === "extended" && !root.portrait ? {key: "pads", icon: "pads", title: qsTr("Pads"), detail: root.padsHidden ? qsTr("Ocultos: más onda") : qsTr("A la vista")} : {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
                             {key: "stems", icon: "stems", title: qsTr("Stems solos"), detail: root.stemsAuto ? qsTr("Prendido") : qsTr("Apagado")},
                             {key: "diagnostics", icon: "list", title: qsTr("Diagnóstico"), detail: root.diagnostics ? qsTr("Visible") : qsTr("Oculto")},
+                            {key: "sharelog", icon: "more", title: qsTr("Compartir log"), detail: qsTr("Para reportar fallas")},
                             {key: "settings", icon: "settings", title: qsTr("Ajustes"), detail: qsTr("Sonido, latencia, DVS")}
                         ]
 
                         MenuButton {
                             required property var modelData
 
-                            width: root.cell(3)
+                            width: modelData.key === "settings" ? root.cell(parent.columns) * 2 + root.gap : root.cell(parent.columns)
                             height: 56
                             key: modelData.key
                             icon: modelData.icon

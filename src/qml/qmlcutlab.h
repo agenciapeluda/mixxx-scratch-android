@@ -77,6 +77,10 @@ class QmlCutlab : public QObject {
     /// Opens the share sheet with the log of this run, the one before and
     /// the crash reports
     Q_INVOKABLE bool shareLog() const;
+    /// Cutlab 1.32.2: true when a crash report newer than the last one
+    /// seen is there (the app closed by itself last time)
+    Q_INVOKABLE bool hasNewCrash() const;
+    Q_INVOKABLE void markCrashSeen() const;
 
     static QmlCutlab* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
 

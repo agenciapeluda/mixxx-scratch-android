@@ -928,6 +928,11 @@ Category {
                                     }
                                     Skin.ComboBox {
                                         id: audioBuffer
+
+                                        // Cutlab 1.32.2: a width of its own (it had none and
+                                        // was almost 0: the list showed only the tick)
+                                        Layout.preferredWidth: 150
+                                        Layout.minimumWidth: 120
                                         function update(sr) {
                                             let data = [];
                                             let framesPerBuffer = 1;

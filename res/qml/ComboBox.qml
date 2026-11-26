@@ -100,7 +100,8 @@ ComboBox {
 
         height: root.contentItem.height * (Math.min(root.popupMaxItem, Math.max(root.count, 1)) + 1)
         padding: 0
-        width: root.width
+        // Cutlab 1.32.2: never narrower than its items
+        width: Math.max(root.width, 140)
         x: root.width - width
         y: root.height - 4
 

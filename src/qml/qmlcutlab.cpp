@@ -2457,6 +2457,41 @@ void QmlCutlab::setScreen(const QString& name) {
     }
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.2: since 1.31.2 the logs are in the folder of the app, which
+// the file manager of Android 13+ can't open: after a crash the app offers
+// to share them on its own
+// [AI-generated text, Claude (Anthropic) — end]
+namespace {
+const ConfigKey kCrashSeenKey(QStringLiteral("[Cutlab]"), QStringLiteral("crash_seen"));
+
+qint64 newestCrashTime() {
+#ifdef Q_OS_ANDROID
+    const QDir crashes(mixxx::android::logsDirectory());
+    const QFileInfoList list = crashes.entryInfoList(
+            {QStringLiteral("crash-*")}, QDir::Files, QDir::Time);
+    if (!list.isEmpty()) {
+        return list.first().lastModified().toSecsSinceEpoch();
+    }
+#endif
+    return 0;
+}
+} // namespace
+
+bool QmlCutlab::hasNewCrash() const {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    const qint64 newest = newestCrashTime();
+    return pConfig && newest > 0 &&
+            newest > pConfig->getValueString(kCrashSeenKey).toLongLong();
+}
+
+void QmlCutlab::markCrashSeen() const {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (pConfig) {
+        pConfig->setValue(kCrashSeenKey, QString::number(newestCrashTime()));
+    }
+}
+
 bool QmlCutlab::shareLog() const {
 #ifdef Q_OS_ANDROID
     QStringList files;

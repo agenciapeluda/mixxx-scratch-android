@@ -281,7 +281,8 @@ EngineBuffer::EngineBuffer(const QString& group,
 #ifdef __RUBBERBAND__
     m_pScaleRB = new EngineBufferScaleRubberBand(m_pReadAheadManager);
 #endif
-    slotKeylockEngineChanged(m_pKeylockEngine->get());
+    // Nothing plays yet: applied right away
+    applyKeylockEngine(static_cast<int>(m_pKeylockEngine->get()));
     m_pScaleVinyl = m_pScaleLinear;
     m_pScale = m_pScaleVinyl;
     m_pScale->clear();
@@ -860,11 +861,28 @@ void EngineBuffer::slotControlStop(double v)
     }
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.2: the keylock engine is changed on the engine thread.
+// This slot runs on the thread that set the control (the UI, Direct
+// connection), and switching Rubber Band between R2 and R3 rebuilds its
+// stretchers (useEngineFiner() -> onSignalChanged() -> clear() + setup())
+// while the engine thread may be inside them: crashes in
+// RubberBand::RingBuffer::write / RubberBandStretcher::available with
+// garbage addresses, and noise. Now it only queues the index; process()
+// applies it before the next buffer.
+// [AI-generated text, Claude (Anthropic) — end]
 void EngineBuffer::slotKeylockEngineChanged(double dIndex) {
     if (m_bScalerOverride) {
         return;
     }
-    const KeylockEngine engine = static_cast<KeylockEngine>(dIndex);
+    m_keylockEngineQueued.storeRelease(static_cast<int>(dIndex));
+}
+
+void EngineBuffer::applyKeylockEngine(int index) {
+    if (m_bScalerOverride) {
+        return;
+    }
+    const KeylockEngine engine = static_cast<KeylockEngine>(index);
     switch (engine) {
     case KeylockEngine::SoundTouch:
         m_pScaleKeylock = m_pScaleST;
@@ -888,9 +906,10 @@ void EngineBuffer::slotKeylockEngineChanged(double dIndex) {
         break;
 #endif
     default:
-        slotKeylockEngineChanged(static_cast<double>(defaultKeylockEngine()));
-        break;
+        applyKeylockEngine(static_cast<int>(defaultKeylockEngine()));
+        return;
     }
+    m_bScalerChanged = true;
 }
 
 void EngineBuffer::slipQuitAndAdopt() {
@@ -1239,6 +1258,13 @@ void EngineBuffer::process(CSAMPLE* pOutput, const std::size_t bufferSize) {
 #ifdef __RUBBERBAND__
     m_pScaleRB->setSignal(m_sampleRate, m_channelCount);
 #endif
+
+    // Cutlab 1.32.2: a keylock engine asked for from the UI, here on the
+    // engine thread (see slotKeylockEngineChanged)
+    const int keylockEngine = m_keylockEngineQueued.fetchAndStoreAcquire(-1);
+    if (keylockEngine >= 0) {
+        applyKeylockEngine(keylockEngine);
+    }
 
     if (isTrackLoaded() && m_pause.tryLock()) {
         processTrackLocked(pOutput, bufferSize, m_sampleRate);
