@@ -1090,6 +1090,13 @@ int SoundDevicePortAudio::callbackProcessClkRef(
         if ((sched_getscheduler(0) & SCHED_FIFO) == 0) {
             mixxx::setCurrentThreadNice(mixxx::kNiceUrgentAudio);
         }
+        {
+            const int fastCores = mixxx::keepCurrentThreadOnFastCores();
+            qInfo() << "Audio callback thread" << gettid()
+                    << (fastCores > 0
+                                       ? QStringLiteral("kept on %1 fast cores").arg(fastCores)
+                                       : QStringLiteral("may run on any core"));
+        }
 #endif
 #endif
         m_bSetThreadPriority = true;

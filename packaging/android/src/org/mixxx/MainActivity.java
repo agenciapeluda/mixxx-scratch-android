@@ -43,9 +43,7 @@ public class MainActivity extends QtActivityBase {
             if (display == null) {
                 return;
             }
-            final PowerManager power = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            final boolean saving = power != null && power.isPowerSaveMode();
-            final Display.Mode current = display.getMode();
+                        final Display.Mode current = display.getMode();
             Display.Mode best = null;
             for (Display.Mode mode : display.getSupportedModes()) {
                 if (mode.getPhysicalWidth() != current.getPhysicalWidth()
@@ -53,12 +51,10 @@ public class MainActivity extends QtActivityBase {
                     continue;
                 }
                 final float rate = mode.getRefreshRate();
-                if (saving) {
-                    // The mode closest to 60 Hz
-                    if (best == null || Math.abs(rate - 60f) < Math.abs(best.getRefreshRate() - 60f)) {
-                        best = mode;
-                    }
-                } else if (best == null || rate > best.getRefreshRate()) {
+                // Cutlab: always the mode closest to 60 Hz. At 120 Hz the
+                // render thread took 80-95 % of a core while a track played
+                // and left less room for the audio engine
+                if (best == null || Math.abs(rate - 60f) < Math.abs(best.getRefreshRate() - 60f)) {
                     best = mode;
                 }
             }
