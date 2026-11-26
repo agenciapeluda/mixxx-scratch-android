@@ -158,7 +158,7 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     visible: !chip.isHeader
-                    radius: 0
+                    radius: height / 2
                     color: chip.picked ? Style.deckColor(root.group) : (chipMouse.pressed ? Style.buttonPressed : "transparent")
                     border.width: 1
                     border.color: chip.picked ? Style.deckColor(root.group) : Qt.rgba(1, 1, 1, 0.14)
@@ -204,7 +204,7 @@ Item {
 
                 width: (fractionRow.width - fractionRow.spacing * 7) / 8
                 height: fractionRow.height
-                radius: 0
+                radius: Math.round(10 * root.u)
                 text: root.fractionText(modelData)
                 fontSize: Math.max(10, Math.round(13 * root.u))
                 highlighted: root.fraction === modelData
@@ -214,7 +214,7 @@ Item {
         CLButton {
             width: (fractionRow.width - fractionRow.spacing * 7) / 8
             height: fractionRow.height
-            radius: 0
+            radius: Math.round(10 * root.u)
             text: qsTr("HOLD")
             fontSize: Math.max(10, Math.round(13 * root.u))
             highlighted: root.hold
@@ -253,7 +253,7 @@ Item {
 
                 width: root.narrow ? (shotColumn.width - 3 * shotColumn.spacing) / 4 : shotColumn.width
                 height: root.narrow ? shotColumn.height : (shotColumn.height - 3 * shotColumn.spacing) / 4
-                radius: 0
+                radius: Math.round(12 * root.u)
                 color: shotMouse.pressed ? Style.buttonPressed : Style.raised
                 border.width: 1
                 border.color: shotMouse.pressed ? root.deckColor : Qt.rgba(1, 1, 1, 0.14)
@@ -339,7 +339,7 @@ Item {
         anchors.topMargin: Math.round(12 * root.u)
         anchors.bottomMargin: Math.round(12 * root.u)
         anchors.rightMargin: root.narrow ? 0 : Math.round(12 * root.u)
-        radius: 0
+        radius: Math.round(16 * root.u)
         color: Style.raised
         border.width: 1
         border.color: Qt.rgba(root.deckColor.r, root.deckColor.g, root.deckColor.b, 0.35)
@@ -427,7 +427,7 @@ Item {
             id: flashRect
 
             anchors.fill: parent
-            radius: 0
+            radius: 14
             color: root.deckColor
             opacity: 0
 
@@ -457,7 +457,7 @@ Item {
             y: touch.mouseY - height / 2
             width: Math.round(44 * root.u)
             height: width
-            radius: 0
+            radius: width / 2
             color: Style.deckColor(root.group)
             border.width: 3
             border.color: "#ffffff"

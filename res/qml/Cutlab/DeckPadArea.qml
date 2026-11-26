@@ -28,7 +28,7 @@ Item {
         x: root.compact ? 0 : (root.mirrored ? root.width - width : 0)
         width: root.compact ? root.width : Math.round(Math.max(54, Math.min(84, root.width * 0.16)))
         height: root.compact ? 26 : root.height
-        radius: 0
+        radius: 10
         color: pickerMouse.pressed ? Style.buttonPressed : Style.raised
 
         // Sideways, like upright: a box with the current mode; a tap goes

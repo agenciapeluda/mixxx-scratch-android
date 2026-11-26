@@ -48,6 +48,7 @@ Rectangle {
         width: Math.min(parent.width - 32, 520)
         height: column.implicitHeight + 40
         color: Style.panel
+        radius: 12
         border.width: 1
         border.color: Style.buttonBorder
 
@@ -129,7 +130,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 130
                         height: 42
-                        radius: 0
+                        radius: 8
                         text: modelData.ok ? modelData.okText : modelData.action
                         lit: modelData.ok
                         litColor: Style.ok
@@ -159,7 +160,7 @@ Rectangle {
                 CLButton {
                     width: (parent.width - 12) / 2
                     height: 48
-                    radius: 0
+                    radius: 8
                     text: Mixxx.Cutlab.showMode ? qsTr("Apagar modo show") : qsTr("Prender modo show")
                     lit: Mixxx.Cutlab.showMode
                     litColor: Style.ok
@@ -168,7 +169,7 @@ Rectangle {
                 CLButton {
                     width: (parent.width - 12) / 2
                     height: 48
-                    radius: 0
+                    radius: 8
                     text: qsTr("Listo")
                     onClicked: root.closeRequested()
                 }

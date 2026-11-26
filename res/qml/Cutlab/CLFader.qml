@@ -75,7 +75,7 @@ Item {
         readonly property real travel: root.vertical ? root.height - height : root.width - width
 
         color: root.handleColor
-        radius: 0
+        radius: root.vertical ? height / 2 : width / 2
         border.color: "#ffffff"
         border.width: mouse.pressed ? 2 : 0
         width: root.vertical ? root.handleLength : root.handleThickness * 0.5

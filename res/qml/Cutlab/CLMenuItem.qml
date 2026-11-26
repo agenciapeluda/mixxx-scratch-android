@@ -18,7 +18,7 @@ MenuItem {
         verticalAlignment: Text.AlignVCenter
     }
     background: Rectangle {
-        radius: 0
+        radius: 8
         color: root.highlighted || root.down ? Style.buttonPressed : "transparent"
     }
 }

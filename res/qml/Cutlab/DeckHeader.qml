@@ -69,7 +69,7 @@ Item {
         anchors.bottomMargin: 6
         x: root.coverOnRight ? root.width - width - 8 : 8
         width: height
-        radius: 0
+        radius: 8
         color: "#1d1d1f"
         clip: true
 
@@ -188,7 +188,7 @@ Item {
             // show at a glance.
             Rectangle {
                 anchors.fill: parent
-                radius: 0
+                radius: 4
                 color: Style.panelDark
                 visible: root.loaded
 

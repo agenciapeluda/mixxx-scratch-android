@@ -23,13 +23,13 @@ AbstractButton {
 
             anchors.fill: parent
             color: root.category == ActionButton.Category.Action ? '#332da1' : root.category == ActionButton.Category.Danger ? '#5a2a30' : Theme.darkGray3
-            radius: 0
+            radius: 4
         }
         DropShadow {
             anchors.fill: parent
             color: "#80000000"
             horizontalOffset: 0
-            radius: 0
+            radius: 8.0
             source: content
             verticalOffset: 0
         }

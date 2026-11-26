@@ -22,7 +22,7 @@ Rectangle {
 
     implicitWidth: column.implicitWidth + 20
     implicitHeight: column.implicitHeight + 51
-    radius: 0
+    radius: 10
     color: Qt.rgba(0.03, 0.02, 0.06, 0.88)
     border.width: 1
     border.color: Style.buttonBorder
@@ -276,7 +276,7 @@ Rectangle {
         Rectangle {
             width: zeroLabel.implicitWidth + 24
             height: 32
-            radius: 0
+            radius: 8
             color: zeroMouse.pressed ? Style.buttonPressed : Style.raised
 
             Text {
@@ -299,7 +299,7 @@ Rectangle {
         Rectangle {
             width: shareLabel.implicitWidth + 24
             height: 32
-            radius: 0
+            radius: 8
             color: shareMouse.pressed ? Style.accentDark : Style.accent
 
             Text {

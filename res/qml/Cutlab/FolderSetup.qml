@@ -165,7 +165,7 @@ Rectangle {
                 visible: root.restoreName !== "" && !root.restoreDismissed
                 width: column.width
                 height: visible ? restoreColumn.implicitHeight + 28 : 0
-                radius: 0
+                radius: 14
                 color: Style.panel
                 border.width: 2
                 border.color: Style.neutral
@@ -212,7 +212,7 @@ Rectangle {
                         CLButton {
                             width: 200
                             height: 46
-                            radius: 0
+                            radius: 12
                             fillColor: Style.accent
                             bordered: false
                             fontSize: 15
@@ -225,7 +225,7 @@ Rectangle {
                         CLButton {
                             width: 150
                             height: 46
-                            radius: 0
+                            radius: 12
                             fontSize: 15
                             text: qsTr("Empezar de cero")
                             onClicked: root.restoreDismissed = true
@@ -252,7 +252,7 @@ Rectangle {
 
                     width: column.width
                     height: 66
-                    radius: 0
+                    radius: 14
                     color: root.knobIndex === index ? Style.raised : Style.panel
                     border.width: 2
                     border.color: on ? Style.neutral : "transparent"
@@ -264,7 +264,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 40
                         height: 40
-                        radius: 0
+                        radius: 10
                         color: folderRow.on ? Style.neutralDark : Style.buttonBorder
 
                         Image {
@@ -308,7 +308,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: 46
                         height: 28
-                        radius: 0
+                        radius: 14
                         color: folderRow.on ? Style.neutralDark : Style.buttonBorder
 
                         Rectangle {
@@ -316,7 +316,7 @@ Rectangle {
                             x: folderRow.on ? parent.width - width - 3 : 3
                             width: 22
                             height: 22
-                            radius: 0
+                            radius: 11
                             color: "#ffffff"
 
                             Behavior on x {
@@ -350,7 +350,7 @@ Rectangle {
             Rectangle {
                 width: column.width
                 height: 48
-                radius: 0
+                radius: 12
                 color: otherMouse.pressed ? Style.raised : "transparent"
                 border.width: 1
                 border.color: Qt.rgba(1, 1, 1, 0.22)
@@ -373,7 +373,7 @@ Rectangle {
             Rectangle {
                 width: column.width
                 height: excludedColumn.implicitHeight + 24
-                radius: 0
+                radius: 14
                 color: Style.panel
 
                 Column {
@@ -406,7 +406,7 @@ Rectangle {
             Rectangle {
                 width: column.width
                 height: usbText.implicitHeight + 24
-                radius: 0
+                radius: 14
                 color: Style.panel
 
                 Text {
@@ -443,7 +443,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         width: Math.min(parent.width - 40, 640)
         height: 54
-        radius: 0
+        radius: 14
         fillColor: Style.accent
         bordered: false
         fontSize: 16
@@ -497,7 +497,7 @@ Rectangle {
             CLButton {
                 width: 44
                 height: 44
-                radius: 0
+                radius: 10
                 icon: "back"
                 iconSize: 18
                 fillColor: "transparent"
@@ -523,7 +523,7 @@ Rectangle {
             CLButton {
                 width: 150
                 height: 44
-                radius: 0
+                radius: 10
                 text: qsTr("Usar esta")
                 highlighted: true
                 onClicked: {

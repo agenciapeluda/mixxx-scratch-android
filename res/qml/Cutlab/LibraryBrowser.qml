@@ -149,6 +149,8 @@ Rectangle {
     }
 
     function open(group) {
+        // Cutlab 1.32.1: always the music of the phone
+        root.source = 0;
         root.targetGroup = group || "";
         root.visible = true;
         root.readLoaded();
@@ -835,7 +837,7 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: miniLetter.implicitWidth + 12
                             height: miniLetter.implicitHeight + 2
-                            radius: 0
+                            radius: 4
                             color: Style.deckColor(miniDeck.modelData)
 
                             Text {
@@ -890,7 +892,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: 44
             height: 44
-            radius: 0
+            radius: 10
             icon: "back"
             iconSize: 18
             fillColor: "transparent"
@@ -929,7 +931,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: Math.max(52, Math.round(52 * root.u))
             height: width
-            radius: 0
+            radius: 12
             icon: root.wide ? "close" : "more"
             iconSize: width * 0.46
             bordered: !root.wide
@@ -1012,7 +1014,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 width: sourceList.width
                 height: Math.round(38 * root.u)
-                radius: 0
+                radius: Math.round(8 * root.u)
                 color: current ? Style.neutralDark : (sourceMouse.pressed ? Style.raised : "transparent")
                 border.width: knob ? 2 : 0
                 border.color: current ? "#ffffff" : Style.neutral
@@ -1111,7 +1113,7 @@ Rectangle {
                 CLButton {
                     width: parent.width
                     height: Math.round(38 * root.u)
-                    radius: 0
+                    radius: Math.round(8 * root.u)
                     icon: "folder"
                     iconSize: Math.round(16 * root.u)
                     fontSize: root.fs(13)
@@ -1122,7 +1124,7 @@ Rectangle {
                 CLButton {
                     width: parent.width
                     height: Math.round(38 * root.u)
-                    radius: 0
+                    radius: Math.round(8 * root.u)
                     fontSize: root.fs(13)
                     text: qsTr("Más opciones…")
                     fillColor: "transparent"
@@ -1169,7 +1171,7 @@ Rectangle {
 
                         width: chipLabel.implicitWidth + 24
                         height: 34
-                        radius: 0
+                        radius: 17
                         color: on ? Style.neutralDark : "transparent"
                         border.width: 1
                         border.color: on ? Style.neutral : Qt.rgba(1, 1, 1, 0.14)
@@ -1209,7 +1211,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: root.wide ? parent.width - x - compatButton.width - orderButton.width - Math.round(30 * root.u) : parent.width - 24
                 height: Math.round(40 * root.u)
-                radius: 0
+                radius: Math.round(10 * root.u)
                 color: Style.raised
 
                 Image {
@@ -1292,7 +1294,7 @@ Rectangle {
                 width: root.wide ? compatText.implicitWidth + Math.round(28 * root.u)
                     : Math.max(Math.round(90 * root.u), Math.min(compatText.implicitWidth + Math.round(28 * root.u), orderButton.x - x - 8))
                 height: Math.round((root.wide ? 40 : 32) * root.u)
-                radius: 0
+                radius: height / 2
                 fillColor: root.compatible ? Style.neutralDark : "transparent"
                 bordered: true
 
@@ -1333,7 +1335,7 @@ Rectangle {
                 visible: root.wide || !root.searchOpen
                 width: orderText.implicitWidth + Math.round(28 * root.u)
                 height: compatButton.height
-                radius: 0
+                radius: height / 2
                 fillColor: "transparent"
                 bordered: root.wide
 
@@ -1358,7 +1360,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 36
                 height: 36
-                radius: 0
+                radius: 10
                 icon: root.searchOpen ? "close" : "search"
                 iconSize: 16
                 fillColor: "transparent"
@@ -1403,7 +1405,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: sugLetter.implicitWidth + 12
                     height: sugLetter.implicitHeight + 2
-                    radius: 0
+                    radius: 4
                     color: Style.deckColor(root.versusGroup)
 
                     Text {
@@ -1469,7 +1471,7 @@ Rectangle {
 
                     width: root.wide ? (suggestionView.width - 3 * suggestionView.spacing) / 4 : 220
                     height: suggestionView.height
-                    radius: 0
+                    radius: Math.round(10 * root.u)
                     color: picked ? Style.track : Style.panel
                     border.width: picked ? 2 : 1
                     border.color: picked ? Style.neutral : Qt.rgba(0.55, 0.52, 1, 0.25)
@@ -1481,7 +1483,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: Math.round(36 * root.u)
                         height: width
-                        radius: 0
+                        radius: Math.round(6 * root.u)
                         color: "#2a2650"
                     }
                     Column {
@@ -1600,7 +1602,7 @@ Rectangle {
             width: trackView.width
             visible: scanning || running || root.missing > 0 || failed > 0
             height: visible ? Math.round(40 * root.u) : 0
-            radius: 0
+            radius: Math.round(8 * root.u)
             color: Style.raised
             clip: true
 
@@ -1611,7 +1613,7 @@ Rectangle {
                 visible: analysisBar.scanning
                 width: parent.width * 0.25
                 height: parent.height
-                radius: 0
+                radius: parent.radius
                 color: Style.neutralDark
 
                 SequentialAnimation on x {
@@ -1637,7 +1639,7 @@ Rectangle {
                 visible: analysisBar.running && !analysisBar.scanning
                 width: parent.width * (analysisBar.total > 0 ? analysisBar.done / analysisBar.total : 0)
                 height: parent.height
-                radius: 0
+                radius: parent.radius
                 color: Style.neutralDark
             }
             Text {
@@ -1983,7 +1985,7 @@ Rectangle {
 
                     width: (loadBar.width - 24 - 8) / 2
                     height: 52
-                    radius: 0
+                    radius: 12
                     color: main ? Style.deckColor(modelData) : "transparent"
                     border.width: main ? 0 : 1
                     border.color: Style.deckColor(modelData)
@@ -2046,10 +2048,8 @@ Rectangle {
             enabled: root.page && root.page.showTracks && trackView.count > 0
             onTriggered: stemsPopup.openFor("")
         }
-        CLMenuItem {
-            text: root.source === 0 ? qsTr("Streaming…") : qsTr("Música local")
-            onTriggered: root.source = root.source === 0 ? 1 : 0
-        }
+        // Cutlab 1.32.1: streaming out of the menu for now (no streaming
+        // in sets yet): the library is always the music of the phone
         CLMenuItem {
             text: qsTr("Elegir mis carpetas de música…")
             onTriggered: root.foldersRequested()
@@ -2160,7 +2160,7 @@ Rectangle {
         onClosed: Qt.inputMethod.hide()
         background: Rectangle {
             color: Style.panel
-            radius: 0
+            radius: 16
             border.width: 1
             border.color: Style.buttonBorder
         }
@@ -2178,7 +2178,7 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: 44
-                radius: 0
+                radius: 10
                 color: Style.raised
 
                 TextField {
@@ -2238,7 +2238,7 @@ Rectangle {
         anchors.bottomMargin: (root.wide ? hints.height : loadBar.height) + 16
         width: Math.min(root.width - 32, toastText.implicitWidth + 32)
         height: toastText.implicitHeight + 20
-        radius: 0
+        radius: height / 2
         color: Style.raised
         border.width: 1
         border.color: Style.neutral

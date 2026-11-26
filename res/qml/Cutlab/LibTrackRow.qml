@@ -65,7 +65,7 @@ Rectangle {
     }
 
     height: Math.round((selected ? 68 : 56) * u)
-    radius: 0
+    radius: Math.round(10 * u)
     // The deck this track is loaded on ("" if none): the row takes its color
     readonly property string onDeck: url === "" ? "" : (url === loadedUrlA ? "[Channel1]" : (url === loadedUrlB ? "[Channel2]" : ""))
 
@@ -82,7 +82,7 @@ Rectangle {
         y: cover.y - 4
         width: deckTag.implicitWidth + Math.round(10 * root.u)
         height: deckTag.implicitHeight + 2
-        radius: 0
+        radius: 5
         color: root.onDeck !== "" ? Style.deckColor(root.onDeck) : "transparent"
 
         Text {
@@ -110,7 +110,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: Math.round(44 * root.u)
         height: width
-        radius: 0
+        radius: Math.round(8 * root.u)
         color: "#2a2650"
         clip: true
         z: 2
@@ -206,7 +206,7 @@ Rectangle {
                 visible: root.camelot !== ""
                 width: keyText.implicitWidth + Math.round(10 * root.u)
                 height: keyText.implicitHeight + 4
-                radius: 0
+                radius: 4
                 color: root.match.clash ? Style.textSecondary : Style.keyChip
 
                 Text {
@@ -312,7 +312,7 @@ Rectangle {
                 visible: root.stemmed
                 width: visible ? stemsLabel.implicitWidth + Math.round(10 * root.u) : 0
                 height: stemsLabel.implicitHeight + 2
-                radius: 0
+                radius: 4
                 color: Style.stemVocals
 
                 Text {

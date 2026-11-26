@@ -11,7 +11,7 @@ Rectangle {
     property bool mirrored: false
     property real u: 1
 
-    radius: 0
+    radius: Math.round(10 * u)
     color: Style.panel
     clip: true
 
@@ -48,7 +48,7 @@ Rectangle {
         y: Math.round(8 * root.u)
         width: letter.implicitWidth + Math.round(12 * root.u)
         height: letter.implicitHeight + 2
-        radius: 0
+        radius: 4
         color: Style.deckColor(root.group)
 
         Text {

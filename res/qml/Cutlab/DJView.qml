@@ -849,7 +849,7 @@ Rectangle {
         anchors.bottomMargin: 72
         width: Math.min(parent.width - 32, 440)
         height: letsktchToastText.implicitHeight + 24
-        radius: 0
+        radius: 12
         z: 50
         color: Style.panel
         border.width: 1

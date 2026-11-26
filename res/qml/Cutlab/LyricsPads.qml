@@ -88,6 +88,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: Style.panelDark
+        radius: 10
         border.width: 1
         border.color: Style.divider
         clip: true

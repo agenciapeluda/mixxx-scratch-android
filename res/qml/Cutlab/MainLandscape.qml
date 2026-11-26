@@ -235,7 +235,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: visible ? 48 : 0
                 height: 40
-                radius: 0
+                radius: 20
                 text: root.padsBig ? "▼" : "▲"
                 fontSize: 14
                 highlighted: root.padsBig
@@ -356,7 +356,7 @@ Rectangle {
                 z: 3
                 active: shown
                 sourceComponent: ToolPanel {
-                    radius: 0
+                    radius: 12
                     group: toolsArea.modelData
                     tool: toolsArea.index === 0 ? root.host.tool1 : root.host.tool2
                     onToolChanged: root.host.setTool(toolsArea.modelData, tool)

@@ -11,7 +11,7 @@ Menu {
     background: Rectangle {
         implicitWidth: 260
         color: Style.raised
-        radius: 0
+        radius: 12
         border.color: Style.buttonBorder
         border.width: 1
     }

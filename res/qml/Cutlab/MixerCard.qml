@@ -19,7 +19,7 @@ Rectangle {
         return names[id] || id;
     }
 
-    radius: 0
+    radius: Math.round(14 * u)
     color: Style.panel
     border.width: 1
     border.color: Qt.rgba(1, 1, 1, 0.07)
@@ -72,7 +72,7 @@ Rectangle {
 
                     width: (parent.width - parent.spacing) / 2
                     height: fxColumn.implicitHeight + Math.round(16 * root.u)
-                    radius: 0
+                    radius: Math.round(10 * root.u)
                     color: fxMouse.pressed ? Style.buttonPressed : Style.track
                     border.width: on ? 1 : 0
                     border.color: Style.deckColor(modelData)
@@ -186,7 +186,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width
                     height: Math.round(10 * root.u)
-                    radius: 0
+                    radius: height / 2
                     color: Style.track
                 }
                 Rectangle {

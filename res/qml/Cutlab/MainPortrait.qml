@@ -204,7 +204,7 @@ Rectangle {
                 anchors.fill: parent
                 active: root.toolsGroup !== ""
                 sourceComponent: ToolPanel {
-                    radius: 0
+                    radius: 12
                     group: root.toolsGroup
                     tool: root.toolsGroup === "[Channel2]" ? root.host.tool2 : root.host.tool1
                     onToolChanged: root.host.setTool(root.toolsGroup, tool)
@@ -252,7 +252,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 76
                 height: 44
-                radius: 0
+                radius: 22
                 text: qsTr("PADS")
                 fontSize: 13
                 highlighted: root.host.padsBig

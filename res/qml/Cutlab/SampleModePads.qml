@@ -41,7 +41,7 @@ Item {
 
                     width: (parent.width - 8) / 3
                     height: parent.height
-                    radius: 0
+                    radius: height / 2
                     color: on ? Qt.darker(root.deckColor, 1.5) : "transparent"
                     border.width: 1
                     border.color: on ? root.deckColor : Qt.rgba(1, 1, 1, 0.14)
@@ -92,7 +92,7 @@ Item {
 
                     width: (parent.width - baseLabel.width - 8 * 3) / 8
                     height: parent.height
-                    radius: 0
+                    radius: 5
                     color: on ? Style.cueColor(index + 1, cueColor.value) : Style.raised
                     border.width: 1
                     border.color: on ? "#ffffff" : Style.buttonBorder

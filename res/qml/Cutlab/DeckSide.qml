@@ -92,7 +92,7 @@ Rectangle {
             Rectangle {
                 width: Math.round(48 * root.u)
                 height: width
-                radius: 0
+                radius: Math.round(10 * root.u)
                 color: Style.deckShade(root.group)
                 clip: true
 
@@ -132,7 +132,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: letterText.implicitWidth + Math.round(14 * root.u)
                 height: letterText.implicitHeight + 4
-                radius: 0
+                radius: 4
                 color: Style.deckColor(root.group)
 
                 Text {
@@ -175,7 +175,7 @@ Rectangle {
                     visible: root.loaded && Mixxx.KeyUtils.keyIsValid(keyControl.value)
                     width: keyText.implicitWidth + 10
                     height: keyText.implicitHeight + 2
-                    radius: 0
+                    radius: 4
                     color: Style.keyChip
 
                     Text {
@@ -210,7 +210,7 @@ Rectangle {
         anchors.bottom: footer.top
         anchors.bottomMargin: Math.round(12 * root.u)
         width: top.width
-        radius: 0
+        radius: Math.round(10 * root.u)
         color: Style.panel
         clip: true
 
@@ -258,7 +258,7 @@ Rectangle {
                     visible: modelData.show
                     width: chipText.implicitWidth + Math.round(20 * root.u)
                     height: chipText.implicitHeight + Math.round(8 * root.u)
-                    radius: 0
+                    radius: height / 2
                     color: "transparent"
                     border.width: 1
                     border.color: modelData.color === Style.textSecondary ? Qt.rgba(1, 1, 1, 0.12) : modelData.color

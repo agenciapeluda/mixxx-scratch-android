@@ -164,7 +164,7 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 8
                 height: 8
-                radius: 0
+                radius: 4
                 color: Math.abs(rate.value) < 0.0001 ? Style.play : Style.tick
             }
         }
@@ -179,7 +179,7 @@ Rectangle {
         anchors.bottomMargin: 8
         width: Math.min(parent.width - 16, 100)
         height: 44
-        radius: 0
+        radius: 22
         group: root.group
         key: "vinylcontrol_enabled"
         mode: "toggle"

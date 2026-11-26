@@ -22,7 +22,9 @@ Popup {
     property int current: -1
 
     // Every item in the order the knob walks them
-    readonly property var order: ["record", "autodj", "quantize", "wave_vertical", "wave_horizontal"].concat(root.portrait ? [] : ["wave_extended"]).concat(["look_dial", "look_platter", "zoom_out", "zoom_in", "library", "pads", "stems", "folders", "diagnostics", "settings"])
+    // Cutlab 1.32.1: the show mode in the quick row, the rest in the order
+    // they are on screen
+    readonly property var order: ["record", "autodj", "quantize", "showmode", "wave_vertical", "wave_horizontal"].concat(root.portrait ? [] : ["wave_extended"]).concat(["look_dial", "look_platter", "zoom_out", "zoom_in", "library", "folders", "pads", "stems", "diagnostics", "settings"])
     readonly property string currentKey: current >= 0 ? order[current] : ""
     // These stay open after a tap: they are toggles or looks
     readonly property var stays: ["quantize", "wave_vertical", "wave_horizontal", "wave_extended", "look_dial", "look_platter", "zoom_out", "zoom_in", "stems", "diagnostics"]
@@ -81,7 +83,7 @@ Popup {
     }
     background: Rectangle {
         color: Style.panel
-        radius: 0
+        radius: 22
         border.width: 1
         border.color: Qt.rgba(1, 1, 1, 0.08)
     }
@@ -98,7 +100,7 @@ Popup {
         property color onColor: Style.neutral
         readonly property real textRoom: width - (icon !== "" ? 48 : 16)
 
-        radius: 0
+        radius: 12
         color: buttonMouse.pressed ? Style.buttonPressed : (on ? Qt.rgba(onColor.r, onColor.g, onColor.b, 0.22) : Style.raised)
         border.width: root.currentKey === key ? 2 : 1
         border.color: root.currentKey === key ? Style.text : (on ? onColor : Qt.rgba(1, 1, 1, 0.08))
@@ -147,6 +149,29 @@ Popup {
         }
     }
 
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.1: one grid for the whole menu. Every row has the same
+    // label column on the left and the same area for its buttons, so the
+    // buttons of all rows start and end at the same place.
+    // [AI-generated text, Claude (Anthropic) — end]
+    readonly property real labelWidth: content.width > 520 ? 86 : 64
+    readonly property real gap: 8
+    readonly property real area: content.width - root.labelWidth - root.gap
+    function cell(count) {
+        return (root.area - root.gap * (count - 1)) / count;
+    }
+
+    component RowLabel: Text {
+        width: root.labelWidth
+        anchors.verticalCenter: parent ? parent.verticalCenter : undefined
+        color: Style.textSecondary
+        font.family: Style.font
+        font.pixelSize: 11
+        font.weight: Font.DemiBold
+        font.letterSpacing: 0.8
+        elide: Text.ElideRight
+    }
+
     contentItem: Flickable {
         clip: true
         contentWidth: width
@@ -157,74 +182,69 @@ Popup {
             id: content
 
             width: parent.width
-            spacing: 12
+            spacing: 10
 
-            // The mark and the quick toggles
+            // The mark
             Row {
-                width: parent.width
-                height: 56
-                spacing: 10
+                height: 34
+                spacing: 8
 
-                Row {
-                    id: brand
-
+                Image {
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 8
+                    width: 28
+                    height: 28
+                    source: root.recording ? "icons/cutlab_mark_rec.svg" : "icons/cutlab_mark.svg"
+                    sourceSize.width: 96
+                    sourceSize.height: 96
+                }
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Style.text
+                    font.family: Style.font
+                    font.pixelSize: 20
+                    font.weight: Font.ExtraBold
+                    font.letterSpacing: -0.6
+                    text: "cutlab"
+                }
+            }
 
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 30
-                        height: 30
-                        source: root.recording ? "icons/cutlab_mark_rec.svg" : "icons/cutlab_mark.svg"
-                        sourceSize.width: 96
-                        sourceSize.height: 96
-                    }
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: content.width > 520
-                        color: Style.text
-                        font.family: Style.font
-                        font.pixelSize: 22
-                        font.weight: Font.ExtraBold
-                        font.letterSpacing: -0.6
-                        text: "cutlab"
-                    }
+            // The quick toggles
+            Row {
+                height: 52
+                spacing: root.gap
+
+                RowLabel {
+                    text: qsTr("RÁPIDO")
                 }
                 Repeater {
                     model: [
                         {key: "record", icon: "rec", title: root.recording ? qsTr("Grabando") : qsTr("Grabar")},
                         {key: "autodj", icon: "autodj", title: qsTr("Auto DJ")},
-                        {key: "quantize", icon: "", title: qsTr("Quantize")}
+                        {key: "quantize", icon: "", title: qsTr("Quantize")},
+                        {key: "showmode", icon: "", title: qsTr("Modo show")}
                     ]
 
                     MenuButton {
                         required property var modelData
 
-                        width: (content.width - brand.width - 40) / 3
-                        height: 56
+                        width: root.cell(4)
+                        height: 52
                         key: modelData.key
                         icon: modelData.icon
                         title: modelData.title
                         on: (modelData.key === "record" && root.recording) || (modelData.key === "quantize" && root.quantize)
-                        onColor: modelData.key === "record" ? Style.danger : Style.neutral
+                            || (modelData.key === "showmode" && Mixxx.Cutlab.showMode)
+                        onColor: modelData.key === "record" ? Style.danger : (modelData.key === "showmode" ? Style.ok : Style.neutral)
                     }
                 }
             }
 
             // The waveforms
             Row {
-                width: parent.width
                 height: 44
-                spacing: 8
+                spacing: root.gap
 
-                Text {
-                    width: 70
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: Style.textSecondary
-                    font.family: Style.font
-                    font.pixelSize: 11
-                    font.weight: Font.DemiBold
-                    font.letterSpacing: 0.8
+                RowLabel {
                     text: qsTr("ONDA")
                 }
                 Repeater {
@@ -238,7 +258,7 @@ Popup {
                     MenuButton {
                         required property var modelData
 
-                        width: (content.width - 70 - 8 * waveButtons.count) / waveButtons.count
+                        width: root.cell(waveButtons.count)
                         height: 44
                         key: modelData.key
                         title: modelData.title
@@ -249,38 +269,16 @@ Popup {
 
             // The decks and the zoom
             Row {
-                width: parent.width
                 height: 44
-                spacing: 8
+                spacing: root.gap
 
-                Text {
-                    width: 70
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: Style.textSecondary
-                    font.family: Style.font
-                    font.pixelSize: 11
-                    font.weight: Font.DemiBold
-                    font.letterSpacing: 0.8
+                RowLabel {
                     text: qsTr("PLATO")
                 }
                 Repeater {
                     model: [
                         {key: "look_dial", title: qsTr("Dial")},
-                        {key: "look_platter", title: qsTr("Bandeja")}
-                    ]
-
-                    MenuButton {
-                        required property var modelData
-
-                        width: (content.width - 70 - 40) / 4
-                        height: 44
-                        key: modelData.key
-                        title: modelData.title
-                        on: root.deckLook === modelData.key.substring(5)
-                    }
-                }
-                Repeater {
-                    model: [
+                        {key: "look_platter", title: qsTr("Bandeja")},
                         {key: "zoom_out", title: qsTr("Zoom −")},
                         {key: "zoom_in", title: qsTr("Zoom +")}
                     ]
@@ -288,41 +286,50 @@ Popup {
                     MenuButton {
                         required property var modelData
 
-                        width: (content.width - 70 - 40) / 4
+                        width: root.cell(4)
                         height: 44
                         key: modelData.key
                         title: modelData.title
+                        on: modelData.key.startsWith("look_") && root.deckLook === modelData.key.substring(5)
                     }
                 }
             }
 
-            // The rest
-            Grid {
-                width: parent.width
-                columns: 3
-                spacing: 8
+            // The rest: two rows of three
+            Row {
+                spacing: root.gap
 
-                Repeater {
-                    model: [
-                        {key: "library", icon: "library", title: qsTr("Biblioteca"), detail: qsTr("Cola y listas")},
-                        root.waveMode === "extended" && !root.portrait ? {key: "pads", icon: "pads", title: qsTr("Pads"), detail: root.padsHidden ? qsTr("Ocultos: más onda") : qsTr("A la vista")} : {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
-                        {key: "stems", icon: "stems", title: qsTr("Stems solos"), detail: root.stemsAuto ? qsTr("Prendido") : qsTr("Apagado")},
-                        {key: "folders", icon: "folder", title: qsTr("Carpetas"), detail: qsTr("Tu música")},
-                        {key: "showmode", icon: "keylock", title: qsTr("Modo show"), detail: Mixxx.Cutlab.showMode ? qsTr("Prendido") : qsTr("Apagado")},
-                        {key: "diagnostics", icon: "list", title: qsTr("Diagnóstico"), detail: root.diagnostics ? qsTr("Visible") : qsTr("Oculto")},
-                        {key: "settings", icon: "settings", title: qsTr("Ajustes avanzados"), detail: qsTr("Sonido, latencia, DVS")}
-                    ]
+                RowLabel {
+                    anchors.verticalCenter: undefined
+                    topPadding: 18
+                    text: qsTr("APP")
+                }
+                Grid {
+                    width: root.area
+                    columns: 3
+                    spacing: root.gap
 
-                    MenuButton {
-                        required property var modelData
+                    Repeater {
+                        model: [
+                            {key: "library", icon: "library", title: qsTr("Biblioteca"), detail: qsTr("Cola y listas")},
+                            {key: "folders", icon: "folder", title: qsTr("Carpetas"), detail: qsTr("Tu música")},
+                            root.waveMode === "extended" && !root.portrait ? {key: "pads", icon: "pads", title: qsTr("Pads"), detail: root.padsHidden ? qsTr("Ocultos: más onda") : qsTr("A la vista")} : {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
+                            {key: "stems", icon: "stems", title: qsTr("Stems solos"), detail: root.stemsAuto ? qsTr("Prendido") : qsTr("Apagado")},
+                            {key: "diagnostics", icon: "list", title: qsTr("Diagnóstico"), detail: root.diagnostics ? qsTr("Visible") : qsTr("Oculto")},
+                            {key: "settings", icon: "settings", title: qsTr("Ajustes"), detail: qsTr("Sonido, latencia, DVS")}
+                        ]
 
-                        width: (content.width - 16) / 3
-                        height: 52
-                        key: modelData.key
-                        icon: modelData.icon
-                        title: modelData.title
-                        detail: modelData.detail
-                        on: (modelData.key === "stems" && root.stemsAuto) || (modelData.key === "diagnostics" && root.diagnostics)
+                        MenuButton {
+                            required property var modelData
+
+                            width: root.cell(3)
+                            height: 56
+                            key: modelData.key
+                            icon: modelData.icon
+                            title: modelData.title
+                            detail: modelData.detail
+                            on: (modelData.key === "stems" && root.stemsAuto) || (modelData.key === "diagnostics" && root.diagnostics)
+                        }
                     }
                 }
             }

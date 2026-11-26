@@ -128,7 +128,7 @@ Row {
     CLButton {
         width: root.buttonWidth
         height: root.height
-        radius: 0
+        radius: height / 2
         icon: "mixer"
         iconSize: Math.min(22, height * 0.46)
         lit: root.toolsOpen
@@ -138,7 +138,7 @@ Row {
     CLButton {
         width: root.buttonWidth
         height: root.height
-        radius: 0
+        radius: height / 2
         icon: root.playing ? "pause" : "play"
         iconSize: Math.min(22, height * 0.46)
         fillColor: root.playing ? Style.deckColor(root.group) : "#1d1b33"
@@ -149,7 +149,7 @@ Row {
     CLButton {
         width: root.buttonWidth
         height: root.height
-        radius: 0
+        radius: height / 2
         text: "CUE"
         fontSize: Math.max(10, Math.min(14, height * 0.3, root.buttonWidth * 0.24))
         lit: root.cueLit
@@ -161,7 +161,7 @@ Row {
     CLButton {
         width: root.buttonWidth
         height: root.height
-        radius: 0
+        radius: height / 2
         // On: filled in the deck color, bold (it says the beats are locked;
         // the leader carries a dot under the label)
         text: "SYNC"
@@ -194,7 +194,7 @@ Row {
         visible: root.withLoop
         width: root.buttonWidth
         height: root.height
-        radius: 0
+        radius: height / 2
         text: scratchActive.value > 0 ? qsTr("SCRATCH") : "LOOP " + Style.beatsText(loopSize.value)
         fontSize: Math.max(11, Math.min(14, height * 0.3))
         lit: loopEnabled.value > 0

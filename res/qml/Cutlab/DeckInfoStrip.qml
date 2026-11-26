@@ -19,7 +19,7 @@ Rectangle {
     property real remaining: 0
     readonly property real u: Math.max(0.7, Math.min(1.3, height / 64))
 
-    radius: 0
+    radius: 10
     color: Style.raised
 
     function read() {
@@ -153,7 +153,7 @@ Rectangle {
             visible: keyText !== ""
             width: keyLabel.implicitWidth + Math.round(16 * root.u)
             height: Math.round(28 * root.u)
-            radius: 0
+            radius: height / 2
             color: "transparent"
             border.width: 1.5
             border.color: Style.keyColor(keyText)
@@ -198,7 +198,7 @@ Rectangle {
                     visible: modelData.on
                     width: badge.implicitWidth + Math.round(14 * root.u)
                     height: Math.round(24 * root.u)
-                    radius: 0
+                    radius: 6
                     color: modelData.color
 
                     Text {

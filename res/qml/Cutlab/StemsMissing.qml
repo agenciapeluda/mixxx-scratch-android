@@ -49,7 +49,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        radius: 0
+        radius: 6
         color: "#b0141418"
     }
     Column {
@@ -76,7 +76,7 @@ Item {
             visible: root.loaded && root.job === ""
             width: Math.min(parent.width, 180)
             height: 40
-            radius: 0
+            radius: 20
             text: root.ready ? qsTr("Usar stems") : qsTr("Separar")
             highlighted: true
             onClicked: root.ready ? root.useStems() : stemsPopup.openFor(root.track.trackLocationUrl)

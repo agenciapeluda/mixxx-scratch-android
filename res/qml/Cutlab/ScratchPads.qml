@@ -68,7 +68,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width: Math.max(26, Math.min(Math.round(root.rowHeight * 1.4), (beatsRow.width - beatsLabel.implicitWidth - 6 * 4) / 4))
                     height: root.rowHeight - 4
-                    radius: 0
+                    radius: height / 2
                     text: String(modelData)
                     fontSize: 12
                     fontWeight: Font.Bold
@@ -85,7 +85,7 @@ Item {
             y: root.twoRows ? root.rowHeight + 4 + 2 : 2
             width: root.twoRows ? header.width : header.width - x
             height: root.rowHeight - 4
-            radius: 0
+            radius: height / 2
             text: qsTr("Scratchear: %1 ▾").arg(root.engine ? root.engine.stemName(root.engine.scratchStem || root.engine.stem) : qsTr("Voz"))
             fontSize: 12
             fontWeight: Font.DemiBold
