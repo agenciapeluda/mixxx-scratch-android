@@ -68,7 +68,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 8
         color: '#0e0d1a'
-        radius: root.focused ? 18 : 22
+        radius: 0
         border.color: root.focused ? "#3429ff" : (root.knownDevice ? "#2bd67b" : "#2a2940")
         border.width: root.focused ? 2 : 1
 
@@ -794,7 +794,7 @@ Item {
         anchors.margins: 8
         color: "#000000"
         horizontalOffset: 0
-        radius: root.focused ? 0 : 8.0
+        radius: 0
         source: content
         verticalOffset: 0
     }
@@ -840,7 +840,7 @@ Item {
 
         background: Rectangle {
             color: "#17162a"
-            radius: 12
+            radius: 0
             border.width: 1
             border.color: "#2a2940"
         }
@@ -868,7 +868,7 @@ Item {
                 onTextChanged: mappingPicker.filter = text
                 background: Rectangle {
                     color: "#0e0d1a"
-                    radius: 8
+                    radius: 0
                     border.width: 1
                     border.color: searchField.activeFocus ? "#e6e7ee" : "#2a2940"
                 }
@@ -889,7 +889,7 @@ Item {
 
                     width: ListView.view.width
                     height: 44
-                    radius: 8
+                    radius: 0
                     color: current ? "#2b2766" : (rowMouse.pressed ? "#2a2650" : "transparent")
 
                     Text {

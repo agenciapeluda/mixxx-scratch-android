@@ -19,7 +19,7 @@ Rectangle {
 
     implicitHeight: 30
     implicitWidth: Math.max(recording ? 76 : 50, recRow.implicitWidth + 16)
-    radius: 4
+    radius: 0
     color: recording ? "#b71c1c" : (recMouse.pressed ? "#1d1b33" : idleColor)
     border.color: recording ? "#ff4d5e" : idleBorderColor
     border.width: 1
@@ -57,7 +57,7 @@ Rectangle {
         Rectangle {
             Layout.preferredHeight: 8
             Layout.preferredWidth: 8
-            radius: 4
+            radius: 0
             color: root.recording ? (blinkTimer.blink ? "#ff1744" : "#ff8f99") : "#7d8199"
         }
         Text {
@@ -92,7 +92,7 @@ Rectangle {
 
         background: Rectangle {
             color: "#0e0d1a"
-            radius: 10
+            radius: 0
             border.color: "#ff4d5e"
             border.width: 1
         }

@@ -83,3 +83,5 @@ SampleModePads 1.0 SampleModePads.qml
 SmartCfx 1.0 SmartCfx.qml
 SmartFader 1.0 SmartFader.qml
 CutlabBridge 1.0 CutlabBridge.qml
+ShowModePanel 1.0 ShowModePanel.qml
+LyricsPads 1.0 LyricsPads.qml

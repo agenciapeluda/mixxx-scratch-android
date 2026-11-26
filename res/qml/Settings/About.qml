@@ -36,7 +36,7 @@ Category {
             // App identity
             Rectangle {
                 Layout.fillWidth: true
-                radius: 12
+                radius: 0
                 color: "#0e0d1a"
                 border.color: "#1d1b33"
                 border.width: 1
@@ -72,7 +72,7 @@ Category {
                             Text {
                                 elide: Text.ElideRight
                                 Layout.minimumWidth: 0
-                                text: qsTr("by Lui Agüero")
+                                text: qsTr("made by xhellvirax")
                                 font.pixelSize: 11
                                 color: "#c9cce0"
                             }
@@ -102,7 +102,7 @@ Category {
             Rectangle {
                 visible: false
                 Layout.fillWidth: true
-                radius: 8
+                radius: 0
                 color: "#0e0d1a"
                 border.color: "#1d1b33"
                 border.width: 1
@@ -224,7 +224,7 @@ Category {
                                 y: (autoCheckSwitch.height - height) / 2
                                 implicitWidth: 48
                                 implicitHeight: 26
-                                radius: 13
+                                radius: 0
                                 color: autoCheckSwitch.checked ? "#17162a" : "#0e0d1a"
                                 border.color: autoCheckSwitch.checked ? "#8b85ff" : "#5a5f75"
                                 border.width: 1
@@ -234,7 +234,7 @@ Category {
                                     y: 3
                                     width: 20
                                     height: 20
-                                    radius: 10
+                                    radius: 0
                                     color: autoCheckSwitch.checked ? "#8b85ff" : "#7d8199"
                                 }
                             }
@@ -258,7 +258,7 @@ Category {
             // Credits and license
             Rectangle {
                 Layout.fillWidth: true
-                radius: 12
+                radius: 0
                 color: "#0e0d1a"
                 border.color: "#1d1b33"
                 border.width: 1
@@ -281,7 +281,7 @@ Category {
                     Text {
                         Layout.minimumWidth: 0
                         Layout.fillWidth: true
-                        text: qsTr("Cutlab is made by Lui Agüero. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.")
+                        text: qsTr("Cutlab is made by xhellvirax. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.")
                         font.pixelSize: 11
                         color: "#9ca1b8"
                         wrapMode: Text.WordWrap

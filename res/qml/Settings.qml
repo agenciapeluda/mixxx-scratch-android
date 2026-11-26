@@ -29,7 +29,7 @@ Popup {
         anchors.fill: parent
         color: Theme.darkGray2
         opacity: parent.radius < 0 ? Math.max(0.1, 1 + parent.radius / 8) : 1
-        radius: 8
+        radius: 0
     }
     contentItem: Item {
         anchors.centerIn: parent

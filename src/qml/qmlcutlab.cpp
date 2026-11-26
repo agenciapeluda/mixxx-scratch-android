@@ -19,6 +19,16 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QHash>
+#include <QCryptographicHash>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QUrlQuery>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QMap>
+#include <QRegularExpression>
 #include <QSet>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -30,9 +40,11 @@
 #include <QtDebug>
 #include <algorithm>
 #include <cmath>
+#include <utility>
 #include <vector>
 
 #include "control/controlobject.h"
+#include "qml/qmlconfigproxy.h"
 #include "engine/channels/enginedeck.h"
 #include "track/trackref.h"
 #include "library/dao/playlistdao.h"
@@ -234,8 +246,41 @@ void ensureFailedTable(QSqlDatabase& db) {
 }
 } // namespace
 
+namespace {
+const ConfigKey kShowModeKey(QStringLiteral("[Cutlab]"), QStringLiteral("show_mode"));
+
+#ifdef Q_OS_ANDROID
+void callShowMode(const char* method) {
+    QJniObject::callStaticMethod<void>("org/mixxx/ShowMode",
+            method,
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
+}
+bool askShowMode(const char* method) {
+    return QJniObject::callStaticMethod<jboolean>("org/mixxx/ShowMode",
+                   method,
+                   "(Landroid/content/Context;)Z",
+                   QNativeInterface::QAndroidApplication::context().object()) != 0;
+}
+void applyShowMode(bool on) {
+    QJniObject::callStaticMethod<void>("org/mixxx/ShowMode",
+            "setEnabled",
+            "(Landroid/content/Context;Z)V",
+            QNativeInterface::QAndroidApplication::context().object(),
+            static_cast<jboolean>(on));
+}
+#endif
+} // namespace
+
 QmlCutlab::QmlCutlab(QObject* pParent)
         : QObject(pParent) {
+#ifdef Q_OS_ANDROID
+    // Cutlab 1.32.0: the show mode as it was left; off, Do Not Disturb
+    // back as it was if a crash left it changed
+    QTimer::singleShot(0, this, [this]() {
+        applyShowMode(showMode());
+    });
+#endif
     Library* pLibrary = QmlLibraryProxy::get();
     if (pLibrary && pLibrary->trackCollectionManager() &&
             pLibrary->trackCollectionManager()->scanner()) {
@@ -675,38 +720,606 @@ QVariantList QmlCutlab::musicFolders() const {
     return result;
 }
 
+// Cutlab 1.32.0: see the header
+QVariantList QmlCutlab::subFolders(const QString& path) const {
+    QVariantList result;
+    QSqlDatabase db = database();
+    if (!db.isOpen() || path.isEmpty()) {
+        return result;
+    }
+    const QString prefix = QDir::cleanPath(path) + QChar('/');
+    QSqlQuery query(db);
+    query.prepare(QStringLiteral(
+            "SELECT track_locations.location FROM library "
+            "INNER JOIN track_locations ON library.location = track_locations.id "
+            "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0 "
+            "AND substr(track_locations.location, 1, :length) = :prefix"));
+    query.bindValue(QStringLiteral(":length"), static_cast<int>(prefix.size()));
+    query.bindValue(QStringLiteral(":prefix"), prefix);
+    if (!query.exec()) {
+        qWarning() << "Cutlab subfolders:" << query.lastError();
+        return result;
+    }
+    QMap<QString, int> counts;
+    while (query.next()) {
+        const QString rest = query.value(0).toString().mid(prefix.size());
+        const int slash = rest.indexOf(QChar('/'));
+        if (slash > 0) {
+            counts[rest.left(slash)] += 1;
+        }
+    }
+    QStringList names = counts.keys();
+    std::sort(names.begin(), names.end(), [](const QString& a, const QString& b) {
+        return QString::localeAwareCompare(a, b) < 0;
+    });
+    for (const QString& name : std::as_const(names)) {
+        result.append(QVariantMap{
+                {QStringLiteral("name"), name},
+                {QStringLiteral("path"), prefix + name},
+                {QStringLiteral("count"), counts.value(name)},
+        });
+    }
+    return result;
+}
+
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.0: the genres of the library, in two levels, and the genre
+// of a track as the app uses it (Géneros and the suggestions).
+//
+// Many files have an ISRC in the genre tag (USSM19600058: what some
+// streaming downloads write), which made one "genre" per track. Those don't
+// count as a genre. With the source "Automático" (default) a track without a
+// real genre takes it from its folder: the first folder under a music
+// folder of the library, "08 HipHop - Underground Moderno" -> HipHop /
+// Underground Moderno (a second folder level is the subgenre too). "Tag"
+// uses only the tag, "Carpeta" only the folders. Nothing is written to the
+// files. Variants are joined by a key of letters and digits ("Hip Hop",
+// "hip-hop" and "HipHop" are one genre).
+// [AI-generated text, Claude (Anthropic) — end]
+namespace {
+
+const QRegularExpression kIsrcPattern(
+        QStringLiteral("^[A-Za-z]{2}-?[A-Za-z0-9]{3}-?\\d{2}-?\\d{5}$"));
+const QRegularExpression kFolderNumbering(
+        QStringLiteral("^\\s*\\d+(\\s*[-._)]\\s*|\\s+)"));
+const ConfigKey kGenreSourceKey(QStringLiteral("[Cutlab]"), QStringLiteral("genre_source"));
+const ConfigKey kSuggestFromKey(QStringLiteral("[Cutlab]"), QStringLiteral("suggest_from"));
+
+enum class GenreSource {
+    Automatic = 0,
+    Tag = 1,
+    Folder = 2,
+};
+
+int configInt(const ConfigKey& key, int fallback) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    return pConfig ? pConfig->getValue(key, fallback) : fallback;
+}
+
+bool isRealGenre(const QString& genre) {
+    const QString trimmed = genre.trimmed();
+    return !trimmed.isEmpty() && !kIsrcPattern.match(trimmed).hasMatch();
+}
+
+QString genreKey(const QString& name) {
+    QString key;
+    key.reserve(name.size());
+    for (const QChar ch : name) {
+        if (ch.isLetterOrNumber()) {
+            key.append(ch.toLower());
+        }
+    }
+    return key;
+}
+
+QString cleanFolderName(const QString& name) {
+    QString cleaned = name;
+    cleaned.remove(kFolderNumbering);
+    cleaned.replace(QChar('_'), QChar(' '));
+    return cleaned.simplified();
+}
+
+struct TrackGenre {
+    QString genre;
+    QString subgenre;
+    // The folder the genre or subgenre comes from, empty when from the tag
+    QString folder;
+    bool fromTag = false;
+};
+
+/// The genre and subgenre the folders of `location` give, from the music
+/// folder (`roots`) that holds it
+TrackGenre folderGenre(const QString& location, const QStringList& roots) {
+    TrackGenre result;
+    for (const QString& root : roots) {
+        const QString prefix = root.endsWith(QChar('/')) ? root : root + QChar('/');
+        if (!location.startsWith(prefix)) {
+            continue;
+        }
+        const QStringList segments = location.mid(prefix.size()).split(QChar('/'), Qt::SkipEmptyParts);
+        // The last segment is the file
+        if (segments.size() < 2) {
+            return result;
+        }
+        const QString first = cleanFolderName(segments.at(0));
+        const int dash = first.indexOf(QStringLiteral(" - "));
+        if (dash > 0) {
+            result.genre = first.left(dash).trimmed();
+            result.subgenre = first.mid(dash + 3).trimmed();
+            result.folder = prefix + segments.at(0);
+        } else {
+            result.genre = first;
+            result.folder = prefix + segments.at(0);
+            if (segments.size() >= 3) {
+                result.subgenre = cleanFolderName(segments.at(1));
+                result.folder += QChar('/') + segments.at(1);
+            }
+        }
+        return result;
+    }
+    return result;
+}
+
+TrackGenre trackGenre(const QString& tag, const QString& location, const QStringList& roots, GenreSource source) {
+    if (source != GenreSource::Folder && isRealGenre(tag)) {
+        TrackGenre result;
+        result.genre = tag.trimmed();
+        result.fromTag = true;
+        // A folder of the same genre gives the subgenre
+        const TrackGenre folder = folderGenre(location, roots);
+        if (!folder.subgenre.isEmpty() && genreKey(folder.genre) == genreKey(result.genre)) {
+            result.subgenre = folder.subgenre;
+            result.folder = folder.folder;
+        }
+        return result;
+    }
+    if (source == GenreSource::Tag) {
+        return {};
+    }
+    return folderGenre(location, roots);
+}
+
+QStringList libraryRoots(QSqlDatabase& db) {
+    QStringList roots;
+    QSqlQuery query(db);
+    if (query.exec(QStringLiteral("SELECT directory FROM directories"))) {
+        while (query.next()) {
+            roots.append(QDir::cleanPath(query.value(0).toString()));
+        }
+    }
+    // The deepest first, so a music folder inside another one wins
+    std::sort(roots.begin(), roots.end(), [](const QString& a, const QString& b) {
+        return a.size() > b.size();
+    });
+    return roots;
+}
+
+QString quoted(const QString& value) {
+    QString clean = value;
+    clean.remove(QChar('"'));
+    return QChar('"') + clean + QChar('"');
+}
+
+struct GenreGroup {
+    QHash<QString, int> names; // spelling -> tracks, the most used is shown
+    int count = 0;
+    QSet<QString> tags;    // tag values, for the filter
+    QSet<QString> folders; // folders, for the filter
+};
+
+QString bestName(const QHash<QString, int>& names) {
+    QString best;
+    int most = -1;
+    for (auto it = names.cbegin(); it != names.cend(); ++it) {
+        if (it.value() > most || (it.value() == most && it.key() < best)) {
+            best = it.key();
+            most = it.value();
+        }
+    }
+    return best;
+}
+
+QString groupFilter(const GenreGroup& group) {
+    QStringList parts;
+    QStringList tags = group.tags.values();
+    tags.sort();
+    for (const QString& tag : std::as_const(tags)) {
+        parts.append(QStringLiteral("genre:") + quoted(tag));
+    }
+    QStringList folders = group.folders.values();
+    folders.sort();
+    for (const QString& folder : std::as_const(folders)) {
+        parts.append(QStringLiteral("location:") + quoted(folder + QChar('/')));
+    }
+    return parts.join(QStringLiteral(" | "));
+}
+
+} // namespace
+
 QVariantList QmlCutlab::genres() const {
     QVariantList result;
     QSqlDatabase db = database();
     if (!db.isOpen()) {
         return result;
     }
+    const QStringList roots = libraryRoots(db);
+    const auto source = static_cast<GenreSource>(configInt(kGenreSourceKey, 0));
     QSqlQuery query(db);
     if (!query.exec(QStringLiteral(
-                "SELECT genre, COUNT(*) AS n FROM library "
-                "WHERE mixxx_deleted = 0 AND genre IS NOT NULL AND genre != '' "
-                "GROUP BY genre ORDER BY n DESC LIMIT 200"))) {
+                "SELECT library.genre, track_locations.location FROM library "
+                "INNER JOIN track_locations ON library.location = track_locations.id "
+                "WHERE library.mixxx_deleted = 0 AND track_locations.fs_deleted = 0"))) {
         qWarning() << "Cutlab genres:" << query.lastError();
         return result;
     }
+    QHash<QString, GenreGroup> groups;
+    QHash<QString, QHash<QString, GenreGroup>> subgroups;
+    int withoutGenre = 0;
     while (query.next()) {
+        const QString tag = query.value(0).toString();
+        const QString location = query.value(1).toString();
+        const TrackGenre genre = trackGenre(tag, location, roots, source);
+        const QString key = genreKey(genre.genre);
+        if (key.isEmpty()) {
+            ++withoutGenre;
+            continue;
+        }
+        GenreGroup& group = groups[key];
+        group.names[genre.genre] += 1;
+        group.count += 1;
+        if (genre.fromTag) {
+            group.tags.insert(tag.trimmed());
+        } else if (!genre.folder.isEmpty()) {
+            group.folders.insert(genre.folder);
+        }
+        const QString subKey = genreKey(genre.subgenre);
+        if (!subKey.isEmpty() && !genre.folder.isEmpty()) {
+            GenreGroup& sub = subgroups[key][subKey];
+            sub.names[genre.subgenre] += 1;
+            sub.count += 1;
+            sub.folders.insert(genre.folder);
+        }
+    }
+    QList<QString> keys = groups.keys();
+    std::sort(keys.begin(), keys.end(), [&groups](const QString& a, const QString& b) {
+        return groups[a].count != groups[b].count ? groups[a].count > groups[b].count : a < b;
+    });
+    for (const QString& key : std::as_const(keys)) {
+        const GenreGroup& group = groups[key];
+        QVariantList subs;
+        const auto& subMap = subgroups.value(key);
+        QList<QString> subKeys = subMap.keys();
+        std::sort(subKeys.begin(), subKeys.end(), [&subMap](const QString& a, const QString& b) {
+            return subMap[a].count != subMap[b].count ? subMap[a].count > subMap[b].count : a < b;
+        });
+        for (const QString& subKey : std::as_const(subKeys)) {
+            const GenreGroup& sub = subMap[subKey];
+            subs.append(QVariantMap{
+                    {QStringLiteral("name"), bestName(sub.names)},
+                    {QStringLiteral("count"), sub.count},
+                    {QStringLiteral("filter"), groupFilter(sub)},
+            });
+        }
         result.append(QVariantMap{
-                {QStringLiteral("name"), query.value(0).toString()},
-                {QStringLiteral("count"), query.value(1).toInt()},
+                {QStringLiteral("name"), bestName(group.names)},
+                {QStringLiteral("count"), group.count},
+                {QStringLiteral("filter"), groupFilter(group)},
+                {QStringLiteral("subgenres"), subs},
         });
     }
-    // The tracks without a genre, last, with an empty name: none of the
-    // genres above counts them
-    if (query.exec(QStringLiteral(
-                "SELECT COUNT(*) FROM library "
-                "WHERE mixxx_deleted = 0 AND (genre IS NULL OR genre = '')")) &&
-            query.next() && query.value(0).toInt() > 0) {
+    // The tracks without a genre, last, with an empty name. The filter
+    // finds the empty tags; ISRCs without a folder genre are rare.
+    if (withoutGenre > 0) {
         result.append(QVariantMap{
                 {QStringLiteral("name"), QString()},
-                {QStringLiteral("count"), query.value(0).toInt()},
+                {QStringLiteral("count"), withoutGenre},
+                {QStringLiteral("filter"), QStringLiteral("genre:\"\"")},
+                {QStringLiteral("subgenres"), QVariantList()},
         });
     }
     return result;
+}
+
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.0: the show mode, kept in the settings and applied again at
+// every start (see the constructor)
+// [AI-generated text, Claude (Anthropic) — end]
+
+bool QmlCutlab::showMode() const {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    return pConfig && pConfig->getValue(kShowModeKey, false);
+}
+
+void QmlCutlab::setShowMode(bool on) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig || on == showMode()) {
+        return;
+    }
+    pConfig->setValue(kShowModeKey, on);
+#ifdef Q_OS_ANDROID
+    applyShowMode(on);
+#endif
+    qInfo() << "Cutlab show mode" << (on ? "on" : "off");
+    emit showModeChanged();
+}
+
+QVariantMap QmlCutlab::showModeAccess() const {
+#ifdef Q_OS_ANDROID
+    return {
+            {QStringLiteral("dnd"), askShowMode("hasDndAccess")},
+            {QStringLiteral("battery"), askShowMode("ignoresBatteryOptimizations")},
+    };
+#else
+    return {{QStringLiteral("dnd"), true}, {QStringLiteral("battery"), true}};
+#endif
+}
+
+void QmlCutlab::openDndAccess() const {
+#ifdef Q_OS_ANDROID
+    callShowMode("openDndAccess");
+#endif
+}
+
+void QmlCutlab::requestBatteryExemption() const {
+#ifdef Q_OS_ANDROID
+    callShowMode("requestIgnoreBatteryOptimizations");
+#endif
+}
+
+void QmlCutlab::openInternetPanel() const {
+#ifdef Q_OS_ANDROID
+    callShowMode("openInternetPanel");
+#endif
+}
+
+void QmlCutlab::openBluetoothSettings() const {
+#ifdef Q_OS_ANDROID
+    callShowMode("openBluetoothSettings");
+#endif
+}
+
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.0: lyrics for the "Letra" pads. LRC is "[mm:ss.xx] line";
+// a line may carry several times, "[offset:+/-ms]" moves them all.
+// [AI-generated text, Claude (Anthropic) — end]
+namespace {
+
+const QRegularExpression kLrcTime(QStringLiteral("\\[(\\d{1,3}):(\\d{1,2}(?:[.:]\\d{1,3})?)\\]"));
+const QRegularExpression kLrcOffset(QStringLiteral("^\\[offset:\\s*([+-]?\\d+)\\]"), QRegularExpression::CaseInsensitiveOption);
+const QRegularExpression kLrcTag(QStringLiteral("^\\[[a-zA-Z]+:.*\\]$"));
+
+struct ParsedLyrics {
+    QVariantList lines;
+    bool synced = false;
+};
+
+ParsedLyrics parseLyrics(const QString& text) {
+    ParsedLyrics result;
+    QList<QPair<double, QString>> timed;
+    QStringList plain;
+    double offset = 0;
+    const QStringList rows = text.split(QRegularExpression(QStringLiteral("\\r?\\n")));
+    for (const QString& rawRow : rows) {
+        const QString row = rawRow.trimmed();
+        const auto offsetMatch = kLrcOffset.match(row);
+        if (offsetMatch.hasMatch()) {
+            offset = offsetMatch.captured(1).toDouble() / 1000.0;
+            continue;
+        }
+        QList<double> times;
+        int end = 0;
+        auto it = kLrcTime.globalMatch(row);
+        while (it.hasNext()) {
+            const auto match = it.next();
+            if (match.capturedStart() != end) {
+                break;
+            }
+            QString seconds = match.captured(2);
+            seconds.replace(QChar(':'), QChar('.'));
+            times.append(match.captured(1).toInt() * 60 + seconds.toDouble());
+            end = match.capturedEnd();
+        }
+        if (!times.isEmpty()) {
+            const QString line = row.mid(end).trimmed();
+            for (const double time : std::as_const(times)) {
+                timed.append({time, line});
+            }
+        } else if (!kLrcTag.match(row).hasMatch()) {
+            plain.append(row);
+        }
+    }
+    if (!timed.isEmpty()) {
+        std::stable_sort(timed.begin(), timed.end(), [](const auto& a, const auto& b) {
+            return a.first < b.first;
+        });
+        for (const auto& [time, line] : std::as_const(timed)) {
+            result.lines.append(QVariantMap{
+                    {QStringLiteral("time"), std::max(0.0, time + offset)},
+                    {QStringLiteral("text"), line},
+            });
+        }
+        result.synced = true;
+        return result;
+    }
+    while (!plain.isEmpty() && plain.last().isEmpty()) {
+        plain.removeLast();
+    }
+    for (const QString& line : std::as_const(plain)) {
+        result.lines.append(QVariantMap{
+                {QStringLiteral("time"), -1.0},
+                {QStringLiteral("text"), line},
+        });
+    }
+    return result;
+}
+
+QString lyricsCacheDir() {
+#ifdef Q_OS_ANDROID
+    const QString dir = mixxx::android::appDirectory() + QStringLiteral("/lyrics");
+#else
+    const QString dir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + QStringLiteral("/lyrics");
+#endif
+    QDir().mkpath(dir);
+    return dir;
+}
+
+QString lyricsCacheFile(const QString& location) {
+    return lyricsCacheDir() + QChar('/') +
+            QString::fromLatin1(QCryptographicHash::hash(location.toUtf8(), QCryptographicHash::Sha1).toHex()) +
+            QStringLiteral(".lrc");
+}
+
+QString readText(const QString& path) {
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return QString();
+    }
+    return QString::fromUtf8(file.readAll());
+}
+
+/// "Artist A, Artist B feat. C" -> "Artist A": LRCLIB knows the main one
+QString mainArtist(const QString& artist) {
+    static const QRegularExpression separators(
+            QStringLiteral("\\s*(,|&|;|/|\\bfeat\\.?|\\bft\\.?|\\bfeaturing\\b|\\bx\\b)\\s*"),
+            QRegularExpression::CaseInsensitiveOption);
+    return artist.split(separators, Qt::SkipEmptyParts).value(0, artist).trimmed();
+}
+
+/// "Title (feat. X) [Remastered]" -> "Title"
+QString plainTitle(const QString& title) {
+    static const QRegularExpression extras(
+            QStringLiteral("\\s*[\\(\\[][^\\)\\]]*(feat|ft\\.|remaster|version|edit|mix|explicit|clean)[^\\)\\]]*[\\)\\]]"),
+            QRegularExpression::CaseInsensitiveOption);
+    QString cleaned = title;
+    cleaned.remove(extras);
+    return cleaned.trimmed();
+}
+
+} // namespace
+
+void QmlCutlab::fetchLyrics(const QString& group) {
+    const TrackPointer pTrack = PlayerInfo::instance().getTrackInfo(group);
+    if (!pTrack) {
+        emit lyricsReady(group, QString(), {}, false, QString(), QStringLiteral("none"));
+        return;
+    }
+    const QString location = pTrack->getLocation();
+    const auto answer = [this, group, location](const QString& text, const QString& source) {
+        const ParsedLyrics parsed = parseLyrics(text);
+        if (parsed.lines.isEmpty()) {
+            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
+            return;
+        }
+        emit lyricsReady(group, location, parsed.lines, parsed.synced, source, QString());
+    };
+    // Next to the file: "Track.mp3" -> "Track.lrc"
+    const QFileInfo info(location);
+    const QString sidecar = info.absolutePath() + QChar('/') + info.completeBaseName() + QStringLiteral(".lrc");
+    if (QFileInfo::exists(sidecar)) {
+        answer(readText(sidecar), QStringLiteral("file"));
+        return;
+    }
+    const QString cached = lyricsCacheFile(location);
+    if (QFileInfo::exists(cached)) {
+        answer(readText(cached), QStringLiteral("saved"));
+        return;
+    }
+    if (showMode()) {
+        emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("offline"));
+        return;
+    }
+    if (!m_pNetwork) {
+        m_pNetwork = new QNetworkAccessManager(this);
+        m_pNetwork->setTransferTimeout(10000);
+    }
+    const QString artist = mainArtist(pTrack->getArtist());
+    const QString title = plainTitle(pTrack->getTitle());
+    const double duration = pTrack->getDuration();
+    if (artist.isEmpty() || title.isEmpty()) {
+        emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
+        return;
+    }
+    const auto request = [](const QString& path, const QUrlQuery& query) {
+        QUrl url(QStringLiteral("https://lrclib.net") + path);
+        url.setQuery(query);
+        QNetworkRequest networkRequest(url);
+        networkRequest.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("Cutlab/1.32 (Android DJ app)"));
+        return networkRequest;
+    };
+    // The best of a search: synced first, the closest duration
+    const auto pick = [duration](const QJsonArray& items) -> QString {
+        QString best;
+        double bestScore = -1;
+        for (const QJsonValue& value : items) {
+            const QJsonObject item = value.toObject();
+            const QString synced = item.value(QStringLiteral("syncedLyrics")).toString();
+            const QString plain = item.value(QStringLiteral("plainLyrics")).toString();
+            if (synced.isEmpty() && plain.isEmpty()) {
+                continue;
+            }
+            const double gap = duration > 0 ? std::abs(item.value(QStringLiteral("duration")).toDouble() - duration) : 0;
+            if (duration > 0 && gap > 8) {
+                continue;
+            }
+            const double score = (synced.isEmpty() ? 0 : 100) - gap;
+            if (score > bestScore) {
+                bestScore = score;
+                best = synced.isEmpty() ? plain : synced;
+            }
+        }
+        return best;
+    };
+    const auto save = [cached](const QString& text) {
+        QFile file(cached);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            file.write(text.toUtf8());
+        }
+    };
+    QUrlQuery search;
+    search.addQueryItem(QStringLiteral("track_name"), title);
+    search.addQueryItem(QStringLiteral("artist_name"), artist);
+    QNetworkReply* pReply = m_pNetwork->get(request(QStringLiteral("/api/search"), search));
+    connect(pReply, &QNetworkReply::finished, this, [this, pReply, group, location, answer, pick, save]() {
+        pReply->deleteLater();
+        if (pReply->error() != QNetworkReply::NoError) {
+            qInfo() << "Cutlab lyrics:" << pReply->errorString();
+            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("error"));
+            return;
+        }
+        const QString text = pick(QJsonDocument::fromJson(pReply->readAll()).array());
+        if (text.isEmpty()) {
+            emit lyricsReady(group, location, {}, false, QString(), QStringLiteral("none"));
+            return;
+        }
+        save(text);
+        answer(text, QStringLiteral("lrclib"));
+    });
+}
+
+int QmlCutlab::genreSource() const {
+    return configInt(kGenreSourceKey, 0);
+}
+
+void QmlCutlab::setGenreSource(int source) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig || source == genreSource()) {
+        return;
+    }
+    pConfig->setValue(kGenreSourceKey, std::clamp(source, 0, 2));
+    emit genreSourceChanged();
+}
+
+int QmlCutlab::suggestFrom() const {
+    return configInt(kSuggestFromKey, 0);
+}
+
+void QmlCutlab::setSuggestFrom(int from) {
+    const UserSettingsPointer pConfig = QmlConfigProxy::get();
+    if (!pConfig || from == suggestFrom()) {
+        return;
+    }
+    pConfig->setValue(kSuggestFromKey, std::clamp(from, 0, 2));
+    emit suggestFromChanged();
 }
 
 QVariantList QmlCutlab::suggestions(const QString& group, int limit) const {
@@ -718,7 +1331,12 @@ QVariantList QmlCutlab::suggestions(const QString& group, int limit) const {
     }
     const double bpm = pTrack->getBpm();
     const int key = static_cast<int>(pTrack->getKey());
-    const QString genre = pTrack->getGenre().trimmed().toLower();
+    // Cutlab 1.32.0: the genre as Géneros shows it (ISRCs out, the folder
+    // when the tag isn't a genre), and what the suggestions come from
+    const QStringList roots = libraryRoots(db);
+    const auto genreSource = static_cast<GenreSource>(configInt(kGenreSourceKey, 0));
+    const int from = configInt(kSuggestFromKey, 0);
+    const QString genre = genreKey(trackGenre(pTrack->getGenre(), pTrack->getLocation(), roots, genreSource).genre);
     const QString folder = parentFolder(pTrack->getLocation());
     const QString artist = pTrack->getArtist().trimmed().toLower();
     const QVariant trackId = pTrack->getId().toVariant();
@@ -812,12 +1430,19 @@ QVariantList QmlCutlab::suggestions(const QString& group, int limit) const {
         } else if (match == 0) {
             score -= 15;
         }
-        const QString candidateGenre = query.value(5).toString().trimmed().toLower();
-        if (!genre.isEmpty() && candidateGenre == genre) {
-            score += 25;
-            why.append(query.value(5).toString());
+        const TrackGenre candidate = trackGenre(query.value(5).toString(), location, roots, genreSource);
+        const bool sameGenre = !genre.isEmpty() && genreKey(candidate.genre) == genre;
+        const bool sameFolder = parentFolder(location) == folder;
+        // "Mismo género" / "Misma carpeta" keep only those; open format
+        // takes any, with a bonus for them
+        if ((from == 1 && !genre.isEmpty() && !sameGenre) || (from == 2 && !sameFolder)) {
+            continue;
         }
-        if (parentFolder(location) == folder) {
+        if (sameGenre) {
+            score += 25;
+            why.append(candidate.genre);
+        }
+        if (sameFolder) {
             score += 18;
             why.append(tr("misma carpeta"));
         }

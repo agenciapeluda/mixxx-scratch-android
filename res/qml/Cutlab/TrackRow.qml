@@ -27,7 +27,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: 44
         height: 44
-        radius: 5
+        radius: 0
         color: "#2c2c2e"
         clip: true
 
@@ -132,7 +132,7 @@ Rectangle {
 
                 width: 40
                 height: 36
-                radius: 8
+                radius: 0
                 text: String(index + 1)
                 fontSize: 15
                 fillColor: "#232325"

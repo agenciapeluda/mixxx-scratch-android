@@ -78,7 +78,7 @@ Item {
             CLControlButton {
                 width: parent.width / 2
                 height: parent.height
-                radius: 10
+                radius: 0
                 group: root.group
                 key: "loop_in"
                 mode: "push"
@@ -90,7 +90,7 @@ Item {
             CLControlButton {
                 width: parent.width / 2
                 height: parent.height
-                radius: 10
+                radius: 0
                 group: root.group
                 key: "loop_out"
                 mode: "push"
@@ -115,7 +115,7 @@ Item {
         visible: root.locked
         width: lockText.implicitWidth + 32
         height: 40
-        radius: 20
+        radius: 0
         color: Style.raised
         border.color: Style.deckColor(root.group)
         border.width: 1

@@ -40,7 +40,7 @@ Item {
 
                 width: parent.width
                 height: (root.height - 12 - 4) / 2
-                radius: 10
+                radius: 0
                 color: Style.panel
                 clip: true
 
@@ -65,7 +65,7 @@ Item {
                     y: 8
                     width: 24
                     height: 20
-                    radius: 4
+                    radius: 0
                     color: Style.deckColor(lane.modelData)
 
                     Text {

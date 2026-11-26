@@ -8,6 +8,6 @@ TextField {
     background: Rectangle {
         anchors.fill: parent
         color: Theme.embeddedBackgroundColor
-        radius: 5
+        radius: 0
     }
 }

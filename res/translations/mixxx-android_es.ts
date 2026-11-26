@@ -16,12 +16,12 @@
         <translation>Créditos</translation>
     </message>
     <message>
-        <source>Cutlab is made by Lui Agüero. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.</source>
-        <translation>Cutlab está hecho por Lui Agüero. Es un proyecto basado en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografías: Inter Tight y JetBrains Mono, licencia SIL Open Font 1.1.</translation>
+        <source>Cutlab is made by xhellvirax. It is a project based on Mixxx (mixxx.org) and its community. Free software under the GNU GPL v2 or later. Stem separation: Spleeter (Deezer) and HTDemucs (Meta), MIT license. Fonts: Inter Tight and JetBrains Mono, SIL Open Font License 1.1.</source>
+        <translation>Cutlab está hecha por xhellvirax. Es un proyecto basado en Mixxx (mixxx.org) y su comunidad. Software libre bajo la GNU GPL v2 o posterior. Separación de stems: Spleeter (Deezer) y HTDemucs (Meta), licencia MIT. Tipografías: Inter Tight y JetBrains Mono, licencia SIL Open Font 1.1.</translation>
     </message>
     <message>
-        <source>by Lui Agüero</source>
-        <translation>por Lui Agüero</translation>
+        <source>made by xhellvirax</source>
+        <translation>Hecha por xhellvirax</translation>
     </message>
     <message>
         <source>About</source>
@@ -2093,7 +2093,43 @@ Aborting the operation to avoid library inconsistencies</source>
         <source>Re-analyze the whole collection</source>
         <translation>Re-analizar Toda la Colección</translation>
     </message>
-    </context>
+        <message>
+        <source>Genres and suggestions</source>
+        <translation>Géneros y sugerencias</translation>
+    </message>
+    <message>
+        <source>Genre of each track. Automatic: the genre tag if it is a genre; if it is empty or an ISRC code (like USSM19600058), the folder: &quot;08 HipHop - Underground Moderno&quot; is HipHop, subgenre Underground Moderno. The files are not changed.</source>
+        <translation>Género de cada tema. Automático: el tag de género si es un género; si está vacío o es un código ISRC (como USSM19600058), la carpeta: &quot;08 HipHop - Underground Moderno&quot; es HipHop, subgénero Underground Moderno. Los archivos no se tocan.</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation>Automático</translation>
+    </message>
+    <message>
+        <source>Tag</source>
+        <translation>Tag</translation>
+    </message>
+    <message>
+        <source>Folder</source>
+        <translation>Carpeta</translation>
+    </message>
+    <message>
+        <source>Suggestions: open format takes any genre; same genre or same folder keep only those. Tempo and key always count.</source>
+        <translation>Sugerencias: open format toma cualquier género; mismo género o misma carpeta dejan solo esos. El tempo y la tonalidad cuentan siempre.</translation>
+    </message>
+    <message>
+        <source>Open format</source>
+        <translation>Open format</translation>
+    </message>
+    <message>
+        <source>Same genre</source>
+        <translation>Mismo género</translation>
+    </message>
+    <message>
+        <source>Same folder</source>
+        <translation>Misma carpeta</translation>
+    </message>
+</context>
 <context>
     <name>Loop</name>
     <message>
@@ -4016,6 +4052,10 @@ Aborting the operation to avoid library inconsistencies</source>
     <message>
         <source>The library is not available</source>
         <translation>La biblioteca no está disponible</translation>
+    </message>
+    <message>
+        <source>Cutlab restarts now to finish restoring %1.</source>
+        <translation>Cutlab se reinicia para terminar de restaurar %1.</translation>
     </message>
 </context>
 <context>

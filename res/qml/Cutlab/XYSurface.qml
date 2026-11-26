@@ -61,7 +61,7 @@ Rectangle {
         y: root.height / 2 - height / 2
         width: 12
         height: 12
-        radius: 6
+        radius: 0
         color: Style.textSecondary
         visible: !root.active
     }
@@ -72,7 +72,7 @@ Rectangle {
 
         width: 56
         height: 56
-        radius: 28
+        radius: 0
         color: Qt.rgba(0.39, 0.36, 1.0, 0.35)
         border.color: Style.neutral
         border.width: 2
@@ -84,7 +84,7 @@ Rectangle {
             anchors.centerIn: parent
             width: 14
             height: 14
-            radius: 7
+            radius: 0
             color: Style.text
         }
     }

@@ -96,6 +96,8 @@ Rectangle {
     // djay: an effect is heard as soon as it is on, from the screen or from
     // a controller
     Component.onCompleted: {
+        // Cutlab 1.32.0: in show mode the analysis waits from the start
+        Mixxx.Cutlab.setAnalysisHeld(root.holdAnalysis);
         // From here on the layout turns only through rotationSettle
         root.portrait = root.portraitNow;
         Mixxx.Cutlab.setScreen(root.screenName);
@@ -189,7 +191,9 @@ Rectangle {
     // The analysis waits while a deck plays (it would take the CPU of the
     // screen and the audio) and goes on once both stop
     readonly property bool anyPlaying: playing1.value > 0 || playing2.value > 0
-    onAnyPlayingChanged: Mixxx.Cutlab.setAnalysisHeld(root.anyPlaying)
+    // Cutlab 1.32.0: and all the time in show mode
+    readonly property bool holdAnalysis: root.anyPlaying || Mixxx.Cutlab.showMode
+    onHoldAnalysisChanged: Mixxx.Cutlab.setAnalysisHeld(root.holdAnalysis)
     Mixxx.ControlProxy {
         id: playing1
 
@@ -845,7 +849,7 @@ Rectangle {
         anchors.bottomMargin: 72
         width: Math.min(parent.width - 32, 440)
         height: letsktchToastText.implicitHeight + 24
-        radius: 12
+        radius: 0
         z: 50
         color: Style.panel
         border.width: 1
@@ -928,8 +932,22 @@ Rectangle {
                 Mixxx.Application.setConfigValue("[Cutlab]", "diagnostics", root.showDiagnostics ? "1" : "0");
             } else if (key === "settings") {
                 root.settingsRequested();
+            } else if (key === "showmode") {
+                // Cutlab 1.32.0: on at once, the panel shows what else to do
+                if (!Mixxx.Cutlab.showMode) {
+                    Mixxx.Cutlab.showMode = true;
+                }
+                showModePanel.visible = true;
             }
         }
+    }
+
+    ShowModePanel {
+        id: showModePanel
+
+        anchors.fill: parent
+        z: 40
+        onCloseRequested: visible = false
     }
 
     LibraryBrowser {
@@ -966,5 +984,9 @@ Rectangle {
         anchors.margins: 8
         visible: root.showDiagnostics
         z: 30
+        onCloseRequested: {
+            root.showDiagnostics = false;
+            Mixxx.Application.setConfigValue("[Cutlab]", "diagnostics", "0");
+        }
     }
 }

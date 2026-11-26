@@ -277,7 +277,7 @@ Category {
                                     Layout.preferredWidth: 22
                                     Layout.preferredHeight: 70
                                     Layout.alignment: Qt.AlignHCenter
-                                    radius: 4
+                                    radius: 0
                                     color: "#0b0a16"
                                     border.color: "#2a2940"
 
@@ -519,7 +519,7 @@ Category {
                                 Layout.preferredWidth: 120
                                 border.color: "#1d1b33"
                                 color: "#0b0a16"
-                                radius: 10
+                                radius: 0
 
                                 Mixxx.VinylSignalQuality {
                                     active: root.visible
@@ -638,7 +638,7 @@ Category {
                             Rectangle {
                                 Layout.preferredWidth: 160
                                 Layout.preferredHeight: 14
-                                radius: 4
+                                radius: 0
                                 color: "#0b0a16"
                                 border.color: "#2a2940"
 
@@ -816,7 +816,7 @@ Category {
                             y: cutSlider.topPadding + cutSlider.availableHeight / 2 - height / 2
                             width: 24
                             height: 24
-                            radius: 12
+                            radius: 0
                             color: "#e5e5ea"
                         }
                     }
@@ -910,7 +910,7 @@ Category {
         border.width: 1
         color: "#0e0d1a"
         implicitHeight: cardColumn.implicitHeight + 32
-        radius: 12
+        radius: 0
 
         ColumnLayout {
             id: cardColumn

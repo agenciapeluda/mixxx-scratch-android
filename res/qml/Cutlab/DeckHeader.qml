@@ -69,7 +69,7 @@ Item {
         anchors.bottomMargin: 6
         x: root.coverOnRight ? root.width - width - 8 : 8
         width: height
-        radius: 8
+        radius: 0
         color: "#1d1d1f"
         clip: true
 
@@ -188,7 +188,7 @@ Item {
             // show at a glance.
             Rectangle {
                 anchors.fill: parent
-                radius: 4
+                radius: 0
                 color: Style.panelDark
                 visible: root.loaded
 
@@ -223,6 +223,41 @@ Item {
                 height: 1
                 color: Style.tick
                 visible: !root.loaded
+            }
+
+            // [AI-generated text, Claude (Anthropic) — start]
+            // Cutlab 1.32.0: tapping or dragging the whole-track waveform
+            // moves the playback there; it no longer opens the library
+            // (that stays on the cover and the title). Empty deck: opens it.
+            // [AI-generated text, Claude (Anthropic) — end]
+            Mixxx.ControlProxy {
+                id: overviewPosition
+
+                group: root.group
+                key: "playposition"
+            }
+            MouseArea {
+                anchors.fill: parent
+                preventStealing: true
+
+                function seek(mouseX) {
+                    overviewPosition.value = Math.max(0, Math.min(1, mouseX / Math.max(1, width)));
+                }
+                onPressed: mouse => {
+                    if (root.loaded) {
+                        seek(mouse.x);
+                    }
+                }
+                onPositionChanged: mouse => {
+                    if (root.loaded && pressed) {
+                        seek(mouse.x);
+                    }
+                }
+                onClicked: {
+                    if (!root.loaded) {
+                        root.browseRequested();
+                    }
+                }
             }
         }
 

@@ -142,6 +142,10 @@ void QmlAppUpdateProxy::slotAutoCheck() {
     if (!pConfig || !autoCheck()) {
         return;
     }
+    // Cutlab 1.32.0: nothing goes to the internet on its own in show mode
+    if (pConfig->getValue(ConfigKey(QStringLiteral("[Cutlab]"), QStringLiteral("show_mode")), false)) {
+        return;
+    }
     const qint64 lastCheck = pConfig->getValueString(kLastCheckKey).toLongLong();
     if (QDateTime::currentSecsSinceEpoch() - lastCheck < kAutoCheckIntervalSecs) {
         return;

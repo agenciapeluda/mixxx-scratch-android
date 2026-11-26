@@ -23,7 +23,7 @@ AbstractButton {
 
             anchors.fill: parent
             color: root.backgroundColor
-            radius: 4
+            radius: 0
             visible: false
         }
         InnerShadow {
@@ -32,7 +32,7 @@ AbstractButton {
             anchors.fill: parent
             color: "transparent"
             horizontalOffset: -1
-            radius: 8
+            radius: 0
             samples: 16
             source: backgroundImage
             spread: 0.3
@@ -44,7 +44,7 @@ AbstractButton {
             anchors.fill: parent
             color: "transparent"
             horizontalOffset: 1
-            radius: 8
+            radius: 0
             samples: 16
             source: bottomInnerEffect
             spread: 0.3
@@ -56,7 +56,7 @@ AbstractButton {
             anchors.fill: parent
             color: "#0b0a16"
             horizontalOffset: 0
-            radius: 4.0
+            radius: 0
             source: topInnerEffect
             verticalOffset: 0
         }

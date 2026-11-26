@@ -87,7 +87,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: topBarCol.implicitHeight + 20
                 color: "#17162a"
-                radius: 12
+                radius: 0
                 border.color: "#3c3c3c"
                 border.width: 1
                 visible: root.selectedController == null
@@ -105,7 +105,7 @@ Category {
                         Rectangle {
                             width: 38
                             height: 38
-                            radius: 19
+                            radius: 0
                             color: "#4a43c9"
                             border.color: "#635bff"
                             border.width: 1
@@ -155,7 +155,7 @@ Category {
                         Rectangle {
                             Layout.preferredWidth: 230
                             Layout.preferredHeight: 38
-                            radius: 8
+                            radius: 0
                             color: rescanMouse.pressed ? "#635bff" : (rescanMouse.containsMouse ? "#635bff" : "#4a43c9")
                             border.color: "#908aff"
                             border.width: 1
@@ -233,7 +233,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: guideContent.implicitHeight + 24
                 color: "#1f1f1f"
-                radius: 12
+                radius: 0
                 border.color: "#393939"
                 border.width: 1
                 visible: root.selectedController == null
@@ -262,7 +262,7 @@ Category {
                         Rectangle {
                             width: 80
                             height: 24
-                            radius: 12
+                            radius: 0
                             color: guideToggleArea.containsMouse ? "#17162a" : "#17162a"
                             border.color: "#2a2940"
                             border.width: 1
@@ -299,7 +299,7 @@ Category {
                             Rectangle {
                                 width: 24
                                 height: 24
-                                radius: 12
+                                radius: 0
                                 color: "#0c02d1"
                                 Text {
                                     elide: Text.ElideRight
@@ -340,7 +340,7 @@ Category {
                             Rectangle {
                                 width: 24
                                 height: 24
-                                radius: 12
+                                radius: 0
                                 color: "#ffb547"
                                 Text {
                                     elide: Text.ElideRight
@@ -382,7 +382,7 @@ Category {
                             Rectangle {
                                 width: 24
                                 height: 24
-                                radius: 12
+                                radius: 0
                                 color: "#2bd67b"
                                 Text {
                                     elide: Text.ElideRight
@@ -424,7 +424,7 @@ Category {
                             Rectangle {
                                 width: 24
                                 height: 24
-                                radius: 12
+                                radius: 0
                                 color: "#261fa2"
                                 Text {
                                     elide: Text.ElideRight
@@ -459,7 +459,7 @@ Category {
                                 Rectangle {
                                     Layout.preferredWidth: 260
                                     Layout.preferredHeight: 30
-                                    radius: 6
+                                    radius: 0
                                     color: audioBtnMouse.pressed ? "#211b9a" : (audioBtnMouse.containsMouse ? "#8b85ff" : "#261fa2")
                                     Text {
                                         elide: Text.ElideRight
@@ -488,7 +488,7 @@ Category {
                             Rectangle {
                                 width: 24
                                 height: 24
-                                radius: 12
+                                radius: 0
                                 color: "#e6e7ee"
                                 Text {
                                     elide: Text.ElideRight
@@ -528,7 +528,7 @@ Category {
                                         Layout.fillWidth: true
                                         Layout.preferredHeight: 28
                                         color: "#151515"
-                                        radius: 4
+                                        radius: 0
                                         border.color: "#17162a"
                                         border.width: 1
 
@@ -549,7 +549,7 @@ Category {
                                     Rectangle {
                                         Layout.preferredWidth: 150
                                         Layout.preferredHeight: 28
-                                        radius: 4
+                                        radius: 0
                                         color: copyMouse.pressed ? "#07008f" : (copyMouse.containsMouse ? "#0800a7" : "#262433")
 
                                         Text {
@@ -586,7 +586,7 @@ Category {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 32
-                            radius: 6
+                            radius: 0
                             color: "#17162a"
 
                             Text {
@@ -606,7 +606,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 140
                 color: "#0e0d1a"
-                radius: 12
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
                 visible: root.selectedController == null && root.activeDevices.length === 0 && root.unmappedDevices.length === 0
@@ -649,7 +649,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 58
                 color: "#4a43c9"
-                radius: 10
+                radius: 0
                 border.color: "#4b42f5"
                 border.width: 1.5
                 visible: root.selectedController != null
@@ -692,7 +692,7 @@ Category {
                     Rectangle {
                         Layout.preferredWidth: 105
                         Layout.preferredHeight: 32
-                        radius: 6
+                        radius: 0
                         color: audioNavMouse.pressed ? "#1a148c" : (audioNavMouse.containsMouse ? "#261fa2" : "#211b9a")
                         border.color: "#e6e7ee"
                         border.width: 1
@@ -718,7 +718,7 @@ Category {
                     Rectangle {
                         Layout.preferredWidth: 90
                         Layout.preferredHeight: 32
-                        radius: 6
+                        radius: 0
                         color: backMouse.pressed ? "#110b8a" : (backMouse.containsMouse ? "#635bff" : "#635bff")
                         border.color: "#9590f9"
                         border.width: 1
@@ -834,7 +834,7 @@ Category {
                             Layout.preferredHeight: 22
                             Layout.preferredWidth: 44
                             color: '#393939'
-                            radius: 4
+                            radius: 0
 
                             Text {
                                 elide: Text.ElideRight
@@ -914,7 +914,7 @@ Category {
         color: "#0e0d1a"
         border.color: "#1d1b33"
         border.width: 1
-        radius: 8
+        radius: 0
 
         FormRow {
             anchors.fill: parent
@@ -925,7 +925,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
-                radius: 17
+                radius: 0
                 color: root.dirty ? "#2e2616" : (root.activeDevices.length > 0 ? "#1d2a21" : "#17162a")
                 border.color: root.dirty ? "#ffb547" : (root.activeDevices.length > 0 ? "#2bd67b" : "#2b21f3")
                 border.width: 1
@@ -975,7 +975,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
-                radius: 6
+                radius: 0
                 visible: !!root.selectedController?.mapping?.hasSettings
                 color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#1d1b33")
                 border.color: "#ff4d5e"
@@ -1011,7 +1011,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 130
-                radius: 6
+                radius: 0
                 visible: root.dirty || root.selectedController !== null
                 color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
@@ -1043,7 +1043,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 220
-                radius: 6
+                radius: 0
                 color: root.dirty
                        ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
                        : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))

@@ -538,7 +538,7 @@ Category {
                                                 anchors.fill: parent
                                                 color: "#1a2350"
                                                 horizontalOffset: -1
-                                                radius: 8
+                                                radius: 0
                                                 samples: 32
                                                 source: content
                                                 spread: 0.4
@@ -550,7 +550,7 @@ Category {
                                                 anchors.fill: parent
                                                 color: "#1a2350"
                                                 horizontalOffset: 1
-                                                radius: 8
+                                                radius: 0
                                                 samples: 32
                                                 source: bottomInnerEffect
                                                 spread: 0.4
@@ -969,7 +969,7 @@ Category {
                                     border.color: Theme.deckLineColor
                                     border.width: itemDlgt.highlighted ? 1 : 0
                                     color: "transparent"
-                                    radius: 5
+                                    radius: 0
                                 }
                                 contentItem: Content {
                                     id: content

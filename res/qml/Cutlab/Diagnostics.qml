@@ -17,9 +17,12 @@ Rectangle {
         return root.stats[key] !== undefined ? Number(root.stats[key]) : 0;
     }
 
+    // Cutlab 1.32.0: the X in the corner closes it
+    signal closeRequested()
+
     implicitWidth: column.implicitWidth + 20
-    implicitHeight: column.implicitHeight + 14
-    radius: 10
+    implicitHeight: column.implicitHeight + 51
+    radius: 0
     color: Qt.rgba(0.03, 0.02, 0.06, 0.88)
     border.width: 1
     border.color: Style.buttonBorder
@@ -178,7 +181,8 @@ Rectangle {
         id: column
 
         x: 10
-        y: 7
+        // Cutlab 1.32.0: below the close button
+        y: 44
         spacing: 2
 
         Repeater {
@@ -272,7 +276,7 @@ Rectangle {
         Rectangle {
             width: zeroLabel.implicitWidth + 24
             height: 32
-            radius: 8
+            radius: 0
             color: zeroMouse.pressed ? Style.buttonPressed : Style.raised
 
             Text {
@@ -295,7 +299,7 @@ Rectangle {
         Rectangle {
             width: shareLabel.implicitWidth + 24
             height: 32
-            radius: 8
+            radius: 0
             color: shareMouse.pressed ? Style.accentDark : Style.accent
 
             Text {
@@ -316,6 +320,31 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: failed = !Mixxx.Cutlab.shareLog()
             }
+        }
+    }
+
+    // Cutlab 1.32.0: close
+    Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        width: 44
+        height: 44
+        color: closeMouse.pressed ? Qt.rgba(1, 1, 1, 0.12) : "transparent"
+        z: 5
+
+        Image {
+            anchors.centerIn: parent
+            width: 20
+            height: 20
+            source: "icons/close.svg"
+            sourceSize.width: 40
+            sourceSize.height: 40
+        }
+        MouseArea {
+            id: closeMouse
+
+            anchors.fill: parent
+            onClicked: root.closeRequested()
         }
     }
 }

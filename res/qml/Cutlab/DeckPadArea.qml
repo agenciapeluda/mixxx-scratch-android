@@ -17,7 +17,8 @@ Item {
     // (1.31: DVS added; samples have Key Shift and Pitch Play)
     // [AI-generated text, Claude (Anthropic) — end]
     property int mode: 0
-    readonly property var modes: [qsTr("HOT CUE"), qsTr("ROLL"), qsTr("SAMPLE"), qsTr("SCRATCH"), qsTr("STEMS"), qsTr("DVS")]
+    // Cutlab 1.32.0: 6 LETRA, the lyrics of the track
+    readonly property var modes: [qsTr("HOT CUE"), qsTr("ROLL"), qsTr("SAMPLE"), qsTr("SCRATCH"), qsTr("STEMS"), qsTr("DVS"), qsTr("LETRA")]
 
     signal loadSampleRequested(string group)
 
@@ -27,7 +28,7 @@ Item {
         x: root.compact ? 0 : (root.mirrored ? root.width - width : 0)
         width: root.compact ? root.width : Math.round(Math.max(54, Math.min(84, root.width * 0.16)))
         height: root.compact ? 26 : root.height
-        radius: 10
+        radius: 0
         color: pickerMouse.pressed ? Style.buttonPressed : Style.raised
 
         // Sideways, like upright: a box with the current mode; a tap goes
@@ -110,7 +111,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            sourceComponent: [cues, rolls, samples, scratch, stems, dvs][Math.max(0, Math.min(5, root.mode))]
+            sourceComponent: [cues, rolls, samples, scratch, stems, dvs, lyrics][Math.max(0, Math.min(6, root.mode))]
         }
         Component {
             id: cues
@@ -143,6 +144,14 @@ Item {
             ScratchPads {
                 group: root.group
                 engine: root.letsktch ? root.letsktch.deckOf(root.group) : null
+                spacing: 4
+            }
+        }
+        Component {
+            id: lyrics
+
+            LyricsPads {
+                group: root.group
                 spacing: 4
             }
         }

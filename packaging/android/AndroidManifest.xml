@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.agenciapeluda.cutlab"
     android:installLocation="internalOnly"
-    android:versionCode="54"
-    android:versionName="1.31.3">
+    android:versionCode="55"
+    android:versionName="1.32.0">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"  />
     <uses-permission android:name="android.permission.INTERNET"  />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
@@ -18,6 +18,9 @@
     <!-- Separating tracks into stems in the background, see StemsService.java -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Cutlab 1.32.0: Modo show (Do Not Disturb, battery) -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
     <!-- Reading the music collection. Up to Android 12 this is covered by
@@ -80,6 +83,14 @@
                 android:name="android.app.arguments"
                 android:value="--new-ui" />
         </activity>
+        <!-- Cutlab 1.32.0: restarts the app cleanly, in its own process -->
+        <activity
+            android:name="org.mixxx.Restarter"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:process=":restart"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <service
             android:name="org.mixxx.StemsService"
             android:exported="false"

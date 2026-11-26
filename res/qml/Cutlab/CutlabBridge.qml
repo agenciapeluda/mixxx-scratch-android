@@ -83,7 +83,7 @@ Item {
                     if (value <= 0) {
                         return;
                     }
-                    const mode = Math.max(0, Math.min(5, Math.round(value) - 1));
+                    const mode = Math.max(0, Math.min(6, Math.round(value) - 1));
                     if (deckBridge.deck === 1) {
                         root.host.padMode1 = mode;
                     } else {

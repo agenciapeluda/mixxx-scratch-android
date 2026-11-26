@@ -26,7 +26,7 @@ Popup {
         color: "#0e0d1a"
         border.color: root.deckColor
         border.width: 2
-        radius: 8
+        radius: 0
 
         MouseArea {
             anchors.fill: parent
@@ -67,7 +67,7 @@ Popup {
                 Rectangle {
                     Layout.preferredHeight: 32
                     Layout.preferredWidth: 80
-                    radius: 4
+                    radius: 0
                     color: root.deckBgColor
                     border.color: root.deckColor
                     border.width: 1

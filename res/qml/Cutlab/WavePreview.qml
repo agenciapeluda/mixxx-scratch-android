@@ -27,7 +27,7 @@ Item {
 
                 width: parent.width
                 height: (root.height - 4) / 2
-                radius: 6
+                radius: 0
                 color: Style.panelDark
 
                 Canvas {

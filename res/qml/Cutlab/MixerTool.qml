@@ -110,7 +110,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: (smartCfxRow.width - smartLabel.width - 4 * smartCfxRow.spacing) / 4
                 height: 26
-                radius: 13
+                radius: 0
                 color: on ? Style.neutralDark : "transparent"
                 border.width: 1
                 border.color: on ? Style.neutral : Qt.rgba(1, 1, 1, 0.14)

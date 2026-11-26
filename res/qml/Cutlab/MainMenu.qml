@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Mixxx 1.0 as Mixxx
 
 // The menu of the Cutlab mark, a card in the middle of the screen: quick
 // toggles on top (record, Auto DJ, quantize), then how the screen looks
@@ -80,7 +81,7 @@ Popup {
     }
     background: Rectangle {
         color: Style.panel
-        radius: 22
+        radius: 0
         border.width: 1
         border.color: Qt.rgba(1, 1, 1, 0.08)
     }
@@ -97,7 +98,7 @@ Popup {
         property color onColor: Style.neutral
         readonly property real textRoom: width - (icon !== "" ? 48 : 16)
 
-        radius: 12
+        radius: 0
         color: buttonMouse.pressed ? Style.buttonPressed : (on ? Qt.rgba(onColor.r, onColor.g, onColor.b, 0.22) : Style.raised)
         border.width: root.currentKey === key ? 2 : 1
         border.color: root.currentKey === key ? Style.text : (on ? onColor : Qt.rgba(1, 1, 1, 0.08))
@@ -307,6 +308,7 @@ Popup {
                         root.waveMode === "extended" && !root.portrait ? {key: "pads", icon: "pads", title: qsTr("Pads"), detail: root.padsHidden ? qsTr("Ocultos: más onda") : qsTr("A la vista")} : {key: "pads", icon: "pads", title: qsTr("Pads grandes"), detail: qsTr("Sobre los diales")},
                         {key: "stems", icon: "stems", title: qsTr("Stems solos"), detail: root.stemsAuto ? qsTr("Prendido") : qsTr("Apagado")},
                         {key: "folders", icon: "folder", title: qsTr("Carpetas"), detail: qsTr("Tu música")},
+                        {key: "showmode", icon: "keylock", title: qsTr("Modo show"), detail: Mixxx.Cutlab.showMode ? qsTr("Prendido") : qsTr("Apagado")},
                         {key: "diagnostics", icon: "list", title: qsTr("Diagnóstico"), detail: root.diagnostics ? qsTr("Visible") : qsTr("Oculto")},
                         {key: "settings", icon: "settings", title: qsTr("Ajustes avanzados"), detail: qsTr("Sonido, latencia, DVS")}
                     ]

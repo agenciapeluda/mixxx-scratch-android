@@ -602,7 +602,7 @@ Category {
         color: "#0e0d1a"
         border.color: "#1d1b33"
         border.width: 1
-        radius: 8
+        radius: 0
 
         FormRow {
             anchors.fill: parent
@@ -613,7 +613,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
-                radius: 17
+                radius: 0
                 color: root.dirty ? "#2e2616" : "#1d2a21"
                 border.color: root.dirty ? "#ffb547" : "#2bd67b"
                 border.width: 1
@@ -659,7 +659,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
-                radius: 6
+                radius: 0
                 color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#1d1b33")
                 border.color: "#ff4d5e"
                 border.width: 1
@@ -693,7 +693,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 110
-                radius: 6
+                radius: 0
                 visible: root.dirty
                 color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
@@ -724,7 +724,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 230
-                radius: 6
+                radius: 0
                 color: root.dirty
                        ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
                        : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))

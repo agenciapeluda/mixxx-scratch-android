@@ -11,7 +11,7 @@ Rectangle {
 
     visible: live
     color: Qt.rgba(0.03, 0.02, 0.06, 0.82)
-    radius: 10
+    radius: 0
     z: 50
 
     MouseArea {

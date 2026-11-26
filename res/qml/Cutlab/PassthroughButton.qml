@@ -12,7 +12,7 @@ Rectangle {
     visible: !!engine && (engine.inputReady || on)
     width: label.implicitWidth + 26
     height: 28
-    radius: 14
+    radius: 0
     color: on ? Style.danger : (mouse.pressed ? Style.buttonPressed : "#1c1c1e")
     border.width: 1
     border.color: on ? Style.danger : Style.buttonBorder
@@ -25,7 +25,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: 8
             height: 8
-            radius: 4
+            radius: 0
             color: root.on ? "#ffffff" : Style.danger
         }
         Text {

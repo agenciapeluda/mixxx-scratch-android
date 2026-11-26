@@ -12,7 +12,7 @@ Rectangle {
     visible: group !== ""
     width: label.implicitWidth + 28
     height: 32
-    radius: 16
+    radius: 0
     z: 10
     color: Style.stemVocals
 

@@ -53,7 +53,7 @@ Column {
 
                 width: (root.width - 3 * parent.spacing) / 4
                 height: Math.round((root.count > 4 ? 40 : 44) * root.u)
-                radius: Math.round(8 * root.u)
+                radius: 0
                 color: isSet ? setColor : Style.raised
                 border.width: isSet ? 0 : 1
                 border.color: Qt.rgba(1, 1, 1, 0.1)
@@ -129,7 +129,7 @@ Column {
 
                     width: Math.max(Math.round(44 * root.u), label.implicitWidth + Math.round(20 * root.u))
                     height: parent.height
-                    radius: Math.round(8 * root.u)
+                    radius: 0
                     color: on ? Style.deckColor(root.group) : "transparent"
                     border.width: 1
                     border.color: on ? Style.deckColor(root.group) : Qt.rgba(1, 1, 1, 0.12)

@@ -452,7 +452,7 @@ Category {
                     Layout.fillWidth: true
                     Layout.preferredHeight: presetsCol.implicitHeight + 28
                     color: "#17162a"
-                    radius: 12
+                    radius: 0
                     border.color: "#2a2854"
                     border.width: 1
 
@@ -496,7 +496,7 @@ Category {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: Math.max(96, presetCol1.implicitHeight + 20)
                                 Layout.fillHeight: true
-                                radius: 10
+                                radius: 0
                                 color: root.activePreset === "single" ? "#25225b" : (p1Mouse.containsMouse ? "#1d1b33" : "#17162a")
                                 border.color: root.activePreset === "single" ? "#4b42f5" : "#414141"
                                 border.width: root.activePreset === "single" ? 2 : 1
@@ -564,7 +564,7 @@ Category {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: Math.max(96, presetCol2.implicitHeight + 20)
                                 Layout.fillHeight: true
-                                radius: 10
+                                radius: 0
                                 color: root.activePreset === "splitter" ? "#303030" : (p2Mouse.containsMouse ? "#17162a" : "#0e0d1a")
                                 border.color: root.activePreset === "splitter" ? "#ff4d5e" : "#3e3e3e"
                                 border.width: root.activePreset === "splitter" ? 2 : 1
@@ -620,7 +620,7 @@ Category {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: Math.max(96, presetCol3.implicitHeight + 20)
                                 Layout.fillHeight: true
-                                radius: 10
+                                radius: 0
                                 color: root.activePreset === "controller" ? "#1d2a21" : (p3Mouse.containsMouse ? "#17162a" : "#0e0d1a")
                                 border.color: root.activePreset === "controller" ? "#2bd67b" : "#3d3d3d"
                                 border.width: root.activePreset === "controller" ? 2 : 1
@@ -676,7 +676,7 @@ Category {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: Math.max(96, presetCol4.implicitHeight + 20)
                                 Layout.fillHeight: true
-                                radius: 10
+                                radius: 0
                                 color: root.activePreset === "hybrid" ? "#211b92" : (p4Mouse.containsMouse ? "#1d1b33" : "#0e0d1a")
                                 border.color: root.activePreset === "hybrid" ? "#8e88ff" : "#2d27a0"
                                 border.width: root.activePreset === "hybrid" ? 2 : 1
@@ -732,7 +732,7 @@ Category {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: presetMessageText.implicitHeight + 16
-                            radius: 8
+                            radius: 0
                             visible: root.presetMessage.length > 0
                             color: root.presetError ? "#1d1b33" : "#0e0d1a"
                             border.color: root.presetError ? "#ff4d5e" : "#2bd67b"
@@ -754,7 +754,7 @@ Category {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 38
-                            radius: 8
+                            radius: 0
                             visible: root.activePreset === "custom"
                             color: "#17162a"
                             border.color: "#4238f8"
@@ -789,7 +789,7 @@ Category {
                         Rectangle {
                             Layout.fillWidth: true
                             Layout.preferredHeight: audioExplCol.implicitHeight + 16
-                            radius: 8
+                            radius: 0
                             color: "#0e0d1a"
                             border.color: "#2a2940"
                             border.width: 1
@@ -827,7 +827,7 @@ Category {
                     Layout.fillWidth: true
                     Layout.preferredHeight: engineSettingsCol.implicitHeight + 28
                     color: "#0e0d1a"
-                    radius: 12
+                    radius: 0
                     border.color: "#1d1b33"
                     border.width: 1
 
@@ -1130,7 +1130,7 @@ Category {
                     Layout.fillWidth: true
                     Layout.preferredHeight: root.showAdvancedRouter ? 460 : 54
                     color: "#0e0d1a"
-                    radius: 12
+                    radius: 0
                     border.color: "#1d1b33"
                     border.width: 1
                     clip: true
@@ -1158,7 +1158,7 @@ Category {
                             Rectangle {
                                 width: 150
                                 height: 28
-                                radius: 6
+                                radius: 0
                                 color: toggleRouterMouse.containsMouse ? "#3e3e3e" : "#1d1b33"
                                 border.color: "#3e37bd"
                                 border.width: 1
@@ -1229,7 +1229,7 @@ Category {
                     Layout.fillWidth: true
                     Layout.preferredHeight: delaysCol.implicitHeight + 28
                     color: "#0e0d1a"
-                    radius: 12
+                    radius: 0
                     border.color: "#1d1b33"
                     border.width: 1
 
@@ -1333,7 +1333,7 @@ Category {
         color: "#0e0d1a"
         border.color: "#2a2940"
         border.width: 1
-        radius: 8
+        radius: 0
 
         FormRow {
             anchors.fill: parent
@@ -1345,7 +1345,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 30
                 Layout.preferredWidth: statusText.implicitWidth + 20
-                radius: 15
+                radius: 0
                 color: root.hasChanges ? "#303030" : "#1d2a21"
                 border.color: root.hasChanges ? "#ffb547" : "#2bd67b"
                 border.width: 1
@@ -1391,7 +1391,7 @@ Category {
                 id: applyButtonRect
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 230
-                radius: 8
+                radius: 0
                 color: root.committing ? "#635bff" : (root.hasChanges ? "#2bd67b" : (applyMouse.containsMouse ? "#3429ff" : "#635bff"))
                 border.color: root.hasChanges ? "#2bd67b" : "#908aff"
                 border.width: 1.5

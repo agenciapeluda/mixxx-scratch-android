@@ -40,6 +40,19 @@ Rectangle {
     // else deck A
     readonly property string playingGroup: play2.value > 0 && play1.value <= 0 ? "[Channel2]" : "[Channel1]"
     readonly property string otherGroup: playingGroup === "[Channel1]" ? "[Channel2]" : "[Channel1]"
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.0: what the list compares with ("CON B", BPM/key, the
+    // suggestions, "compatibles"): the other deck of the one the track goes
+    // to. Choosing for A compares with B. If that deck is empty, the one
+    // playing. Up to 1.31 it was always the one playing ("VS. DECK A" while
+    // choosing for A).
+    // [AI-generated text, Claude (Anthropic) — end]
+    readonly property string versusGroup: {
+        const target = root.targetGroup !== "" ? root.targetGroup : root.otherGroup;
+        const other = target === "[Channel2]" ? "[Channel1]" : "[Channel2]";
+        const url = other === "[Channel1]" ? root.loadedUrlA : root.loadedUrlB;
+        return url !== "" ? other : root.playingGroup;
+    }
     property var suggestions: []
     property var folderRows: []
     property var genreRows: []
@@ -63,9 +76,9 @@ Rectangle {
     property real compatBpm: 0
     property string compatKey: ""
     function freezeCompatible() {
-        root.compatGroup = root.playingGroup;
-        root.compatBpm = root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value;
-        root.compatKey = Mixxx.Cutlab.deckKey(root.playingGroup);
+        root.compatGroup = root.versusGroup;
+        root.compatBpm = root.versusGroup === "[Channel2]" ? bpm2.value : bpm1.value;
+        root.compatKey = Mixxx.Cutlab.deckKey(root.versusGroup);
     }
     property int missing: 0
     property int failedAnalysis: 0
@@ -73,11 +86,16 @@ Rectangle {
         // Again when a key changes
         keyA.value;
         keyB.value;
-        return Mixxx.Cutlab.deckKey(root.playingGroup);
+        return Mixxx.Cutlab.deckKey(root.versusGroup);
     }
     // Playlists and crates holding the picked track
     readonly property var pickedLists: root.selectedRow >= 0 ? Mixxx.Cutlab.listsContaining(root.urlAt(root.selectedRow)) : []
 
+    // Cutlab 1.32.0: a genre of Mixxx.Cutlab.genres() as an entry: its
+    // filter (tags and folders of the genre) and its subgenres
+    function genreSource(genre) {
+        return {kind: "genre", key: "genre:" + genre.name, name: genre.name === "" ? qsTr("Sin género") : genre.name, genre: genre.name, count: genre.count, filter: genre.filter, subgenres: genre.subgenres || []};
+    }
     // The entries on the left, in the order the knob goes through them
     readonly property var sourceRows: {
         const rows = [{kind: "all", key: "all", name: qsTr("Todas las canciones")}];
@@ -85,7 +103,7 @@ Rectangle {
             rows.push({kind: "folder", key: "folder:" + folder.path, name: folder.name, count: folder.count, path: folder.path});
         }
         for (const genre of root.genreRows) {
-            rows.push({kind: "genre", key: "genre:" + genre.name, name: genre.name === "" ? qsTr("Sin género") : genre.name, genre: genre.name, count: genre.count});
+            rows.push(root.genreSource(genre));
         }
         rows.push({kind: "lists", key: "lists", name: qsTr("Listas y cajas")});
         rows.push({kind: "queue", key: "queue", name: qsTr("Cola")});
@@ -114,7 +132,7 @@ Rectangle {
         return Math.max(9, Math.round(px * root.u));
     }
     function refreshSuggestions() {
-        root.suggestions = Mixxx.Cutlab.suggestions(root.playingGroup, 12);
+        root.suggestions = Mixxx.Cutlab.suggestions(root.versusGroup, 12);
         root.selectedSuggestion = 0;
     }
     function loadUrl(url, group) {
@@ -223,21 +241,29 @@ Rectangle {
         switch (row.kind) {
         case "all":
             root.section = 0;
-            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: ""});
+            // Cutlab 1.32.0: upright there is no list of folders on the
+            // left: they go above the tracks
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "",
+                       subfolders: root.wide ? [] : root.folderRows});
             break;
         case "folder":
             root.section = 0;
-            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\""});
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\"",
+                       subfolders: Mixxx.Cutlab.subFolders(row.path)});
             break;
         case "volume":
             // Into the library the first time, then like a folder
             Mixxx.Cutlab.addFolder(row.path);
             root.section = 0;
-            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\""});
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "location:\"" + row.path + "/\"",
+                       subfolders: Mixxx.Cutlab.subFolders(row.path)});
             break;
         case "genre":
+            // Cutlab 1.32.0: the subgenres above the tracks of the genre
             root.section = 1;
-            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: "genre:\"" + (row.genre !== undefined ? row.genre : row.name) + "\""});
+            root.push({title: row.name, parents: [], node: root.featureIndex("tracks"), showTracks: true,
+                       filter: row.filter !== undefined ? row.filter : "genre:\"" + row.genre + "\"",
+                       subgenres: row.subgenres || []});
             break;
         case "lists": {
             root.section = 2;
@@ -333,6 +359,27 @@ Rectangle {
         root.loadedUrlA = root.urlOf("[Channel1]");
         root.loadedUrlB = root.urlOf("[Channel2]");
     }
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.0: the decks whose track comes from the folder `path`
+    // (or a folder inside it), for the A/B marks of the folders
+    // [AI-generated text, Claude (Anthropic) — end]
+    function localPath(url) {
+        return url === "" ? "" : decodeURIComponent(url.toString().replace(/^file:\/\//, ""));
+    }
+    function decksFrom(path) {
+        if (!path) {
+            return [];
+        }
+        const prefix = path.endsWith("/") ? path : path + "/";
+        const decks = [];
+        if (root.localPath(root.loadedUrlA).startsWith(prefix)) {
+            decks.push("[Channel1]");
+        }
+        if (root.localPath(root.loadedUrlB).startsWith(prefix)) {
+            decks.push("[Channel2]");
+        }
+        return decks;
+    }
     // The track loaded last from here: coming back, the list stands on it
     property string lastLoadedUrl: ""
     function restorePick() {
@@ -404,9 +451,6 @@ Rectangle {
     // then the sorting
     function queryText() {
         const parts = [];
-        if (root.page && root.page.filter) {
-            parts.push(root.page.filter);
-        }
         if (root.compatible) {
             if (root.compatBpm > 0) {
                 parts.push("~bpm:" + root.compatBpm.toFixed(1));
@@ -418,7 +462,13 @@ Rectangle {
         if (searchField.text.trim() !== "") {
             parts.push(searchField.text.trim());
         }
-        return parts.join(" ");
+        // Cutlab 1.32.0: a filter with alternatives ("a | b", a genre) gets
+        // the rest on each one: the search has no parentheses
+        const filter = root.page && root.page.filter ? root.page.filter : "";
+        if (filter === "") {
+            return parts.join(" ");
+        }
+        return filter.split(" | ").map(alternative => [alternative].concat(parts).join(" ")).join(" | ");
     }
     function refreshQuery() {
         if (!root.tracklist) {
@@ -653,6 +703,15 @@ Rectangle {
     Connections {
         target: Mixxx.Cutlab
 
+        // Cutlab 1.32.0: another source of the genre or the suggestions
+        function onGenreSourceChanged() {
+            root.genreRows = Mixxx.Cutlab.genres();
+            root.refreshSuggestions();
+        }
+        function onSuggestFromChanged() {
+            root.refreshSuggestions();
+        }
+
         function onLibraryScanned() {
             root.missing = Mixxx.Cutlab.missingAnalysis();
             root.folderRows = Mixxx.Cutlab.musicFolders();
@@ -776,7 +835,7 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             width: miniLetter.implicitWidth + 12
                             height: miniLetter.implicitHeight + 2
-                            radius: 4
+                            radius: 0
                             color: Style.deckColor(miniDeck.modelData)
 
                             Text {
@@ -831,7 +890,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: 44
             height: 44
-            radius: 10
+            radius: 0
             icon: "back"
             iconSize: 18
             fillColor: "transparent"
@@ -870,7 +929,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: Math.max(52, Math.round(52 * root.u))
             height: width
-            radius: 12
+            radius: 0
             icon: root.wide ? "close" : "more"
             iconSize: width * 0.46
             bordered: !root.wide
@@ -953,7 +1012,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 width: sourceList.width
                 height: Math.round(38 * root.u)
-                radius: Math.round(8 * root.u)
+                radius: 0
                 color: current ? Style.neutralDark : (sourceMouse.pressed ? Style.raised : "transparent")
                 border.width: knob ? 2 : 0
                 border.color: current ? "#ffffff" : Style.neutral
@@ -976,13 +1035,47 @@ Rectangle {
                     }
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width - countText.width - Math.round(24 * root.u)
+                        width: parent.width - countText.width - deckMarks.width - Math.round(24 * root.u)
                         elide: Text.ElideRight
                         color: sourceRow.current ? "#ffffff" : Style.text
                         font.family: Style.font
                         font.weight: sourceRow.current ? Font.DemiBold : Font.Medium
                         font.pixelSize: root.fs(14)
                         text: sourceRow.modelData.kind === "queue" && queueCount.count > 0 ? qsTr("Cola · %1").arg(queueCount.count) : sourceRow.modelData.name
+                    }
+                }
+                // Cutlab 1.32.0: A / B on the folder the track of a deck
+                // comes from
+                Row {
+                    id: deckMarks
+
+                    readonly property var decks: sourceRow.modelData.kind === "folder" || sourceRow.modelData.kind === "volume"
+                        ? root.decksFrom(sourceRow.modelData.path) : []
+
+                    anchors.right: countText.left
+                    anchors.rightMargin: decks.length > 0 ? Math.round(8 * root.u) : 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: Math.round(3 * root.u)
+
+                    Repeater {
+                        model: deckMarks.decks
+
+                        Rectangle {
+                            required property string modelData
+
+                            width: Math.round(18 * root.u)
+                            height: width
+                            color: Style.deckColor(modelData)
+
+                            Text {
+                                anchors.centerIn: parent
+                                color: "#0b0a16"
+                                font.family: Style.font
+                                font.weight: Font.Bold
+                                font.pixelSize: root.fs(11)
+                                text: Style.deckLetter(parent.modelData)
+                            }
+                        }
                     }
                 }
                 Text {
@@ -1018,7 +1111,7 @@ Rectangle {
                 CLButton {
                     width: parent.width
                     height: Math.round(38 * root.u)
-                    radius: Math.round(8 * root.u)
+                    radius: 0
                     icon: "folder"
                     iconSize: Math.round(16 * root.u)
                     fontSize: root.fs(13)
@@ -1029,7 +1122,7 @@ Rectangle {
                 CLButton {
                     width: parent.width
                     height: Math.round(38 * root.u)
-                    radius: Math.round(8 * root.u)
+                    radius: 0
                     fontSize: root.fs(13)
                     text: qsTr("Más opciones…")
                     fillColor: "transparent"
@@ -1076,7 +1169,7 @@ Rectangle {
 
                         width: chipLabel.implicitWidth + 24
                         height: 34
-                        radius: 17
+                        radius: 0
                         color: on ? Style.neutralDark : "transparent"
                         border.width: 1
                         border.color: on ? Style.neutral : Qt.rgba(1, 1, 1, 0.14)
@@ -1116,7 +1209,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: root.wide ? parent.width - x - compatButton.width - orderButton.width - Math.round(30 * root.u) : parent.width - 24
                 height: Math.round(40 * root.u)
-                radius: Math.round(10 * root.u)
+                radius: 0
                 color: Style.raised
 
                 Image {
@@ -1199,7 +1292,7 @@ Rectangle {
                 width: root.wide ? compatText.implicitWidth + Math.round(28 * root.u)
                     : Math.max(Math.round(90 * root.u), Math.min(compatText.implicitWidth + Math.round(28 * root.u), orderButton.x - x - 8))
                 height: Math.round((root.wide ? 40 : 32) * root.u)
-                radius: height / 2
+                radius: 0
                 fillColor: root.compatible ? Style.neutralDark : "transparent"
                 bordered: true
 
@@ -1216,7 +1309,7 @@ Rectangle {
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignHCenter
                     text: {
-                        const group = root.compatible ? root.compatGroup : root.playingGroup;
+                        const group = root.compatible ? root.compatGroup : root.versusGroup;
                         const bpm = root.compatible ? root.compatBpm : (group === "[Channel2]" ? bpm2.value : bpm1.value);
                         const key = root.compatible ? root.compatKey : Mixxx.Cutlab.deckKey(group);
                         const base = qsTr("Compatibles con %1").arg(Style.deckLetter(group));
@@ -1240,7 +1333,7 @@ Rectangle {
                 visible: root.wide || !root.searchOpen
                 width: orderText.implicitWidth + Math.round(28 * root.u)
                 height: compatButton.height
-                radius: height / 2
+                radius: 0
                 fillColor: "transparent"
                 bordered: root.wide
 
@@ -1265,7 +1358,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 36
                 height: 36
-                radius: 10
+                radius: 0
                 icon: root.searchOpen ? "close" : "search"
                 iconSize: 16
                 fillColor: "transparent"
@@ -1310,8 +1403,8 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: sugLetter.implicitWidth + 12
                     height: sugLetter.implicitHeight + 2
-                    radius: 4
-                    color: Style.deckColor(root.playingGroup)
+                    radius: 0
+                    color: Style.deckColor(root.versusGroup)
 
                     Text {
                         id: sugLetter
@@ -1321,7 +1414,7 @@ Rectangle {
                         font.family: Style.mono
                         font.weight: Font.Bold
                         font.pixelSize: root.fs(11)
-                        text: Style.deckLetter(root.playingGroup)
+                        text: Style.deckLetter(root.versusGroup)
                     }
                 }
                 Text {
@@ -1330,7 +1423,7 @@ Rectangle {
                     font.family: Style.font
                     font.weight: Font.Bold
                     font.pixelSize: root.fs(13)
-                    text: qsTr("Sugeridos para lo que suena en %1").arg(Style.deckLetter(root.playingGroup))
+                    text: qsTr("Sugeridos para lo que suena en %1").arg(Style.deckLetter(root.versusGroup))
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
@@ -1376,7 +1469,7 @@ Rectangle {
 
                     width: root.wide ? (suggestionView.width - 3 * suggestionView.spacing) / 4 : 220
                     height: suggestionView.height
-                    radius: Math.round(10 * root.u)
+                    radius: 0
                     color: picked ? Style.track : Style.panel
                     border.width: picked ? 2 : 1
                     border.color: picked ? Style.neutral : Qt.rgba(0.55, 0.52, 1, 0.25)
@@ -1388,7 +1481,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         width: Math.round(36 * root.u)
                         height: width
-                        radius: Math.round(6 * root.u)
+                        radius: 0
                         color: "#2a2650"
                     }
                     Column {
@@ -1472,7 +1565,7 @@ Rectangle {
                         {t: qsTr("BPM"), w: 64, right: true},
                         {t: qsTr("TON."), w: 46, right: false},
                         {t: qsTr("DUR."), w: 56, right: true},
-                        {t: qsTr("VS. DECK %1").arg(Style.deckLetter(root.playingGroup)), w: 150, right: false}
+                        {t: qsTr("CON %1").arg(Style.deckLetter(root.versusGroup)), w: 150, right: false}
                     ]
 
                     Text {
@@ -1507,7 +1600,7 @@ Rectangle {
             width: trackView.width
             visible: scanning || running || root.missing > 0 || failed > 0
             height: visible ? Math.round(40 * root.u) : 0
-            radius: Math.round(8 * root.u)
+            radius: 0
             color: Style.raised
             clip: true
 
@@ -1518,7 +1611,7 @@ Rectangle {
                 visible: analysisBar.scanning
                 width: parent.width * 0.25
                 height: parent.height
-                radius: parent.radius
+                radius: 0
                 color: Style.neutralDark
 
                 SequentialAnimation on x {
@@ -1544,7 +1637,7 @@ Rectangle {
                 visible: analysisBar.running && !analysisBar.scanning
                 width: parent.width * (analysisBar.total > 0 ? analysisBar.done / analysisBar.total : 0)
                 height: parent.height
-                radius: parent.radius
+                radius: 0
                 color: Style.neutralDark
             }
             Text {
@@ -1672,7 +1765,39 @@ Rectangle {
                         width: trackView.width
                         text: (modelData.name === "" ? qsTr("Sin género") : modelData.name) + "  ·  " + modelData.count
                         icon: "list"
-                        onClicked: root.pickSource({kind: "genre", key: "genre:" + modelData.name, name: modelData.name === "" ? qsTr("Sin género") : modelData.name, genre: modelData.name, count: modelData.count})
+                        onClicked: root.pickSource(root.genreSource(modelData))
+                    }
+                }
+                // Cutlab 1.32.0: the folders inside the folder on screen
+                // (and the folders of the library upright), with A / B on
+                // the one a deck's track comes from
+                Repeater {
+                    model: root.page && root.page.subfolders ? root.page.subfolders : []
+
+                    NodeRow {
+                        required property var modelData
+                        readonly property var decks: root.decksFrom(modelData.path)
+
+                        width: trackView.width
+                        text: (decks.length > 0 ? "[" + decks.map(group => Style.deckLetter(group)).join(" ") + "]  " : "")
+                            + modelData.name + "  ·  " + modelData.count
+                        icon: "folder"
+                        onClicked: root.push({title: modelData.name, parents: [], node: root.featureIndex("tracks"), showTracks: true,
+                                              filter: "location:\"" + modelData.path + "/\"",
+                                              subfolders: Mixxx.Cutlab.subFolders(modelData.path)})
+                    }
+                }
+                // Cutlab 1.32.0: the subgenres of the genre on screen
+                Repeater {
+                    model: root.page && root.page.subgenres ? root.page.subgenres : []
+
+                    NodeRow {
+                        required property var modelData
+
+                        width: trackView.width
+                        text: modelData.name + "  ·  " + modelData.count
+                        icon: "folder"
+                        onClicked: root.push({title: root.page.title + " · " + modelData.name, parents: [], node: root.featureIndex("tracks"), showTracks: true, filter: modelData.filter})
                     }
                 }
                 Repeater {
@@ -1752,7 +1877,7 @@ Rectangle {
                         color: Style.textSecondary
                         font.family: Style.font
                         font.pixelSize: 12
-                        text: qsTr("con temas que pegan con %1").arg(Style.deckLetter(root.playingGroup))
+                        text: qsTr("con temas que pegan con %1").arg(Style.deckLetter(root.versusGroup))
                     }
                 }
             }
@@ -1766,7 +1891,7 @@ Rectangle {
                 compact: !root.wide
                 u: root.wide ? root.u : 1
                 selected: root.selectedRow === index && root.focusColumn !== 2
-                versusBpm: root.playingGroup === "[Channel2]" ? bpm2.value : bpm1.value
+                versusBpm: root.versusGroup === "[Channel2]" ? bpm2.value : bpm1.value
                 versusKey: root.versusKey
                 loadedUrlA: root.loadedUrlA
                 loadedUrlB: root.loadedUrlB
@@ -1858,7 +1983,7 @@ Rectangle {
 
                     width: (loadBar.width - 24 - 8) / 2
                     height: 52
-                    radius: 12
+                    radius: 0
                     color: main ? Style.deckColor(modelData) : "transparent"
                     border.width: main ? 0 : 1
                     border.color: Style.deckColor(modelData)
@@ -2035,7 +2160,7 @@ Rectangle {
         onClosed: Qt.inputMethod.hide()
         background: Rectangle {
             color: Style.panel
-            radius: 16
+            radius: 0
             border.width: 1
             border.color: Style.buttonBorder
         }
@@ -2053,7 +2178,7 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: 44
-                radius: 10
+                radius: 0
                 color: Style.raised
 
                 TextField {
@@ -2113,7 +2238,7 @@ Rectangle {
         anchors.bottomMargin: (root.wide ? hints.height : loadBar.height) + 16
         width: Math.min(root.width - 32, toastText.implicitWidth + 32)
         height: toastText.implicitHeight + 20
-        radius: height / 2
+        radius: 0
         color: Style.raised
         border.width: 1
         border.color: Style.neutral

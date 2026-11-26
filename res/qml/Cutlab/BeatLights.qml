@@ -71,7 +71,7 @@ Grid {
 
             width: root.lightWidth
             height: root.lightHeight
-            radius: Math.round(root.lightHeight * 0.22)
+            radius: 0
             // Always the color of the deck; the first beat of the bar
             // brighter, with a white edge
             color: on ? (index === 0 ? Style.deckLight(root.group) : Style.deckColor(root.group)) : Style.raised

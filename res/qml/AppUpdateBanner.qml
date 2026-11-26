@@ -20,7 +20,7 @@ Rectangle {
     // In a Loader, which takes the size of the bar
     width: Math.min(720, Window.width - 24)
     height: 48
-    radius: 8
+    radius: 0
     color: "#e61e1e1e"
     border.color: "#8b85ff"
     border.width: 1

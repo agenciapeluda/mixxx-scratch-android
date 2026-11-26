@@ -10,7 +10,7 @@ FocusScope {
 
     Rectangle {
         id: backgroundInput
-        radius: 4
+        radius: 0
         color: '#17162a'
         anchors.fill: parent
     }
@@ -19,7 +19,7 @@ FocusScope {
         anchors.fill: parent
         horizontalOffset: 0
         verticalOffset: 0
-        radius: 4.0
+        radius: 0
         color: "#000000"
         source: backgroundInput
     }
@@ -28,7 +28,7 @@ FocusScope {
         anchors.fill: parent
         source: dropSetting
         spread: 0.2
-        radius: 12
+        radius: 0
         samples: 24
         horizontalOffset: 0
         verticalOffset: 0

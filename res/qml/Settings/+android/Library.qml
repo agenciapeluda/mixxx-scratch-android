@@ -147,7 +147,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: localCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -175,7 +175,7 @@ Category {
                         Rectangle {
                             Layout.preferredHeight: 24
                             Layout.preferredWidth: scannerStatusText.implicitWidth + 16
-                            radius: 12
+                            radius: 0
                             color: root.isScanning ? "#ff910022" : "#00e67622"
                             border.color: root.isScanning ? "#ffb547" : "#2bd67b"
                             border.width: 1
@@ -222,7 +222,7 @@ Category {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 48
                                 color: "#0e0d1a"
-                                radius: 6
+                                radius: 0
                                 border.color: "#363636"
                                 border.width: 1
 
@@ -285,7 +285,7 @@ Category {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 42
                             color: "#17162a"
-                            radius: 6
+                            radius: 0
                             visible: !root.sourcesList || root.sourcesList.length === 0
 
                             FormRow {
@@ -404,7 +404,7 @@ Category {
                         Layout.fillWidth: true
                         Layout.preferredHeight: browserCol.implicitHeight + 20
                         color: "#0e0d1a"
-                        radius: 6
+                        radius: 0
                         border.color: "#00e5ff44"
                         border.width: 1
                         visible: root.showFolderBrowser
@@ -452,7 +452,7 @@ Category {
                                     font.pixelSize: 11
                                     background: Rectangle {
                                         color: "#17162a"
-                                        radius: 4
+                                        radius: 0
                                         border.color: pathInputField.activeFocus ? "#e6e7ee" : "#2a2940"
                                         border.width: 1
                                     }
@@ -482,7 +482,7 @@ Category {
                                     Rectangle {
                                         height: 28
                                         width: dirLabel.implicitWidth + 20
-                                        radius: 4
+                                        radius: 0
                                         color: "#17162a"
                                         border.color: "#444444"
                                         border.width: 1
@@ -558,12 +558,82 @@ Category {
                 }
             }
 
+            // [AI-generated text, Claude (Anthropic) — start]
+            // Cutlab 1.32.0: where the genre comes from and what the
+            // suggestions come from
+            // [AI-generated text, Claude (Anthropic) — end]
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: genreCol.implicitHeight + 24
+                color: Theme.darkGray3
+                radius: 0
+                border.color: "#1d1b33"
+                border.width: 1
+
+                ColumnLayout {
+                    id: genreCol
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    spacing: 10
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        elide: Text.ElideRight
+                        text: qsTr("Genres and suggestions")
+                        font.weight: Font.DemiBold
+                        font.pixelSize: 13
+                        color: "#e6e7ee"
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        text: qsTr("Genre of each track. Automatic: the genre tag if it is a genre; if it is empty or an ISRC code (like USSM19600058), the folder: \"08 HipHop - Underground Moderno\" is HipHop, subgenre Underground Moderno. The files are not changed.")
+                        font.pixelSize: 11
+                        color: "#9ca1b8"
+                        wrapMode: Text.WordWrap
+                    }
+                    SettingComponents.RatioChoice {
+                        readonly property var labels: [qsTr("Automatic"), qsTr("Tag"), qsTr("Folder")]
+                        Layout.maximumWidth: genreCol.width
+                        options: labels
+                        selected: labels[Math.max(0, Math.min(2, Mixxx.Cutlab.genreSource))]
+                        onSelectedChanged: {
+                            const index = labels.indexOf(selected);
+                            if (index >= 0 && index !== Mixxx.Cutlab.genreSource) {
+                                Mixxx.Cutlab.genreSource = index;
+                            }
+                        }
+                    }
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 0
+                        text: qsTr("Suggestions: open format takes any genre; same genre or same folder keep only those. Tempo and key always count.")
+                        font.pixelSize: 11
+                        color: "#9ca1b8"
+                        wrapMode: Text.WordWrap
+                    }
+                    SettingComponents.RatioChoice {
+                        readonly property var labels: [qsTr("Open format"), qsTr("Same genre"), qsTr("Same folder")]
+                        Layout.maximumWidth: genreCol.width
+                        options: labels
+                        selected: labels[Math.max(0, Math.min(2, Mixxx.Cutlab.suggestFrom))]
+                        onSelectedChanged: {
+                            const index = labels.indexOf(selected);
+                            if (index >= 0 && index !== Mixxx.Cutlab.suggestFrom) {
+                                Mixxx.Cutlab.suggestFrom = index;
+                            }
+                        }
+                    }
+                }
+            }
+
             // ================= 2. CACHÉ DE STREAMING (NAVIDROME / AUDIUS / TIDAL) =================
             Rectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: streamingCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -600,7 +670,7 @@ Category {
                             Layout.preferredHeight: 40
                             Layout.fillWidth: true
                             color: "#0e0d1a"
-                            radius: 6
+                            radius: 0
                             border.color: "#2a2940"
                             border.width: 1
 
@@ -668,7 +738,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: backupCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -786,7 +856,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: driveBackupCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -948,7 +1018,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: searchCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -1025,7 +1095,7 @@ Category {
                 Layout.fillWidth: true
                 Layout.preferredHeight: analysisCol.implicitHeight + 24
                 color: Theme.darkGray3
-                radius: 8
+                radius: 0
                 border.color: "#1d1b33"
                 border.width: 1
 
@@ -1104,7 +1174,7 @@ Category {
         color: "#0e0d1a"
         border.color: "#1d1b33"
         border.width: 1
-        radius: 8
+        radius: 0
 
         FormRow {
             anchors.fill: parent
@@ -1115,7 +1185,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
-                radius: 17
+                radius: 0
                 color: root.isScanning ? "#2e2616" : (root.dirty ? "#2e2616" : "#1d2a21")
                 border.color: root.isScanning ? "#ffb547" : (root.dirty ? "#ffb547" : "#2bd67b")
                 border.width: 1
@@ -1149,7 +1219,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 160
-                radius: 6
+                radius: 0
                 color: rescanMouse.pressed ? "#635bff" : (rescanMouse.containsMouse ? "#635bff" : "#4a43c9")
                 border.color: "#908aff"
                 border.width: 1
@@ -1186,7 +1256,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 110
-                radius: 6
+                radius: 0
                 visible: root.dirty
                 color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#1d1b33" : "#17162a")
                 border.color: "#555555"
@@ -1217,7 +1287,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 220
-                radius: 6
+                radius: 0
                 color: root.dirty
                        ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
                        : (saveMouse.pressed ? "#4a43c9" : (saveMouse.containsMouse ? "#635bff" : "#635bff"))
@@ -1272,7 +1342,7 @@ Category {
 
         background: Rectangle {
             color: "#0e0d1a"
-            radius: 10
+            radius: 0
             border.color: "#ffb547"
             border.width: 1
         }
@@ -1374,7 +1444,7 @@ Category {
 
         background: Rectangle {
             color: "#0e0d1a"
-            radius: 10
+            radius: 0
             border.color: "#ffb547"
             border.width: 1
         }

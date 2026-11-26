@@ -57,7 +57,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        radius: 10
+        radius: 0
         color: root.large ? Style.button : "transparent"
         border.color: root.large ? Style.buttonBorder : "transparent"
         border.width: 1

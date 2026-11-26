@@ -72,7 +72,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: recText.implicitWidth + root.px(24)
                 height: root.px(32)
-                radius: height / 2
+                radius: 0
                 color: root.recording ? Style.danger : "transparent"
                 border.width: 1
                 border.color: root.recording ? Style.danger : Qt.rgba(1, 1, 1, 0.12)
@@ -98,7 +98,7 @@ Rectangle {
             CLButton {
                 width: root.px(44)
                 height: width
-                radius: root.px(10)
+                radius: 0
                 icon: "list"
                 iconSize: root.px(18)
                 fillColor: "transparent"
@@ -136,7 +136,7 @@ Rectangle {
 
                 width: (cards.width - cards.spacing) / 2
                 height: cardColumn.implicitHeight + root.px(16) + 3
-                radius: root.px(12)
+                radius: 0
                 color: cardMouse.pressed ? Style.raised : Style.panel
                 clip: true
 
@@ -324,7 +324,7 @@ Rectangle {
 
                     width: (waves.width - root.px(8)) / 2
                     height: waves.height
-                    radius: root.px(12)
+                    radius: 0
                     color: Style.panel
                     clip: true
 
@@ -359,7 +359,7 @@ Rectangle {
             visible: phase.active
             width: phaseText.implicitWidth + root.px(14)
             height: phaseText.implicitHeight + 4
-            radius: height / 2
+            radius: 0
             color: Style.background
             border.width: 1
             border.color: phaseText.color
@@ -417,7 +417,7 @@ Rectangle {
 
                         width: (deckButtons.width - 2 * deckButtons.spacing) / 3
                         height: root.px(44)
-                        radius: root.px(10)
+                        radius: 0
                         color: on && modelData === "sync" ? Style.deckColor(deckButtons.modelData) : (buttonMouse.pressed ? Style.raised : "transparent")
                         border.width: 1
                         border.color: on ? onColor : Qt.rgba(1, 1, 1, 0.12)
@@ -550,7 +550,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
                 height: root.px(8)
-                radius: height / 2
+                radius: 0
                 color: Style.track
             }
             Rectangle {

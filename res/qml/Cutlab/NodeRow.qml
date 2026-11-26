@@ -30,7 +30,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: 40
         height: 40
-        radius: 6
+        radius: 0
         color: Style.raised
 
         Image {

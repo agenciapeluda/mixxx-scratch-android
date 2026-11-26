@@ -74,7 +74,15 @@ GridLayout {
             row.stacked = row.wantStacked;
         }
     }
-    onWantStackedChanged: Qt.callLater(row.syncStacked)
+    // Cutlab 1.32.0: a child Timer instead of Qt.callLater(), so nothing
+    // runs on a row that was already destroyed (changing settings pages)
+    Timer {
+        id: stackedTimer
+        interval: 0
+        repeat: false
+        onTriggered: row.syncStacked()
+    }
+    onWantStackedChanged: stackedTimer.restart()
     // [AI-generated text, Claude (Anthropic) — end]
 
     // What it changed on the children, to give it back

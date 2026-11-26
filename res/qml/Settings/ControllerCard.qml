@@ -55,7 +55,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 8
         color: '#0e0d1a'
-        radius: root.focused ? 18 : 22
+        radius: 0
 
         Item {
             id: label
@@ -731,7 +731,7 @@ Item {
         anchors.margins: 8
         color: "#000000"
         horizontalOffset: 0
-        radius: root.focused ? 0 : 8.0
+        radius: 0
         source: content
         verticalOffset: 0
     }

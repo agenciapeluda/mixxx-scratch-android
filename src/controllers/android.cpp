@@ -216,6 +216,20 @@ void saveBeforeExit() {
         qWarning() << "Saving before exit timed out";
     }
 }
+void restartApp() {
+    std::function<void()> save;
+    {
+        std::lock_guard lock(s_saveBeforeExitLock);
+        save = s_saveBeforeExit;
+    }
+    if (save) {
+        save();
+    }
+    QJniObject::callStaticMethod<void>("org/mixxx/Restarter",
+            "restart",
+            "(Landroid/content/Context;)V",
+            QNativeInterface::QAndroidApplication::context().object());
+}
 } // namespace android
 } // namespace mixxx
 

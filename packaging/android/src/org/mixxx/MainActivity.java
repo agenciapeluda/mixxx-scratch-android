@@ -139,6 +139,9 @@ public class MainActivity extends QtActivityBase {
             // Receiver was not registered
         }
         if (isFinishing()) {
+            // Cutlab 1.32.0: Do Not Disturb and the audio focus of the show
+            // mode back as they were
+            ShowMode.release(this);
             // Qt ends the process with System.exit() while the threads of
             // Mixxx and Android are still running, which crashes in them at
             // times (e.g. in Android's hwui threads). Save what Mixxx has to

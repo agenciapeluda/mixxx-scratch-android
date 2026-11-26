@@ -95,7 +95,7 @@ Row {
         CLControlButton {
             width: transport.unit * 1.35
             height: transport.unit * 0.92
-            radius: 8
+            radius: 0
             group: transport.group
             key: "cue_set"
             mode: "trigger"
@@ -106,7 +106,7 @@ Row {
         CLControlButton {
             width: transport.unit * 1.35
             height: transport.unit * 0.92
-            radius: 8
+            radius: 0
             group: transport.group
             key: "cue_default"
             mode: "push"

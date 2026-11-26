@@ -16,7 +16,7 @@ Rectangle {
     visible: active
     width: row.implicitWidth + 18
     height: 28
-    radius: 14
+    radius: 0
     color: "#1c1c1e"
     border.color: statusColor()
     border.width: 1
@@ -69,7 +69,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             width: 8
             height: 8
-            radius: 4
+            radius: 0
             color: root.statusColor()
         }
         Text {

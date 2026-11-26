@@ -18,6 +18,9 @@
 #include "library/trackcollection.h"
 #include "library/trackcollectionmanager.h"
 #include "moc_qmlmobilelibraryproxy.cpp"
+#ifdef Q_OS_ANDROID
+#include "controllers/android.h"
+#endif
 #include "qml/qmlconfigproxy.h"
 #include "qml/qmllibraryproxy.h"
 #include "qml/qmllibrarytracklistmodel.h"
@@ -176,9 +179,17 @@ QVariantMap QmlMobileLibraryProxy::restoreBackup(const QString& name) {
     if (!mixxx::android::stageRestore(CmdlineArgs::Instance().getSettingsPath(), name, &error)) {
         return result(false, error);
     }
-    // Gives the UI time to show the message
+    // Gives the UI time to show the message. Cutlab 1.32.0: restarts on its
+    // own; QCoreApplication::quit() crashed at times on the way out
+#ifdef Q_OS_ANDROID
+    QTimer::singleShot(2000, QCoreApplication::instance(), []() {
+        mixxx::android::restartApp();
+    });
+    return result(true, tr("Cutlab restarts now to finish restoring %1.").arg(name));
+#else
     QTimer::singleShot(3000, QCoreApplication::instance(), &QCoreApplication::quit);
     return result(true, tr("Mixxx closes now. Open it again to finish restoring %1.").arg(name));
+#endif
 }
 
 bool QmlMobileLibraryProxy::sidebarVisible() const {

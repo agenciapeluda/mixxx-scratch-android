@@ -332,7 +332,7 @@ Rectangle {
 
     clip: true
     color: '#0b0a16'
-    radius: 5
+    radius: 0
 
     onModeChanged: {
         updateHiddenConnectionCount();

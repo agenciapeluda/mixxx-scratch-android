@@ -12,7 +12,7 @@ Rectangle {
     border.color: root.active ? Theme.accentColor : Theme.white
     border.width: 1
     color: 'transparent'
-    radius: height / 2
+    radius: 0
 
     MouseArea {
         id: mouseArea

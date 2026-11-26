@@ -287,7 +287,7 @@ Category {
         Layout.fillWidth: true
         implicitHeight: (holder.children.length > 0 ? holder.children[0].implicitHeight : 0) + 24
         color: "#0e0d1a"
-        radius: 8
+        radius: 0
         border.color: "#1d1b33"
         border.width: 1
 
@@ -377,7 +377,7 @@ Category {
 
         Layout.fillWidth: true
         implicitHeight: modelLayout.implicitHeight + 16
-        radius: 6
+        radius: 0
         color: "#202020"
         border.color: installed ? "#2bd67b" : "#2f2f2f"
         border.width: 1

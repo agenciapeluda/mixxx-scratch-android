@@ -26,7 +26,7 @@ ComboBox {
             border.color: '#000000'
             border.width: 1
             color: '#17162a'
-            radius: 4
+            radius: 0
         }
         InnerShadow {
             id: bottomInnerEffect
@@ -34,7 +34,7 @@ ComboBox {
             anchors.fill: parent
             color: "#40000000"
             horizontalOffset: -2
-            radius: 4
+            radius: 0
             samples: 16
             source: background
             spread: 0.3
@@ -46,7 +46,7 @@ ComboBox {
             anchors.fill: parent
             color: "#40000000"
             horizontalOffset: 2
-            radius: 4
+            radius: 0
             samples: 16
             source: bottomInnerEffect
             spread: 0.3
@@ -56,7 +56,7 @@ ComboBox {
             anchors.fill: parent
             color: "#40000000"
             horizontalOffset: 0
-            radius: 4.0
+            radius: 0
             source: topInnerEffect
             verticalOffset: 0
         }
@@ -85,7 +85,7 @@ ComboBox {
             border.color: itemDlgt.highlighted ? Theme.deckLineColor : "transparent"
             border.width: 1
             color: "transparent"
-            radius: 5
+            radius: 0
         }
         contentItem: Text {
             color: Theme.deckTextColor
@@ -223,7 +223,7 @@ ComboBox {
                 anchors.fill: parent
                 color: "#000000"
                 horizontalOffset: 0
-                radius: 8.0
+                radius: 0
                 source: content
                 verticalOffset: 0
             }

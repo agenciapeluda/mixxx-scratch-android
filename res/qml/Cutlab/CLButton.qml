@@ -13,7 +13,7 @@ Item {
     property color litColor: Style.neutral
     property color fillColor: Style.button
     property color textColor: Style.text
-    property real radius: 8
+    property real radius: 0
     property bool bordered: true
     // Whether being lit also colors the border, or only the label
     property bool litBorder: true
@@ -35,7 +35,7 @@ Item {
         id: background
 
         anchors.fill: parent
-        radius: root.round ? Math.min(width, height) / 2 : root.radius
+        radius: 0
         color: root.highlighted ? (root.litColor === Style.neutral ? Style.neutralDark : root.litColor) : (touch.pressed ? Style.buttonPressed : root.fillColor)
         border.width: root.lit && root.litBorder ? 2 : (root.bordered ? 1 : 0)
         border.color: root.lit && root.litBorder ? root.litColor : Style.buttonBorder

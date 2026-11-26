@@ -62,7 +62,7 @@ SpinBox {
             anchors.fill: parent
             color: "#2a2940"
             horizontalOffset: -1
-            radius: 8
+            radius: 0
             samples: 32
             source: content
             spread: 0.4
@@ -74,7 +74,7 @@ SpinBox {
             anchors.fill: parent
             color: "#2a2940"
             horizontalOffset: 1
-            radius: 8
+            radius: 0
             samples: 32
             source: bottomInnerEffect
             spread: 0.4
@@ -133,7 +133,7 @@ SpinBox {
             anchors.fill: parent
             color: "#40000000"
             horizontalOffset: -2
-            radius: 4
+            radius: 0
             samples: 16
             source: content
             spread: 0.3
@@ -145,7 +145,7 @@ SpinBox {
             anchors.fill: parent
             color: "#40000000"
             horizontalOffset: 2
-            radius: 4
+            radius: 0
             samples: 16
             source: bottomInnerEffect
             spread: 0.3

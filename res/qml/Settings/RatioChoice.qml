@@ -56,7 +56,7 @@ Item {
         anchors.centerIn: parent
         color: root.inactiveColor
         height: 24
-        radius: height / 2
+        radius: 0
         visible: root.maxWidth == 0 || root.maxWidth > root.cellSize * root.options.length
         width: root.naturalWidth * root.fit
 
@@ -79,7 +79,7 @@ Item {
 
                         anchors.fill: parent
                         color: root.selected == modelData ? Theme.accentColor : 'transparent'
-                        radius: height / 2
+                        radius: 0
 
                         Text {
                             anchors.fill: parent
@@ -119,7 +119,7 @@ Item {
                         anchors.fill: parent
                         color: "#2a2940"
                         horizontalOffset: -1
-                        radius: 8
+                        radius: 0
                         samples: 32
                         source: contentOption
                         spread: 0.4
@@ -132,7 +132,7 @@ Item {
                         anchors.fill: parent
                         color: "#2a2940"
                         horizontalOffset: 1
-                        radius: 8
+                        radius: 0
                         samples: 32
                         source: bottomOptionInnerEffect
                         spread: 0.4
@@ -170,7 +170,7 @@ Item {
         background: Rectangle {
             color: root.inactiveColor
             implicitWidth: contentSpin.textWidth + 2 * contentSpin.spacing + 48
-            radius: parent.height / 2
+            radius: 0
         }
         contentItem: Item {
             width: contentSpin.textWidth + 2 * contentSpin.spacing + 20
@@ -180,7 +180,7 @@ Item {
 
                 anchors.fill: parent
                 color: Theme.accentColor
-                radius: height / 2
+                radius: 0
 
                 Text {
                     id: textLabel
@@ -199,7 +199,7 @@ Item {
                 anchors.fill: parent
                 color: "#2a2940"
                 horizontalOffset: -1
-                radius: 8
+                radius: 0
                 samples: 32
                 source: content
                 spread: 0.4
@@ -211,7 +211,7 @@ Item {
                 anchors.fill: parent
                 color: "#2a2940"
                 horizontalOffset: 1
-                radius: 8
+                radius: 0
                 samples: 32
                 source: bottomInnerEffect
                 spread: 0.4
@@ -260,7 +260,7 @@ Item {
         anchors.margins: dropRatio.radius
         color: "#80000000"
         horizontalOffset: 0
-        radius: 4.0
+        radius: 0
         source: contentList.visible ? contentList : contentSpin
         verticalOffset: 0
     }
@@ -333,7 +333,7 @@ Item {
                 anchors.fill: parent
                 color: "#000000"
                 horizontalOffset: 0
-                radius: 8.0
+                radius: 0
                 source: contentPopup
                 verticalOffset: 0
             }
@@ -348,7 +348,7 @@ Item {
         height: implicitHeight
         implicitHeight: 24
         implicitWidth: 24
-        radius: parent.height / 2
+        radius: 0
 
         Text {
             anchors.fill: parent

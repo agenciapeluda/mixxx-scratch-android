@@ -54,7 +54,7 @@ Skin.ComboBox {
             border.color: Theme.deckLineColor
             border.width: itemDlgt.highlighted ? 1 : 0
             color: "transparent"
-            radius: 5
+            radius: 0
         }
         contentItem: RowLayout {
             anchors.fill: parent

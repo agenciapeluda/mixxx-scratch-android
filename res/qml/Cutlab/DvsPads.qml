@@ -69,7 +69,7 @@ Item {
 
                 width: (root.width - 4 * root.spacing) / 5
                 height: root.height
-                radius: 10
+                radius: 0
                 color: on ? Qt.darker(root.deckColor, 1.5) : (mouse.pressed ? Style.buttonPressed : Style.raised)
                 border.width: on ? 2 : 1
                 border.color: on ? root.deckColor : Style.buttonBorder

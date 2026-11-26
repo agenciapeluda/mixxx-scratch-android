@@ -143,7 +143,7 @@ Category {
                             Layout.preferredHeight: 18
                             Layout.preferredWidth: 35
                             color: '#393939'
-                            radius: 4
+                            radius: 0
 
                             Text {
                                 anchors.centerIn: parent

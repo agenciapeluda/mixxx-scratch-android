@@ -9,6 +9,8 @@
 #include <QVariantList>
 #include <QVariantMap>
 
+class QNetworkAccessManager;
+
 namespace mixxx {
 namespace qml {
 
@@ -35,6 +37,15 @@ class QmlCutlab : public QObject {
     /// A library scan runs, and how many new tracks it added so far
     Q_PROPERTY(bool scanning READ scanning NOTIFY scanChanged)
     Q_PROPERTY(int scannedTracks READ scannedTracks NOTIFY scanChanged)
+    // Cutlab 1.32.0: where a track's genre comes from: 0 automatic (the tag
+    // if it is a genre, else the folder), 1 the tag, 2 the folder
+    Q_PROPERTY(int genreSource READ genreSource WRITE setGenreSource NOTIFY genreSourceChanged)
+    // Cutlab 1.32.0: what the suggestions come from: 0 open format, 1 the
+    // same genre, 2 the same folder
+    Q_PROPERTY(int suggestFrom READ suggestFrom WRITE setSuggestFrom NOTIFY suggestFromChanged)
+    // Cutlab 1.32.0: "Modo show" (org.mixxx.ShowMode): Do Not Disturb,
+    // audio focus, screen on, no background work of the app, no internet
+    Q_PROPERTY(bool showMode READ showMode WRITE setShowMode NOTIFY showModeChanged)
 
   public:
     explicit QmlCutlab(QObject* pParent = nullptr);
@@ -82,8 +93,31 @@ class QmlCutlab : public QObject {
     /// The folders of the library, one per subfolder of the music folders:
     /// {name, path, count, root}
     Q_INVOKABLE QVariantList musicFolders() const;
-    /// The genres of the library with their track count: {name, count}
+    /// Cutlab 1.32.0: the folders right inside `path` that hold tracks of
+    /// the library (also deeper down), A-Z: {name, path, count}
+    Q_INVOKABLE QVariantList subFolders(const QString& path) const;
+    /// The genres of the library, most tracks first:
+    /// {name, count, filter, subgenres: [{name, count, filter}]}; the
+    /// tracks without a genre last, with an empty name. `filter` is the
+    /// search that lists the tracks.
     Q_INVOKABLE QVariantList genres() const;
+    int genreSource() const;
+    void setGenreSource(int source);
+    int suggestFrom() const;
+    void setSuggestFrom(int from);
+    bool showMode() const;
+    void setShowMode(bool on);
+    /// What the show mode can't do on its own: {dnd, battery} granted
+    Q_INVOKABLE QVariantMap showModeAccess() const;
+    Q_INVOKABLE void openDndAccess() const;
+    Q_INVOKABLE void requestBatteryExemption() const;
+    Q_INVOKABLE void openInternetPanel() const;
+    Q_INVOKABLE void openBluetoothSettings() const;
+
+    /// Cutlab 1.32.0: the lyrics of the track on `group`, answered with
+    /// lyricsReady(): an .lrc next to the file, the ones saved before, else
+    /// LRCLIB (lrclib.net) when there is internet and the show mode is off
+    Q_INVOKABLE void fetchLyrics(const QString& group);
     /// Tracks that suit the one loaded on `group`, best first:
     /// {url, title, artist, bpm, key, why}
     Q_INVOKABLE QVariantList suggestions(const QString& group, int limit) const;
@@ -150,6 +184,18 @@ class QmlCutlab : public QObject {
     Q_INVOKABLE bool markPlayed(const QString& group) const;
 
   signals:
+    void genreSourceChanged();
+    void showModeChanged();
+    /// lines: [{time (s, -1 without times), text}]; source: "file",
+    /// "saved", "lrclib", or "" when there are none (status says why:
+    /// "none", "offline", "error")
+    void lyricsReady(const QString& group,
+            const QString& location,
+            const QVariantList& lines,
+            bool synced,
+            const QString& source,
+            const QString& status);
+    void suggestFromChanged();
     /// A library scan is over: the folders and the tracks may have changed
     void libraryScanned();
     void analysisChanged();
@@ -166,6 +212,7 @@ class QmlCutlab : public QObject {
     void frameStats(const QVariantMap& stats);
 
   private:
+    QNetworkAccessManager* m_pNetwork = nullptr;
     QTimer m_scanTick;
     QElapsedTimer m_sinceGrow;
     /// The batch is over: marks the tracks it could not analyze

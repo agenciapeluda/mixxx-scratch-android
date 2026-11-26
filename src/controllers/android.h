@@ -22,6 +22,9 @@ void notifyDevicesChanged();
 /// What has to be saved before the process ends, called on the main thread
 /// when the activity closes (see MainActivity.onDestroy()). Empty to unset.
 void setSaveBeforeExit(std::function<void()> save);
+/// Cutlab 1.32.0: saves what saveBeforeExit() saves, from the main thread,
+/// and restarts the app cleanly (org.mixxx.Restarter)
+void restartApp();
 
 extern std::mutex s_androidLock;
 extern std::condition_variable s_grantingWaitCond;

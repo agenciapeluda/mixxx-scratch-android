@@ -34,7 +34,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 8
         color: Theme.darkGray3
-        radius: 15
+        radius: 0
 
         Column {
             id: gatewayColumn
@@ -194,7 +194,7 @@ Item {
                             anchors.verticalCenter: inputLabel.verticalCenter
                             color: Theme.midGray
                             height: width
-                            radius: width / 2
+                            radius: 0
                             width: 15
                             z: 100
 

@@ -153,7 +153,7 @@ Item {
 
                 anchors.fill: parent
                 color: Theme.accentColor
-                radius: 7
+                radius: 0
             }
             InnerShadow {
                 id: handleEffect1
@@ -161,7 +161,7 @@ Item {
                 anchors.fill: parent
                 color: "#2a2940"
                 horizontalOffset: 0
-                radius: 16.0
+                radius: 0
                 samples: 16
                 source: handle
                 verticalOffset: 0
@@ -172,7 +172,7 @@ Item {
                 anchors.fill: parent
                 color: Qt.alpha(Theme.darkGray, 0.25)
                 horizontalOffset: 0
-                radius: 12.0
+                radius: 0
                 source: handleEffect1
                 verticalOffset: 0
             }
@@ -199,7 +199,7 @@ Item {
             anchors.fill: parent
             anchors.margins: 4
             color: Theme.darkGray2
-            radius: 4
+            radius: 0
         }
         DropShadow {
             id: dropSetting
@@ -207,7 +207,7 @@ Item {
             anchors.fill: backgroundInput
             color: Theme.darkGray
             horizontalOffset: 0
-            radius: 4.0
+            radius: 0
             source: backgroundInput
             verticalOffset: 0
         }
@@ -217,7 +217,7 @@ Item {
             anchors.fill: backgroundInput
             color: "#2a2940"
             horizontalOffset: 0
-            radius: 12
+            radius: 0
             samples: 24
             source: dropSetting
             spread: 0.2

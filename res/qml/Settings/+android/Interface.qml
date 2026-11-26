@@ -202,7 +202,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: card1Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -382,7 +382,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: topBarCol.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -470,7 +470,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: card2Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -556,7 +556,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: card3Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -688,7 +688,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: deckCard1Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -766,7 +766,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: deckCard2Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -826,7 +826,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: deckCard3Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -938,7 +938,7 @@ Category {
                         Layout.fillWidth: true
                         implicitHeight: deckCard4Col.implicitHeight + 20
                         color: "#17162a"
-                        radius: 8
+                        radius: 0
                         border.color: "#1d1b33"
                         border.width: 1
 
@@ -1033,7 +1033,7 @@ Category {
         color: "#17162a"
         border.color: "#1d1b33"
         border.width: 1
-        radius: 8
+        radius: 0
 
         readonly property bool hasChanges: (root.selectedIndex === 0 && themeColorTab.dirty) || (root.selectedIndex === 1 && decksTab.dirty)
 
@@ -1046,7 +1046,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 34
                 Layout.preferredWidth: statusRow.implicitWidth + 24
-                radius: 17
+                radius: 0
                 color: buttonActions.hasChanges ? "#2e2616" : "#1d2a21"
                 border.color: buttonActions.hasChanges ? "#ffb547" : "#2bd67b"
                 border.width: 1
@@ -1092,7 +1092,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 140
-                radius: 6
+                radius: 0
                 color: resetMouse.pressed ? "#2e1c1c" : (resetMouse.containsMouse ? "#2e1c1c" : "#371e1e")
                 border.color: "#ff4d5e"
                 border.width: 1
@@ -1133,7 +1133,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 38
                 Layout.preferredWidth: 110
-                radius: 6
+                radius: 0
                 visible: buttonActions.hasChanges
                 color: discardMouse.pressed ? "#424242" : (discardMouse.containsMouse ? "#262a35" : "#17162a")
                 border.color: "#555555"
@@ -1171,7 +1171,7 @@ Category {
             Rectangle {
                 Layout.preferredHeight: 40
                 Layout.preferredWidth: 220
-                radius: 6
+                radius: 0
                 color: buttonActions.hasChanges
                        ? (saveMouse.pressed ? "#1d2a21" : (saveMouse.containsMouse ? "#2bd67b" : "#2bd67b"))
                        : (saveMouse.pressed ? "#2c47b8" : (saveMouse.containsMouse ? "#4f7cff" : "#4f7cff"))

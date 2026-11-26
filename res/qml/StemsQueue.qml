@@ -108,7 +108,7 @@ ColumnLayout {
 
             Layout.fillWidth: true
             implicitHeight: rowLayout.implicitHeight + 12
-            radius: 6
+            radius: 0
             color: running ? "#1d1b33" : "#202020"
             border.color: running ? "#4b42f5" : "#2f2f2f"
             border.width: 1
