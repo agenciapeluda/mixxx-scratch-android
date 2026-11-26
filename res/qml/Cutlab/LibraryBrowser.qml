@@ -2113,6 +2113,111 @@ Rectangle {
             enabled: trackMenu.track !== null
             onTriggered: Mixxx.Library.analyze(trackMenu.track)
         }
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.32.3: out of the list on screen (the file stays), or
+        // deleted from the phone after asking
+        // [AI-generated text, Claude (Anthropic) — end]
+        CLMenuItem {
+            readonly property bool canRemove: !!root.tracklist && root.tracklist.canRemoveFromList()
+            text: qsTr("Quitar de esta lista")
+            enabled: canRemove
+            visible: canRemove
+            height: canRemove ? implicitHeight : 0
+            onTriggered: {
+                if (root.tracklist.removeFromList(trackMenu.row)) {
+                    root.toast(qsTr("Quitado de la lista (el archivo sigue en el teléfono)"));
+                }
+            }
+        }
+        CLMenuItem {
+            text: qsTr("Borrar del teléfono…")
+            enabled: trackMenu.url !== ""
+            onTriggered: {
+                deleteDialog.url = trackMenu.url;
+                const info = root.tracklist ? root.tracklist.rowInfo(trackMenu.row) : ({});
+                deleteDialog.name = info && info.title ? (info.artist ? info.artist + " · " : "") + info.title
+                    : decodeURIComponent(trackMenu.url.toString().split("/").pop());
+                Qt.callLater(deleteDialog.open);
+            }
+        }
+    }
+
+    // Cutlab 1.32.3: "Borrar del teléfono", asked first
+    Popup {
+        id: deleteDialog
+
+        property var url: ""
+        property string name: ""
+
+        anchors.centerIn: parent
+        width: Math.min(root.width - 40, 440)
+        modal: true
+        focus: true
+        padding: 20
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        background: Rectangle {
+            color: Style.panel
+            radius: 16
+            border.width: 1
+            border.color: Style.danger
+        }
+
+        contentItem: Column {
+            spacing: 14
+
+            Text {
+                width: parent.width
+                color: Style.text
+                font.family: Style.font
+                font.pixelSize: 18
+                font.weight: Font.Bold
+                text: qsTr("¿Borrar del teléfono?")
+            }
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                color: Style.text
+                font.family: Style.font
+                font.pixelSize: 15
+                text: deleteDialog.name
+            }
+            Text {
+                width: parent.width
+                wrapMode: Text.WordWrap
+                color: Style.textSecondary
+                font.family: Style.font
+                font.pixelSize: 13
+                text: qsTr("Se borra el archivo del teléfono y sale de la biblioteca y de todas las listas. No se puede deshacer.")
+            }
+            Row {
+                anchors.right: parent.right
+                spacing: 10
+
+                CLButton {
+                    width: 120
+                    height: 44
+                    text: qsTr("Cancelar")
+                    onClicked: deleteDialog.close()
+                }
+                CLButton {
+                    width: 120
+                    height: 44
+                    text: qsTr("Borrar")
+                    lit: true
+                    litColor: Style.danger
+                    onClicked: {
+                        const error = Mixxx.Cutlab.deleteTrackFile(deleteDialog.url);
+                        deleteDialog.close();
+                        if (error !== "") {
+                            root.toast(error);
+                            return;
+                        }
+                        root.toast(qsTr("Borrado del teléfono"));
+                        root.refreshQuery();
+                    }
+                }
+            }
+        }
     }
     // "Agregar a…": a new list or crate with the track, or one of yours
     CLMenu {

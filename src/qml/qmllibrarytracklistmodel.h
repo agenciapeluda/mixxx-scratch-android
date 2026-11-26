@@ -84,6 +84,11 @@ class QmlLibraryTrackListModel : public QIdentityProxyModel {
     }
     Q_INVOKABLE TrackModel::Capabilities getCapabilities() const;
     Q_INVOKABLE bool hasCapabilities(TrackModel::Capabilities caps) const;
+    /// Cutlab 1.32.3: the list on screen is a playlist or a crate, so a
+    /// track can be taken out of it (the file stays)
+    Q_INVOKABLE bool canRemoveFromList() const;
+    /// Cutlab 1.32.3: takes the track of `row` out of the playlist or crate
+    Q_INVOKABLE bool removeFromList(int row);
     Q_INVOKABLE void search(const QString& searchText);
     QHash<int, QByteArray> roleNames() const override;
     Q_INVOKABLE QVariant headerData(int section,

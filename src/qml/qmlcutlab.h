@@ -87,6 +87,10 @@ class QmlCutlab : public QObject {
     /// Cutlab 1.32.2: saves and opens the app again (the outputs are read
     /// when it starts)
     Q_INVOKABLE void restartApp() const;
+    /// Cutlab 1.32.3: deletes the file of the track at `url` from the phone
+    /// and takes it out of the library and its lists. "" when done, else
+    /// why not (loaded on a deck, no access, the file can't be deleted).
+    Q_INVOKABLE QString deleteTrackFile(const QUrl& url) const;
 
     static QmlCutlab* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
 

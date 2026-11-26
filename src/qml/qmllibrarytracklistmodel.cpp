@@ -227,6 +227,25 @@ QHash<int, QByteArray> QmlLibraryTrackListModel::roleNames() const {
     return kRoleNames;
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.3: "Quitar de esta lista" in the menu of a track
+// [AI-generated text, Claude (Anthropic) — end]
+bool QmlLibraryTrackListModel::canRemoveFromList() const {
+    auto* const pTrackModel = dynamic_cast<TrackModel*>(sourceModel());
+    return pTrackModel &&
+            (pTrackModel->hasCapabilities(TrackModel::Capability::RemovePlaylist) ||
+                    pTrackModel->hasCapabilities(TrackModel::Capability::RemoveCrate));
+}
+
+bool QmlLibraryTrackListModel::removeFromList(int row) {
+    auto* const pTrackModel = dynamic_cast<TrackModel*>(sourceModel());
+    if (!pTrackModel || !canRemoveFromList() || row < 0 || row >= sourceModel()->rowCount()) {
+        return false;
+    }
+    pTrackModel->removeTracks({sourceModel()->index(row, 0)});
+    return true;
+}
+
 QUrl QmlLibraryTrackListModel::getUrl(int row) const {
     auto* const pTrackModel = dynamic_cast<TrackModel*>(sourceModel());
 

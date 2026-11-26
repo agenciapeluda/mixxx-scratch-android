@@ -2497,6 +2497,49 @@ void QmlCutlab::restartApp() const {
 #endif
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.3: "Borrar del teléfono" (the menu asks first)
+// [AI-generated text, Claude (Anthropic) — end]
+QString QmlCutlab::deleteTrackFile(const QUrl& url) const {
+    if (!url.isLocalFile()) {
+        return tr("Ese tema no es un archivo del teléfono.");
+    }
+    const QString location = url.toLocalFile();
+    for (const auto& pLoaded : PlayerInfo::instance().getLoadedTracks()) {
+        if (pLoaded && pLoaded->getLocation() == location) {
+            return tr("Está cargado en un deck: sacalo del deck primero.");
+        }
+    }
+    Library* pLibrary = QmlLibraryProxy::get();
+    if (!pLibrary || !pLibrary->trackCollectionManager()) {
+        return tr("La biblioteca no está lista.");
+    }
+    TrackId trackId;
+    QSqlDatabase db = database();
+    if (db.isOpen()) {
+        QSqlQuery query(db);
+        query.prepare(QStringLiteral(
+                "SELECT library.id FROM library INNER JOIN track_locations "
+                "ON library.location = track_locations.id "
+                "WHERE track_locations.location = :location"));
+        query.bindValue(QStringLiteral(":location"), location);
+        if (query.exec() && query.next()) {
+            trackId = TrackId(query.value(0));
+        }
+    }
+    if (QFileInfo::exists(location) && !QFile::remove(location)) {
+        qWarning() << "Cutlab: could not delete" << location;
+        return tr("No se pudo borrar el archivo (¿Cutlab tiene acceso a todos los archivos?).");
+    }
+    // Its .lrc and saved lyrics go with it
+    const QFileInfo info(location);
+    QFile::remove(info.absolutePath() + QChar('/') + info.completeBaseName() + QStringLiteral(".lrc"));
+    QFile::remove(lyricsCacheFile(location));
+    pLibrary->trackCollectionManager()->purgeTracks({TrackRef::fromFilePath(location, trackId)});
+    qInfo() << "Cutlab: deleted" << location;
+    return QString();
+}
+
 bool QmlCutlab::hasNewCrash() const {
     const UserSettingsPointer pConfig = QmlConfigProxy::get();
     const qint64 newest = newestCrashTime();
