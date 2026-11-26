@@ -58,6 +58,7 @@ Popup {
         }
         return qsTr("Auto DJ no arrancó: revisá que el tema siguiente de la cola no sea el que está sonando.");
     }
+    property int styleChoice: parseInt(Mixxx.Application.configValue("[Cutlab]", "transition_style", "0")) || 0
     // 1.32.4: the folder Auto DJ plays, "" for the whole library
     property string folder: Mixxx.Application.configValue("[Cutlab]", "autodj_folder", "")
     readonly property string folderName: root.folder.length > 0 ? root.folder.substring(root.folder.lastIndexOf("/") + 1) : ""
@@ -538,6 +539,39 @@ Popup {
                     radius: 18
                     highlighted: Math.round(transitionModeControl.value) === index
                     onClicked: transitionModeControl.value = index
+                }
+            }
+        }
+        // 1.32.5: how each transition sounds (Smart Fader, also by hand)
+        Text {
+            color: Cutlab.Style.textSecondary
+            font.family: Cutlab.Style.font
+            font.pixelSize: 13
+            text: qsTr("Estilo de mezcla · siempre en tempo y en fase, y vuelve a su BPM")
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+        }
+        Flow {
+            Layout.fillWidth: true
+            spacing: 6
+
+            Repeater {
+                model: [qsTr("Variado"), qsTr("Mezcla de graves"), qsTr("Filtro"), qsTr("Corte")]
+
+                Cutlab.CLButton {
+                    required property int index
+                    required property string modelData
+
+                    height: 36
+                    text: modelData
+                    fontSize: 13
+                    fontWeight: Font.Normal
+                    radius: 18
+                    highlighted: root.styleChoice === index
+                    onClicked: {
+                        root.styleChoice = index;
+                        Mixxx.Application.setConfigValue("[Cutlab]", "transition_style", String(index));
+                    }
                 }
             }
         }
