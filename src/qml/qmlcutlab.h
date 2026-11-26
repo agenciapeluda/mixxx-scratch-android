@@ -81,6 +81,12 @@ class QmlCutlab : public QObject {
     /// seen is there (the app closed by itself last time)
     Q_INVOKABLE bool hasNewCrash() const;
     Q_INVOKABLE void markCrashSeen() const;
+    /// Cutlab 1.32.2: the headphones connected now ("" none), to notice
+    /// them plugged in or out while the app runs
+    Q_INVOKABLE QString headphoneOutputs() const;
+    /// Cutlab 1.32.2: saves and opens the app again (the outputs are read
+    /// when it starts)
+    Q_INVOKABLE void restartApp() const;
 
     static QmlCutlab* create(QQmlEngine* pQmlEngine, QJSEngine* pJsEngine);
 

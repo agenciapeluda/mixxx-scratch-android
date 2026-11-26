@@ -62,6 +62,7 @@
 #include "moc_qmlcutlab.cpp"
 #ifdef Q_OS_ANDROID
 #include "util/androidstorage.h"
+#include "controllers/android.h"
 #endif
 #include "qml/qmllibraryproxy.h"
 #include "qml/qmlmobilelibraryproxy.h"
@@ -2477,6 +2478,24 @@ qint64 newestCrashTime() {
     return 0;
 }
 } // namespace
+
+QString QmlCutlab::headphoneOutputs() const {
+#ifdef Q_OS_ANDROID
+    return QJniObject::callStaticMethod<jstring>("org/mixxx/AudioHelper",
+            "headphoneOutputs",
+            "(Landroid/content/Context;)Ljava/lang/String;",
+            QNativeInterface::QAndroidApplication::context().object())
+            .toString();
+#else
+    return QString();
+#endif
+}
+
+void QmlCutlab::restartApp() const {
+#ifdef Q_OS_ANDROID
+    mixxx::android::restartApp();
+#endif
+}
 
 bool QmlCutlab::hasNewCrash() const {
     const UserSettingsPointer pConfig = QmlConfigProxy::get();

@@ -1018,6 +1018,91 @@ Rectangle {
         }
     }
 
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.2: headphones plugged in or out while the app runs. The
+    // outputs are read when Cutlab starts (PortAudio with Oboe doesn't see
+    // new ones), so it offers to restart; at the start the main output
+    // goes to the headphones if there are.
+    // [AI-generated text, Claude (Anthropic) — end]
+    property string headphonesAtStart: ""
+    Timer {
+        interval: 2000
+        repeat: true
+        running: true
+        triggeredOnStart: true
+        onTriggered: {
+            const now = Mixxx.Cutlab.headphoneOutputs();
+            if (root.headphonesAtStart === "" && !headphonesBanner.seen) {
+                headphonesBanner.seen = true;
+                root.headphonesAtStart = now === "" ? "-" : now;
+                return;
+            }
+            const before = root.headphonesAtStart === "-" ? "" : root.headphonesAtStart;
+            headphonesBanner.visible = now !== before;
+            headphonesBanner.plugged = now !== "";
+        }
+    }
+    Rectangle {
+        id: headphonesBanner
+
+        property bool seen: false
+        property bool plugged: true
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 16
+        width: Math.min(parent.width - 24, 640)
+        height: 56
+        radius: 12
+        z: 45
+        visible: false
+        color: Style.panel
+        border.width: 1
+        border.color: Style.buttonBorder
+
+        Text {
+            anchors.left: parent.left
+            anchors.leftMargin: 14
+            anchors.right: headphonesButtons.left
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            wrapMode: Text.WordWrap
+            maximumLineCount: 2
+            elide: Text.ElideRight
+            color: Style.text
+            font.family: Style.font
+            font.pixelSize: 13
+            text: headphonesBanner.plugged
+                ? qsTr("Conectaste auriculares. Reiniciá Cutlab para que el sonido salga por ahí.")
+                : qsTr("Desconectaste los auriculares. Reiniciá Cutlab para volver al parlante.")
+        }
+        Row {
+            id: headphonesButtons
+
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 8
+
+            CLButton {
+                width: 120
+                height: 40
+                text: qsTr("Reiniciar")
+                onClicked: Mixxx.Cutlab.restartApp()
+            }
+            CLButton {
+                width: 40
+                height: 40
+                icon: "close"
+                onClicked: {
+                    // Until the headphones change again
+                    root.headphonesAtStart = Mixxx.Cutlab.headphoneOutputs() || "-";
+                    headphonesBanner.visible = false;
+                }
+            }
+        }
+    }
+
     ShowModePanel {
         id: showModePanel
 

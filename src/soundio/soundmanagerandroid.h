@@ -53,6 +53,7 @@ class SoundManagerAndroid : public QObject {
     /// Routes the outputs to a connected DJ controller sound card, see
     /// kAutoRouteControllerKey. Modifies and saves the SoundManagerConfig.
     void autoRouteToController();
+    void preferHeadphones();
     void keepVinylInputs();
     void removeClashingOutputs();
     void plainOutputsForController();

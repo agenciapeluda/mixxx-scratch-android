@@ -277,6 +277,67 @@ void SoundManagerAndroid::autoRouteToController() {
     config.writeToDisk();
 }
 
+// [AI-generated text, Claude (Anthropic) — start]
+// Cutlab 1.32.2: headphones before the phone speaker. The main output is
+// saved with the name of the device, so it stayed on the speaker with
+// headphones (USB-C, wired or Bluetooth) connected. When the main output is
+// the speaker and headphones are there, it goes to them. PortAudio with
+// Oboe only sees the outputs there were when the app opened: plugged in
+// later, the app offers to restart (DJView).
+// [AI-generated text, Claude (Anthropic) — end]
+void SoundManagerAndroid::preferHeadphones() {
+    SoundManagerConfig& config = m_pSoundManager->m_config;
+    auto& outputs = config.getOutputsRef();
+    SoundDeviceId speaker;
+    bool mainOnSpeaker = false;
+    for (auto it = outputs.cbegin(); it != outputs.cend(); ++it) {
+        if (it.value().getType() == AudioPathType::Main) {
+            mainOnSpeaker = it.key().name.endsWith(QStringLiteral(": Speaker"));
+            speaker = it.key();
+            break;
+        }
+    }
+    if (!mainOnSpeaker) {
+        return;
+    }
+    SoundDevicePointer pHeadphones;
+    for (const auto& pDevice : m_pSoundManager->m_pEnumerator->queryDevices()) {
+        const QString name = pDevice->getDisplayName();
+        const int channels = pDevice->getNumOutputChannels();
+        if (channels <= 0) {
+            continue;
+        }
+        const bool wired = name.endsWith(QStringLiteral(": Wired headphones")) ||
+                name.endsWith(QStringLiteral(": Wired headset"));
+        // A USB-C headset or dongle: 2 outputs (a DJ controller has 4)
+        const bool usb = name.endsWith(QStringLiteral(": USB")) && channels <= 2;
+        const bool bluetooth = name.endsWith(QStringLiteral(": Bluetooth"));
+        if (wired || usb || bluetooth) {
+            // Wired and USB first: Bluetooth comes 150-250 ms late
+            if (!pHeadphones || (!bluetooth && pHeadphones->getDisplayName().endsWith(QStringLiteral(": Bluetooth")))) {
+                pHeadphones = pDevice;
+            }
+        }
+    }
+    if (!pHeadphones) {
+        return;
+    }
+    qInfo() << "Headphones connected: main output from" << speaker.name
+            << "to" << pHeadphones->getDisplayName();
+    QList<AudioOutput> moved;
+    for (auto it = outputs.begin(); it != outputs.end();) {
+        if (it.key() == speaker) {
+            moved.append(it.value());
+            it = outputs.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    for (const auto& output : std::as_const(moved)) {
+        outputs.insert(pHeadphones->getDeviceId(), output);
+    }
+}
+
 void SoundManagerAndroid::prepareSetup() {
     SoundManagerConfig& config = m_pSoundManager->m_config;
     if (config.getOutputs().isEmpty()) {
@@ -288,6 +349,7 @@ void SoundManagerAndroid::prepareSetup() {
         config.writeToDisk();
     }
     autoRouteToController();
+    preferHeadphones();
     removeClashingOutputs();
     plainOutputsForController();
     keepVinylInputs();

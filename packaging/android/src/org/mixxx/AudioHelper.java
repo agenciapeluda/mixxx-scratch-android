@@ -61,4 +61,32 @@ public class AudioHelper {
         Log.i(TAG, "Raised the USB media volume from " + current + " to " + max);
         return true;
     }
+
+    // [AI-generated text, Claude (Anthropic) — start]
+    /// Cutlab 1.32.2: the headphones connected now (wired, USB-C, Bluetooth),
+    /// as "type:name" joined with ";", sorted. PortAudio with Oboe only knows
+    /// the outputs there were when the app opened: the app compares this
+    /// with the value at the start and offers to restart.
+    // [AI-generated text, Claude (Anthropic) — end]
+    public static String headphoneOutputs(Context context) {
+        AudioManager audioManager =
+                (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) {
+            return "";
+        }
+        java.util.ArrayList<String> found = new java.util.ArrayList<>();
+        for (AudioDeviceInfo device : audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
+            int type = device.getType();
+            if (type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                    || type == AudioDeviceInfo.TYPE_WIRED_HEADSET
+                    || type == AudioDeviceInfo.TYPE_USB_HEADSET
+                    || type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP
+                    || type == AudioDeviceInfo.TYPE_BLE_HEADSET
+                    || type == AudioDeviceInfo.TYPE_BLE_SPEAKER) {
+                found.add(type + ":" + device.getProductName());
+            }
+        }
+        java.util.Collections.sort(found);
+        return String.join(";", found);
+    }
 }
