@@ -1004,8 +1004,13 @@ void AutoDJProcessor::playerPositionChanged(DeckAttributes* pAttributes,
 
 TrackPointer AutoDJProcessor::getNextTrackFromQueue() {
     // Get the track at the top of the playlist.
+    // Cutlab 1.32.5: with a folder for Auto DJ, the folder fills the queue
+    // and no random track of the whole library comes in
     bool randomQueueEnabled = m_pConfig->getValue<bool>(
-            ConfigKey(kPreferenceGroup, QStringLiteral("EnableRandomQueue")));
+            ConfigKey(kPreferenceGroup, QStringLiteral("EnableRandomQueue"))) &&
+            m_pConfig->getValueString(ConfigKey(QStringLiteral("[Cutlab]"),
+                                              QStringLiteral("autodj_folder")))
+                    .isEmpty();
     int minAutoDJCrateTracks =
             m_pConfig->getValueString(ConfigKey(kPreferenceGroup,
                                               QStringLiteral("RandomQueueMinimumAllowed")))
@@ -1107,7 +1112,10 @@ void AutoDJProcessor::maybeFillRandomTracks() {
             m_pConfig->getValueString(
                              ConfigKey(kPreferenceGroup,
                                      QStringLiteral("EnableRandomQueue")))
-                    .toInt() == 1;
+                    .toInt() == 1 &&
+            m_pConfig->getValueString(ConfigKey(QStringLiteral("[Cutlab]"),
+                                              QStringLiteral("autodj_folder")))
+                    .isEmpty();
 
     int tracksToAdd = minAutoDJCrateTracks - m_pAutoDJTableModel->rowCount();
     if (randomQueueEnabled && (tracksToAdd > 0)) {

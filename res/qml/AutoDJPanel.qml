@@ -62,17 +62,21 @@ Popup {
     property string folder: Mixxx.Application.configValue("[Cutlab]", "autodj_folder", "")
     readonly property string folderName: root.folder.length > 0 ? root.folder.substring(root.folder.lastIndexOf("/") + 1) : ""
 
+    // Choosing a folder rebuilds the queue with it right away: the tracks
+    // queued before (from anywhere) go out
     function setFolder(path) {
         root.folder = path;
         Mixxx.Application.setConfigValue("[Cutlab]", "autodj_folder", path);
+        if (path.length > 0) {
+            root.fillFromFolder();
+        }
     }
     function fillFromFolder() {
         if (root.folder.length === 0) {
             folderPicker.open();
             return;
         }
-        const replace = enabledControl.value <= 0;
-        const added = Mixxx.Cutlab.fillQueueFromFolder(root.folder, replace);
+        const added = Mixxx.Cutlab.fillQueueFromFolder(root.folder, true);
         root.queued = Mixxx.Cutlab.queueCount();
         autoDJHint.text = added > 0
             ? qsTr("Cola armada con %1 temas de «%2», del BPM más lento al más rápido.").arg(added).arg(root.folderName)
@@ -445,7 +449,7 @@ Popup {
             Layout.fillWidth: true
             Layout.preferredHeight: 48
             icon: "queue"
-            text: enabledControl.value > 0 ? qsTr("Sumar los temas de la carpeta") : qsTr("Armar la cola con la carpeta (por BPM)")
+            text: qsTr("Rearmar la cola con la carpeta (por BPM)")
             fontSize: 15
             highlighted: true
             textColor: "#ffffff"

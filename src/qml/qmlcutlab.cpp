@@ -2357,6 +2357,14 @@ int QmlCutlab::fillQueueFromFolder(const QString& folder, bool replace) const {
             fromBpm = it->bpm;
             lastArtist = it->artist;
         }
+    } else {
+        // An empty queue goes on from the track that plays: its BPM up
+        // first, never its artist right after it
+        const TrackPointer pPlaying = PlayerInfo::instance().getCurrentPlayingTrack();
+        if (pPlaying) {
+            fromBpm = pPlaying->getBpm();
+            lastArtist = pPlaying->getArtist().trimmed().toLower();
+        }
     }
     std::vector<Row> pending;
     for (const Row& row : rows) {
