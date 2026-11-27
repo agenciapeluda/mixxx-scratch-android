@@ -55,6 +55,13 @@ QtObject {
     function setMode(mode) {
         sampleMode.value = mode;
     }
+    // 1.32.6: leaving Key Shift / Pitch Play for samples brings the key of
+    // the track back
+    onModeChanged: {
+        if (root.mode === 0 && root.semitones !== 0) {
+            pitchAdjust.value = 0;
+        }
+    }
 
     property Mixxx.ControlProxy keyPad: Mixxx.ControlProxy {
         group: "[Cutlab]"

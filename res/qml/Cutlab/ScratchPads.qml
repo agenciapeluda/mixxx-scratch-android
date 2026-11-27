@@ -16,7 +16,7 @@ Item {
     required property var engine
     property real spacing: 4
 
-    readonly property real headerHeight: Math.max(26, Math.min(34, root.height * 0.2))
+    readonly property real headerHeight: Math.max(26, Math.min(32, root.height * 0.18))
     // The blink of the playing slot
     property bool blink: true
 
@@ -32,7 +32,10 @@ Item {
     // One row when it fits the width of the deck, else two (Tiempos on top,
     // the stem below). Hidden when the track has no stems.
     readonly property bool hasStems: !!root.engine && root.engine.hasStems
-    readonly property bool twoRows: root.width < 340
+    // 1.32.6: always one row, so the pads keep the height; narrow, without
+    // the "Tiempos" label and with the short name of the stem
+    readonly property bool twoRows: false
+    readonly property bool narrow: root.width < 340
     readonly property real rowHeight: root.headerHeight
 
     Item {
@@ -46,13 +49,14 @@ Item {
         Row {
             id: beatsRow
 
-            width: root.twoRows ? header.width : Math.min(header.width * 0.55, beatsLabel.implicitWidth + 6 + 4 * (Math.round(root.rowHeight * 1.1) + 6))
+            width: Math.min(header.width * 0.6, (beatsLabel.visible ? beatsLabel.implicitWidth + 6 : 0) + 4 * (Math.round(root.rowHeight * 1.2) + 6))
             height: root.rowHeight
             spacing: 6
 
             Text {
                 id: beatsLabel
 
+                visible: !root.narrow
                 anchors.verticalCenter: parent.verticalCenter
                 color: Style.textSecondary
                 font.family: Style.font
@@ -66,7 +70,7 @@ Item {
                     required property int modelData
 
                     anchors.verticalCenter: parent.verticalCenter
-                    width: Math.max(26, Math.min(Math.round(root.rowHeight * 1.4), (beatsRow.width - beatsLabel.implicitWidth - 6 * 4) / 4))
+                    width: Math.max(26, Math.min(Math.round(root.rowHeight * 1.4), (beatsRow.width - (beatsLabel.visible ? beatsLabel.implicitWidth + 6 : 0) - 6 * 4) / 4))
                     height: root.rowHeight - 4
                     radius: height / 2
                     text: String(modelData)
@@ -86,7 +90,7 @@ Item {
             width: root.twoRows ? header.width : header.width - x
             height: root.rowHeight - 4
             radius: height / 2
-            text: qsTr("Scratchear: %1 ▾").arg(root.engine ? root.engine.stemName(root.engine.scratchStem || root.engine.stem) : qsTr("Voz"))
+            text: (root.narrow ? "%1 ▾" : qsTr("Scratchear: %1 ▾")).arg(root.engine ? root.engine.stemName(root.engine.scratchStem || root.engine.stem) : qsTr("Voz"))
             fontSize: 12
             fontWeight: Font.DemiBold
             onClicked: stemMenu.popup(stemButton, 0, stemButton.height)

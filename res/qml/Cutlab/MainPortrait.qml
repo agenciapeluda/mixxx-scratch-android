@@ -128,9 +128,10 @@ Rectangle {
             }
 
             LetsktchChip {
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
                 anchors.top: parent.top
-                anchors.topMargin: 6
+                anchors.topMargin: 4
                 group: root.host.letsktchGroup
                 onStopRequested: root.host.letsktchEngine.stop(group)
             }

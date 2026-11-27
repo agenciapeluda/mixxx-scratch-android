@@ -140,18 +140,49 @@ Item {
 
             anchors.right: parent.right
             anchors.baseline: artist.baseline
-            color: Style.keyColor(text.replace("♪ ", ""))
+            color: Style.keyColor(text.replace("♪ ", "").split(" ")[0])
             font.family: Style.font
             font.pixelSize: artist.font.pixelSize
             font.weight: Font.Medium
-            // The key as it sounds now, with the pitch applied
-            text: root.loaded && Mixxx.KeyUtils.keyIsValid(keyControl.value) ? "♪ " + Mixxx.KeyUtils.keyToString(keyControl.value) : ""
+            // The key as it sounds now, with the pitch applied; 1.32.6: moved
+            // by Key Shift / Pitch Play it shows the semitones and a tap
+            // brings it back
+            readonly property int shift: Math.round(pitchAdjustControl.value)
+            text: root.loaded && Mixxx.KeyUtils.keyIsValid(keyControl.value)
+                ? "♪ " + Mixxx.KeyUtils.keyToString(keyControl.value) + (shift !== 0 ? (shift > 0 ? "  +" : "  ") + shift : "")
+                : ""
 
+            Rectangle {
+                visible: keyText.shift !== 0 && keyText.text !== ""
+                anchors.fill: parent
+                anchors.margins: -3
+                z: -1
+                radius: 6
+                color: "transparent"
+                border.width: 1
+                border.color: keyText.color
+            }
+            TapHandler {
+                enabled: keyText.shift !== 0
+                onTapped: resetKeyControl.value = 1
+            }
             Mixxx.ControlProxy {
                 id: keyControl
 
                 group: root.group
                 key: "key"
+            }
+            Mixxx.ControlProxy {
+                id: pitchAdjustControl
+
+                group: root.group
+                key: "pitch_adjust"
+            }
+            Mixxx.ControlProxy {
+                id: resetKeyControl
+
+                group: root.group
+                key: "reset_key"
             }
         }
         DropCountdown {

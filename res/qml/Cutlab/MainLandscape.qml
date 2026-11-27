@@ -113,15 +113,16 @@ Rectangle {
         // The pads and buttons; big pads take the stage, hidden pads leave
         // the buttons and the info strip
         readonly property real controlsHeight: root.padsHidden ? deckRowHeight + root.gap + infoHeight
-            : root.padsBig ? height - (root.portrait ? xfaderHeight + root.gap : 0)
+            : root.padsBig ? Math.round(height * 0.62)
             : Math.round(height * (root.portrait ? 0.44 : 0.42))
-        readonly property real stageHeight: root.padsBig ? 0 : height - controlsHeight - root.gap - (root.portrait ? xfaderHeight + root.gap : 0)
+        // 1.32.6: big pads leave a strip of waveforms (no dials) above
+        readonly property real stageHeight: height - controlsHeight - root.gap - (root.portrait ? xfaderHeight + root.gap : 0)
         readonly property real controlsY: height - controlsHeight
         // Each half below the stage
         readonly property real halfWidth: (width - root.centerGap) / 2
         // The block of a deck on the stage: pitch strip and dial
-        readonly property real pitchWidth: root.portrait ? 0 : Math.round(Math.max(30, Math.min(42, width * 0.04)))
-        readonly property real dialSize: root.extended ? 0 : Math.min(stageHeight, Math.round(width * (root.portrait ? 0.27 : 0.25)))
+        readonly property real pitchWidth: root.portrait || root.padsBig ? 0 : Math.round(Math.max(30, Math.min(42, width * 0.04)))
+        readonly property real dialSize: root.extended || root.padsBig ? 0 : Math.min(stageHeight, Math.round(width * (root.portrait ? 0.27 : 0.25)))
         readonly property real deckBlock: pitchWidth + (root.extended ? 0 : dialSize + root.gap)
         // Where the waveforms go, between what is on each side
         readonly property real wavesLeft: root.tools1 && !root.portrait ? halfWidth + root.gap : deckBlock
@@ -188,7 +189,6 @@ Rectangle {
             x: area.wavesLeft
             width: area.width - area.wavesLeft - area.wavesRight
             height: area.wavesHeight
-            visible: !root.padsBig
 
             Loader {
                 anchors.fill: parent
@@ -209,9 +209,10 @@ Rectangle {
             }
 
             LetsktchChip {
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 8
                 anchors.top: parent.top
-                anchors.topMargin: 6
+                anchors.topMargin: 4
                 group: root.host.letsktchGroup
                 onStopRequested: root.host.letsktchEngine.stop(group)
             }
@@ -223,10 +224,9 @@ Rectangle {
             id: xfaderRow
 
             x: root.portrait ? 0 : waves.x
-            y: root.portrait ? area.stageHeight + (root.padsBig ? 0 : root.gap) : waves.height + root.gap
+            y: root.portrait ? area.stageHeight + root.gap : waves.height + root.gap
             width: root.portrait ? area.width : waves.width
             height: area.xfaderHeight
-            visible: root.portrait || !root.padsBig
 
             CLButton {
                 id: bigPadsUpright
