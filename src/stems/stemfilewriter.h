@@ -46,7 +46,9 @@ class StemFileWriter {
     }
 
   private:
-    static constexpr int kStreamCount = kStemCount + 1;
+    // Cutlab 1.32.6: the stems only. The mix is the track's own file, and
+    // Cutlab plays the sum of the stems anyway (20 % smaller files)
+    static constexpr int kStreamCount = kStemCount;
 
     struct Stream {
         AVCodecContext* pCodecContext = nullptr;

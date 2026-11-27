@@ -238,7 +238,7 @@ ApplicationWindow {
     Rectangle {
         id: splash
         anchors.fill: parent
-        color: "#0b0a16"
+        color: "#0b0d12"
         z: 99999
         visible: opacity > 0
 
@@ -268,10 +268,12 @@ ApplicationWindow {
                     } else if (splash.progress < 0.94) {
                         splash.progress = Math.min(0.94, splash.progress + 0.012);
                     }
-                } else {
+                } else if (splash.introDone) {
                     splash.progress = 1.0;
                     loadProgressTimer.stop();
                     dismissTimer.start();
+                } else {
+                    splash.progress = Math.max(splash.progress, 0.94);
                 }
             }
         }
@@ -285,92 +287,165 @@ ApplicationWindow {
             }
         }
 
-        Column {
-            id: splashContent
-            anchors.centerIn: parent
-            spacing: 14
-            opacity: 1
+        // [AI-generated text, Claude (Anthropic) — start]
+        // Cutlab 1.32.6: an animated intro, like a motion graphics piece:
+        // the square pops in with a little overshoot and a turn, the record
+        // spins in, the cut slices across with a flash, "Cutlab" rises
+        // letter by letter and the tagline closes its tracking. About 1.2 s;
+        // the splash stays at least that long (see dismissTimer).
+        // [AI-generated text, Claude (Anthropic) — end]
+        property bool introDone: false
 
-            // Mixxx Logo (Icon and MIXXX together)
-            Image {
-                id: logo
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: Qt.resolvedUrl("images/cutlab_logo.svg")
-                sourceSize.width: 72
-                sourceSize.height: 72
-                fillMode: Image.PreserveAspectFit
-                width: 72
-                height: 72
-                smooth: true
-                antialiasing: true
-            }
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "#f4f5fb"
-                font.pixelSize: 30
-                font.weight: Font.DemiBold
-                font.letterSpacing: -0.5
-                text: "Cutlab"
-            }
-
-            // Subtitle
-            Text {
-                id: subtitleText
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: "#9ca1b8"
-                font.pixelSize: 13
-                font.letterSpacing: 0.2
-                text: qsTr("DJ software for Android")
-            }
-
-            Item {
-                // Spacer
-                height: 8
-                width: 1
-            }
-
-            // Progress bar
-            Item {
-                id: progressBarContainer
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: 260
-                height: 32
-
-                Rectangle {
-                    id: progressTrack
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    width: parent.width
-                    height: 6
-                    radius: 3
-                    color: "#0e0d1a"
-                    border.color: "#1d1b33"
-                    border.width: 1
-                    clip: true
-
-                    Rectangle {
-                        id: progressFill
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        width: Math.max(6, parent.width * splash.progress)
-                        radius: 3
-                        color: "#8b85ff"
-
-                        Behavior on width {
-                            NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+        SequentialAnimation {
+            running: true
+            ParallelAnimation {
+                NumberAnimation { target: square; property: "scale"; from: 0.4; to: 1; duration: 520; easing.type: Easing.OutBack; easing.overshoot: 1.8 }
+                NumberAnimation { target: square; property: "rotation"; from: -18; to: 0; duration: 520; easing.type: Easing.OutCubic }
+                NumberAnimation { target: square; property: "opacity"; from: 0; to: 1; duration: 220 }
+                SequentialAnimation {
+                    PauseAnimation { duration: 140 }
+                    ParallelAnimation {
+                        NumberAnimation { target: rings; property: "rotation"; from: -300; to: 0; duration: 620; easing.type: Easing.OutQuart }
+                        NumberAnimation { target: rings; property: "scale"; from: 0.3; to: 1; duration: 520; easing.type: Easing.OutBack }
+                        NumberAnimation { target: rings; property: "opacity"; from: 0; to: 1; duration: 200 }
+                    }
+                }
+                SequentialAnimation {
+                    PauseAnimation { duration: 480 }
+                    ParallelAnimation {
+                        NumberAnimation { target: slash; property: "scale"; from: 0; to: 1; duration: 260; easing.type: Easing.OutBack; easing.overshoot: 2.4 }
+                        NumberAnimation { target: slash; property: "opacity"; from: 0; to: 1; duration: 80 }
+                        SequentialAnimation {
+                            NumberAnimation { target: flash; property: "opacity"; from: 0; to: 0.55; duration: 70 }
+                            NumberAnimation { target: flash; property: "opacity"; to: 0; duration: 260; easing.type: Easing.OutQuad }
                         }
                     }
                 }
+                SequentialAnimation {
+                    PauseAnimation { duration: 620 }
+                    NumberAnimation { target: wordmark; property: "reveal"; from: 0; to: 1; duration: 420; easing.type: Easing.Linear }
+                }
+                SequentialAnimation {
+                    PauseAnimation { duration: 880 }
+                    ParallelAnimation {
+                        NumberAnimation { target: tagline; property: "opacity"; from: 0; to: 1; duration: 300 }
+                        NumberAnimation { target: tagline; property: "font.letterSpacing"; from: 7; to: 2.2; duration: 520; easing.type: Easing.OutCubic }
+                    }
+                }
+            }
+            ScriptAction { script: splash.introDone = true }
+        }
 
-                Text {
-                    anchors.top: progressTrack.bottom
-                    anchors.topMargin: 7
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: splash.progress >= 1.0 ? qsTr("Ready to mix!") : (splash.progress > 0.7 ? qsTr("Optimizing DJ controls...") : (splash.progress > 0.35 ? qsTr("Loading library and decks...") : qsTr("Starting audio engine...")))
-                    font.pixelSize: 11
-                    font.weight: Font.DemiBold
-                    color: "#a3a3a3"
+        Column {
+            id: splashContent
+            anchors.centerIn: parent
+            spacing: 16
+
+            Item {
+                id: logo
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: 96
+                height: 96
+
+                Image {
+                    id: square
+                    anchors.fill: parent
+                    opacity: 0
+                    source: Qt.resolvedUrl("images/splash_square.svg")
+                    sourceSize.width: 192
+                    sourceSize.height: 192
+                    smooth: true
+                    antialiasing: true
+                }
+                Image {
+                    id: rings
+                    anchors.fill: parent
+                    opacity: 0
+                    source: Qt.resolvedUrl("images/splash_rings.svg")
+                    sourceSize.width: 192
+                    sourceSize.height: 192
+                    smooth: true
+                    antialiasing: true
+                }
+                Image {
+                    id: slash
+                    anchors.fill: parent
+                    opacity: 0
+                    source: Qt.resolvedUrl("images/splash_slash.svg")
+                    sourceSize.width: 192
+                    sourceSize.height: 192
+                    smooth: true
+                    antialiasing: true
+                }
+                Rectangle {
+                    id: flash
+                    anchors.fill: parent
+                    anchors.margins: 5
+                    radius: 22
+                    color: "#ffffff"
+                    opacity: 0
+                }
+            }
+
+            // "Cutlab", letter by letter: each one rises and fades in
+            Row {
+                id: wordmark
+                property real reveal: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 0
+
+                Repeater {
+                    model: ["C", "u", "t", "l", "a", "b"]
+
+                    Text {
+                        required property string modelData
+                        required property int index
+                        readonly property real t: Math.max(0, Math.min(1, wordmark.reveal * 6 - index * 0.75))
+                        color: "#f4f5fb"
+                        font.pixelSize: 34
+                        font.weight: Font.DemiBold
+                        font.letterSpacing: -0.5
+                        text: modelData
+                        opacity: t
+                        transform: Translate { y: (1 - t) * (1 - t) * 18 }
+                    }
+                }
+            }
+
+            Text {
+                id: tagline
+                anchors.horizontalCenter: parent.horizontalCenter
+                opacity: 0
+                color: "#8b85ff"
+                font.pixelSize: 12
+                font.weight: Font.Medium
+                font.letterSpacing: 2.2
+                text: qsTr("CORTÁ · SCRATCHEÁ · MEZCLÁ")
+            }
+
+            Item {
+                height: 10
+                width: 1
+            }
+
+            // A thin line that fills while it loads
+            Rectangle {
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: 160
+                height: 2
+                radius: 1
+                color: "#1d1b33"
+                opacity: tagline.opacity
+
+                Rectangle {
+                    width: Math.max(2, parent.width * splash.progress)
+                    height: parent.height
+                    radius: 1
+                    color: "#8b85ff"
+
+                    Behavior on width {
+                        NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+                    }
                 }
             }
         }

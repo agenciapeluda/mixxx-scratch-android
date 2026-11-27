@@ -106,7 +106,16 @@ SoundSource::OpenResult SoundSourceSTEM::tryOpen(
         return OpenResult::Failed;
     }
 
-    bool foundPremixedStream = false;
+    // Cutlab 1.32.6: Cutlab's own stem files have no premixed stream, only
+    // the 4 stems; NI stem files have the premix first
+    unsigned int audioStreamCount = 0;
+    for (unsigned int i = 0; i < pavInputFormatContext->nb_streams; i++) {
+        if (pavInputFormatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+            audioStreamCount++;
+        }
+    }
+    const bool hasPremix = audioStreamCount > static_cast<unsigned int>(kRequiredStreamCount);
+    bool foundPremixedStream = !hasPremix;
     AVStream* firstStem = nullptr;
     int stemCount = 0;
     uint selectedStemMask = params.stemMask();
@@ -176,7 +185,7 @@ SoundSource::OpenResult SoundSourceSTEM::tryOpen(
         }
 
         // StemIdx is equal to StreamIdx -1 (the main mix)
-        if (selectedStemMask && !(selectedStemMask & 1 << (streamIdx - 1))) {
+        if (selectedStemMask && !(selectedStemMask & 1 << (streamIdx - (hasPremix ? 1 : 0)))) {
             continue;
         }
 

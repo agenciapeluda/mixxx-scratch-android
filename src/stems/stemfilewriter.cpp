@@ -146,7 +146,7 @@ bool StemFileWriter::open(const QString& path,
             return fail(QStringLiteral("Unable to set up the stream"), result);
         }
         pStream->time_base = pContext->time_base;
-        // Only the mix plays in other players
+        // Other players play the first stream
         pStream->disposition = index == 0 ? AV_DISPOSITION_DEFAULT : 0;
     }
 
@@ -173,11 +173,9 @@ bool StemFileWriter::open(const QString& path,
 bool StemFileWriter::write(const float* pMix,
         const std::array<const float*, kStemCount>& stems,
         SINT frameCount) {
-    if (!encode(0, pMix, static_cast<int>(frameCount))) {
-        return false;
-    }
+    Q_UNUSED(pMix);
     for (int stem = 0; stem < kStemCount; ++stem) {
-        if (!encode(stem + 1, stems[stem], static_cast<int>(frameCount))) {
+        if (!encode(stem, stems[stem], static_cast<int>(frameCount))) {
             return false;
         }
     }
