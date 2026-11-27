@@ -481,6 +481,10 @@ class EngineBuffer : public EngineObject {
     bool m_bScalerChanged;
     // Indicates that dependency injection has taken place.
     bool m_bScalerOverride;
+    // Cutlab 1.32.7: frames during which the keylock scaler stays off after
+    // scratching (or a stop, or a very fast/slow speed), so a scratch does
+    // not switch the time stretcher on and off at every move
+    std::ptrdiff_t m_keylockHoldFrames = 0;
 
     QAtomicInt m_iSeekPhaseQueued;
     QAtomicInt m_iEnableSyncQueued;

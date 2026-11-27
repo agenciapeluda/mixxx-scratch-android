@@ -1021,6 +1021,28 @@ void EngineBuffer::processTrackLocked(
         }
     }
 
+    // [AI-generated text, Claude (Anthropic) — start]
+    // Cutlab 1.32.7: while scratching, each move goes through a stop or a
+    // very slow speed, and each one switched the keylock scaler off and on
+    // again. A RubberBand stretcher (R3 above all) is cleared and primed
+    // again at every switch, which costs several buffers of work at once:
+    // on a phone that is crackle, then the whole engine falling behind.
+    // After any of those moments the linear scaler stays on for 400 ms of
+    // steady playback before keylock comes back.
+    // [AI-generated text, Claude (Anthropic) — end]
+    // Only a scratch arms it (a plain play from a stop keeps keylock).
+    if (is_scratching ||
+            (m_keylockHoldFrames > 0 && (fabs(speed) < 0.1 || fabs(speed) > 1.9))) {
+        m_keylockHoldFrames = static_cast<std::ptrdiff_t>(sampleRate.value() * 0.4);
+    } else if (m_keylockHoldFrames > 0) {
+        // outputBufferSize counts stereo samples
+        m_keylockHoldFrames -= static_cast<std::ptrdiff_t>(outputBufferSize / 2);
+        if (useIndependentPitchAndTempoScaling && m_pScale != m_pScaleKeylock) {
+            useIndependentPitchAndTempoScaling = false;
+            pitchRatio = speed;
+        }
+    }
+
     if (speed != 0.0 || is_scratching) {
         // Do not switch scaler when we have no transport, except when we start scratching.
         enableIndependentPitchTempoScaling(useIndependentPitchAndTempoScaling,
